@@ -1,0 +1,898 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="description" content="Inteligencia fiscal internacional para empresarios hispanohablantes con LLC en USA. Diagnóstico de obligaciones no declaradas con normativa verificada." />
+<title>Kaufman Advisory Group — Inteligencia fiscal internacional</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='32' height='32' fill='%230a0a0c'/%3E%3Crect x='4' y='4' width='24' height='24' fill='none' stroke='%23c9a84c' stroke-width='2'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='600' fill='%23c9a84c' text-anchor='middle'%3EK%3C/text%3E%3C/svg%3E" />
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-217HQ31S3E"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-217HQ31S3E');</script>
+<template id="__bundler_thumbnail" data-bg-color="#0a0a0c">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#0a0a0c"/>
+    <rect x="480" y="280" width="240" height="240" fill="none" stroke="#c9a84c" stroke-width="6"/>
+    <text x="600" y="470" font-family="ui-monospace, Menlo, monospace" font-size="180" font-weight="600" fill="#c9a84c" text-anchor="middle">K</text>
+    <rect x="480" y="560" width="240" height="2" fill="#c9a84c"/>
+    <text x="600" y="600" font-family="ui-monospace, Menlo, monospace" font-size="20" letter-spacing="4" fill="#8a8f99" text-anchor="middle">KAUFMAN ADVISORY</text>
+  </svg>
+</template>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#0a0a0c;
+    --bg-1:#0f1014;
+    --bg-2:#14161b;
+    --line:#1f2228;
+    --line-2:#2a2e36;
+    --ink:#e6e7ea;
+    --ink-dim:#8a8f99;
+    --ink-mute:#5a5f69;
+    --gold:#c9a84c;
+    --gold-soft:#8f7934;
+    --green:#34d399;
+    --red:#e5484d;
+    --mono:"JetBrains Mono", ui-monospace, Menlo, monospace;
+    --sans:"DM Sans", system-ui, sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;font-feature-settings:"tnum","zero" 0;font-variant-numeric:tabular-nums}
+  body{font-size:15px;line-height:1.55}
+  a{color:inherit;text-decoration:none}
+  .mono{font-family:var(--mono);font-feature-settings:"tnum","zero" 0}
+  .hairline{border-top:1px solid var(--line)}
+  .container{max-width:1360px;margin:0 auto;padding:0 32px}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim)}
+  .eyebrow .dot{display:inline-block;width:6px;height:6px;background:var(--gold);margin-right:10px;transform:translateY(-2px)}
+  .tick{color:var(--gold)}
+  .num{font-variant-numeric:tabular-nums}
+  ::selection{background:var(--gold);color:#0a0a0c}
+
+  /* ===== NAV / TICKER ===== */
+  .ticker{border-bottom:1px solid var(--line);background:#07080a;font-family:var(--mono);font-size:11px;color:var(--ink-dim);overflow:hidden;position:relative}
+  .ticker-inner{display:flex;gap:48px;padding:8px 0;white-space:nowrap;animation:tick 60s linear infinite}
+  .ticker-inner span{display:inline-flex;align-items:center;gap:10px}
+  .ticker-inner b{color:var(--ink);font-weight:500}
+  .ticker-inner .up{color:var(--green)}
+  .ticker-inner .dn{color:var(--red)}
+  @keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  nav.top{border-bottom:1px solid var(--line);background:var(--bg);position:sticky;top:0;z-index:40;backdrop-filter:blur(8px)}
+  nav.top .row{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .brand{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:13px;letter-spacing:.02em}
+  .brand .sigil{width:36px;height:36px;border:2px solid var(--gold);display:grid;place-items:center;color:var(--gold);font-weight:700;font-size:16px}
+  .brand .name{color:var(--ink);font-weight:500}
+  .brand .tag{color:var(--ink-dim);margin-left:8px;padding-left:12px;border-left:1px solid var(--line-2)}
+  .navlinks{display:flex;gap:28px;font-family:var(--mono);font-size:12px;color:var(--ink-dim)}
+  .navlinks a{display:flex;align-items:center;gap:6px}
+  .navlinks a .idx{color:var(--ink-mute);font-size:10px}
+  .navlinks a:hover{color:var(--ink)}
+  .nav-cta{display:flex;gap:10px;align-items:center}
+  .nav-cta .status{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;color:var(--ink-dim)}
+  .nav-cta .status .pulse{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(52,211,153,.6);animation:pulse 2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(52,211,153,.5)}70%{box-shadow:0 0 0 8px rgba(52,211,153,0)}100%{box-shadow:0 0 0 0 rgba(52,211,153,0)}}
+  .btn{display:inline-flex;align-items:center;gap:10px;padding:10px 16px;border:1px solid var(--line-2);color:var(--ink);font-family:var(--mono);font-size:12px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;background:transparent;transition:all .15s}
+  .btn:hover{border-color:var(--gold);color:var(--gold)}
+  .btn.primary{background:var(--gold);color:#0a0a0c;border-color:var(--gold);font-weight:600}
+  .btn.primary:hover{background:#d9b758;color:#0a0a0c}
+  .btn .arrow{font-family:var(--mono)}
+
+  /* ===== SECTION HEADER ===== */
+  .section{border-top:1px solid var(--line);padding:96px 0;position:relative}
+  .section .section-head{display:grid;grid-template-columns:180px 1fr;gap:48px;margin-bottom:56px}
+  .section .section-head .idx{font-family:var(--mono);font-size:11px;color:var(--ink-dim);letter-spacing:.14em;text-transform:uppercase;padding-top:8px;border-top:1px solid var(--gold);display:inline-block;align-self:start}
+  .section h2{font-family:var(--mono);font-weight:500;font-size:40px;line-height:1.1;margin:0 0 16px;letter-spacing:-.01em;max-width:900px}
+  .section h2 em{font-style:normal;color:var(--gold)}
+  .section .section-sub{color:var(--ink-dim);max-width:720px;font-size:16px;line-height:1.55}
+
+  /* ===== HERO ===== */
+  .hero{padding:72px 0 96px;position:relative;overflow:hidden}
+  .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:72px;align-items:start}
+  .hero .crumb{display:flex;gap:16px;align-items:center;font-family:var(--mono);font-size:11px;color:var(--ink-dim);letter-spacing:.14em;text-transform:uppercase;margin-bottom:40px}
+  .hero .crumb .bar{flex:0 0 56px;height:1px;background:var(--gold)}
+  .hero h1{font-family:var(--mono);font-weight:400;font-size:64px;line-height:1.02;letter-spacing:-.02em;margin:0 0 28px}
+  .hero h1 .hl{background:linear-gradient(180deg,transparent 62%,rgba(201,168,76,.22) 62%);padding:0 4px}
+  .hero h1 .un{color:var(--gold)}
+  .hero .lede{font-size:17px;line-height:1.6;color:var(--ink-dim);max-width:560px;margin:0 0 40px}
+  .hero .lede b{color:var(--ink);font-weight:500}
+  .hero-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--gold);margin-top:48px;background:var(--bg-1);border-bottom:1px solid var(--line)}
+  .hero-meta .cell{padding:24px 24px;border-right:1px solid var(--line)}
+  .hero-meta .cell:last-child{border-right:none}
+  .hero-meta .k{font-family:var(--mono);font-size:11px;color:var(--ink-dim);letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px}
+  .hero-meta .v{font-family:var(--sans);font-size:32px;color:var(--gold);font-weight:700}
+  .hero-meta .v small{color:var(--gold);font-size:12px;margin-left:6px;font-weight:400}
+
+  /* ===== DIAGNOSTIC PANEL ===== */
+  .panel{background:var(--bg-1);border:1px solid var(--line);position:relative}
+  .panel .head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);background:#0c0d11}
+  .panel .head .title{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);display:flex;align-items:center;gap:10px}
+  .panel .head .title .sq{width:8px;height:8px;background:var(--gold)}
+  .panel .head .ctrls{display:flex;gap:6px}
+  .panel .head .ctrls span{width:8px;height:8px;border:1px solid var(--line-2)}
+  .panel .body{padding:28px 28px 28px}
+  .form-row{display:flex;flex-direction:column;gap:8px;margin-bottom:22px}
+  .form-row label{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim)}
+  .form-row label .req{color:var(--gold);margin-left:4px}
+  .input, .select{
+    width:100%;
+    background:#07080a;
+    border:1px solid var(--line-2);
+    color:var(--ink);
+    font-family:var(--mono);
+    font-size:14px;
+    padding:14px 16px;
+    outline:none;
+    transition:border-color .15s;
+    appearance:none;
+    -webkit-appearance:none;
+  }
+  .input:focus,.select:focus{border-color:var(--gold)}
+  .select{background-image:linear-gradient(45deg, transparent 50%, var(--gold) 50%), linear-gradient(135deg, var(--gold) 50%, transparent 50%);background-position:calc(100% - 18px) center, calc(100% - 12px) center;background-size:6px 6px;background-repeat:no-repeat;padding-right:38px}
+  .seg{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line-2);background:#07080a}
+  .seg button{background:transparent;border:none;color:var(--ink-dim);font-family:var(--mono);font-size:12px;padding:14px 8px;cursor:pointer;border-right:1px solid var(--line-2);transition:all .15s;letter-spacing:.04em}
+  .seg button:last-child{border-right:none}
+  .seg button.on{background:var(--gold);color:#0a0a0c;font-weight:600}
+  .seg button:hover:not(.on){color:var(--ink);background:#0c0d11}
+  .panel .cta-row{display:flex;gap:12px;margin-top:8px;align-items:center}
+  .panel .cta-row .btn.primary{flex:1;justify-content:space-between;padding:16px 20px;font-size:12px}
+  .panel .foot{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-top:1px solid var(--line);background:#0c0d11;font-family:var(--mono);font-size:10px;color:var(--ink-mute);letter-spacing:.12em;text-transform:uppercase}
+  .panel .foot .g{color:var(--green)}
+
+  /* ===== PROBLEM CARDS ===== */
+  .prob-grid{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line)}
+  .prob{padding:40px 32px 36px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);position:relative;min-height:360px;display:flex;flex-direction:column;background:var(--bg);transition:background .2s}
+  .prob:hover{background:var(--bg-1)}
+  .prob .tag{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:28px;display:flex;justify-content:space-between}
+  .prob .tag .code{color:var(--gold)}
+  .prob .stat{font-family:var(--sans);font-weight:700;font-size:56px;line-height:.95;color:var(--ink);letter-spacing:-.03em;margin-bottom:4px}
+  .prob .stat .u{font-size:24px;color:var(--gold);margin-left:2px;vertical-align:top;position:relative;top:6px}
+  .prob .stat-label{font-family:var(--mono);font-size:11px;color:var(--ink-dim);letter-spacing:.1em;margin-bottom:28px}
+  .prob h3{font-family:var(--mono);font-size:15px;font-weight:500;margin:0 0 10px;color:var(--ink);letter-spacing:-.005em;line-height:1.3}
+  .prob p{font-size:14px;color:var(--ink-dim);line-height:1.55;margin:0 0 auto}
+  .prob .cite{margin-top:22px;padding-top:16px;border-top:1px dashed var(--line-2);font-family:var(--mono);font-size:10px;color:var(--ink-mute);letter-spacing:.08em;display:flex;justify-content:space-between}
+  .prob .cite .verify{color:var(--gold);text-decoration:none;cursor:pointer}
+  .prob .cite .verify:hover{text-decoration:underline}
+
+  /* ===== HOW IT WORKS ===== */
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--line)}
+  .step{padding:32px 28px 40px;border-right:1px solid var(--line);position:relative}
+  .step:last-child{border-right:none}
+  .step .n{font-family:var(--sans);font-size:72px;font-weight:300;color:var(--gold);line-height:1;letter-spacing:-.04em;margin-bottom:20px;display:flex;align-items:baseline;gap:10px}
+  .step .n .of{font-size:13px;color:var(--ink-mute);font-weight:400}
+  .step .arrow{position:absolute;right:-6px;top:38px;font-family:var(--mono);color:var(--line-2);font-size:14px}
+  .step h3{font-family:var(--mono);font-size:18px;font-weight:500;margin:0 0 10px;letter-spacing:-.005em}
+  .step .sub{font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:.14em;text-transform:uppercase;margin-bottom:14px}
+  .step p{color:var(--ink-dim);font-size:14px;line-height:1.55;margin:0 0 20px}
+  .step ul{list-style:none;padding:0;margin:0;font-family:var(--mono);font-size:11px;color:var(--ink-dim);letter-spacing:.02em}
+  .step ul li{padding:6px 0;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:12px}
+  .step ul li:last-child{border-bottom:1px solid var(--line)}
+  .step ul li .c{color:var(--ink-mute)}
+
+  /* ===== CREDIBILITY ===== */
+  .cred-wrap{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line)}
+  .cred-col{padding:40px 36px;border-right:1px solid var(--line)}
+  .cred-col:last-child{border-right:none;background:#0c0d11}
+  .cred-col .tab{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:28px}
+  .cred-col .tab .pip{width:8px;height:8px;background:var(--ink-mute)}
+  .cred-col.us .tab .pip{background:var(--gold)}
+  .cred-col.us .tab{color:var(--gold)}
+  .cred-col h4{font-family:var(--mono);font-size:22px;font-weight:500;margin:0 0 20px;letter-spacing:-.01em}
+  .cred-list{list-style:none;padding:0;margin:0}
+  .cred-list li{display:grid;grid-template-columns:28px 1fr;gap:14px;padding:16px 0;border-top:1px solid var(--line);font-size:14px;line-height:1.5;color:var(--ink-dim)}
+  .cred-list li:last-child{border-bottom:1px solid var(--line)}
+  .cred-list li .mark{font-family:var(--mono);font-size:14px;color:var(--red);font-weight:500}
+  .cred-col.us .cred-list li .mark{color:var(--green)}
+  .cred-list li b{color:var(--ink);font-weight:500}
+  .cred-headline{padding:64px 36px 48px;border-bottom:1px solid var(--line);text-align:left}
+  .cred-headline h3{font-family:var(--mono);font-size:32px;font-weight:400;line-height:1.15;letter-spacing:-.01em;margin:0 0 16px;max-width:900px}
+  .cred-headline h3 u{text-decoration:none;color:var(--gold);border-bottom:1px solid var(--gold)}
+  .cred-headline p{color:var(--ink-dim);max-width:720px;margin:0}
+
+  .cite-demo{margin-top:24px;padding:18px 20px;border:1px solid var(--line-2);background:#07080a;font-family:var(--mono);font-size:12px;color:var(--ink-dim);display:flex;justify-content:space-between;align-items:center;gap:16px}
+  .cite-demo .L{display:flex;gap:12px;align-items:center}
+  .cite-demo .L .ico{width:24px;height:24px;border:1px solid var(--gold);color:var(--gold);display:grid;place-items:center;font-size:11px}
+  .cite-demo .L b{color:var(--ink);font-weight:500}
+  .cite-demo .R{color:var(--gold);font-size:11px;letter-spacing:.1em;text-decoration:none;cursor:pointer}
+  .cite-demo .R:hover{text-decoration:underline}
+
+  /* ===== PRICING ===== */
+  .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+  .tier{padding:40px 32px 36px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;flex-direction:column;position:relative;background:var(--bg)}
+  .tier.featured{background:#0e0f14;border-right:1px solid var(--gold);border-left:1px solid var(--gold);margin:-1px 0}
+  .tier.featured::before{content:"RECOMENDADO";position:absolute;top:-1px;left:-1px;right:-1px;background:var(--gold);color:#0a0a0c;font-family:var(--mono);font-size:10px;letter-spacing:.2em;padding:6px 0;text-align:center;font-weight:600}
+  .tier.featured .tier-head{padding-top:24px}
+  .tier .tier-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px}
+  .tier .code{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--ink-mute)}
+  .tier h3{font-family:var(--mono);font-size:15px;font-weight:500;margin:8px 0 4px;letter-spacing:.01em;text-transform:uppercase}
+  .tier .tagline{color:var(--ink-dim);font-size:13px;max-width:260px;line-height:1.5}
+  .tier .price{font-family:var(--sans);font-weight:700;font-size:56px;letter-spacing:-.03em;color:var(--ink);line-height:1;margin:12px 0 6px;display:flex;align-items:baseline;gap:6px}
+  .tier .price .cur{font-size:22px;color:var(--gold);font-weight:400}
+  .tier .price .per{font-size:12px;color:var(--ink-mute);letter-spacing:.04em;margin-left:6px;font-weight:400}
+  .tier .dur{font-family:var(--mono);font-size:11px;color:var(--ink-dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid var(--line)}
+  .tier ul{list-style:none;padding:0;margin:0 0 32px;flex:1}
+  .tier ul li{display:grid;grid-template-columns:22px 1fr;gap:10px;padding:10px 0;font-size:13.5px;color:var(--ink-dim);line-height:1.5;border-bottom:1px solid var(--line)}
+  .tier ul li:last-child{border-bottom:none}
+  .tier ul li .chk{font-family:var(--mono);color:var(--gold);font-size:12px}
+  .tier ul li b{color:var(--ink);font-weight:500}
+  .tier .btn{width:100%;justify-content:space-between}
+
+  /* ===== FOOTER ===== */
+  footer{border-top:1px solid var(--line);padding:72px 0 32px;background:#07080a}
+  .foot-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:48px;margin-bottom:64px}
+  .foot-brand .sigil-lg{width:48px;height:48px;border:1px solid var(--gold);color:var(--gold);display:grid;place-items:center;font-family:var(--mono);font-weight:600;font-size:18px;margin-bottom:20px}
+  .foot-brand .nm{font-family:var(--mono);font-size:15px;color:var(--ink);margin-bottom:6px;font-weight:500}
+  .foot-brand .ad{color:var(--ink-dim);font-size:13px;line-height:1.6;max-width:320px;font-family:var(--mono)}
+  .foot-col h5{font-family:var(--mono);font-size:10px;color:var(--ink-mute);letter-spacing:.18em;text-transform:uppercase;margin:0 0 20px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+  .foot-col ul{list-style:none;padding:0;margin:0;font-family:var(--mono);font-size:12px;line-height:2;color:var(--ink-dim)}
+  .foot-col ul a:hover{color:var(--gold)}
+  .foot-bottom{border-top:1px solid var(--line);padding-top:24px;display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:11px;color:var(--ink-mute);letter-spacing:.08em;text-transform:uppercase}
+  .foot-bottom .legal{display:flex;gap:24px}
+
+  /* ===== UTILITY ===== */
+  .rule-grid{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(to right,var(--line) 1px,transparent 1px);background-size:calc(100%/12) 100%;opacity:.35;mix-blend-mode:normal}
+
+  @media (max-width: 1100px){
+    .hero-grid{grid-template-columns:1fr;gap:48px}
+    .prob-grid,.steps,.price-grid{grid-template-columns:1fr 1fr}
+    .cred-wrap{grid-template-columns:1fr}
+    .foot-grid{grid-template-columns:1fr 1fr}
+    .hero h1{font-size:44px}
+    .section h2{font-size:30px}
+    #casos .container > div{grid-template-columns:1fr !important}
+    #guia .container > div{grid-template-columns:1fr !important}
+  }
+  @media (max-width: 640px){
+    .container{padding:0 20px}
+    .prob-grid,.steps,.price-grid,.foot-grid{grid-template-columns:1fr}
+    .hero h1{font-size:34px}
+    .section{padding:64px 0}
+    .section .section-head{grid-template-columns:1fr;gap:16px}
+    .navlinks{display:none}
+    .hero-meta{grid-template-columns:1fr}
+    .hero-meta .cell{border-right:none;border-bottom:1px solid var(--line);padding:16px 0}
+    #casos .container > div{grid-template-columns:1fr !important}
+    #guia .container > div{grid-template-columns:1fr !important}
+    #guia .container > div > div{padding:28px 20px !important}
+  }
+</style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-inner">
+    <span><b>MODELO 720</b> <span class="up">PLAZO 31 MAR 2027</span></span>
+    <span><b>ART. 91 LIRPF</b> TRANSPARENCIA FISCAL INTERNACIONAL</span>
+    <span><b>FORM 5472 IRS</b> <span class="dn">PLAZO 15 ABR 2027 · SANCIÓN USD 25,000</span></span>
+    <span><b>CRS</b> 119 JURISDICCIONES · INTERCAMBIO SEPT 2026</span>
+    <span><b>FATCA</b> ACTIVO · USA REPORTA VÍA IGAs BILATERALES</span>
+    <span><b>SANCIÓN BASE LGT</b> <span class="dn">50–150% CUOTA NO INGRESADA</span></span>
+    <span><b>BOI FINCEN</b> <span class="dn">USD 500 / DÍA DE RETRASO</span></span>
+    <span><b>DAC8 CRIPTO</b> <span class="up">ACTIVO DESDE 01/01/2026</span></span>
+    <span><b>MODELO 720</b> <span class="up">PLAZO 31 MAR 2027</span></span>
+    <span><b>ART. 91 LIRPF</b> TRANSPARENCIA FISCAL INTERNACIONAL</span>
+    <span><b>FORM 5472 IRS</b> <span class="dn">PLAZO 15 ABR 2027 · SANCIÓN USD 25,000</span></span>
+    <span><b>CRS</b> 119 JURISDICCIONES · INTERCAMBIO SEPT 2026</span>
+    <span><b>FATCA</b> ACTIVO · USA REPORTA VÍA IGAs BILATERALES</span>
+    <span><b>SANCIÓN BASE LGT</b> <span class="dn">50–150% CUOTA NO INGRESADA</span></span>
+    <span><b>BOI FINCEN</b> <span class="dn">USD 500 / DÍA DE RETRASO</span></span>
+    <span><b>DAC8 CRIPTO</b> <span class="up">ACTIVO DESDE 01/01/2026</span></span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="top">
+  <div class="container row">
+    <div class="brand">
+      <div class="sigil">K</div>
+      <div>
+        <span class="name">KAUFMAN ADVISORY GROUP</span>
+        <span class="tag">INTELIGENCIA FISCAL · LDN</span>
+      </div>
+    </div>
+    <div class="navlinks">
+      <a href="#problema"><span class="idx">01</span> Problema</a>
+      <a href="#metodo"><span class="idx">02</span> Método</a>
+      <a href="#credibilidad"><span class="idx">03</span> Credibilidad</a>
+      <a href="#casos"><span class="idx">03b</span> Casos</a>
+      <a href="#honorarios"><span class="idx">04</span> Honorarios</a>
+    </div>
+    <div class="nav-cta">
+      <div class="status"><span class="pulse"></span> ATENDIENDO CASOS · Q2</div>
+      <a href="#diagnostico" class="btn primary">DIAGNÓSTICO GRATIS <span class="arrow">→</span></a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div class="hero-left">
+        <div class="crumb">
+          <span class="bar"></span>
+          <span>DOSSIER 2026 / 04</span>
+          <span>·</span>
+          <span>PARA FUNDADORES LATAM · ES · EU CON LLC EN EE.UU.</span>
+        </div>
+        <h1>
+          Tu <span class="un">LLC</span> tiene obligaciones que <span class="hl">no estás cumpliendo.</span>
+        </h1>
+        <p class="lede">
+          La estructura que te vendieron en <b>Delaware</b> o <b>Wyoming</b> no te hace invisible. El <b>CRS</b> reporta tus cuentas automáticamente. <b>Hacienda</b> ya tiene los datos. La pregunta no es si lo sabrán — es qué estás haciendo al respecto antes de que empiece el expediente sancionador.
+        </p>
+        <p class="lede" style="max-width:520px">
+          Kaufman Advisory Group construye la arquitectura fiscal internacional que tu gestor local no puede resolver y tu abogado americano no entiende.
+        </p>
+      </div>
+
+      <!-- DIAGNOSTIC PANEL -->
+      <aside class="panel" id="diagnostico">
+        <div class="head">
+          <div class="title"><span class="sq"></span> DIAGNÓSTICO GRATUITO · PRELIMINAR</div>
+          <div class="ctrls"><span></span><span></span><span></span></div>
+        </div>
+        <div class="body">
+          <p style="font-family:var(--mono);font-size:12px;color:var(--ink-dim);margin:0 0 24px;line-height:1.6;letter-spacing:.01em">
+            Tres campos. Respuesta <span style="color:var(--gold)">inmediata</span>. Sin compromiso y sin vendedores detrás.
+          </p>
+
+          <form id="diagForm" onsubmit="submitDiag(event)">
+            <div class="form-row">
+              <label>01 · País de residencia fiscal<span class="req">*</span></label>
+              <select class="select" name="country" required>
+                <option value="">— Selecciona jurisdicción —</option>
+                <option>España</option>
+                <option>México</option>
+                <option>Argentina</option>
+                <option>Colombia</option>
+                <option>Chile</option>
+                <option>Uruguay</option>
+                <option>Perú</option>
+                <option>Portugal (NHR / IFICI)</option>
+                <option>Andorra</option>
+                <option>Italia (Régimen impatriati)</option>
+                <option>EAU / Dubái</option>
+                <option>Otro — indicar en contacto</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <label>02 · Estructura societaria<span class="req">*</span></label>
+              <div class="seg" role="tablist">
+                <button type="button" class="on" data-struct="single">LLC UNIPERSONAL</button>
+                <button type="button" data-struct="multi">LLC MULTI-MIEMBRO</button>
+                <button type="button" data-struct="holding">HOLDING / GRUPO</button>
+              </div>
+              <input type="hidden" name="structure" value="single" />
+            </div>
+
+            <div class="form-row">
+              <label>03 · Facturación anual (USD)<span class="req">*</span></label>
+              <select class="select" name="revenue" required>
+                <option value="">— Rango anual —</option>
+                <option>&lt; 100,000</option>
+                <option>100,000 — 300,000</option>
+                <option>300,000 — 750,000</option>
+                <option>750,000 — 2,000,000</option>
+                <option>2,000,000 +</option>
+              </select>
+            </div>
+
+            <div class="cta-row">
+              <button type="submit" class="btn primary">SOLICITAR DIAGNÓSTICO <span class="arrow">→</span></button>
+            </div>
+          </form>
+        </div>
+        <div class="foot">
+          <span>CIFRADO EXTREMO · SIN CRM DE VENTAS</span>
+          <span class="g">● OPERATIVO</span>
+        </div>
+      </aside>
+    </div>
+
+    <div class="hero-meta">
+      <div class="cell">
+        <div class="k">Casos analizados</div>
+        <div class="v">2,340+</div>
+      </div>
+      <div class="cell">
+        <div class="k">Jurisdicciones cubiertas</div>
+        <div class="v">27</div>
+      </div>
+      <div class="cell">
+        <div class="k">Artículos citados · verificables</div>
+        <div class="v">100%</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="section" id="problema">
+  <div class="container">
+    <div class="section-head">
+      <span class="idx">§ 01 · Problema</span>
+      <div>
+        <h2>Cuatro hechos que tu <em>gestor</em> prefiere no mencionarte.</h2>
+        <p class="section-sub">Cada dato proviene de normativa vigente o resoluciones públicas. Cada artículo es verificable con un clic. Ninguno es una opinión.</p>
+      </div>
+    </div>
+
+    <div class="prob-grid">
+      <article class="prob">
+        <div class="tag"><span>HECHO · 001</span><span class="code">ES · AEAT</span></div>
+        <div class="stat num">90<span class="u">%</span></div>
+        <div class="stat-label">DE LLC ESPAÑOLAS · NO DECLARAN</div>
+        <h3>Modelo 720 — la declaración que el 90% omite</h3>
+        <p>La participación en una LLC extranjera supera los 50.000 € y debe declararse en el <b style="color:var(--ink)">Modelo 720</b>. La omisión ya no conlleva sanciones desproporcionadas tras la STJUE, pero sí activa el <b style="color:var(--ink)">expediente de comprobación</b>.</p>
+        <div class="cite">
+          <span>Ley 7/2012 · Orden HAP/72/2013</span>
+          <a class="verify" href="https://www.boe.es/buscar/act.php?id=BOE-A-2012-14301" target="_blank" rel="noopener">VERIFICAR →</a>
+        </div>
+      </article>
+
+      <article class="prob">
+        <div class="tag"><span>HECHO · 002</span><span class="code">ES · LIRPF</span></div>
+        <div class="stat mono">ART<span class="u">.91</span></div>
+        <div class="stat-label">TRANSPARENCIA FISCAL INTERNACIONAL</div>
+        <h3>La LLC no protege — imputa directamente</h3>
+        <p>Si eres residente fiscal español y controlas una LLC con rentas pasivas, el <b style="color:var(--ink)">Art. 91 LIRPF</b> imputa los beneficios a tu IRPF, tributes o no en EE.UU. La LLC <b style="color:var(--ink)">no es un escudo</b>, es una pantalla transparente.</p>
+        <div class="cite">
+          <span>Ley 35/2006 · Art. 91</span>
+          <a class="verify" href="https://www.boe.es/buscar/act.php?id=BOE-A-2006-20764&p=20240101&tn=1#a91" target="_blank" rel="noopener">VERIFICAR →</a>
+        </div>
+      </article>
+
+      <article class="prob">
+        <div class="tag"><span>HECHO · 003</span><span class="code">OCDE · CRS</span></div>
+        <div class="stat num">119</div>
+        <div class="stat-label">JURISDICCIONES · INTERCAMBIO AUTOMÁTICO</div>
+        <h3>Tu banco ya envió los datos</h3>
+        <p>El <b style="color:var(--ink)">Common Reporting Standard</b> intercambia saldos, titularidades y beneficiarios reales cada septiembre. EE.UU. no firma CRS, pero tu cuenta en Mercury, Wise o Relay <b style="color:var(--ink)">sí reporta</b> vía FATCA y equivalentes.</p>
+        <div class="cite">
+          <span>OCDE · AEOI Standard 2014</span>
+          <a class="verify" href="https://www.oecd.org/en/topics/sub-issues/automatic-exchange-of-information.html" target="_blank" rel="noopener">VERIFICAR →</a>
+        </div>
+      </article>
+
+      <article class="prob">
+        <div class="tag"><span>HECHO · 004</span><span class="code">LGT · ART. 191</span></div>
+        <div class="stat num">50<span class="u">–150%</span></div>
+        <div class="stat-label">SANCIÓN · SOBRE CUOTA NO INGRESADA</div>
+        <h3>El coste real de seguir improvisando</h3>
+        <p>La infracción tributaria grave o muy grave aplica un recargo proporcional del <b style="color:var(--ink)">50% al 150%</b> sobre lo no ingresado, más intereses de demora. Una LLC de 200 k$ mal estructurada puede derivar en un expediente de <b style="color:var(--ink)">seis cifras</b>.</p>
+        <div class="cite">
+          <span>Ley 58/2003 · Arts. 191–195</span>
+          <a class="verify" href="https://www.boe.es/buscar/act.php?id=BOE-A-2003-23186&p=20240101&tn=1#a191" target="_blank" rel="noopener">VERIFICAR →</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="metodo">
+  <div class="container">
+    <div class="section-head">
+      <span class="idx">§ 02 · Método</span>
+      <div>
+        <h2>De la consulta al <em>mapa de ejecución</em>. Cuatro pasos, sin aire.</h2>
+        <p class="section-sub">No vendemos esperanza ni jurisdicciones exóticas. Diagnosticamos, modelamos tres escenarios y entregamos instrucciones operativas que tu gestor local puede ejecutar.</p>
+      </div>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="n num">01<span class="of">/ 04</span></div>
+        <div class="arrow">→</div>
+        <div class="sub">DÍA 1</div>
+        <h3>Intake documental</h3>
+        <p>Cuestionario estructurado de 34 campos. Recopilamos estructura actual, jurisdicciones, flujos de caja y obligaciones vigentes sin ambigüedad.</p>
+        <ul>
+          <li>Entregables <span class="c">Dossier</span></li>
+          <li>Duración <span class="c">~45 min</span></li>
+          <li>Canal <span class="c">Cifrado</span></li>
+        </ul>
+      </div>
+      <div class="step">
+        <div class="n num">02<span class="of">/ 04</span></div>
+        <div class="arrow">→</div>
+        <div class="sub">DÍA 2–3</div>
+        <h3>Diagnóstico normativo</h3>
+        <p>Cruzamos tu situación contra la normativa aplicable de cada jurisdicción implicada. Identificamos brechas, riesgos activos y exposición cuantificada.</p>
+        <ul>
+          <li>Artículos citados <span class="c">12–30</span></li>
+          <li>Jurisdicciones <span class="c">2–5</span></li>
+          <li>Salida <span class="c">Informe PDF</span></li>
+        </ul>
+      </div>
+      <div class="step">
+        <div class="n num">03<span class="of">/ 04</span></div>
+        <div class="arrow">→</div>
+        <div class="sub">DÍA 4–7</div>
+        <h3>Tres escenarios modelados</h3>
+        <p>Modelamos tres arquitecturas viables con su coste fiscal efectivo, complejidad operativa y horizonte de ejecución. Sin recomendación oculta.</p>
+        <ul>
+          <li>Escenario A <span class="c">Continuista</span></li>
+          <li>Escenario B <span class="c">Optimizado</span></li>
+          <li>Escenario C <span class="c">Reestructura</span></li>
+        </ul>
+      </div>
+      <div class="step">
+        <div class="n num">04<span class="of">/ 04</span></div>
+        <div class="sub">DÍA 8–14</div>
+        <h3>Mapa de ejecución</h3>
+        <p>Instrucciones operativas paso a paso con responsables, hitos y proveedores. Documento que tu asesor local puede ejecutar — o que coordinamos nosotros.</p>
+        <ul>
+          <li>Hitos <span class="c">~24</span></li>
+          <li>Formularios <span class="c">Pre-cumplimentados</span></li>
+          <li>Soporte <span class="c">90 días</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CREDIBILITY -->
+<section class="section" id="credibilidad">
+  <div class="container">
+    <div class="section-head">
+      <span class="idx">§ 03 · Credibilidad</span>
+      <div>
+        <h2>Cada artículo legal que citamos es <em>verificable con un clic.</em></h2>
+        <p class="section-sub">No nos creas. Abre el enlace al BOE, al IRS, a la OCDE o al TJUE. Si una afirmación no tiene fuente primaria, no entra al informe.</p>
+      </div>
+    </div>
+
+    <div style="border:1px solid var(--line);background:var(--bg-1)">
+      <div class="cred-headline">
+        <h3>Un modelo genérico te alucina un artículo que no existe. <u>Nosotros te damos el enlace al BOE.</u></h3>
+        <p>Los modelos genéricos combinan datos reales con invenciones plausibles — y tú descubres el error cuando llega la carta de Hacienda. Nuestro trabajo es la diferencia entre <em style="color:var(--ink);font-style:normal">una respuesta</em> y <em style="color:var(--ink);font-style:normal">una posición defendible</em>.</p>
+
+        <div class="cite-demo">
+          <div class="L">
+            <div class="ico">§</div>
+            <div>Ejemplo: <b>Art. 91.1 LIRPF</b> — imputación de rentas por transparencia fiscal internacional · <b>Ley 35/2006</b></div>
+          </div>
+          <a class="R" href="https://www.boe.es/buscar/act.php?id=BOE-A-2006-20764&p=20240101&tn=1#a91" target="_blank" rel="noopener">↗ VER FUENTE EN BOE.ES</a>
+        </div>
+      </div>
+
+      <div class="cred-wrap">
+        <div class="cred-col">
+          <div class="tab"><span class="pip"></span> IA GENÉRICA · ASESORES GENERALISTAS</div>
+          <h4>Rápido. Plausible. Indefendible.</h4>
+          <ul class="cred-list">
+            <li><span class="mark">✕</span><span>Cita <b>artículos inexistentes</b> o deroga­dos hace años.</span></li>
+            <li><span class="mark">✕</span><span>Desconoce la interacción entre <b>Art. 91 LIRPF</b> y convenios de doble imposición.</span></li>
+            <li><span class="mark">✕</span><span>No distingue entre residencia civil, fiscal y beneficiario efectivo CRS.</span></li>
+            <li><span class="mark">✕</span><span>Ignora obligaciones IRS: <b>Form 5472, 1120, BOI FinCEN</b>.</span></li>
+            <li><span class="mark">✕</span><span>No asume responsabilidad ante la <b>AEAT</b>.</span></li>
+          </ul>
+        </div>
+        <div class="cred-col us">
+          <div class="tab"><span class="pip"></span> KAUFMAN ADVISORY GROUP</div>
+          <h4>Trazable. Auditado. Firmado.</h4>
+          <ul class="cred-list">
+            <li><span class="mark">✓</span><span>Cada cita enlaza a la <b>fuente primaria oficial</b> — BOE, IRS, OCDE, DOUE.</span></li>
+            <li><span class="mark">✓</span><span>Cruce normativo entre las <b>jurisdicciones implicadas</b> del caso, no genérico.</span></li>
+            <li><span class="mark">✓</span><span>Distinción explícita entre residencia, beneficiario efectivo e imputación.</span></li>
+            <li><span class="mark">✓</span><span>Obligaciones IRS, FinCEN y estatales incluidas en el mapa de ejecución.</span></li>
+            <li><span class="mark">✓</span><span>Informe <b>firmado</b> con número de expediente y trazabilidad documental.</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section" id="casos">
+  <div class="container">
+    <div class="section-head">
+      <span class="idx">§ 03b · Casos</span>
+      <div>
+        <h2>Resultados reales. <em>Nombres protegidos.</em></h2>
+        <p class="section-sub">Casos anonimizados por confidencialidad. Cada uno refleja una situación real analizada por Kaufman Advisory Group.</p>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--line);border-left:1px solid var(--line)">
+      <div style="padding:32px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:.14em;margin-bottom:16px">CASO · MX-2026-014</div>
+        <p style="font-size:14px;color:var(--ink);line-height:1.6;margin:0 0 16px;font-weight:500">"Llevaba 2 años facturando desde mi LLC sin declarar nada al SAT. El diagnóstico me mostró que el cambio a régimen general ya se había activado sin que yo lo supiera."</p>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--ink-mute)">Desarrollador freelance · México · LLC Wyoming<br>Facturación: 80,000 USD/año</div>
+        <div style="margin-top:12px;font-family:var(--mono);font-size:10px;color:var(--green)">3 OBLIGACIONES IDENTIFICADAS · REGULARIZADO</div>
+      </div>
+      <div style="padding:32px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:.14em;margin-bottom:16px">CASO · ES-2026-037</div>
+        <p style="font-size:14px;color:var(--ink);line-height:1.6;margin:0 0 16px;font-weight:500">"Mi gestor en España no sabía que existía el art. 91 LIRPF. El informe de Kaufman le sirvió como hoja de ruta para regularizar todo antes de que Hacienda cruzara datos."</p>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--ink-mute)">Consultor IT · España · LLC Delaware<br>Facturación: 120,000 EUR/año</div>
+        <div style="margin-top:12px;font-family:var(--mono);font-size:10px;color:var(--green)">4 OBLIGACIONES IDENTIFICADAS · EN EJECUCIÓN</div>
+      </div>
+      <div style="padding:32px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:.14em;margin-bottom:16px">CASO · AR-2026-008</div>
+        <p style="font-size:14px;color:var(--ink);line-height:1.6;margin:0 0 16px;font-weight:500">"Sabía que tenía que declarar Bienes Personales pero no sabía que el cepo cambiario generaba una tercera obligación. Kaufman me lo cruzó todo en un solo informe."</p>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--ink-mute)">Diseñadora UX · Argentina · LLC Wyoming<br>Facturación: 45,000 USD/año</div>
+        <div style="margin-top:12px;font-family:var(--mono);font-size:10px;color:var(--green)">3 OBLIGACIONES IDENTIFICADAS · REGULARIZADO</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LEAD MAGNET -->
+<section class="section" id="guia">
+  <div class="container">
+    <div style="border:1px solid var(--line);background:var(--bg-1);display:grid;grid-template-columns:1fr 1fr;gap:0">
+      <div style="padding:48px 40px;border-right:1px solid var(--line)">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:.14em;text-transform:uppercase;margin-bottom:20px">GUÍA GRATUITA · PDF</div>
+        <h3 style="font-family:var(--mono);font-size:24px;font-weight:500;margin:0 0 16px;line-height:1.2">5 errores fiscales que cometen los hispanohablantes con LLC en USA</h3>
+        <p style="color:var(--ink-dim);font-size:14px;line-height:1.6;margin:0">Cada error con artículo de ley, sanción real, y cómo corregirlo. Sin marketing. Sin upsell. Solo normativa verificada.</p>
+      </div>
+      <div style="padding:48px 40px;display:flex;flex-direction:column;justify-content:center">
+        <label style="font-family:var(--mono);font-size:10px;color:var(--ink-dim);letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px">Tu email para recibir la guía</label>
+        <div style="display:flex;gap:8px">
+          <input type="email" id="leadEmail" placeholder="tu@email.com" style="flex:1;background:#07080a;border:1px solid var(--line-2);color:var(--ink);font-family:var(--mono);font-size:14px;padding:14px 16px;outline:none" />
+          <button onclick="captureEmail()" style="background:var(--gold);color:#0a0a0c;border:none;font-family:var(--mono);font-size:12px;font-weight:600;padding:14px 20px;cursor:pointer;letter-spacing:.04em">ENVIAR →</button>
+        </div>
+        <div id="leadMsg" style="font-family:var(--mono);font-size:11px;color:var(--green);margin-top:12px;display:none">✓ ENVIADA A TU EMAIL</div>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--ink-mute);margin-top:12px;letter-spacing:.08em">SIN SPAM · SIN NEWSLETTER · SOLO LA GUÍA</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section" id="honorarios">
+  <div class="container">
+    <div class="section-head">
+      <span class="idx">§ 04 · Honorarios</span>
+      <div>
+        <h2>Tres niveles de profundidad. Precios fijos, <em>en dólares</em>.</h2>
+        <p class="section-sub">Sin retainers mensuales encubiertos. Sin porcentajes sobre el ahorro fiscal. Pagas por el trabajo, no por la relación.</p>
+      </div>
+    </div>
+
+    <div class="price-grid">
+      <article class="tier">
+        <div class="tier-head">
+          <div>
+            <div class="code">NIVEL 01 · ENTRADA</div>
+            <h3>Diagnóstico</h3>
+          </div>
+          <div class="code">KAG·D1</div>
+        </div>
+        <p class="tagline">Mapa de exposición. Dónde estás parado hoy y qué hay activo en tu contra.</p>
+        <div class="price"><span class="cur">USD</span><span class="num">47</span><span class="per">/ único</span></div>
+        <div class="dur">ENTREGA · INMEDIATA</div>
+        <ul>
+          <li><span class="chk">→</span><span>Revisión estructural de la <b>LLC</b> y residencia</span></li>
+          <li><span class="chk">→</span><span>Lista de <b>obligaciones incumplidas</b> con citas</span></li>
+          <li><span class="chk">→</span><span>Estimación de exposición sancionadora</span></li>
+          <li><span class="chk">→</span><span>Informe ejecutivo · 6–8 páginas</span></li>
+          <li><span class="chk">→</span><span>30 min de llamada posterior</span></li>
+        </ul>
+        <a class="btn" href="#diagnostico">SOLICITAR DIAGNÓSTICO <span class="arrow">→</span></a>
+      </article>
+
+      <article class="tier featured">
+        <div class="tier-head">
+          <div>
+            <div class="code">NIVEL 02 · ANÁLISIS</div>
+            <h3>Análisis Estratégico</h3>
+          </div>
+          <div class="code">KAG·A2</div>
+        </div>
+        <p class="tagline">Tres arquitecturas modeladas con coste fiscal efectivo y riesgo operativo.</p>
+        <div class="price"><span class="cur">USD</span><span class="num">273</span><span class="per">/ único</span></div>
+        <div class="dur">ENTREGA · 7 DÍAS</div>
+        <ul>
+          <li><span class="chk">→</span><span>Todo lo incluido en <b>Diagnóstico</b></span></li>
+          <li><span class="chk">→</span><span><b>Tres escenarios</b> modelados con proyecciones</span></li>
+          <li><span class="chk">→</span><span>Cruce normativo multi-jurisdiccional</span></li>
+          <li><span class="chk">→</span><span>Mapa de riesgos y ventanas de actuación</span></li>
+          <li><span class="chk">→</span><span>Informe completo · 22–30 páginas</span></li>
+          <li><span class="chk">→</span><span>90 min de sesión estratégica</span></li>
+        </ul>
+        <a class="btn primary" href="#diagnostico">INICIAR ANÁLISIS <span class="arrow">→</span></a>
+      </article>
+
+      <article class="tier">
+        <div class="tier-head">
+          <div>
+            <div class="code">NIVEL 03 · EJECUCIÓN</div>
+            <h3>Arquitectura Completa</h3>
+          </div>
+          <div class="code">KAG·X3</div>
+        </div>
+        <p class="tagline">Diseño completo más mapa de ejecución paso a paso con soporte continuado.</p>
+        <div class="price"><span class="cur">USD</span><span class="num">881</span><span class="per">/ único</span></div>
+        <div class="dur">ENTREGA · 14 DÍAS</div>
+        <ul>
+          <li><span class="chk">→</span><span>Todo lo incluido en <b>Análisis</b></span></li>
+          <li><span class="chk">→</span><span><b>Arquitectura</b> recomendada documentada</span></li>
+          <li><span class="chk">→</span><span>Mapa de ejecución con ~24 hitos operativos</span></li>
+          <li><span class="chk">→</span><span>Guía paso a paso para cumplimentar formularios + <b>calendario anual de plazos</b></span></li>
+          <li><span class="chk">→</span><span>Coordinación con gestor local y agente registrado</span></li>
+          <li><span class="chk">→</span><span><b>90 días</b> de soporte continuado por escrito</span></li>
+        </ul>
+        <a class="btn" href="#diagnostico">DISEÑAR ARQUITECTURA <span class="arrow">→</span></a>
+      </article>
+    </div>
+
+    <div style="margin-top:32px;padding:20px 24px;border:1px solid var(--line);background:var(--bg-1);display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:12px;color:var(--ink-dim);letter-spacing:.02em">
+      <span><span style="color:var(--gold)">NOTA —</span> Los honorarios no incluyen tasas oficiales, registrar agent fees ni servicios de terceros. Facturación desde <b style="color:var(--ink)">Reino Unido</b>. Pago por transferencia, Wise, Stripe, PayPal o cripto.</span>
+      <span class="num" style="color:var(--ink-mute)">REV · 2026.04</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="sigil-lg">K</div>
+        <div class="nm">KAUFMAN ADVISORY GROUP</div>
+        <div class="ad">
+          Inteligencia fiscal internacional<br/>
+          para fundadores hispanohablantes<br/>
+          con estructuras en EE.UU.<br/><br/>
+          <span style="color:var(--ink-mute)">LONDON · UNITED KINGDOM</span>
+        </div>
+      </div>
+      <div class="foot-col">
+        <h5>Servicios</h5>
+        <ul>
+          <li><a href="#honorarios">Diagnóstico</a></li>
+          <li><a href="#honorarios">Análisis estratégico</a></li>
+          <li><a href="#honorarios">Arquitectura completa</a></li>
+          <li><a href="#metodo">Soporte continuado</a></li>
+          <li><a href="/partners.html" style="color:var(--gold)">Partners</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h5>Jurisdicciones</h5>
+        <ul>
+          <li>España · Portugal</li>
+          <li>México · LatAm</li>
+          <li>EE.UU. · Delaware · WY</li>
+          <li>EAU · Andorra · Italia</li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h5>Contacto</h5>
+        <ul>
+          <li><a href="mailto:contact@kaufmanadvisory.io" style="color:var(--gold)">contact@kaufmanadvisory.io</a></li>
+          <li>Respuesta inmediata</li>
+          <li>Canal cifrado disponible</li>
+          <li>Sin llamadas frías</li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div>© 2026 KAUFMAN ADVISORY GROUP</div>
+      <div class="legal">
+        <a href="/aviso-legal.html">Aviso legal</a>
+        <a href="/privacidad.html">Privacidad</a>
+        <a href="/terminos.html">Términos</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function captureEmail(){
+    const email = document.getElementById('leadEmail').value;
+    if(!email || !email.includes('@')) return;
+    fetch('https://kaufman-advisory.app.n8n.cloud/webhook/intake',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,source:'lead_magnet',type:'guia_5_errores'})}).catch(()=>{});
+    document.getElementById('leadMsg').style.display='block';
+    document.getElementById('leadEmail').disabled=true;
+  }
+
+  // Segment control
+  document.querySelectorAll('.seg').forEach(seg => {
+    const hidden = seg.parentElement.querySelector('input[type=hidden]');
+    seg.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        seg.querySelectorAll('button').forEach(b => b.classList.remove('on'));
+        btn.classList.add('on');
+        if (hidden) hidden.value = btn.dataset.struct;
+      });
+    });
+  });
+
+  function submitDiag(e){
+    e.preventDefault();
+    const f = e.target;
+    const data = {
+      country: f.country.value,
+      structure: f.structure.value,
+      revenue: f.revenue.value
+    };
+    const panel = document.querySelector('.panel .body');
+    fetch('https://kaufman-advisory.app.n8n.cloud/webhook/intake',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).catch(()=>{});
+
+    const db = {
+      'España': [
+        {ob:'Transparencia Fiscal Internacional',art:'Art. 91 Ley 35/2006 (LIRPF)',url:'https://www.boe.es/buscar/act.php?id=BOE-A-2006-20764',riesgo:'ALTO',nota:'Si participas >=50% en LLC con tributación <75% del IS español, las rentas se imputan en tu IRPF.'},
+        {ob:'Modelo 720 — Bienes en el extranjero',art:'DA 18ª LGT + Orden HAP/72/2013',url:'https://sede.agenciatributaria.gob.es/Sede/procedimientoini/GI34.shtml',riesgo:'ALTO',nota:'Obligatorio si cuentas/valores en el extranjero superan 50.000€. Plazo: 1 enero — 31 marzo.'},
+        {ob:'CRS — Intercambio automático',art:'Directiva 2014/107/UE (DAC2)',url:'https://sede.agenciatributaria.gob.es/Sede/colaborar-agencia-tributaria/intercambio-automatico-informacion-financiera.html',riesgo:'MEDIO',nota:'Tu banco reporta automáticamente a la AEAT. España intercambia con 119 jurisdicciones.'},
+        {ob:'Form 5472 — Declaración IRS',art:'IRC §6038A',url:'https://www.irs.gov/forms-pubs/about-form-5472',riesgo:'ALTO',nota:'LLC con propietario extranjero debe presentar Form 5472. Sanción: $25,000/año por omisión.'}
+      ],
+      'México': [
+        {ob:'ISR — Renta mundial',art:'Arts. 1 y 90 LISR',url:'https://www.diputados.gob.mx/LeyesBiblio/pdf/LISR.pdf',riesgo:'ALTO',nota:'Residentes en México tributan sobre todos sus ingresos mundiales, incluidos los de LLC en USA.'},
+        {ob:'RESICO — Cambio automático de régimen',art:'Arts. 113-E a 113-J LISR',url:'https://www.sat.gob.mx/consultas/76498/conoce-el-resico',riesgo:'ALTO',nota:'Si superas 3.5M MXN, el SAT te cambia de régimen SIN notificarte.'},
+        {ob:'Form 5472 — Declaración IRS',art:'IRC §6038A',url:'https://www.irs.gov/forms-pubs/about-form-5472',riesgo:'ALTO',nota:'LLC con propietario extranjero debe presentar Form 5472. Sanción: $25,000/año por omisión.'}
+      ],
+      'Argentina': [
+        {ob:'Bienes Personales',art:'Ley 23.966 + Ley 27.743',url:'https://www.afip.gob.ar/bienesPersonales/',riesgo:'ALTO',nota:'LLCs extranjeras son bienes gravados. Tipo diferencial más alto para bienes en el exterior.'},
+        {ob:'Impuesto a las Ganancias — Renta mundial',art:'Ley 20.628, arts. 1, 5, 130-136',url:'https://www.afip.gob.ar/ganancias/',riesgo:'ALTO',nota:'Residentes argentinos tributan renta mundial. Alícuotas progresivas hasta 35%.'},
+        {ob:'Régimen informativo participaciones',art:'RG AFIP 4697/2020',url:'https://www.afip.gob.ar/',riesgo:'MEDIO',nota:'Obligación de informar participaciones en sociedades del exterior. El cepo cambiario crea restricciones adicionales.'},
+        {ob:'Form 5472 — Declaración IRS',art:'IRC §6038A',url:'https://www.irs.gov/forms-pubs/about-form-5472',riesgo:'ALTO',nota:'LLC con propietario extranjero debe presentar Form 5472. Sanción: $25,000/año por omisión.'}
+      ],
+      'Colombia': [
+        {ob:'Renta mundial',art:'Arts. 9, 10, 24 Estatuto Tributario',url:'https://estatuto.co/',riesgo:'ALTO',nota:'Residentes colombianos (183 días) tributan renta mundial. Ingresos de LLC deben declararse.'},
+        {ob:'Activos en el exterior',art:'Art. 607 Estatuto Tributario',url:'https://estatuto.co/',riesgo:'MEDIO',nota:'Reportar activos en exterior cuando superen 3,580 UVT (~$40,000 USD). Incluye LLCs.'},
+        {ob:'Form 5472 — Declaración IRS',art:'IRC §6038A',url:'https://www.irs.gov/forms-pubs/about-form-5472',riesgo:'ALTO',nota:'Sanción: $25,000/año por omisión.'}
+      ],
+      'Chile': [
+        {ob:'Renta mundial',art:'Arts. 3, 12, 41A-41C LIR',url:'https://www.sii.cl/normativa_legislacion/ley_impuesto_renta.html',riesgo:'ALTO',nota:'Residentes en Chile tributan renta mundial. CDI Chile-USA vigente desde 2010.'},
+        {ob:'Form 5472 — Declaración IRS',art:'IRC §6038A',url:'https://www.irs.gov/forms-pubs/about-form-5472',riesgo:'ALTO',nota:'Sanción: $25,000/año por omisión.'}
+      ],
+      'Portugal (NHR / IFICI)': [
+        {ob:'Obligación de declarar (Modelo 3 IRS)',art:'Arts. 16, 72, 81 Código do IRS',url:'https://info.portaldasfinancas.gov.pt/pt/informacao_fiscal/codigos_tributarios/cirs/Pages/default.aspx',riesgo:'MEDIO',nota:'NHR cerrado desde 01/01/2024 (reemplazado por IFICI). Obligación de declarar EXISTE incluso si rentas exentas.'},
+        {ob:'Form 5472 — Declaración IRS',art:'IRC §6038A',url:'https://www.irs.gov/forms-pubs/about-form-5472',riesgo:'ALTO',nota:'Sanción: $25,000/año por omisión.'}
+      ]
+    };
+
+    const obs = db[data.country] || [{ob:'Jurisdicción no cubierta en diagnóstico rápido',art:'—',url:'#',riesgo:'—',nota:'Contacta con contact@kaufmanadvisory.io para un análisis personalizado.'}];
+    const altos = obs.filter(o=>o.riesgo==='ALTO').length;
+    const nivel = altos >= 3 ? 'CRÍTICO' : altos >= 2 ? 'ALTO' : altos >= 1 ? 'MEDIO' : 'BAJO';
+    const nivelColor = altos >= 2 ? 'var(--red)' : 'var(--gold)';
+    const exp = 'KAG-' + new Date().toISOString().slice(0,10).replace(/-/g,'') + '-' + Math.random().toString(36).slice(2,6).toUpperCase();
+
+    let rows = obs.map(o => `
+      <div style="padding:14px 0;border-bottom:1px solid var(--line)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <span style="font-family:var(--mono);font-size:12px;font-weight:500;color:var(--ink)">${o.ob}</span>
+          <span style="font-family:var(--mono);font-size:10px;padding:3px 8px;background:${o.riesgo==='ALTO'?'rgba(229,72,77,.12)':'rgba(201,168,76,.12)'};color:${o.riesgo==='ALTO'?'var(--red)':'var(--gold)'};letter-spacing:.1em">${o.riesgo}</span>
+        </div>
+        <div style="font-size:13px;color:var(--ink-dim);margin-bottom:6px">${o.nota}</div>
+        <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--ink-mute)">
+          <span>${o.art}</span>
+          <a href="${o.url}" target="_blank" style="color:var(--gold);text-decoration:none">VERIFICAR →</a>
+        </div>
+      </div>
+    `).join('');
+
+    panel.innerHTML = `
+      <div style="font-family:var(--mono);font-size:11px;color:var(--green);letter-spacing:.14em;margin-bottom:16px;display:flex;align-items:center;gap:10px">
+        <span style="width:8px;height:8px;background:var(--green);display:inline-block"></span>
+        DIAGNÓSTICO COMPLETADO · ${exp}
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--ink-mute);letter-spacing:.12em;margin-bottom:4px">NIVEL DE RIESGO</div>
+          <div style="font-family:var(--sans);font-size:28px;font-weight:700;color:${nivelColor}">${nivel}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-family:var(--mono);font-size:10px;color:var(--ink-mute);letter-spacing:.12em;margin-bottom:4px">OBLIGACIONES DETECTADAS</div>
+          <div style="font-family:var(--sans);font-size:28px;font-weight:700;color:var(--ink)">${obs.length}</div>
+        </div>
+      </div>
+      ${rows}
+      <div style="margin-top:20px;padding:16px;background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2)">
+        <div style="font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:.1em;margin-bottom:8px">SIGUIENTE PASO</div>
+        <div style="font-size:13px;color:var(--ink-dim);line-height:1.6">Este diagnóstico identifica QUÉ obligaciones tienes. Para los <b style="color:var(--ink)">3 escenarios con cuantificación</b> y el <b style="color:var(--ink)">mapa de ejecución</b>, solicita el análisis completo.</div>
+        <a href="mailto:contact@kaufmanadvisory.io?subject=Análisis completo — ${exp}" style="display:inline-flex;align-items:center;gap:8px;margin-top:12px;padding:10px 16px;background:var(--gold);color:#0a0a0c;font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.04em;text-decoration:none">SOLICITAR ANÁLISIS COMPLETO →</a>
+      </div>
+    `;
+  }
+</script>
+
+</body>
+</html>
