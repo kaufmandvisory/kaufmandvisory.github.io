@@ -3,66 +3,94 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Checkout — Kaufman Advisory</title>
+<title>Checkout — Diagnóstico Cross-Border — Kaufman Advisory</title>
 <style>
-  :root{
-    --bg:#f6f7f9;
-    --card:#ffffff;
-    --ink:#111418;
-    --muted:#5b6470;
-    --line:#e4e7ec;
-    --accent:#0a66ff;
-    --accent-ink:#ffffff;
-    --soft:#f0f2f5;
-    --warn:#8a6d3b;
-  }
+  :root{--bg:#f6f7f9;--card:#fff;--ink:#111418;--muted:#5b6470;--line:#e4e7ec;--accent:#0a66ff;--soft:#f0f2f5}
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
   .wrap{max-width:680px;margin:0 auto;padding:48px 20px 80px}
-  h1{font-size:28px;font-weight:600;letter-spacing:-0.01em;margin:0 0 8px}
-  .lede{color:var(--muted);font-size:15px;margin:0 0 32px;line-height:1.5}
-  .method{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin-bottom:14px;display:flex;align-items:flex-start;gap:16px;text-decoration:none;color:inherit;transition:border-color .15s ease,box-shadow .15s ease}
-  a.method:hover{border-color:var(--accent);box-shadow:0 2px 14px rgba(10,102,255,.08)}
-  .method-body{flex:1;min-width:0}
-  .method-title{font-size:16px;font-weight:600;margin:0 0 4px}
-  .method-sub{font-size:13.5px;color:var(--muted);margin:0;line-height:1.45}
-  .method-note{font-size:13.5px;color:var(--ink);margin:10px 0 0;line-height:1.5;padding:10px 12px;background:var(--soft);border-radius:8px}
+  .product{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:24px;margin-bottom:28px}
+  .product h1{font-size:22px;font-weight:600;letter-spacing:-0.01em;margin:0 0 4px}
+  .price{font-size:26px;font-weight:600;margin:0 0 10px;letter-spacing:-0.01em}
+  .product-desc{font-size:14px;color:var(--muted);margin:0;line-height:1.5}
+  .recommend{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin:0 4px 8px}
+  .pay-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin-bottom:14px;display:flex;align-items:flex-start;gap:16px;text-decoration:none;color:inherit;transition:border-color .15s,box-shadow .15s}
+  a.pay-card:hover{border-color:var(--accent);box-shadow:0 2px 14px rgba(10,102,255,.08)}
+  .pay-card-body{flex:1;min-width:0}
+  .pay-title{font-size:16px;font-weight:600;margin:0 0 4px}
+  .pay-sub{font-size:13.5px;color:var(--muted);margin:0;line-height:1.45}
   .cta{font-size:13px;font-weight:600;color:var(--accent);white-space:nowrap;align-self:center}
-  .badge{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:var(--soft);color:var(--muted);margin-left:8px;vertical-align:middle}
-  .method.disabled{opacity:.85;cursor:default}
-  .method.disabled .method-title{color:var(--ink)}
+  .security-note{font-size:12.5px;color:var(--muted);margin:-4px 4px 30px;line-height:1.5}
+  .wise-section{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:24px;margin-bottom:14px}
+  .wise-section h2{font-size:16px;font-weight:600;margin:0 0 4px}
+  .wise-intro{font-size:13.5px;color:var(--muted);margin:0 0 20px;line-height:1.45}
+  .currency-block{padding:16px 0;border-top:1px solid var(--line)}
+  .currency-block:first-of-type{border-top:0;padding-top:4px}
+  .currency-label{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.08em;background:var(--soft);color:var(--ink);padding:4px 10px;border-radius:6px;margin-bottom:12px}
+  .field{margin-bottom:10px}
+  .field:last-child{margin-bottom:0}
+  .field-label{font-size:12px;color:var(--muted);margin:0 0 2px;line-height:1.3}
+  .field-value{font-size:14px;font-weight:600;margin:0;word-break:break-word;line-height:1.4}
+  .field-hint{font-size:12px;color:var(--muted);margin:2px 0 0;line-height:1.4;font-weight:400}
+  .wise-note{font-size:13px;margin:18px 0 0;line-height:1.55;padding:12px 14px;background:var(--soft);border-radius:8px}
   footer{margin-top:36px;font-size:12.5px;color:var(--muted);text-align:center;line-height:1.5}
 </style>
 </head>
 <body>
-  <main class="wrap">
-    <h1>Finalizar pago</h1>
-    <p class="lede">Elige el método de pago que prefieras. El pago con tarjeta es el único método inmediato; el resto se gestiona manualmente.</p>
+<main class="wrap">
 
-    <a class="method" href="https://buy.stripe.com/4gM4gBeB9aFh8JzenMdwc00" target="_blank" rel="noopener">
-      <div class="method-body">
-        <p class="method-title">Tarjeta de crédito o débito</p>
-        <p class="method-sub">Visa &middot; Mastercard &middot; Amex &mdash; vía Stripe</p>
-      </div>
-      <span class="cta">Pagar &rarr;</span>
-    </a>
+  <header class="product">
+    <h1>Diagnóstico Cross-Border</h1>
+    <p class="price">USD 47</p>
+    <p class="product-desc">Informe PDF con trazabilidad documental sobre exposición fiscal internacional.</p>
+  </header>
 
-    <div class="method disabled" aria-disabled="true">
-      <div class="method-body">
-        <p class="method-title">Transferencia bancaria</p>
-        <p class="method-sub">Wise Business &middot; disponible bajo solicitud</p>
-        <p class="method-note">Para pagar por transferencia Wise, escribe a contact@kaufmanadvisory.io con asunto: Pago DCB por Wise.</p>
-      </div>
+  <p class="recommend">Recomendado · cobro inmediato, acceso al intake automático</p>
+  <a class="pay-card" href="https://buy.stripe.com/4gM4gBeB9aFh8JzenMdwc00" target="_blank" rel="noopener">
+    <div class="pay-card-body">
+      <p class="pay-title">Pagar con tarjeta</p>
+      <p class="pay-sub">Visa &middot; Mastercard &middot; Amex &mdash; vía Stripe</p>
+    </div>
+    <span class="cta">Pagar &rarr;</span>
+  </a>
+  <p class="security-note">Pago seguro procesado por Stripe. Kaufman Advisory no almacena datos de tu tarjeta.</p>
+
+  <section class="wise-section" aria-label="Pagar por transferencia">
+    <h2>Pagar por transferencia (Wise)</h2>
+    <p class="wise-intro">Alternativa para clientes que no pagan con tarjeta. Activación manual.</p>
+
+    <div class="currency-block">
+      <span class="currency-label">EUR</span>
+      <div class="field"><p class="field-label">Beneficiario</p><p class="field-value">kaufman advisory group LLC</p></div>
+      <div class="field"><p class="field-label">IBAN</p><p class="field-value">BE04 9058 3926 5831</p><p class="field-hint">Puede recibir EUR y otras divisas</p></div>
+      <div class="field"><p class="field-label">Swift/BIC</p><p class="field-value">TRWIBEB1XXX</p><p class="field-hint">Solo para transferencias internacionales Swift</p></div>
+      <div class="field"><p class="field-label">Nombre y dirección del banco</p><p class="field-value">Wise, Rue du Trône 100, 3rd floor, Brussels, 1050, Belgium</p></div>
     </div>
 
-    <div class="method disabled" aria-disabled="true">
-      <div class="method-body">
-        <p class="method-title">PayPal <span class="badge">Próximamente</span></p>
-        <p class="method-sub">Próximamente</p>
-      </div>
+    <div class="currency-block">
+      <span class="currency-label">USD</span>
+      <div class="field"><p class="field-label">Beneficiario</p><p class="field-value">kaufman advisory group LLC</p></div>
+      <div class="field"><p class="field-label">Tipo de cuenta</p><p class="field-value">Checking</p></div>
+      <div class="field"><p class="field-label">Número de ruta (ACH y wire)</p><p class="field-value">101019628</p><p class="field-hint">Solo para transferencias nacionales</p></div>
+      <div class="field"><p class="field-label">Número de cuenta</p><p class="field-value">217946932318</p></div>
+      <div class="field"><p class="field-label">Swift/BIC</p><p class="field-value">TRWIUS35XXX</p><p class="field-hint">Solo para transferencias internacionales Swift</p></div>
+      <div class="field"><p class="field-label">Nombre y dirección del banco</p><p class="field-value">Wise US Inc, 108 W 13th St, Wilmington, DE, 19801, United States</p></div>
     </div>
 
-    <footer>Kaufman Advisory</footer>
-  </main>
+    <div class="currency-block">
+      <span class="currency-label">GBP</span>
+      <div class="field"><p class="field-label">Beneficiario</p><p class="field-value">kaufman advisory group LLC</p></div>
+      <div class="field"><p class="field-label">Número de cuenta</p><p class="field-value">34298465</p></div>
+      <div class="field"><p class="field-label">Sort code</p><p class="field-value">23-08-01</p><p class="field-hint">Solo para transferencias nacionales</p></div>
+      <div class="field"><p class="field-label">IBAN</p><p class="field-value">GB07 TRWI 2308 0134 2984 65</p><p class="field-hint">Puede recibir GBP y otras divisas</p></div>
+      <div class="field"><p class="field-label">Swift/BIC</p><p class="field-value">TRWIGB2LXXX</p><p class="field-hint">Solo para transferencias internacionales Swift</p></div>
+      <div class="field"><p class="field-label">Nombre y dirección del banco</p><p class="field-value">Wise Payments Limited, 1st Floor, Worship Square, 65 Clifton Street, London, EC2A 4JE, United Kingdom</p></div>
+    </div>
+
+    <p class="wise-note">Indica en el concepto: <strong>Pago DCB</strong>. Tras enviar, contacta con contact@kaufmanadvisory.io adjuntando el comprobante para activar tu intake. Activación manual en menos de 24 h.</p>
+  </section>
+
+  <footer>Kaufman Advisory</footer>
+</main>
 </body>
 </html>
