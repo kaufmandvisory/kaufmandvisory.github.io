@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="description" content="Formulario de intake — Diagnóstico Cross-Border · Kaufman Advisory Group" />
+<title>Intake · Diagnóstico Cross-Border — Kaufman Advisory Group</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='32' height='32' fill='%230a0a0c'/%3E%3Crect x='4' y='4' width='24' height='24' fill='none' stroke='%23c9a84c' stroke-width='2'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='600' fill='%23c9a84c' text-anchor='middle'%3EK%3C/text%3E%3C/svg%3E" />
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-217HQ31S3E"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-217HQ31S3E');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#0a0a0c;--bg-1:#0f1014;--bg-2:#14161b;
+    --line:#1f2228;--line-2:#2a2e36;
+    --ink:#e6e7ea;--ink-dim:#8a8f99;--ink-mute:#555a65;
+    --gold:#c9a84c;--green:#4ade80;--red:#e5484d;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+    --sans:'DM Sans','Inter',system-ui,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+  .wrap{max-width:640px;width:100%;padding:40px 24px}
+  .brand{display:flex;align-items:center;gap:14px;margin-bottom:40px}
+  .sigil{width:42px;height:42px;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:600;font-size:18px;color:var(--gold)}
+  .brand-text .name{font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.1em;display:block}
+  .brand-text .tag{font-family:var(--mono);font-size:10px;color:var(--ink-mute);letter-spacing:.08em;display:block;margin-top:2px}
+  .header{margin-bottom:32px}
+  .header h1{font-size:24px;font-weight:700;margin-bottom:8px}
+  .header p{font-size:14px;color:var(--ink-dim);line-height:1.6}
+  .status-bar{display:flex;align-items:center;gap:8px;padding:12px 16px;background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.15);margin-bottom:32px;font-family:var(--mono);font-size:11px;color:var(--green);letter-spacing:.08em}
+  .status-bar .dot{width:8px;height:8px;background:var(--green);border-radius:50%;flex-shrink:0}
+  form{display:flex;flex-direction:column;gap:24px}
+  .form-group label{display:block;font-family:var(--mono);font-size:11px;color:var(--ink-dim);letter-spacing:.08em;margin-bottom:8px}
+  .form-group .req{color:var(--gold);margin-left:4px}
+  input,select,textarea{width:100%;padding:12px 16px;background:var(--bg-1);border:1px solid var(--line);color:var(--ink);font-family:var(--sans);font-size:14px;outline:none;transition:border .2s}
+  input:focus,select:focus,textarea:focus{border-color:var(--gold)}
+  select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23555a65' stroke-width='2'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center}
+  textarea{min-height:100px;resize:vertical}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 24px;background:var(--gold);color:#0a0a0c;font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.04em;border:none;cursor:pointer;transition:opacity .2s;width:100%}
+  .btn:hover{opacity:.9}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .note{font-family:var(--mono);font-size:10px;color:var(--ink-mute);letter-spacing:.04em;line-height:1.6;margin-top:8px}
+  .divider{height:1px;background:var(--line);margin:8px 0}
+  .section-label{font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:.12em;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  #successMsg{display:none;text-align:center;padding:40px 24px}
+  #successMsg h2{font-size:20px;margin-bottom:12px}
+  #successMsg p{font-size:14px;color:var(--ink-dim)}
+  .footer{margin-top:auto;padding:24px;font-family:var(--mono);font-size:10px;color:var(--ink-mute);text-align:center;letter-spacing:.04em}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="brand">
+    <div class="sigil">K</div>
+    <div class="brand-text">
+      <span class="name">KAUFMAN ADVISORY GROUP</span>
+      <span class="tag">DIAGNÓSTICO CROSS-BORDER · INTAKE</span>
+    </div>
+  </div>
+
+  <div class="status-bar">
+    <span class="dot"></span>
+    PAGO CONFIRMADO · COMPLETAR INTAKE PARA INICIAR DCB
+  </div>
+
+  <div class="header">
+    <h1>Formulario de intake</h1>
+    <p>Completa los datos a continuación para que podamos elaborar tu Diagnóstico Cross-Border. Toda la información es confidencial y se utiliza exclusivamente para el análisis de tu caso.</p>
+  </div>
+
+  <div id="intakeForm">
+    <form id="intake" onsubmit="submitIntake(event)">
+
+      <div class="section-label">DATOS PERSONALES</div>
+
+      <div class="form-group">
+        <label>NOMBRE COMPLETO<span class="req">*</span></label>
+        <input type="text" name="nombre" required placeholder="Tu nombre completo" />
+      </div>
+
+      <div class="form-group">
+        <label>EMAIL DE CONTACTO<span class="req">*</span></label>
+        <input type="email" name="email" required placeholder="email@ejemplo.com" />
+      </div>
+
+      <div class="form-group">
+        <label>PAÍS DE RESIDENCIA FISCAL ACTUAL<span class="req">*</span></label>
+        <select name="pais_residencia" required>
+          <option value="">— Selecciona —</option>
+          <option>España</option>
+          <option>México</option>
+          <option>Argentina</option>
+          <option>Colombia</option>
+          <option>Chile</option>
+          <option>Uruguay</option>
+          <option>Perú</option>
+          <option>Portugal</option>
+          <option>Andorra</option>
+          <option>Italia</option>
+          <option>EAU / Dubái</option>
+          <option>Otro</option>
+        </select>
+      </div>
+
+      <div class="divider"></div>
+      <div class="section-label">ESTRUCTURA LLC</div>
+
+      <div class="form-group">
+        <label>ESTADO DE INCORPORACIÓN DE LA LLC<span class="req">*</span></label>
+        <select name="estado_llc" required>
+          <option value="">— Selecciona —</option>
+          <option>Wyoming</option>
+          <option>Delaware</option>
+          <option>Florida</option>
+          <option>New Mexico</option>
+          <option>Texas</option>
+          <option>Otro</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>TIPO DE LLC<span class="req">*</span></label>
+        <select name="tipo_llc" required>
+          <option value="">— Selecciona —</option>
+          <option>Single-member LLC (unipersonal)</option>
+          <option>Multi-member LLC</option>
+          <option>LLC con elección S-Corp / C-Corp</option>
+          <option>No estoy seguro</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>AÑO DE CONSTITUCIÓN DE LA LLC</label>
+        <input type="number" name="año_constitucion" min="2000" max="2026" placeholder="Ej: 2023" />
+      </div>
+
+      <div class="form-group">
+        <label>FACTURACIÓN ANUAL APROXIMADA (USD)<span class="req">*</span></label>
+        <select name="facturacion" required>
+          <option value="">— Rango anual —</option>
+          <option>Menos de 50,000</option>
+          <option>50,000 — 100,000</option>
+          <option>100,000 — 300,000</option>
+          <option>300,000 — 750,000</option>
+          <option>750,000 — 2,000,000</option>
+          <option>Más de 2,000,000</option>
+        </select>
+      </div>
+
+      <div class="divider"></div>
+      <div class="section-label">SITUACIÓN FISCAL ACTUAL</div>
+
+      <div class="form-group">
+        <label>¿HAS PRESENTADO FORM 5472 AL IRS?<span class="req">*</span></label>
+        <select name="form5472" required>
+          <option value="">— Selecciona —</option>
+          <option>Sí, todos los años</option>
+          <option>Solo algunos años</option>
+          <option>Nunca</option>
+          <option>No sé qué es</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>¿DECLARAS LOS INGRESOS DE LA LLC EN TU PAÍS DE RESIDENCIA?<span class="req">*</span></label>
+        <select name="declara_residencia" required>
+          <option value="">— Selecciona —</option>
+          <option>Sí, todo declarado</option>
+          <option>Parcialmente</option>
+          <option>No declaro nada de la LLC</option>
+          <option>No estoy seguro</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>¿TIENES CUENTAS BANCARIAS FUERA DE TU PAÍS DE RESIDENCIA?</label>
+        <select name="cuentas_exterior">
+          <option value="">— Selecciona —</option>
+          <option>Sí, en USA (Mercury, Relay, etc.)</option>
+          <option>Sí, en USA y otros países</option>
+          <option>No</option>
+        </select>
+      </div>
+
+      <div class="divider"></div>
+      <div class="section-label">CONTEXTO ADICIONAL</div>
+
+      <div class="form-group">
+        <label>¿HAY ALGO ESPECÍFICO QUE TE PREOCUPE O QUIERAS QUE REVISEMOS?</label>
+        <textarea name="contexto" placeholder="Ej: 'No sé si tengo que hacer Modelo 720', 'Me preocupa la sanción del Form 5472', 'Quiero saber si mi LLC tributa en España'..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>REFERENCIA DE PAGO PAYPAL (SI LA TIENES)</label>
+        <input type="text" name="ref_pago" placeholder="Ej: ID de transacción PayPal" />
+      </div>
+
+      <div class="note">Todos los campos marcados con * son obligatorios. Tu información es confidencial y se usa exclusivamente para elaborar el DCB.</div>
+
+      <button type="submit" class="btn" id="submitBtn">ENVIAR INTAKE · INICIAR DCB →</button>
+    </form>
+  </div>
+
+  <div id="successMsg">
+    <div style="width:48px;height:48px;border:2px solid var(--green);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:20px;color:var(--green)">✓</div>
+    <h2>Intake recibido</h2>
+    <p>Hemos recibido tu información. El equipo de Kaufman Advisory Group iniciará tu Diagnóstico Cross-Border en las próximas 48–72 horas. Recibirás el informe en el email que proporcionaste.</p>
+    <p style="margin-top:16px;font-family:var(--mono);font-size:11px;color:var(--ink-mute);letter-spacing:.06em">EXPEDIENTE: <span id="expId"></span></p>
+    <a href="/" style="display:inline-flex;align-items:center;gap:8px;margin-top:24px;padding:10px 16px;border:1px solid var(--line);color:var(--ink-dim);font-family:var(--mono);font-size:12px;text-decoration:none;letter-spacing:.04em">← VOLVER A KAUFMAN ADVISORY</a>
+  </div>
+</div>
+
+<div class="footer">
+  © 2026 KAUFMAN ADVISORY GROUP · WYOMING LLC · OPERACIÓN 100% ONLINE
+</div>
+
+<script>
+function submitIntake(e) {
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'ENVIANDO...';
+
+  const f = e.target;
+  const data = {};
+  new FormData(f).forEach((v, k) => { data[k] = v; });
+  data.source = 'intake_dcb';
+  data.type = 'dcb_intake';
+  data.timestamp = new Date().toISOString();
+  data.expediente = 'KAG-DCB-' + new Date().toISOString().slice(0,10).replace(/-/g,'') + '-' + Math.random().toString(36).slice(2,6).toUpperCase();
+
+  // Send to n8n webhook (same endpoint, different type)
+  fetch('https://kaufman-advisory.app.n8n.cloud/webhook/intake', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  }).catch(() => {});
+
+  // Also send via mailto fallback
+  const subject = encodeURIComponent('DCB Intake — ' + data.expediente);
+  const body = encodeURIComponent(Object.entries(data).map(([k,v]) => k + ': ' + v).join('\n'));
+  const mailLink = document.createElement('a');
+  mailLink.href = 'mailto:contact@kaufmanadvisory.io?subject=' + subject + '&body=' + body;
+  mailLink.click();
+
+  // Show success
+  document.getElementById('intakeForm').style.display = 'none';
+  document.getElementById('successMsg').style.display = 'block';
+  document.getElementById('expId').textContent = data.expediente;
+}
+</script>
+
+</body>
+</html>
