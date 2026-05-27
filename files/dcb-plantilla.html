@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>DCB — Diagnóstico Cross-Border · Kaufman Advisory Group</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+  :root{--gold:#c9a84c;--ink:#1a1a1f;--dim:#555;--line:#ddd;--mono:'JetBrains Mono',monospace;--sans:'DM Sans',sans-serif}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:var(--sans);color:var(--ink);line-height:1.6;max-width:800px;margin:0 auto;padding:40px}
+  @media print{body{padding:20px}@page{margin:20mm 15mm}}
+
+  .header{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:24px;border-bottom:2px solid var(--gold);margin-bottom:32px}
+  .logo{display:flex;align-items:center;gap:12px}
+  .sigil{width:48px;height:48px;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;font-size:22px;color:var(--gold)}
+  .logo-text{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.08em}
+  .logo-sub{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.06em;margin-top:2px}
+  .meta{text-align:right;font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.04em;line-height:1.8}
+  .meta b{color:var(--ink)}
+
+  h1{font-size:20px;font-weight:700;margin-bottom:4px}
+  h2{font-size:16px;font-weight:600;color:var(--gold);margin:28px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--line);font-family:var(--mono);letter-spacing:.04em}
+  h3{font-size:14px;font-weight:600;margin:16px 0 8px}
+  .subtitle{font-size:13px;color:var(--dim);margin-bottom:24px}
+
+  .risk-badge{display:inline-block;padding:4px 10px;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.08em}
+  .risk-alto{background:#fef2f2;color:#dc2626;border:1px solid #fecaca}
+  .risk-medio{background:#fffbeb;color:#d97706;border:1px solid #fde68a}
+  .risk-bajo{background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0}
+
+  table{width:100%;border-collapse:collapse;margin:12px 0 20px;font-size:13px}
+  th{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--dim);text-align:left;padding:8px 12px;background:#f8f8fa;border:1px solid var(--line)}
+  td{padding:10px 12px;border:1px solid var(--line);vertical-align:top}
+  td a{color:var(--gold);text-decoration:none}
+
+  .ob-card{padding:16px;border:1px solid var(--line);margin:10px 0;page-break-inside:avoid}
+  .ob-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .ob-name{font-weight:600;font-size:14px}
+  .ob-art{font-family:var(--mono);font-size:11px;color:var(--dim);margin-bottom:6px}
+  .ob-nota{font-size:13px;color:#333;line-height:1.6}
+  .ob-link{font-family:var(--mono);font-size:10px;margin-top:8px}
+  .ob-link a{color:var(--gold);text-decoration:none}
+
+  .next-steps{background:#fafaf5;border:1px solid #e5e0c8;padding:20px;margin:24px 0}
+  .next-steps h3{color:var(--gold);margin-top:0}
+  .next-steps ol{padding-left:20px;font-size:13px}
+  .next-steps li{margin:6px 0}
+
+  .disclaimer{font-size:11px;color:var(--dim);line-height:1.6;padding:16px;border:1px solid var(--line);margin-top:32px;page-break-inside:avoid}
+  .footer-doc{margin-top:24px;padding-top:16px;border-top:2px solid var(--gold);display:flex;justify-content:space-between;font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.04em}
+
+  /* EDITABLE MARKERS - estos son los campos que Señor rellena */
+  .editable{background:#fffde7;border:1px dashed #c9a84c;padding:2px 6px;min-width:100px;display:inline-block}
+  @media print{.editable{background:transparent;border:none}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">
+    <div class="sigil">K</div>
+    <div>
+      <div class="logo-text">KAUFMAN ADVISORY GROUP</div>
+      <div class="logo-sub">DIAGNÓSTICO CROSS-BORDER</div>
+    </div>
+  </div>
+  <div class="meta">
+    <b>EXPEDIENTE:</b> <span class="editable" contenteditable="true">KAG-DCB-XXXXXXXX-XXXX</span><br>
+    <b>FECHA:</b> <span class="editable" contenteditable="true">DD/MM/YYYY</span><br>
+    <b>CLIENTE:</b> <span class="editable" contenteditable="true">Nombre del cliente</span><br>
+    <b>CLASIFICACIÓN:</b> CONFIDENCIAL
+  </div>
+</div>
+
+<h1>Diagnóstico Cross-Border (DCB)</h1>
+<p class="subtitle">Informe de obligaciones fiscales internacionales para fundador con LLC en EE.UU.</p>
+
+<h2>§ 01 · RESUMEN EJECUTIVO</h2>
+<table>
+  <tr>
+    <th>PARÁMETRO</th>
+    <th>VALOR</th>
+  </tr>
+  <tr>
+    <td>País de residencia fiscal</td>
+    <td class="editable" contenteditable="true">—</td>
+  </tr>
+  <tr>
+    <td>Estado de incorporación LLC</td>
+    <td class="editable" contenteditable="true">—</td>
+  </tr>
+  <tr>
+    <td>Tipo de LLC</td>
+    <td class="editable" contenteditable="true">Single-member / Multi-member</td>
+  </tr>
+  <tr>
+    <td>Facturación anual (USD)</td>
+    <td class="editable" contenteditable="true">—</td>
+  </tr>
+  <tr>
+    <td>Nivel de riesgo global</td>
+    <td><span class="risk-badge risk-alto editable" contenteditable="true">ALTO</span></td>
+  </tr>
+  <tr>
+    <td>Obligaciones identificadas</td>
+    <td class="editable" contenteditable="true">X</td>
+  </tr>
+</table>
+
+<h2>§ 02 · OBLIGACIONES IDENTIFICADAS</h2>
+<p style="font-size:13px;color:var(--dim);margin-bottom:16px">A continuación se detallan las obligaciones fiscales aplicables según la jurisdicción de residencia y la estructura societaria declarada.</p>
+
+<!-- OBLIGACIÓN 1 — duplicar este bloque por cada obligación -->
+<div class="ob-card">
+  <div class="ob-head">
+    <span class="ob-name editable" contenteditable="true">Nombre de la obligación</span>
+    <span class="risk-badge risk-alto editable" contenteditable="true">ALTO</span>
+  </div>
+  <div class="ob-art"><span class="editable" contenteditable="true">Artículo / Norma aplicable</span></div>
+  <div class="ob-nota"><span class="editable" contenteditable="true">Explicación de la obligación, por qué aplica al caso del cliente, y cuál es la exposición estimada.</span></div>
+  <div class="ob-link"><a href="#" class="editable" contenteditable="true">ENLACE A FUENTE PRIMARIA →</a></div>
+</div>
+
+<div class="ob-card">
+  <div class="ob-head">
+    <span class="ob-name editable" contenteditable="true">Nombre de la obligación 2</span>
+    <span class="risk-badge risk-medio editable" contenteditable="true">MEDIO</span>
+  </div>
+  <div class="ob-art"><span class="editable" contenteditable="true">Artículo / Norma aplicable</span></div>
+  <div class="ob-nota"><span class="editable" contenteditable="true">Explicación de la obligación.</span></div>
+  <div class="ob-link"><a href="#" class="editable" contenteditable="true">ENLACE A FUENTE PRIMARIA →</a></div>
+</div>
+
+<div class="ob-card">
+  <div class="ob-head">
+    <span class="ob-name editable" contenteditable="true">Nombre de la obligación 3</span>
+    <span class="risk-badge risk-alto editable" contenteditable="true">ALTO</span>
+  </div>
+  <div class="ob-art"><span class="editable" contenteditable="true">Artículo / Norma aplicable</span></div>
+  <div class="ob-nota"><span class="editable" contenteditable="true">Explicación de la obligación.</span></div>
+  <div class="ob-link"><a href="#" class="editable" contenteditable="true">ENLACE A FUENTE PRIMARIA →</a></div>
+</div>
+
+<h2>§ 03 · ESTIMACIÓN DE EXPOSICIÓN</h2>
+<table>
+  <tr>
+    <th>OBLIGACIÓN</th>
+    <th>SANCIÓN POTENCIAL</th>
+    <th>PLAZO</th>
+    <th>NORMA</th>
+  </tr>
+  <tr>
+    <td class="editable" contenteditable="true">Obligación 1</td>
+    <td class="editable" contenteditable="true">USD XX,XXX</td>
+    <td class="editable" contenteditable="true">DD/MM/YYYY</td>
+    <td class="editable" contenteditable="true">Art. XX</td>
+  </tr>
+  <tr>
+    <td class="editable" contenteditable="true">Obligación 2</td>
+    <td class="editable" contenteditable="true">USD XX,XXX</td>
+    <td class="editable" contenteditable="true">DD/MM/YYYY</td>
+    <td class="editable" contenteditable="true">Art. XX</td>
+  </tr>
+  <tr>
+    <td class="editable" contenteditable="true">Obligación 3</td>
+    <td class="editable" contenteditable="true">USD XX,XXX</td>
+    <td class="editable" contenteditable="true">DD/MM/YYYY</td>
+    <td class="editable" contenteditable="true">Art. XX</td>
+  </tr>
+  <tr>
+    <td><b>EXPOSICIÓN TOTAL ESTIMADA</b></td>
+    <td colspan="3"><b class="editable" contenteditable="true">USD XX,XXX — XX,XXX</b></td>
+  </tr>
+</table>
+
+<h2>§ 04 · HOJA DE RUTA</h2>
+<div class="next-steps">
+  <h3>Acciones recomendadas</h3>
+  <ol>
+    <li class="editable" contenteditable="true">Acción inmediata 1 — descripción y plazo</li>
+    <li class="editable" contenteditable="true">Acción a corto plazo 2 — descripción y plazo</li>
+    <li class="editable" contenteditable="true">Acción a medio plazo 3 — descripción y plazo</li>
+  </ol>
+</div>
+
+<h2>§ 05 · SIGUIENTE NIVEL</h2>
+<p style="font-size:13px;line-height:1.6">Este DCB identifica las obligaciones y cuantifica la exposición. Para un <b>Análisis Estratégico</b> con tres escenarios modelados, proyecciones y mapa de ejecución completo, contactar a <a href="mailto:contact@kaufmanadvisory.io" style="color:var(--gold)">contact@kaufmanadvisory.io</a> o visitar <a href="https://kaufmanadvisory.io/#honorarios" style="color:var(--gold)">kaufmanadvisory.io</a>.</p>
+
+<div class="disclaimer">
+  <b>AVISO LEGAL —</b> Este documento tiene carácter informativo y orientativo. No constituye asesoramiento legal ni fiscal vinculante. Las obligaciones y sanciones indicadas se basan en la normativa vigente a la fecha de emisión y pueden variar según cambios legislativos o circunstancias específicas del caso. Se recomienda consultar con un profesional habilitado en cada jurisdicción antes de tomar decisiones fiscales. Kaufman Advisory Group no se responsabiliza de decisiones tomadas exclusivamente en base a este documento sin verificación profesional adicional.
+</div>
+
+<div class="footer-doc">
+  <span>© 2026 KAUFMAN ADVISORY GROUP · CONFIDENCIAL</span>
+  <span>kaufmanadvisory.io · contact@kaufmanadvisory.io</span>
+</div>
+
+</body>
+</html>
