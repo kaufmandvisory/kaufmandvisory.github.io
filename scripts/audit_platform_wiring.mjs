@@ -5,11 +5,12 @@ async function assignedJson(file, prefix) {
   return JSON.parse(raw.slice(prefix.length).replace(/;\s*$/, ''));
 }
 
-const [platform, daily, workflow, edge, app, newsBuilder] = await Promise.all([
+const [platform, daily, edge, gasEdge, contextEdge, app, newsBuilder] = await Promise.all([
   assignedJson('../assets/platform-data.js', 'window.KAUFMAN_PLATFORM_DATA = '),
   assignedJson('../assets/daily-data.js', 'window.KAUFMAN_DAILY_DATA = '),
-  readFile(new URL('../.github/workflows/update-daily-data.yml', import.meta.url), 'utf8'),
   readFile(new URL('../.netlify-functions/market-snapshot.mjs', import.meta.url), 'utf8'),
+  readFile(new URL('../.netlify-functions/ethereum-gas.mjs', import.meta.url), 'utf8'),
+  readFile(new URL('../.netlify-functions/market-context.mjs', import.meta.url), 'utf8'),
   readFile(new URL('../assets/kaufman-app.js', import.meta.url), 'utf8'),
   readFile(new URL('./update_daily_data.py', import.meta.url), 'utf8')
 ]);
@@ -21,7 +22,6 @@ const unresolvedFiscal = fiscalFacts.filter((fact) => fact.status === 'NOT_DETER
 const web3Catalog = app.slice(app.indexOf("proyectos:{label:'Proyectos'"), app.indexOf("mineria:{label:'Minería'"));
 const web3Profiles = (web3Catalog.match(/\{id:'/g) || []).length;
 const web3AutomaticProfiles = (web3Catalog.match(/status:'auto'/g) || []).length;
-const dailyCronCount = (workflow.match(/cron:/g) || []).length;
 const edgeUsesPersistentWebSocket = /new\s+WebSocket\s*\(/.test(edge);
 const edgeFetchCalls = (edge.match(/fetch\(/g) || []).length;
 const newsRows = [...(daily.home_regulation || []), ...(daily.mining_news || [])];
@@ -34,10 +34,10 @@ const findings = [
     remediation: 'Desplegar un proceso server-side persistente con heartbeat, huecos y reconexión, y publicar internamente por SSE/WebSocket.'
   },
   {
-    id: 'A02', severity: 'HIGH', area: 'Gas',
-    finding: 'Las comisiones Ethereum no se actualizan cada 15 minutos en producción.',
-    evidence: `${dailyCronCount} cron diario genera platform-data; bloque observado ${platform.auxiliary.ethereum_fees.block_number}.`,
-    remediation: 'Mover eth_feeHistory a una función programada cada 15 minutos o a un proceso persistente con caché server-side.'
+    id: 'A02', severity: 'MEDIUM', area: 'ETF',
+    finding: 'Los flujos ETF automáticos dependen de un único agregador público y todavía no se reconcilian contra cada emisor.',
+    evidence: `Contexto automático=${/s-maxage=300/.test(contextEdge)}; gas independiente a un minuto=${/s-maxage=60/.test(gasEdge)}; fuente ETF=${platform.market_context.etf_flows?.source || 'no disponible'}.`,
+    remediation: 'Añadir una segunda fuente y reconciliar por ticker con los datos publicados por cada emisor antes de elevar la confianza.'
   },
   {
     id: 'A03', severity: 'HIGH', area: 'DEX',

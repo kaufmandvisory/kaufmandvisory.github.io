@@ -6,6 +6,7 @@ import { extractL2BeatProjectIcons, normalizeL2BeatSummary } from '../server/l2b
 import { SOURCE_REGISTRY, buildFiscalSnapshot, checkFiscalSource, validateFiscalSnapshot } from '../server/fiscal.js';
 import { REGULATORY_SOURCES, buildRegulationSnapshot, checkRegulatorySource, validateRegulationSnapshot } from '../server/regulation.js';
 import { buildEthereumFeeSnapshot } from '../server/auxiliary.js';
+import { buildDominanceSnapshot, buildOpenInterestSnapshot, buildDvolSnapshot, buildEtfFlowSnapshot } from '../server/market-context.js';
 import { selectDexPair, verifyDexPair } from '../server/dexscreener.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -130,6 +131,16 @@ async function historicalReturn(asset) {
 }
 const historicalReturns = Object.fromEntries((await Promise.all(assets.map(async (asset) => [asset.id, await attempt(() => historicalReturn(asset))]))).filter(([, value]) => value));
 
+const dvolEnd = Date.now();
+const dvolStart = dvolEnd - 6 * 60 * 60_000;
+const dvolUrl = (asset) => `https://www.deribit.com/api/v2/public/get_volatility_index_data?currency=${asset}&start_timestamp=${dvolStart}&end_timestamp=${dvolEnd}&resolution=60`;
+const [dominance, openInterest, impliedVolatility, etfFlows] = await Promise.all([
+  attempt(async () => buildDominanceSnapshot(await fetchJson('https://api.coingecko.com/api/v3/global'), receivedAt)),
+  attempt(async () => buildOpenInterestSnapshot(await fetchJson('https://api.llama.fi/overview/open-interest?excludeTotalDataChart=false&excludeTotalDataChartBreakdown=true'), receivedAt)),
+  attempt(async () => buildDvolSnapshot({ BTC: await fetchJson(dvolUrl('BTC')), ETH: await fetchJson(dvolUrl('ETH')) }, receivedAt)),
+  attempt(async () => buildEtfFlowSnapshot(await fetchText('https://coinflows.org/'), receivedAt))
+]);
+
 const tokenizationMarkets = await attempt(async () => {
   const [protocols, stablecoins] = await Promise.all([
     fetchJson('https://api.llama.fi/protocols'),
@@ -199,6 +210,18 @@ if (ethereumFees) {
   auxiliary.ethereum_fees = ethereumFees;
   auxiliary.ethereum_gas = { gas_gwei: ethereumFees.tiers.standard.max_fee_gwei, provider_timestamp: ethereumFees.provider_timestamp, received_at: receivedAt, verification_status: ethereumFees.verification_status, methodology: ethereumFees.methodology };
 }
+const marketContext = {
+  schema_version: 'kaufman-market-context-v1',
+  delivery_mode: 'STATIC_SNAPSHOT',
+  generated_at: receivedAt,
+  refresh_interval_ms: 5 * 60_000,
+  status: [dominance, openInterest, impliedVolatility, etfFlows, ethereumFees].every(Boolean) ? 'SNAPSHOT' : 'DEGRADED',
+  dominance,
+  open_interest: openInterest,
+  implied_volatility: impliedVolatility,
+  etf_flows: etfFlows,
+  ethereum_fees: ethereumFees
+};
 auxiliary.exchange_fees = await attempt(async () => {
   const payload = await fetchJson('https://api.kraken.com/0/public/AssetPairs?pair=XBTUSD&info=fees');
   const pair = Object.values(payload.result || {})[0];
@@ -259,6 +282,7 @@ const snapshot = {
   fiscal_intelligence: fiscalIntelligence,
   regulation_intelligence: regulationIntelligence,
   wallet_intelligence: walletIntelligence,
+  market_context: marketContext,
   thresholds: { snapshot_max_age_ms: 26 * 60 * 60_000, tokenization_max_age_ms: 24 * 60 * 60_000, l2beat_max_age_ms: 24 * 60 * 60_000, wallet_max_age_ms: 48 * 60 * 60_000, fiscal_max_age_ms: 48 * 60 * 60_000 },
   data_quality: {
     reference_assets: Object.keys(referencePrices).length,
@@ -268,7 +292,8 @@ const snapshot = {
     l2_available: Boolean(l2Intelligence),
     fiscal_jurisdictions: fiscalIntelligence.jurisdictions.length,
     regulation_regimes: regulationIntelligence.regimes.length,
-    wallet_releases: walletProducts.length
+    wallet_releases: walletProducts.length,
+    market_context_signals: [dominance, openInterest, impliedVolatility, etfFlows, ethereumFees].filter(Boolean).length
   }
 };
 
