@@ -24,18 +24,27 @@ export const REGULATORY_SOURCES = Object.freeze([
     id: 'es_cnmv_mica',
     jurisdiction: 'espana',
     authority: 'CNMV',
-    title: 'MiCA: nueva regulación de criptoactivos',
-    url: 'https://www.cnmv.es/Portal/mica/regulacion-criptoactivos?lang=es',
-    source_type: 'REGULATORY_GUIDANCE',
+    title: 'Comunicado sobre el fin del periodo transitorio de MiCA · 15 jun 2026',
+    url: 'https://www.cnmv.es/webservices/verdocumento/ver?e=Du5bkrJCdss1jpXrE00MMK5dehIxSu4zahhfYaOkxqlixji9EyeRa4lQi1By2gy3',
+    source_type: 'OFFICIAL_COMMUNICATION',
     binding_level: 'OFFICIAL_GUIDANCE'
   },
   {
     id: 'mx_fintech_law',
     jurisdiction: 'mexico',
     authority: 'Cámara de Diputados',
-    title: 'Ley para Regular las Instituciones de Tecnología Financiera · texto vigente',
-    url: 'https://www.diputados.gob.mx/LeyesBiblio/pdf/LRITF.pdf',
-    source_type: 'CONSOLIDATED_LAW',
+    title: 'Ley para Regular las Instituciones de Tecnología Financiera · publicación oficial',
+    url: 'https://sidof.segob.gob.mx/notas/5515623',
+    source_type: 'PRIMARY_LAW',
+    binding_level: 'PRIMARY_LAW'
+  },
+  {
+    id: 'mx_fintech_2025_reform',
+    jurisdiction: 'mexico',
+    authority: 'Diario Oficial de la Federación',
+    title: 'Última reforma de la Ley Fintech · 14 nov 2025',
+    url: 'https://sidof.segob.gob.mx/notas/5773097',
+    source_type: 'PRIMARY_LAW_AMENDMENT',
     binding_level: 'PRIMARY_LAW'
   },
   {
@@ -52,7 +61,7 @@ export const REGULATORY_SOURCES = Object.freeze([
     jurisdiction: 'emiratos-arabes-unidos',
     authority: 'Central Bank of the UAE',
     title: 'Payment Token Services Regulation',
-    url: 'https://rulebook.centralbank.ae/en/rulebook/payment-token-services-regulation',
+    url: 'https://rulebook.centralbank.ae/sites/default/files/en_net_file_store/CBUAE_EN_5731_VER1.pdf',
     source_type: 'REGULATORY_RULEBOOK',
     binding_level: 'BINDING'
   },
@@ -110,7 +119,7 @@ export const REGULATORY_REGIMES = Object.freeze([
     scope: 'Instituciones de tecnología financiera e instituciones de crédito dentro de las operaciones reguladas con activos virtuales.',
     practical_effect: 'La LRITF distribuye competencias entre CNBV y Banco de México; la Circular 4/2019 fija reglas para operaciones de instituciones reguladas con activos virtuales.',
     limitation: 'No debe presentarse como una licencia general para cualquier actividad cripto ni como una autorización automática para ofrecer un activo al público.',
-    source_ids: ['mx_fintech_law', 'mx_banxico_circular'],
+    source_ids: ['mx_fintech_law', 'mx_fintech_2025_reform', 'mx_banxico_circular'],
     legal_reviewed_at: '2026-07-13'
   },
   {
@@ -188,6 +197,9 @@ export function buildRegulationSnapshot(sourceHealth = {}, receivedAt = new Date
     http_status: sourceHealth[source.id]?.http_status || null,
     provider_timestamp: sourceHealth[source.id]?.provider_timestamp || null,
     content_fingerprint: sourceHealth[source.id]?.content_fingerprint || null,
+    content_type: sourceHealth[source.id]?.content_type || null,
+    observed_url: sourceHealth[source.id]?.observed_url || null,
+    access_method: 'PUBLIC_OFFICIAL_SOURCE',
     changed_in_session: detectedChanges.includes(source.id)
   }));
   const regimes = clone(REGULATORY_REGIMES);
@@ -243,7 +255,7 @@ export async function checkRegulatorySource(source, fetchImpl = fetch) {
       headers: {
         accept: 'text/html,application/xhtml+xml,application/pdf,application/json;q=0.9,*/*;q=0.8',
         range: 'bytes=0-65535',
-        'user-agent': 'Kaufman-Regulation-Intelligence/1.0 contact@kaufmanadvisory.io'
+        'user-agent': 'Mozilla/5.0 (compatible; KaufmanRegulationMonitor/1.1; +https://kaufmanadvisory.io)'
       },
       signal: AbortSignal.timeout(12_000)
     });
@@ -256,7 +268,9 @@ export async function checkRegulatorySource(source, fetchImpl = fetch) {
       http_status: response.status,
       provider_timestamp: response.headers.get('last-modified'),
       etag: response.headers.get('etag'),
-      content_fingerprint: fingerprint
+      content_fingerprint: fingerprint,
+      content_type: response.headers.get('content-type'),
+      observed_url: response.url || source.url
     };
   } catch (error) {
     return { checked_at: checkedAt, connection_status: 'DEGRADED', http_status: null, error: error.message };

@@ -155,7 +155,14 @@ assert.ok(Date.now() - Date.parse(regulation.generated_at) <= snapshot.threshold
 assert.equal(regulation.regimes.length, 5, 'unexpected regulation regime coverage');
 assert.equal(regulation.data_quality.demo_record_count, 0, 'regulation layer contains demo records');
 assert.equal(regulation.data_quality.sourced_regime_pct, 100, 'unsourced regulation regimes');
+assert.equal(regulation.data_quality.reachable_source_count, regulation.data_quality.source_count, 'official regulation sources are not fully reachable');
 const regulationSourceIds = new Set(regulation.sources.map((source) => source.id));
+for (const source of regulation.sources) {
+  assert.equal(source.connection_status, 'CONNECTED', `${source.id}: official source is not connected`);
+  assert.equal(source.access_method, 'PUBLIC_OFFICIAL_SOURCE', `${source.id}: source is not marked as public and official`);
+  assert.match(source.url, /^https:\/\//, `${source.id}: source must use HTTPS`);
+  assert.match(source.content_fingerprint || '', /^[a-f0-9]{64}$/, `${source.id}: source fingerprint missing`);
+}
 for (const regime of regulation.regimes) {
   assert.equal(regime.legal_status, 'VERIFIED', `${regime.id}: legal review status`);
   assert.ok(regime.authority && regime.effective && regime.scope && regime.practical_effect && regime.limitation, `${regime.id}: incomplete regulation regime`);

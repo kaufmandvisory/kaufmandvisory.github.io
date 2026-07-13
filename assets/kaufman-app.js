@@ -85,6 +85,7 @@
   const HOME_DIRECTORY_KEYS = ['empresas','bancos','exchanges','wallets','proyectos','mineria','hardware','riesgos'];
 
   const STATUS_LABELS = {verified:'VERIFICADO',unverified:'REVISIÓN NECESARIA',auto:'AUTOMÁTICO',offline:'NO DISPONIBLE'};
+  const REGULATION_LEVEL_LABELS = {BINDING:'VINCULANTE',OFFICIAL_RULEBOOK:'REGLAMENTO OFICIAL',OFFICIAL_GUIDANCE:'GUÍA OFICIAL',PRIMARY_LAW:'LEY PRIMARIA'};
   const ANTENNA_STREAM = '/api/market/stream';
   const PRICE = new Intl.NumberFormat('es-ES',{style:'currency',currency:'USD',maximumFractionDigits:2});
   const SMALL_USD = new Intl.NumberFormat('es-ES',{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:4});
@@ -1162,9 +1163,10 @@
     const sourceRoot=document.querySelector('[data-regulation-sources]');
     if(sourceRoot)sourceRoot.innerHTML=data.sources.map((source)=>{
       const connected=source.connection_status==='CONNECTED',pending=source.connection_status==='NOT_CHECKED';
-      const badge=pending?'<span class="kf-status unverified">COMPROBANDO</span>':connected?statusBadge('auto'):'<span class="kf-status offline">ACCESO AUTOMÁTICO BLOQUEADO</span>';
+      const badge=pending?'<span class="kf-status unverified">COMPROBANDO</span>':connected?'<span class="kf-status auto">FUENTE PÚBLICA CONECTADA</span>':'<span class="kf-status offline">FUENTE TEMPORALMENTE INACCESIBLE</span>';
       const observed=source.checked_at?`Observada ${ageLabel(ageMs(source.checked_at))}`:'Comprobación en curso';
-      return `<article class="kf-reg-source"><div><strong>${escapeHtml(source.authority)}</strong>${badge}</div><span>${escapeHtml(source.title)}</span><small>${escapeHtml(source.binding_level)} · ${escapeHtml(observed)}</small><a href="${safeExternalUrl(source.url)}" target="_blank" rel="noopener noreferrer">Fuente oficial ↗</a></article>`;
+      const bindingLabel=REGULATION_LEVEL_LABELS[source.binding_level]||source.binding_level;
+      return `<article class="kf-reg-source"><div><strong>${escapeHtml(source.authority)}</strong>${badge}</div><span>${escapeHtml(source.title)}</span><small>${escapeHtml(bindingLabel)} · ${escapeHtml(observed)}</small><a href="${safeExternalUrl(source.url)}" target="_blank" rel="noopener noreferrer">Fuente oficial ↗</a></article>`;
     }).join('');
     const regimeRoot=document.querySelector('[data-regulation-regimes]');
     if(regimeRoot)regimeRoot.innerHTML=data.regimes.map((regime)=>{

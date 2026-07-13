@@ -32,6 +32,16 @@ assert.ok(platform.tokenization_markets?.products?.length > 0, 'universo de toke
 assert.ok(platform.l2_intelligence?.projects?.length > 0, 'universo L2 vacío');
 assert.equal(platform.fiscal_intelligence?.data_quality?.fact_count, 40, 'matriz fiscal incompleta');
 assert.equal(platform.regulation_intelligence?.data_quality?.demo_record_count, 0, 'regulación contiene demostraciones');
+assert.equal(
+  platform.regulation_intelligence?.data_quality?.reachable_source_count,
+  platform.regulation_intelligence?.data_quality?.source_count,
+  'regulación contiene fuentes oficiales inaccesibles'
+);
+for (const source of platform.regulation_intelligence.sources) {
+  assert.equal(source.connection_status, 'CONNECTED', `${source.id}: fuente regulatoria no conectada`);
+  assert.equal(source.access_method, 'PUBLIC_OFFICIAL_SOURCE', `${source.id}: acceso oficial público no acreditado`);
+  assert.match(source.content_fingerprint || '', /^[a-f0-9]{64}$/, `${source.id}: huella de contenido ausente`);
+}
 assert.ok(Number.isFinite(platform.auxiliary?.ethereum_fees?.base_fee_gwei), 'gas Ethereum ausente');
 assert.ok(Number.isFinite(platform.auxiliary?.exchange_fees?.maker), 'comisión maker ausente');
 
