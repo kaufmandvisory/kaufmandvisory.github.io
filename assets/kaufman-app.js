@@ -763,14 +763,15 @@
     latestEthUsd=null;
     document.querySelectorAll('[data-market-asset]').forEach((element)=>{
       const reference=references[element.dataset.marketAsset];
-      const currentAge=reference?.provider_timestamp?ageMs(reference.provider_timestamp):null;
+      const referenceTimestamp=reference?.received_at||reference?.provider_timestamp;
+      const currentAge=referenceTimestamp?ageMs(referenceTimestamp):null;
       const status=reference?.price?freshnessFromAge(currentAge):'UNAVAILABLE';
       const publishable=status==='FRESH'&&Number.isFinite(Number(reference?.price));
       if(publishable){freshAssets.add(element.dataset.marketAsset);(reference.venues||[]).forEach((venue)=>freshVenues.add(venue))}
       if(publishable&&element.dataset.marketAsset==='ethereum')latestEthUsd=Number(reference.price);
       const price=element.querySelector('.kf-market-price'),age=element.querySelector('[data-market-age]'),venues=element.querySelector('[data-market-venues]');
       if(price)price.textContent=publishable?PRICE.format(reference.price):'No disponible';
-      if(age){age.textContent=publishable?ageLabel(currentAge):reference?.provider_timestamp?'Actualizando precio…':'Sin precio observado';setFreshness(age,status)}
+      if(age){age.textContent=publishable?ageLabel(currentAge):referenceTimestamp?'Actualizando precio…':'Sin precio observado';setFreshness(age,status)}
       if(venues)venues.textContent=publishable?(reference.venues||[]).join(' · '):'Esperando mercados frescos';
       const confidence=element.querySelector('[data-market-confidence]');
       if(confidence){const confidenceLabel={HIGH:'ALTA',MEDIUM:'MEDIA',LOW:'BAJA'}[reference?.confidence]||reference?.confidence;const verificationLabel={VERIFIED:'VERIFICADO',SINGLE_SOURCE:'UNA FUENTE'}[reference?.verification_status]||reference?.verification_status;confidence.textContent=publishable?`${confidenceLabel} · ${verificationLabel}`:'—'}
@@ -847,7 +848,7 @@
   function renderStablecoins(stablecoins={}){
     const root=document.querySelector('[data-stablecoin-grid]');
     if(!root)return;
-    root.innerHTML=['USDT','USDC'].map((currency)=>{const item=stablecoins[currency],itemAge=ageMs(item?.provider_timestamp),valid=item?.price&&freshnessFromAge(itemAge)==='FRESH';return `<article class="kf-stable-card"><span>${currency} / USD</span><strong>${valid?Number(item.price).toFixed(6):'No disponible'}</strong><small>${item?.provider_timestamp?ageLabel(itemAge):'Sin tipo observado'} · ${valid?item.venues.join(' · '):'no se normalizan parejas '+currency}</small></article>`}).join('');
+    root.innerHTML=['USDT','USDC'].map((currency)=>{const item=stablecoins[currency],itemAge=ageMs(item?.received_at||item?.provider_timestamp),valid=item?.price&&freshnessFromAge(itemAge)==='FRESH';return `<article class="kf-stable-card"><span>${currency} / USD</span><strong>${valid?Number(item.price).toFixed(6):'No disponible'}</strong><small>${item?.received_at||item?.provider_timestamp?ageLabel(itemAge):'Sin tipo observado'} · ${valid?item.venues.join(' · '):'no se normalizan parejas '+currency}</small></article>`}).join('');
   }
 
   function renderDexPools(pools=[]){
@@ -1415,7 +1416,7 @@
     if(marketEdgeRequest||document.hidden)return;
     marketEdgeRequest=(async()=>{
       try{
-        const response=await fetch(MARKET_EDGE_ENDPOINT,{headers:{Accept:'application/json'},cache:'no-store'});
+        const response=await fetch(MARKET_EDGE_ENDPOINT,{headers:{Accept:'application/json'}});
         if(!response.ok)throw new Error(`HTTP ${response.status}`);
         const snapshot=await response.json();
         if(!applyLiveMarketSnapshot(snapshot))throw new Error('Respuesta de mercado no válida');
@@ -1430,7 +1431,7 @@
   function startMarketEdgePolling(){
     if(marketEdgeTimer)return;
     pollMarketEdge();
-    marketEdgeTimer=window.setInterval(pollMarketEdge,4000);
+    marketEdgeTimer=window.setInterval(pollMarketEdge,3000);
   }
 
   function activateEcosystemTerritory(territoryId,{pin=false}={}){

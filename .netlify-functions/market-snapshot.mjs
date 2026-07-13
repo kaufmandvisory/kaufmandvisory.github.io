@@ -230,19 +230,20 @@ export default async (request) => {
   if (request.method !== 'GET') return new Response(JSON.stringify({ error: 'Método no permitido' }), { status: 405, headers: publicHeaders });
 
   const startedAt = Date.now();
-  const receivedAt = new Date().toISOString();
+  const requestTimestamp = new Date().toISOString();
   const [coinbaseResult, krakenResult, binanceResult] = await Promise.allSettled([
-    fetchCoinbase(receivedAt),
-    fetchKraken(receivedAt),
-    fetchBinance(receivedAt),
+    fetchCoinbase(requestTimestamp),
+    fetchKraken(requestTimestamp),
+    fetchBinance(requestTimestamp),
   ]);
   const coinbase = coinbaseResult.status === 'fulfilled' ? coinbaseResult.value.observations : [];
   const kraken = krakenResult.status === 'fulfilled' ? krakenResult.value.observations : [];
   const binance = binanceResult.status === 'fulfilled' ? binanceResult.value.observations : [];
   const nowMs = Date.now();
+  const calculatedAt = new Date(nowMs).toISOString();
 
-  const usdt = stablecoinReference('USDT', coinbase, kraken, receivedAt, nowMs);
-  const usdcDirect = stablecoinReference('USDC', coinbase, kraken, receivedAt, nowMs);
+  const usdt = stablecoinReference('USDT', coinbase, kraken, calculatedAt, nowMs);
+  const usdcDirect = stablecoinReference('USDC', coinbase, kraken, calculatedAt, nowMs);
   const binanceUsdcUsdt = binance.find((item) => item.product === 'USDCUSDT' && ageMs(item.providerTimestamp, nowMs) < FRESH_MS);
   const usdcCross = usdt && binanceUsdcUsdt ? {
     ...binanceUsdcUsdt,
@@ -258,7 +259,7 @@ export default async (request) => {
     price: median(usdcCandidates.map((item) => item.price)),
     currency: 'USD',
     provider_timestamp: new Date(Math.min(...usdcCandidates.map((item) => Date.parse(item.providerTimestamp)))).toISOString(),
-    received_at: receivedAt,
+    received_at: calculatedAt,
     age_ms: Math.max(...usdcCandidates.map((item) => ageMs(item.providerTimestamp, nowMs))),
     venues: usdcCandidates.map((item) => item.venue),
     methodology: 'Mercados fiat directos y cruce USDC/USDT solo cuando USDT/USD es fresco; nunca paridad asumida.',
@@ -283,20 +284,20 @@ export default async (request) => {
 
   const referencePrices = Object.fromEntries(Object.keys(ASSETS).map((assetId) => [
     assetId,
-    referencePrice(assetId, normalizedObservations.filter((item) => item.assetId === assetId), receivedAt, nowMs),
+    referencePrice(assetId, normalizedObservations.filter((item) => item.assetId === assetId), calculatedAt, nowMs),
   ]));
   const published = Object.values(referencePrices).filter((item) => Number.isFinite(item.price));
   const payload = {
     schema_version: 'kaufman-market-edge-v1',
     delivery_mode: 'LIVE_EDGE',
-    generated_at: new Date().toISOString(),
+    generated_at: calculatedAt,
     processing_ms: Date.now() - startedAt,
     reference_prices: referencePrices,
     stablecoin_fx: { USDT: usdt, USDC: usdc },
     providers: {
-      coinbase: providerState(coinbaseResult, receivedAt),
-      kraken: providerState(krakenResult, receivedAt),
-      binance: providerState(binanceResult, receivedAt),
+      coinbase: providerState(coinbaseResult, requestTimestamp),
+      kraken: providerState(krakenResult, requestTimestamp),
+      binance: providerState(binanceResult, requestTimestamp),
     },
     thresholds: { fresh_ms: FRESH_MS, stale_ms: 5_000, degraded_ms: 15_000, unavailable_ms: 60_000 },
     status: published.length === 3 ? 'LIVE' : published.length ? 'DEGRADED' : 'UNAVAILABLE',
@@ -305,4 +306,3 @@ export default async (request) => {
 };
 
 export const config = { path: '/api/market/snapshot' };
-
