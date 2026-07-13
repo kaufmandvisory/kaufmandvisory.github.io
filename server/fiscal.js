@@ -8,7 +8,7 @@ export const FISCAL_EVENTS = Object.freeze([
   { id: 'holding', label: 'Tenencia y declaración', short: 'Tenencia' }
 ]);
 
-const SOURCE_REGISTRY = Object.freeze([
+export const SOURCE_REGISTRY = Object.freeze([
   { id: 'es_irpf_crypto', jurisdiction: 'espana', authority: 'Agencia Tributaria', title: 'IRPF 2025 · monedas virtuales', url: 'https://sede.agenciatributaria.gob.es/Sede/ayuda/manuales-videos-folletos/manuales-practicos/irpf-2025/c11-ganancias-perdidas-patrimoniales/monedas-virtuales/compra-venta-monedas-virtuales-tributacion-inversor.html', source_type: 'ADMINISTRATIVE_GUIDANCE', binding_level: 'OFFICIAL_GUIDANCE', source_updated_at: '2025-07-29', monitor: true },
   { id: 'es_savings_rates', jurisdiction: 'espana', authority: 'Agencia Tributaria', title: 'Gravamen de la base liquidable del ahorro', url: 'https://sede.agenciatributaria.gob.es/Sede/ayuda/manuales-videos-folletos/manuales-practicos/irpf-2025/c15-calculo-impuesto-determinacion-cuotas-integras/gravamen-aplicable-contribuyentes-irpf-residentes-extranjero/gravamen-base-liquidatable-ahorro.html'.replace('liquidatable','liquidable'), source_type: 'ADMINISTRATIVE_GUIDANCE', binding_level: 'OFFICIAL_GUIDANCE', source_updated_at: '2026-03-17' },
   { id: 'es_modelo_721', jurisdiction: 'espana', authority: 'Agencia Tributaria', title: 'Modelo 721 · monedas virtuales en el extranjero', url: 'https://sede.agenciatributaria.gob.es/Sede/todas-gestiones/impuestos-tasas/declaraciones-informativas/modelo-721-decla-sobre-monedas-extranjero/preguntas-frecuentes-sobre-modelo-721/cuando-se-entiende-moneda-virtual-extranjero.html', source_type: 'ADMINISTRATIVE_GUIDANCE', binding_level: 'OFFICIAL_GUIDANCE', source_updated_at: null },
@@ -198,7 +198,7 @@ export function validateFiscalSnapshot(snapshot) {
   return true;
 }
 
-async function checkUrl(source, fetchImpl) {
+export async function checkFiscalSource(source, fetchImpl = fetch) {
   const checkedAt = new Date().toISOString();
   try {
     let response = await fetchImpl(source.url, { method: 'HEAD', redirect: 'follow', headers: { 'user-agent': 'Kaufman-Fiscal-Intelligence/1.0' }, signal: AbortSignal.timeout(8_000) });
@@ -233,7 +233,7 @@ export class FiscalConnector {
 
   async refresh() {
     const monitored = SOURCE_REGISTRY.filter((source) => source.monitor);
-    const results = await Promise.all(monitored.map(async (source) => [source.id, await checkUrl(source, this.fetchImpl)]));
+    const results = await Promise.all(monitored.map(async (source) => [source.id, await checkFiscalSource(source, this.fetchImpl)]));
     this.sourceHealth = Object.fromEntries(results);
     const snapshot = buildFiscalSnapshot(this.sourceHealth);
     validateFiscalSnapshot(snapshot);

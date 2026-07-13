@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node server/index.js",
     "test": "node --test server/*.test.js",
-    "validate": "node scripts/validate_market_antenna.mjs"
+    "validate": "node scripts/validate_market_antenna.mjs && node scripts/validate_static_data.mjs"
   },
   "engines": {
     "node": ">=22"

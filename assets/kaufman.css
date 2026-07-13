@@ -233,6 +233,7 @@ img{max-width:100%;display:block}
 .kf-provider-card p{margin:10px 0 0;color:var(--kf-red);font-size:7px;line-height:1.45;word-break:break-word}
 .kf-health-dot{flex:0 0 auto;width:8px;height:8px;border-radius:50%;background:var(--kf-muted)}
 .kf-health-dot.connected{background:var(--kf-green);box-shadow:0 0 0 4px rgba(36,168,121,.1)}
+.kf-health-dot.snapshot{background:var(--kf-blue);box-shadow:0 0 0 4px rgba(45,91,211,.1)}
 .kf-health-dot.connecting,.kf-health-dot.reconnecting{background:var(--kf-yellow)}
 .kf-health-dot.degraded,.kf-health-dot.disconnected,.kf-health-dot.unavailable{background:var(--kf-red)}
 .kf-contract{display:block;max-width:300px;margin-top:5px;color:var(--kf-muted);font-size:7px;line-height:1.35;word-break:break-all}

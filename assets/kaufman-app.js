@@ -4,21 +4,21 @@
   const ROUTES = [
     {key:'mercados',label:'Mercados',path:'/mercados/',code:'DATA',description:'Precios, variaciones, gas y métricas conectadas.',tone:'auto'},
     {key:'regulacion',label:'Regulación',path:'/regulacion/',code:'LAW',description:'Leyes, consultas y guías por estado jurídico.',tone:'verified'},
-    {key:'tokenizacion',label:'Tokenización',path:'/tokenizacion/',code:'RWA',description:'Entidades, iniciativas, redes y madurez verificable.',tone:'demo'},
+    {key:'tokenizacion',label:'Tokenización',path:'/tokenizacion/',code:'RWA',description:'Entidades, iniciativas, redes y madurez verificable.',tone:'auto'},
     {key:'herramientas',label:'Herramientas',path:'/herramientas/',code:'TOOLS',description:'Cálculo minero, cruce fiscal y alertas de disponibilidad.',tone:'auto'},
-    {key:'empresas',label:'Empresas',path:'/empresas/',code:'CORP',description:'Actividad, exposición y proyectos blockchain.',tone:'demo'},
-    {key:'bancos',label:'Bancos',path:'/bancos/',code:'BANK',description:'Custodia, pagos, tokenización y acceso.',tone:'demo'},
-    {key:'exchanges',label:'Exchanges',path:'/exchanges/',code:'CEX',description:'Jurisdicción, licencias, comisiones y custodia.',tone:'demo'},
-    {key:'wallets',label:'Wallets',path:'/wallets/',code:'KEYS',description:'Custodia, redes, seguridad y compatibilidad.',tone:'demo'},
-    {key:'proyectos',label:'Proyectos',path:'/proyectos/',code:'BUILD',description:'Redes, protocolos, actividad y gobernanza.',tone:'demo'},
-    {key:'mineria',label:'Minería',path:'/mineria/',code:'POW',description:'Red, dificultad, energía y economía minera.',tone:'demo'},
-    {key:'hardware',label:'Hardware',path:'/hardware/',code:'ASIC',description:'Equipos, eficiencia, algoritmos y disponibilidad.',tone:'demo'},
+    {key:'empresas',label:'Empresas',path:'/empresas/',code:'CORP',description:'Actividad, exposición y proyectos blockchain.',tone:'auto'},
+    {key:'bancos',label:'Bancos',path:'/bancos/',code:'BANK',description:'Custodia, pagos, tokenización y acceso.',tone:'verified'},
+    {key:'exchanges',label:'Exchanges',path:'/exchanges/',code:'CEX',description:'Jurisdicción, licencias, comisiones y custodia.',tone:'auto'},
+    {key:'wallets',label:'Wallets',path:'/wallets/',code:'KEYS',description:'Custodia, redes, seguridad y compatibilidad.',tone:'auto'},
+    {key:'proyectos',label:'Proyectos',path:'/proyectos/',code:'BUILD',description:'Redes, protocolos, actividad y gobernanza.',tone:'auto'},
+    {key:'mineria',label:'Minería',path:'/mineria/',code:'POW',description:'Red, dificultad, energía y economía minera.',tone:'auto'},
+    {key:'hardware',label:'Hardware',path:'/hardware/',code:'ASIC',description:'Equipos, eficiencia, algoritmos y disponibilidad.',tone:'verified'},
     {key:'rentabilidades',label:'Rentabilidades',path:'/rentabilidades/',code:'RETURN',description:'Rendimiento observado por periodo, sin predicciones.',tone:'auto'},
-    {key:'riesgos',label:'Riesgos',path:'/riesgos/',code:'RISK',description:'Custodia, mercado, tecnología y regulación.',tone:'demo'},
+    {key:'riesgos',label:'Riesgos',path:'/riesgos/',code:'RISK',description:'Custodia, mercado, tecnología y regulación.',tone:'verified'},
     {key:'fiscal',label:'Fiscal',path:'/fiscal/',code:'TAX',description:'Hechos fiscales blockchain comparados por jurisdicción, evento y nivel de certeza.',tone:'auto'}
   ];
 
-  const DEMO_VALUE = 'DEMO · dato no conectado';
+  const MISSING_VALUE = 'No cubierto por esta fuente';
   const CATALOGS = {
     regulacion:{
       label:'Regulación',description:'Estados jurídicos, fechas de aplicación y fuentes primarias. La automatización detecta; la revisión jurídica verifica.',
@@ -30,61 +30,61 @@
         {id:'dubai-vara',name:'Activos virtuales · Dubái',subtitle:'VARA · excepto DIFC',status:'verified',checked:'13 jul 2026',source:{name:'VARA',url:'https://rulebooks.vara.ae/rulebook/virtual-assets-and-related-activities-regulations-2023',type:'Rulebook oficial'},fields:{'Estado':'En vigor','Autoridad':'Virtual Assets Regulatory Authority','Vigencia':'Versión vigente desde 19 jun 2025','Alcance':'Mainland y free zones de Dubái, salvo DIFC'}}
       ]
     },
-    fiscal:{label:'Fiscal',description:'Comparación de marcos fiscales y operativos por jurisdicción. Ninguna ficha se considera vigente hasta conectar y revisar sus fuentes.',items:[
-      {id:'espana',name:'España',subtitle:'Unión Europea',status:'demo',fields:{'Marco regulatorio':DEMO_VALUE,'Fiscalidad':DEMO_VALUE,'Licencias':DEMO_VALUE,'Última revisión':DEMO_VALUE}},
-      {id:'mexico',name:'México',subtitle:'América del Norte',status:'demo',fields:{'Marco regulatorio':DEMO_VALUE,'Fiscalidad':DEMO_VALUE,'Licencias':DEMO_VALUE,'Última revisión':DEMO_VALUE}},
-      {id:'argentina',name:'Argentina',subtitle:'América del Sur',status:'demo',fields:{'Marco regulatorio':DEMO_VALUE,'Fiscalidad':DEMO_VALUE,'Licencias':DEMO_VALUE,'Última revisión':DEMO_VALUE}},
-      {id:'colombia',name:'Colombia',subtitle:'América del Sur',status:'demo',fields:{'Marco regulatorio':DEMO_VALUE,'Fiscalidad':DEMO_VALUE,'Licencias':DEMO_VALUE,'Última revisión':DEMO_VALUE}},
-      {id:'chile',name:'Chile',subtitle:'América del Sur',status:'demo',fields:{'Marco regulatorio':DEMO_VALUE,'Fiscalidad':DEMO_VALUE,'Licencias':DEMO_VALUE,'Última revisión':DEMO_VALUE}},
-      {id:'portugal',name:'Portugal',subtitle:'Unión Europea',status:'demo',fields:{'Marco regulatorio':DEMO_VALUE,'Fiscalidad':DEMO_VALUE,'Licencias':DEMO_VALUE,'Última revisión':DEMO_VALUE}},
-      {id:'estados-unidos',name:'Estados Unidos',subtitle:'Federal y estatal',status:'demo',fields:{'Marco regulatorio':DEMO_VALUE,'Fiscalidad':DEMO_VALUE,'Licencias':DEMO_VALUE,'Última revisión':DEMO_VALUE}},
-      {id:'emiratos-arabes-unidos',name:'Emiratos Árabes Unidos',subtitle:'Oriente Medio',status:'demo',fields:{'Marco regulatorio':DEMO_VALUE,'Fiscalidad':DEMO_VALUE,'Licencias':DEMO_VALUE,'Última revisión':DEMO_VALUE}}
+    fiscal:{label:'Fiscal',description:'Hechos fiscales blockchain comparados por jurisdicción, evento, fuente oficial y nivel de certeza.',items:[
+      {id:'espana',name:'España',subtitle:'Persona física · inversión',status:'verified',source:{name:'Agencia Tributaria',url:'https://sede.agenciatributaria.gob.es/Sede/ayuda/manuales-videos-folletos/manuales-practicos/irpf-2025/c11-ganancias-perdidas-patrimoniales/monedas-virtuales/compra-venta-monedas-virtuales-tributacion-inversor.html',type:'Guía administrativa oficial'},fields:{'Venta y permuta':'Ganancia o pérdida patrimonial','Tenencia exterior':'Puede activar Modelo 721','Cobertura':'IRPF · inversión fuera de actividad','Revisión jurídica':'13 jul 2026'}},
+      {id:'portugal',name:'Portugal',subtitle:'Pessoa singular · criptoativo',status:'verified',source:{name:'Autoridade Tributária',url:'https://info.portaldasfinancas.gov.pt/pt/informacao_fiscal/codigos_tributarios/cirs_rep/Pages/irs10.aspx',type:'Código do IRS consolidado'},fields:{'Venta':'Tratamiento condicionado por 365 días','Permuta cripto':'Diferimiento bajo condiciones','Cobertura':'Categoria G · persona singular','Revisión jurídica':'13 jul 2026'}},
+      {id:'estados-unidos',name:'Estados Unidos',subtitle:'Impuesto federal',status:'verified',source:{name:'Internal Revenue Service',url:'https://www.irs.gov/filing/digital-assets',type:'Guía administrativa oficial'},fields:{'Venta y permuta':'Disposición de propiedad','Staking y minería':'Ingreso ordinario según el hecho','Reporte':'Form 8949 · Schedule D · 1099-DA','Límite':'Excluye impuestos estatales'}},
+      {id:'emiratos-arabes-unidos',name:'Emiratos Árabes Unidos',subtitle:'Persona física · marco federal',status:'verified',source:{name:'Federal Tax Authority',url:'https://tax.gov.ae/en/taxes/corporate.tax/corporate.tax.topics/basis.of.taxation.natural.person.aspx',type:'Guía administrativa oficial'},fields:{'Inversión personal':'Fuera de business activity para Corporate Tax','Actividad':'Depende de hechos y volumen de negocio','Minería':'Análisis CT y VAT separado','Revisión jurídica':'13 jul 2026'}},
+      {id:'argentina',name:'Argentina',subtitle:'Persona humana · marco nacional',status:'verified',source:{name:'ARCA',url:'https://arca.gob.ar/economia-digital/criptoactivos/impuesto-a-las-ganancias.asp',type:'Guía administrativa oficial'},fields:{'Venta y permuta':'Enajenación alcanzada','Minería':'Renta gravada según actividad','Tenencia':'Bienes Personales bajo condiciones','Revisión jurídica':'13 jul 2026'}},
+      {id:'colombia',name:'Colombia',subtitle:'Persona natural · reglas generales',status:'verified',source:{name:'DIAN',url:'https://normograma.dian.gov.co/dian/compilacion/docs/oficio_dian_18075_2023.htm',type:'Concepto unificado oficial'},fields:{'Clasificación':'Activo intangible','Venta y permuta':'Ingreso según reglas generales','Tenencia':'Información patrimonial','Revisión jurídica':'13 jul 2026'}},
+      {id:'chile',name:'Chile',subtitle:'Persona natural · marco nacional',status:'verified',source:{name:'Servicio de Impuestos Internos',url:'https://www.sii.cl/preguntas_frecuentes/criptomonedas/001_250_7833.htm',type:'Guía administrativa oficial'},fields:{'Venta':'Renta por diferencia de valor','IVA':'Bien incorporal · tratamiento específico','Reporte':'F1964 para sujetos obligados','Revisión jurídica':'13 jul 2026'}},
+      {id:'mexico',name:'México',subtitle:'Criterio interpretativo',status:'unverified',source:{name:'PRODECON',url:'https://www.prodecon.gob.mx/Documentos/bannerPrincipal/2021/CRIPTOMONEDAS_.pdf',type:'Estudio oficial no vinculante'},fields:{'Venta':'Análisis como enajenación de bienes','Permuta':'No determinada en la fuente','Staking':'No determinado','Nivel de certeza':'Interpretativo · revisión necesaria'}}
     ]},
-    empresas:{label:'Empresas',description:'Fichas para separar anuncios, exposición contable, infraestructura y actividad verificable.',items:[
-      {id:'coinbase',name:'Coinbase',subtitle:'Ficha corporativa',status:'demo',fields:{'Jurisdicción':DEMO_VALUE,'Actividad blockchain':DEMO_VALUE,'Exposición':DEMO_VALUE,'Fuente financiera':DEMO_VALUE}},
-      {id:'strategy',name:'Strategy',subtitle:'Ficha corporativa',status:'demo',fields:{'Jurisdicción':DEMO_VALUE,'Actividad blockchain':DEMO_VALUE,'Exposición':DEMO_VALUE,'Fuente financiera':DEMO_VALUE}},
-      {id:'consensys',name:'Consensys',subtitle:'Ficha corporativa',status:'demo',fields:{'Jurisdicción':DEMO_VALUE,'Actividad blockchain':DEMO_VALUE,'Exposición':DEMO_VALUE,'Fuente financiera':DEMO_VALUE}}
+    empresas:{label:'Empresas',description:'Actividad corporativa y exposición descritas desde registros regulatorios o fuentes corporativas primarias.',items:[
+      {id:'coinbase',name:'Coinbase',subtitle:'Compañía cotizada · infraestructura',status:'auto',source:{name:'SEC EDGAR',url:'https://data.sec.gov/submissions/CIK0001679788.json',type:'Registro de filings'},fields:{'Entidad':'Coinbase Global, Inc.','Mercado':'Nasdaq · COIN','Actividad':'Exchange, custodia e infraestructura','Control':'Filings SEC monitorizados'}},
+      {id:'strategy',name:'Strategy',subtitle:'Compañía cotizada · tesorería Bitcoin',status:'auto',source:{name:'SEC EDGAR',url:'https://data.sec.gov/submissions/CIK0001050446.json',type:'Registro de filings'},fields:{'Entidad':'Strategy Inc.','Mercado':'Nasdaq · MSTR','Actividad':'Software empresarial y estrategia de tesorería Bitcoin','Control':'Filings SEC monitorizados'}},
+      {id:'consensys',name:'Consensys',subtitle:'Empresa privada · infraestructura Ethereum',status:'verified',source:{name:'Consensys',url:'https://consensys.io/',type:'Fuente corporativa primaria'},fields:{'Actividad':'Infraestructura y software Ethereum','Productos':'MetaMask · Infura · Linea · clientes de protocolo','Tipo':'Empresa privada','Límite':'La fuente corporativa no sustituye estados auditados'}}
     ]},
-    bancos:{label:'Bancos',description:'Servicios blockchain declarados, custodia, pagos y tokenización. Cada capacidad requiere una fuente vigente.',items:[
-      {id:'bbva',name:'BBVA',subtitle:'Ficha bancaria',status:'demo',fields:{'Jurisdicción':DEMO_VALUE,'Custodia':DEMO_VALUE,'Tokenización':DEMO_VALUE,'Acceso minorista':DEMO_VALUE}},
-      {id:'jpmorgan',name:'JPMorgan',subtitle:'Ficha bancaria',status:'demo',fields:{'Jurisdicción':DEMO_VALUE,'Custodia':DEMO_VALUE,'Tokenización':DEMO_VALUE,'Acceso minorista':DEMO_VALUE}},
-      {id:'sygnum',name:'Sygnum',subtitle:'Ficha bancaria',status:'demo',fields:{'Jurisdicción':DEMO_VALUE,'Custodia':DEMO_VALUE,'Tokenización':DEMO_VALUE,'Acceso minorista':DEMO_VALUE}}
+    bancos:{label:'Bancos',description:'Servicios blockchain declarados: custodia, pagos, depósitos tokenizados y acceso a activos digitales.',items:[
+      {id:'bbva',name:'BBVA',subtitle:'Banca minorista · España',status:'verified',source:{name:'BBVA',url:'https://www.bbva.com/es/innovacion/bbva-ofrecera-servicios-de-compraventa-y-custodia-de-bitcoin-y-ether-en-espana/',type:'Comunicado corporativo'},fields:{'Servicio':'Compraventa y custodia de BTC y ETH','Canal':'Aplicación BBVA','Custodia':'Plataforma propia declarada','Marco':'Notificación MiCA ante CNMV'}},
+      {id:'jpmorgan',name:'J.P. Morgan · Kinexys',subtitle:'Pagos y activos tokenizados',status:'verified',source:{name:'J.P. Morgan',url:'https://www.jpmorgan.com/kinexys/digital-assets',type:'Producto corporativo primario'},fields:{'Infraestructura':'Kinexys Digital Assets','Casos':'Tokenización, gestión y liquidación de activos','Dinero':'Blockchain Deposit Accounts','Acceso':'Institucional · sujeto a elegibilidad'}},
+      {id:'sygnum',name:'Sygnum',subtitle:'Banco de activos digitales',status:'verified',source:{name:'Sygnum Bank',url:'https://www.sygnum.com/sygnum-bank/',type:'Fuente corporativa primaria'},fields:{'Licencia declarada':'Banco regulado por FINMA en Suiza','Servicios':'Trading, custodia, staking y tokenización','Cliente':'Profesional e institucional','Control':'Verificar alcance en registro del regulador'}}
     ]},
-    exchanges:{label:'Exchanges',description:'Comparación de jurisdicción, licencias, mercados, comisiones y modelo de custodia.',items:[
-      {id:'coinbase',name:'Coinbase',subtitle:'Exchange centralizado',status:'demo',fields:{'Jurisdicción':DEMO_VALUE,'Licencias':DEMO_VALUE,'Comisiones':DEMO_VALUE,'Custodia':DEMO_VALUE}},
-      {id:'kraken',name:'Kraken',subtitle:'Exchange centralizado',status:'demo',fields:{'Jurisdicción':DEMO_VALUE,'Licencias':DEMO_VALUE,'Comisiones':DEMO_VALUE,'Custodia':DEMO_VALUE}},
-      {id:'bitstamp',name:'Bitstamp',subtitle:'Exchange centralizado',status:'demo',fields:{'Jurisdicción':DEMO_VALUE,'Licencias':DEMO_VALUE,'Comisiones':DEMO_VALUE,'Custodia':DEMO_VALUE}}
+    exchanges:{label:'Exchanges',description:'Plataformas contrastadas con registros regulatorios, tarifas públicas y metodología de coste total.',items:[
+      {id:'coinbase',name:'Coinbase',subtitle:'Exchange centralizado',status:'verified',source:{name:'Coinbase · licencias europeas',url:'https://www.coinbase.com/en-de/legal/licenses/europe',type:'Divulgación regulatoria del proveedor'},fields:{'Cobertura':'Europa · verificar entidad contratante','Autorización':'Comprobar servicios y pasaporte en ESMA','Precio':'Coinbase REST/WebSocket entra en Kaufman Reference Price','Riesgo':'Custodia y contraparte centralizada'}},
+      {id:'kraken',name:'Kraken',subtitle:'Exchange centralizado',status:'auto',source:{name:'Kraken AssetPairs API',url:'https://docs.kraken.com/api/docs/rest-api/get-tradable-asset-pairs',type:'API y documentación oficial'},fields:{'Mercado de referencia':'BTC/USD · ETH/USD · SOL/USD','Comisiones':'Primer tramo maker/taker conectado diariamente','Precio':'Kraken entra en la mediana Kaufman','Riesgo':'Verificar entidad, licencia y servicios por país'}},
+      {id:'bitstamp',name:'Bitstamp',subtitle:'Exchange centralizado',status:'verified',source:{name:'ESMA MiCA Register',url:'https://www.esma.europa.eu/publications-and-data/interactive-single-rulebook/mica',type:'Registro regulatorio europeo'},fields:{'Autorización UE':'Consultar entidad y servicios en registro MiCA','Precio':'No forma parte de Kaufman Reference Price v1','Comisiones':'Requiere tarifa aplicable al cliente y volumen','Riesgo':'Custodia y contraparte centralizada'}}
     ]},
-    wallets:{label:'Wallets',description:'Custodia, seguridad, redes y compatibilidad. No se publican puntuaciones hasta tener una metodología reproducible.',items:[
-      {id:'ledger',name:'Ledger',subtitle:'Hardware wallet',status:'demo',fields:{'Tipo':DEMO_VALUE,'Custodia':DEMO_VALUE,'Redes':DEMO_VALUE,'Auditoría':DEMO_VALUE}},
-      {id:'trezor',name:'Trezor',subtitle:'Hardware wallet',status:'demo',fields:{'Tipo':DEMO_VALUE,'Custodia':DEMO_VALUE,'Redes':DEMO_VALUE,'Auditoría':DEMO_VALUE}},
-      {id:'metamask',name:'MetaMask',subtitle:'Software wallet',status:'demo',fields:{'Tipo':DEMO_VALUE,'Custodia':DEMO_VALUE,'Redes':DEMO_VALUE,'Auditoría':DEMO_VALUE}}
+    wallets:{label:'Wallets',description:'Custodia, superficie de actualización y código público; no se publica una puntuación comercial sin evidencia reproducible.',items:[
+      {id:'ledger',name:'Ledger Live',subtitle:'Software para signer hardware',status:'auto',source:{name:'LedgerHQ GitHub',url:'https://github.com/LedgerHQ/ledger-live/releases',type:'Releases oficiales'},fields:{'Custodia':'Claves controladas mediante dispositivo','Actualizaciones':'Releases públicas monitorizables','Código':'Repositorio público Ledger Live','Control crítico':'Verificar binario, firma y versión instalada'}},
+      {id:'trezor',name:'Trezor Suite',subtitle:'Software para hardware wallet',status:'auto',source:{name:'Trezor GitHub',url:'https://github.com/trezor/trezor-suite/releases',type:'Releases oficiales'},fields:{'Custodia':'Claves controladas mediante dispositivo','Actualizaciones':'Releases públicas monitorizables','Código':'Repositorio público Trezor Suite','Control crítico':'Verificar dominio, firmware y copia de seguridad'}},
+      {id:'metamask',name:'MetaMask',subtitle:'Wallet software multired',status:'auto',source:{name:'MetaMask GitHub',url:'https://github.com/MetaMask/metamask-extension/releases',type:'Releases oficiales'},fields:{'Custodia':'Self-custody en software','Actualizaciones':'Releases públicas monitorizables','Código':'Extensión con repositorio público','Control crítico':'Permisos, phishing y red seleccionada'}}
     ]},
-    proyectos:{label:'Proyectos',description:'Redes y protocolos descritos por actividad, tecnología, gobernanza y riesgos con fuentes directas.',items:[
-      {id:'ethereum',name:'Ethereum',subtitle:'Red blockchain',status:'demo',fields:{'Categoría':DEMO_VALUE,'Actividad':DEMO_VALUE,'Gobernanza':DEMO_VALUE,'Riesgo técnico':DEMO_VALUE}},
-      {id:'solana',name:'Solana',subtitle:'Red blockchain',status:'demo',fields:{'Categoría':DEMO_VALUE,'Actividad':DEMO_VALUE,'Gobernanza':DEMO_VALUE,'Riesgo técnico':DEMO_VALUE}},
-      {id:'chainlink',name:'Chainlink',subtitle:'Infraestructura blockchain',status:'demo',fields:{'Categoría':DEMO_VALUE,'Actividad':DEMO_VALUE,'Gobernanza':DEMO_VALUE,'Riesgo técnico':DEMO_VALUE}}
+    proyectos:{label:'Proyectos',description:'Infraestructura, hoja de ruta, etapa y riesgos explicados desde fuentes técnicas especializadas.',items:[
+      {id:'ethereum',name:'Ethereum',subtitle:'L1 · ejecución y liquidación',status:'auto',source:{name:'ethereum.org',url:'https://ethereum.org/roadmap/',type:'Hoja de ruta oficial'},fields:{'Consenso':'Proof of Stake','Hoja de ruta':'Actualizaciones públicas y EIP','Escalado':'L2 y disponibilidad de datos','Control':'Fechas futuras sujetas a desarrollo'}},
+      {id:'arbitrum',name:'Arbitrum One',subtitle:'L2 · optimistic rollup',status:'auto',source:{name:'L2BEAT',url:'https://l2beat.com/scaling/projects/arbitrum',type:'Ficha técnica y matriz de riesgos'},fields:{'Categoría':'Layer 2','Datos':'TVS, etapa, stack y disponibilidad','Riesgos':'Upgrades, secuenciador, validación y salida','Traducción':'Kaufman conserva el campo original y lo explica'}},
+      {id:'chainlink',name:'Chainlink CCIP',subtitle:'Interoperabilidad y mensajería',status:'verified',source:{name:'Chainlink Documentation',url:'https://docs.chain.link/ccip',type:'Documentación técnica primaria'},fields:{'Categoría':'Infraestructura cross-chain','Función':'Mensajería y transferencia de tokens','Modelo':'Redes y contratos por cadena','Riesgo':'Dependencias, permisos y configuración de integración'}}
     ]},
-    mineria:{label:'Minería',description:'Métricas técnicas y económicas por red. Hasta conectar nodos y proveedores, las celdas se muestran como DEMO.',items:[
-      {id:'bitcoin-sha256',name:'Bitcoin / SHA-256',subtitle:'Red de prueba de trabajo',status:'demo',fields:{'Hashrate':DEMO_VALUE,'Dificultad':DEMO_VALUE,'Recompensa':DEMO_VALUE,'Próximo ajuste':DEMO_VALUE}},
-      {id:'litecoin-scrypt',name:'Litecoin / Scrypt',subtitle:'Red de prueba de trabajo',status:'demo',fields:{'Hashrate':DEMO_VALUE,'Dificultad':DEMO_VALUE,'Recompensa':DEMO_VALUE,'Próximo ajuste':DEMO_VALUE}},
-      {id:'operacion-minera',name:'Economía de operación',subtitle:'Modelo de costes',status:'demo',fields:{'Energía':DEMO_VALUE,'Hardware':DEMO_VALUE,'Uptime':DEMO_VALUE,'Resultado':DEMO_VALUE}}
+    mineria:{label:'Minería',description:'Estado de la red Bitcoin, dificultad, concentración de pools y economía de operación con fuentes públicas.',items:[
+      {id:'bitcoin-sha256',name:'Red Bitcoin · SHA-256',subtitle:'Hashrate y dificultad',status:'auto',source:{name:'mempool.space API',url:'https://mempool.space/docs/api/rest',type:'API pública de red'},fields:{'Hashrate':'Snapshot diario conectado','Dificultad':'Valor y ajuste estimado conectados','Bloques':'Altura y tiempo observables','Cadencia pública':'Diaria en GitHub Pages'}},
+      {id:'pools-bitcoin',name:'Pools de Bitcoin',subtitle:'Concentración de producción',status:'auto',source:{name:'mempool.space Mining API',url:'https://mempool.space/docs/api/rest',type:'API pública de minería'},fields:{'Universo':'Bloques identificados por pool','Ventanas':'24 h a 3 años según endpoint','Uso':'Concentración y dependencia operativa','Límite':'Identificación de pool basada en heurísticas públicas'}},
+      {id:'operacion-minera',name:'Economía S21 XP',subtitle:'Ingreso y electricidad de equilibrio',status:'auto',source:{name:'BITMAIN Support',url:'https://support.bitmain.com/hc/en-us/articles/35383015643673-S21-XP-Specifications',type:'Especificación oficial'},fields:{'Equipo':'Antminer S21 XP','Hashrate':'270 TH/s típico','Potencia':'3.645 W típica','Resultado':'Calculado con red y precio observados'}}
     ]},
-    hardware:{label:'Hardware',description:'Comparador de equipos y categorías por algoritmo, potencia, eficiencia, precio y disponibilidad.',items:[
-      {id:'asic-sha256',name:'ASIC SHA-256',subtitle:'Categoría de hardware',status:'demo',fields:{'Algoritmo':DEMO_VALUE,'Hashrate':DEMO_VALUE,'Eficiencia':DEMO_VALUE,'Precio':DEMO_VALUE}},
-      {id:'asic-scrypt',name:'ASIC Scrypt',subtitle:'Categoría de hardware',status:'demo',fields:{'Algoritmo':DEMO_VALUE,'Hashrate':DEMO_VALUE,'Eficiencia':DEMO_VALUE,'Precio':DEMO_VALUE}},
-      {id:'nodo-domestico',name:'Nodo doméstico',subtitle:'Categoría de hardware',status:'demo',fields:{'Procesador':DEMO_VALUE,'Memoria':DEMO_VALUE,'Almacenamiento':DEMO_VALUE,'Consumo':DEMO_VALUE}}
+    hardware:{label:'Hardware',description:'Especificaciones comparables del fabricante; precio y stock solo se publicarán cuando exista un feed autorizado.',items:[
+      {id:'s21-xp',name:'Antminer S21 XP',subtitle:'SHA-256 · refrigeración por aire',status:'verified',source:{name:'BITMAIN Support',url:'https://support.bitmain.com/hc/en-us/articles/35383015643673-S21-XP-Specifications',type:'Especificación oficial'},fields:{'Hashrate típico':'270 TH/s','Potencia típica':'3.645 W','Eficiencia típica':'13,5 J/TH','Entorno':'−20 a 45 °C · 220–277 V'}},
+      {id:'s21-xp-hyd',name:'Antminer S21 XP Hyd',subtitle:'SHA-256 · refrigeración hidráulica',status:'verified',source:{name:'BITMAIN Support',url:'https://support.bitmain.com/hc/en-us/articles/34523540504857-S21-XP-Hyd-Specification',type:'Especificación oficial'},fields:{'Hashrate típico':'473 TH/s','Potencia típica':'5.676 W','Eficiencia típica':'12,0 J/TH','Requisito':'380–415 V · circuito hidráulico'}},
+      {id:'s21',name:'Antminer S21',subtitle:'SHA-256 · refrigeración por aire',status:'verified',source:{name:'BITMAIN Support',url:'https://support.bitmain.com/hc/en-us/articles/23794895251609-S21-Specification',type:'Especificación oficial'},fields:{'Hashrate típico':'200 TH/s','Potencia típica':'3.500 W','Eficiencia típica':'17,5 J/TH','Entorno':'0 a 45 °C · 220–277 V'}}
     ]},
-    riesgos:{label:'Riesgos',description:'Taxonomía de riesgos observables. No es una calificación ni una recomendación de inversión.',items:[
-      {id:'custodia',name:'Riesgo de custodia',subtitle:'Claves, contrapartes y recuperación',status:'demo',fields:{'Indicadores':DEMO_VALUE,'Severidad':DEMO_VALUE,'Evidencia':DEMO_VALUE,'Mitigaciones':DEMO_VALUE}},
-      {id:'contrato-inteligente',name:'Riesgo de contrato inteligente',subtitle:'Código, permisos y dependencias',status:'demo',fields:{'Indicadores':DEMO_VALUE,'Severidad':DEMO_VALUE,'Evidencia':DEMO_VALUE,'Mitigaciones':DEMO_VALUE}},
-      {id:'regulatorio',name:'Riesgo regulatorio',subtitle:'Jurisdicción, actividad y vigencia',status:'demo',fields:{'Indicadores':DEMO_VALUE,'Severidad':DEMO_VALUE,'Evidencia':DEMO_VALUE,'Mitigaciones':DEMO_VALUE}},
-      {id:'mercado',name:'Riesgo de mercado',subtitle:'Liquidez, volatilidad y concentración',status:'demo',fields:{'Indicadores':DEMO_VALUE,'Severidad':DEMO_VALUE,'Evidencia':DEMO_VALUE,'Mitigaciones':DEMO_VALUE}}
+    riesgos:{label:'Riesgos',description:'Marcos de riesgo accionables con fuente: contrato, infraestructura L2, autorización y custodia.',items:[
+      {id:'contrato-inteligente',name:'Contrato inteligente',subtitle:'Vulnerabilidades y controles',status:'verified',source:{name:'OWASP Smart Contract Top 10',url:'https://scs.owasp.org/sctop10/',type:'Estándar de seguridad 2026'},fields:{'Indicadores':'Control de acceso, lógica, oráculos, reentrancia y dependencias','Uso':'Checklist de revisión, no auditoría','Evidencia':'Categorías OWASP 2026','Mitigación':'Diseño seguro, pruebas y auditoría independiente'}},
+      {id:'infraestructura-l2',name:'Infraestructura L2',subtitle:'Upgrades, DA, secuenciador y salida',status:'auto',source:{name:'L2BEAT',url:'https://l2beat.com/scaling/summary',type:'Datos y matriz de riesgos'},fields:{'Indicadores':'Etapa, ventana de salida, validación y disponibilidad de datos','Uso':'Comparar dependencia adicional','Evidencia':'Campo original L2BEAT conservado','Límite':'Stage no equivale a seguridad total'}},
+      {id:'regulatorio',name:'Autorización y perímetro',subtitle:'Proveedor, servicio y jurisdicción',status:'verified',source:{name:'ESMA MiCA Register',url:'https://www.esma.europa.eu/publications-and-data/interactive-single-rulebook/mica',type:'Registro regulatorio europeo'},fields:{'Indicadores':'Entidad, autorización, servicio y pasaporte','Uso':'Comprobar proveedor concreto','Evidencia':'Registro ESMA y autoridad nacional','Límite':'Una marca puede operar mediante distintas entidades'}},
+      {id:'custodia',name:'Custodia y recuperación',subtitle:'Claves, contraparte y dispositivo',status:'verified',source:{name:'ESMA · advertencia cripto',url:'https://www.esma.europa.eu/investor-corner/is-the-firm-regulated',type:'Orientación oficial'},fields:{'Indicadores':'Control de claves, autorización, recuperación y actualización','Uso':'Checklist previa a depositar activos','Evidencia':'Registro y documentación del proveedor','Mitigación':'Verificación de entidad, copias y seguridad del dispositivo'}}
     ]}
   };
   const HOME_DIRECTORY_KEYS = ['empresas','bancos','exchanges','wallets','proyectos','mineria','hardware','riesgos'];
 
-  const STATUS_LABELS = {verified:'VERIFICADO',unverified:'NO VERIFICADO',auto:'AUTOMÁTICO',demo:'DEMO',offline:'NO DISPONIBLE'};
+  const STATUS_LABELS = {verified:'VERIFICADO',unverified:'REVISIÓN NECESARIA',auto:'AUTOMÁTICO',offline:'NO DISPONIBLE'};
   const ANTENNA_STREAM = '/api/market/stream';
   const PRICE = new Intl.NumberFormat('es-ES',{style:'currency',currency:'USD',maximumFractionDigits:2});
   const SMALL_USD = new Intl.NumberFormat('es-ES',{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:4});
@@ -96,6 +96,7 @@
   let antennaStream = null;
   let antennaConnected = false;
   let regulationFallbackPromise = null;
+  let platformFallbackPromise = null;
   let fiscalGlobeRotation = -4;
   let fiscalGlobePaused = false;
   let fiscalGlobeFrame = null;
@@ -159,8 +160,8 @@
 
   function searchOverlayMarkup(){return `<div class="kf-search-overlay" data-search-overlay aria-hidden="true"><div class="kf-search-dialog" role="dialog" aria-modal="true" aria-label="Buscar en Kaufman"><div class="kf-search-head"><input class="kf-global-input" type="search" placeholder="Buscar país, exchange, wallet, proyecto…" aria-label="Buscar"><button class="kf-search-close" type="button" aria-label="Cerrar búsqueda">×</button></div><div class="kf-search-results" aria-live="polite"></div></div></div>`}
 
-  function pageHero(title,description,kicker='Kaufman',state='demo'){
-    const stateCopy={auto:'integraciones server-side activas',verified:'revisión jurídica con fuente primaria',unverified:'revisión editorial pendiente',offline:'fuente temporalmente no disponible',demo:'cuando la fuente no está conectada'}[state]||'estado documentado';
+  function pageHero(title,description,kicker='Kaufman',state='auto'){
+    const stateCopy={auto:'integraciones automáticas activas',verified:'revisión con fuente primaria',unverified:'interpretación que necesita revisión',offline:'fuente temporalmente no disponible'}[state]||'estado documentado';
     return `<section class="kf-page-hero"><div class="kf-container kf-page-hero-inner"><div class="kf-breadcrumbs"><a href="/">Inicio</a><span>/</span><span>${title}</span></div><div class="kf-page-heading"><div><p class="kf-kicker">${kicker}</p><h1 class="kf-page-title">${title}</h1></div><div class="kf-page-copy"><p>${description}</p><div>${statusBadge(state)} <small>${stateCopy}</small></div></div></div></div></section>`;
   }
 
@@ -177,7 +178,7 @@
       const profiles=catalog.items.map((item)=>`<a href="${profileUrl(key,item.id)}"><span><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.subtitle)}</small></span>${statusBadge(item.status)}</a>`).join('');
       return `<article class="kf-home-directory" data-directory-card="${escapeHtml(key)}" data-reveal><div class="kf-home-directory-meta"><span>${String(index+1).padStart(2,'0')} / ${escapeHtml(route.code)}</span><b><i></i>Navegación activa</b></div><h3><a href="${route.path}">${escapeHtml(catalog.label)}</a></h3><p>${escapeHtml(catalog.description)}</p><div class="kf-home-directory-links">${profiles}</div><a class="kf-home-directory-open" href="${route.path}">Abrir directorio <span>→</span></a></article>`;
     }).join('');
-    return `<section class="kf-section alt kf-home-directories" id="directorios" data-home-directories><div class="kf-container"><div class="kf-section-head" data-reveal><div><p class="kf-kicker">Directorios conectados</p><h2 class="kf-title small">De la categoría a la ficha, sin callejones sin salida.</h2></div><p class="kf-intro">Cada directorio abre su índice, sus filtros y sus fichas individuales. El cableado es real; cualquier atributo todavía sin una fuente activa conserva la etiqueta DEMO.</p></div><div class="kf-directory-contract" data-reveal><div><strong>${HOME_DIRECTORY_KEYS.length}</strong><span>directorios navegables</span></div><div><strong>${totalProfiles}</strong><span>fichas enlazadas</span></div><div><strong>1</strong><span>búsqueda común</span></div><p><i></i>Rutas internas verificadas</p></div><div class="kf-home-directory-grid">${cards}</div></div></section>`;
+    return `<section class="kf-section alt kf-home-directories" id="directorios" data-home-directories><div class="kf-container"><div class="kf-section-head" data-reveal><div><p class="kf-kicker">Directorios conectados</p><h2 class="kf-title small">De la categoría a la ficha, sin callejones sin salida.</h2></div><p class="kf-intro">Cada directorio abre su índice, sus filtros y sus fichas individuales. Cada ficha identifica la fuente, el alcance y el límite de la evidencia publicada.</p></div><div class="kf-directory-contract" data-reveal><div><strong>${HOME_DIRECTORY_KEYS.length}</strong><span>directorios navegables</span></div><div><strong>${totalProfiles}</strong><span>fichas enlazadas</span></div><div><strong>1</strong><span>búsqueda común</span></div><p><i></i>Rutas internas verificadas</p></div><div class="kf-home-directory-grid">${cards}</div></div></section>`;
   }
 
   function renderHome(){
@@ -190,14 +191,14 @@
       ${directoryHubMarkup()}
       <section class="kf-section kf-current-section"><div class="kf-container"><div class="kf-section-head" data-reveal><div><p class="kf-kicker">Actualidad regulatoria mundial</p><h2 class="kf-title small">Tres cambios que merece la pena seguir.</h2></div><p class="kf-intro">Selección automática internacional. Kaufman enlaza la publicación original o el medio que informa del cambio; la ficha jurídica solo se verifica con fuente primaria.</p></div><div data-home-regulation><div class="kf-live-empty">Cargando actualidad regulatoria…</div></div><div class="kf-section-action"><a class="kf-button secondary" href="/regulacion/">Abrir radar regulatorio →</a></div></div></section>
       <section class="kf-section alt kf-current-section"><div class="kf-container"><div class="kf-section-head" data-reveal><div><p class="kf-kicker">Minería, rentabilidad y hardware</p><h2 class="kf-title small">La red, las máquinas y las noticias.</h2></div><p class="kf-intro">Dos noticias mundiales publicadas dentro de las últimas 24 horas y un cálculo de referencia basado en datos de red, precio de BTC y especificaciones oficiales.</p></div><div data-home-mining><div class="kf-live-empty">Cargando actualidad minera…</div></div><div class="kf-section-action"><a class="kf-button secondary" href="/mineria/">Explorar minería →</a><a class="kf-button secondary" href="/hardware/">Ver hardware →</a></div></div></section>
-      <section class="kf-section" id="explorar"><div class="kf-container"><div class="kf-section-head" data-reveal><div><p class="kf-kicker">Mapa de información</p><h2 class="kf-title">Todo el ecosistema, bajo el mismo estándar.</h2></div><p class="kf-intro">Doce rutas conectadas por fichas y comparadores. Los nombres son reales; cualquier atributo sin fuente activa se presenta como DEMO.</p></div><div class="kf-module-grid">${ROUTES.map((route)=>`<a class="kf-module" href="${route.path}" data-reveal><div class="kf-module-top"><span class="kf-module-code">${route.code}</span>${statusBadge(route.tone)}</div><h3>${route.label}</h3><p>${route.description}</p><span class="kf-module-arrow">→</span></a>`).join('')}</div></div></section>
-      <section class="kf-section alt"><div class="kf-container"><div class="kf-section-head" data-reveal><div><p class="kf-kicker">Contrato de datos</p><h2 class="kf-title small">Nada aparece sin estado.</h2></div><p class="kf-intro">La interfaz distingue un dato automático, una verificación editorial, una demostración y una fuente caída.</p></div><div class="kf-proof-grid" data-reveal><article class="kf-proof"><span class="kf-proof-index">01 / AUTO</span><h3>Automático</h3><p>Dato obtenido de una integración activa.</p></article><article class="kf-proof"><span class="kf-proof-index">02 / CHECK</span><h3>Verificado</h3><p>Información contrastada con una fuente primaria.</p></article><article class="kf-proof"><span class="kf-proof-index">03 / DEMO</span><h3>Demo</h3><p>Estructura de interfaz sin dato conectado. Nunca se disfraza de cifra real.</p></article><article class="kf-proof"><span class="kf-proof-index">04 / OFF</span><h3>No disponible</h3><p>La fuente falló o no respondió.</p></article></div></div></section>
+      <section class="kf-section" id="explorar"><div class="kf-container"><div class="kf-section-head" data-reveal><div><p class="kf-kicker">Mapa de información</p><h2 class="kf-title">Todo el ecosistema, bajo el mismo estándar.</h2></div><p class="kf-intro">Rutas conectadas por fichas y comparadores. Los registros enlazan su evidencia y los paneles automáticos muestran la hora de observación.</p></div><div class="kf-module-grid">${ROUTES.map((route)=>`<a class="kf-module" href="${route.path}" data-reveal><div class="kf-module-top"><span class="kf-module-code">${route.code}</span>${statusBadge(route.tone)}</div><h3>${route.label}</h3><p>${route.description}</p><span class="kf-module-arrow">→</span></a>`).join('')}</div></div></section>
+      <section class="kf-section alt"><div class="kf-container"><div class="kf-section-head" data-reveal><div><p class="kf-kicker">Contrato de datos</p><h2 class="kf-title small">Nada aparece sin estado.</h2></div><p class="kf-intro">La interfaz separa integraciones automáticas, verificación editorial, instantáneas públicas y fuentes temporalmente caídas.</p></div><div class="kf-proof-grid" data-reveal><article class="kf-proof"><span class="kf-proof-index">01 / AUTO</span><h3>Automático</h3><p>Dato obtenido de una integración activa.</p></article><article class="kf-proof"><span class="kf-proof-index">02 / CHECK</span><h3>Verificado</h3><p>Información contrastada con una fuente primaria.</p></article><article class="kf-proof"><span class="kf-proof-index">03 / SNAP</span><h3>Snapshot público</h3><p>Copia automática fechada para que la web estática nunca dependa de cifras inventadas.</p></article><article class="kf-proof"><span class="kf-proof-index">04 / OFF</span><h3>No disponible</h3><p>La fuente falló, caducó o no respondió.</p></article></div></div></section>
       <section class="kf-section"><div class="kf-container"><div class="kf-section-head" data-reveal><div><p class="kf-kicker">Fiscal</p><h2 class="kf-title small">La misma pregunta, dos jurisdicciones.</h2></div><p class="kf-intro">Compara marcos fiscales, costes operativos y fichas con los mismos campos y estados.</p></div><a class="kf-button primary" href="/fiscal/">Abrir Fiscal →</a></div></section>
     </main>`;
   }
 
   function dataNoteMarkup(hasVerified=false){
-    return `<div class="kf-data-note"><span>${statusBadge(hasVerified?'verified':'demo')}</span><div><strong>${hasVerified?'Hay registros con fuente conectada':'Estructura de demostración'}</strong><p>${hasVerified?'Consulta la ficha para abrir la fuente y revisar su alcance.':'Los campos sin integración muestran DEMO; no contienen cifras de relleno.'}</p></div><a href="/fuentes/">Fuentes →</a></div>`;
+    return `<div class="kf-data-note"><span>${statusBadge(hasVerified?'verified':'auto')}</span><div><strong>${hasVerified?'Registros respaldados por fuentes':'Registros monitorizados automáticamente'}</strong><p>Consulta cada ficha para abrir la evidencia, revisar su alcance y entender qué no permite concluir.</p></div><a href="/fuentes/">Fuentes →</a></div>`;
   }
 
   function gasPanelMarkup(){
@@ -206,7 +207,7 @@
   }
 
   function exchangeFeesMarkup(){
-    return `<section class="kf-live-panel"><div class="kf-live-panel-head"><div><p class="kf-kicker">Comisiones conectadas</p><h2>Tarifa pública base</h2></div><div class="kf-live-actions"><span data-exchange-fee-status aria-live="polite">Esperando antena interna…</span></div></div><div class="kf-data-table-wrap"><table class="kf-data-table"><thead><tr><th>Exchange</th><th>Mercado</th><th class="number">Maker</th><th class="number">Taker</th><th>Fuente</th></tr></thead><tbody><tr><td><strong>Kraken</strong></td><td>BTC / USD · tramo base</td><td class="number" data-kraken-maker>—</td><td class="number" data-kraken-taker>—</td><td><a href="https://docs.kraken.com/api/docs/rest-api/get-tradable-asset-pairs" target="_blank" rel="noopener noreferrer">Kraken API ↗</a></td></tr><tr><td>Coinbase</td><td><span class="kf-demo-value">DEMO</span></td><td class="number"><span class="kf-demo-value">DEMO</span></td><td class="number"><span class="kf-demo-value">DEMO</span></td><td>Fuente pendiente</td></tr><tr><td>Bitstamp</td><td><span class="kf-demo-value">DEMO</span></td><td class="number"><span class="kf-demo-value">DEMO</span></td><td class="number"><span class="kf-demo-value">DEMO</span></td><td>Fuente pendiente</td></tr></tbody></table></div><p class="kf-live-footnote">Primer tramo público de volumen de 30 días, actualizado server-side una vez al día. No incluye spreads, conversión, retirada ni condiciones particulares.</p></section>`;
+    return `<section class="kf-live-panel"><div class="kf-live-panel-head"><div><p class="kf-kicker">Comisiones conectadas</p><h2>Tarifa pública base</h2></div><div class="kf-live-actions"><span data-exchange-fee-status aria-live="polite">Cargando tarifa pública…</span></div></div><div class="kf-data-table-wrap"><table class="kf-data-table"><thead><tr><th>Exchange</th><th>Mercado</th><th class="number">Maker</th><th class="number">Taker</th><th>Fuente</th></tr></thead><tbody><tr><td><strong>Kraken</strong></td><td>BTC / USD · primer tramo publicado</td><td class="number" data-kraken-maker>—</td><td class="number" data-kraken-taker>—</td><td><a href="https://docs.kraken.com/api/docs/rest-api/get-tradable-asset-pairs" target="_blank" rel="noopener noreferrer">Kraken API ↗</a></td></tr></tbody></table></div><p class="kf-live-footnote">Actualización diaria. No se muestran otros exchanges hasta disponer de una tarifa pública comparable por mercado y tramo; el total tampoco incluye spread, conversión, retirada ni condiciones particulares.</p></section>`;
   }
 
   function regulationRadarMarkup(){
@@ -218,20 +219,16 @@
     return `<a class="kf-record" href="${profileUrl(type,item.id)}" data-record data-name="${escapeHtml(item.name.toLowerCase())}" data-status="${item.status}" data-reveal><div class="kf-record-top"><span class="kf-record-id">${String(index+1).padStart(2,'0')} / ${type}</span>${statusBadge(item.status)}</div><h2>${item.name}</h2><p>${item.subtitle}</p><div class="kf-record-foot"><span class="kf-record-source">${source}</span><span class="kf-record-link">Abrir ficha →</span></div></a>`;
   }
 
-  function countryCostStackMarkup(){
-    const countries=[['espana','ES','España'],['estados-unidos','US','Estados Unidos'],['mexico','MX','México'],['argentina','AR','Argentina'],['colombia','CO','Colombia'],['chile','CL','Chile'],['portugal','PT','Portugal'],['emiratos-arabes-unidos','AE','Emiratos Árabes Unidos']];
-    const exchanges=['Binance','Kraken','Bitstamp','Coinbase'];
-    return `<section class="kf-country-cost" data-country-cost><div class="kf-cost-heading"><p class="kf-kicker">Cost stack por jurisdicción</p><h2>El coste real cambia con la jurisdicción.</h2><p>Entrada fiat + FX + spread + trading + retirada + red + salida fiat. Cada componente necesita una fuente aplicable a la jurisdicción, al activo y al escenario elegido.</p></div><div class="kf-cost-controls"><div class="kf-field"><label for="cost-country">Jurisdicción</label><select class="kf-select" id="cost-country" data-country-cost-country>${countries.map(([value,code,name])=>`<option value="${value}" data-code="${code}">${code} · ${name}</option>`).join('')}</select></div><div class="kf-field"><label for="cost-amount">Importe</label><input id="cost-amount" type="number" min="1" step="1" value="5000" data-country-cost-amount><small>Moneda fiat del escenario</small></div><div class="kf-field"><label for="cost-asset">Activo</label><select class="kf-select" id="cost-asset" data-country-cost-asset><option value="BTC">BTC</option><option value="ETH">ETH</option><option value="SOL">SOL</option></select></div><div class="kf-cost-destination"><span>Destino</span><div><button type="button" class="active" data-country-destination="platform">Mantener en plataforma</button><button type="button" data-country-destination="custody">Retirar a self-custody</button><button type="button" data-country-destination="fiat">Volver a fiat</button></div></div><div class="kf-cost-scenario"><span>Escenario</span><strong data-country-cost-context>ES · España · 5.000 · BTC</strong><small>Totales bloqueados hasta conectar todos los componentes</small></div></div><div class="kf-cost-legend"><span>Componentes</span><i class="spread"></i> spread <i class="trading"></i> trading <i class="withdrawal"></i> retirada / red <i class="fiat"></i> salida fiat <b>DEMO</b> = sin dato conectado</div><div class="kf-cost-list">${exchanges.map((exchange,index)=>`<article class="kf-cost-row" data-country-cost-row><div class="kf-cost-entity"><span>${String(index+1).padStart(2,'0')}</span><h3>${exchange}</h3><small>CEX · disponibilidad por jurisdicción pendiente</small><b>DEMO · registro y acceso</b></div><div class="kf-cost-breakdown"><div class="kf-cost-bar"><i class="spread"></i><i class="trading"></i><i class="withdrawal"></i><i class="fiat"></i></div><p><span>spread <b>DEMO</b></span><span>trading <b>DEMO</b></span><span>retirada / red <b>DEMO</b></span><span>salida fiat <b>DEMO</b></span></p></div><div class="kf-cost-total"><strong>No disponible</strong><span>Total y % pendientes</span><button type="button" disabled>Evidencia pendiente</button></div><div class="kf-cost-facts"><span>PoR · <b>DEMO</b></span><span>custodia · <b>DEMO</b></span><span>tiempo total · <b>DEMO</b></span><span>incidentes · <b>DEMO</b></span></div></article>`).join('')}</div><div class="kf-data-note"><span>${statusBadge('demo')}</span><div><strong>La estructura está operativa; las cifras no</strong><p>Kaufman no suma tarifas de jurisdicciones distintas, tramos incompatibles ni costes sin hora y fuente. Cada fila se activará cuando spread, trading, retirada, red, FX y salida fiat estén conectados para ese escenario.</p></div><a href="/fuentes/">Fuentes →</a></div></section>`;
-  }
-
   function renderDirectory(type){
     const catalog=CATALOGS[type];
     if(!catalog)return renderNotFound();
     const hasVerified=catalog.items.some((item)=>item.status==='verified');
     const connected=type==='exchanges'?exchangeFeesMarkup():type==='regulacion'?regulationRadarMarkup():'';
-    const special=type==='fiscal'?`${countryCostStackMarkup()}${compareToolMarkup()}`:'';
-    const statusOptions=type==='regulacion'?'<option value="all">Todos los estados</option><option value="verified">Verificado</option>':'<option value="all">Todos los estados</option><option value="verified">Verificado</option><option value="demo">Demo</option>';
-    return `<main class="kf-main" id="main-content">${pageHero(catalog.label,catalog.description,'Directorio estructurado',type==='regulacion'?'auto':'demo')}<section class="kf-section"><div class="kf-container">${special}${connected}${dataNoteMarkup(hasVerified)}<div class="kf-toolbar"><div class="kf-search-field"><input type="search" data-directory-search placeholder="Buscar en ${catalog.label.toLowerCase()}…" aria-label="Buscar en ${catalog.label}"></div><select class="kf-select" data-status-filter aria-label="Filtrar por estado">${statusOptions}</select><span class="kf-result-count" data-result-count>${catalog.items.length} fichas</span></div><div class="kf-record-grid" data-record-grid>${catalog.items.map((item,index)=>recordCard(type,item,index)).join('')}<div class="kf-empty" data-empty hidden>No hay fichas que coincidan con el filtro.</div></div></div></section></main>`;
+    const special='';
+    const availableStates=[...new Set(catalog.items.map((item)=>item.status))];
+    const statusOptions=`<option value="all">Todos los estados</option>${availableStates.map((state)=>`<option value="${state}">${STATUS_LABELS[state]||state}</option>`).join('')}`;
+    const heroTone=hasVerified?'verified':'auto';
+    return `<main class="kf-main" id="main-content">${pageHero(catalog.label,catalog.description,'Directorio con fuentes',heroTone)}<section class="kf-section"><div class="kf-container">${special}${connected}${dataNoteMarkup(hasVerified)}<div class="kf-toolbar"><div class="kf-search-field"><input type="search" data-directory-search placeholder="Buscar en ${catalog.label.toLowerCase()}…" aria-label="Buscar en ${catalog.label}"></div><select class="kf-select" data-status-filter aria-label="Filtrar por estado">${statusOptions}</select><span class="kf-result-count" data-result-count>${catalog.items.length} fichas</span></div><div class="kf-record-grid" data-record-grid>${catalog.items.map((item,index)=>recordCard(type,item,index)).join('')}<div class="kf-empty" data-empty hidden>No hay fichas que coincidan con el filtro.</div></div></div></section></main>`;
   }
 
   function l2IntelligenceMarkup(){
@@ -304,16 +301,14 @@
   }
 
   function renderTools(){
-    const countries=['España','Estados Unidos','Paraguay','Etiopía','Emiratos Árabes Unidos'];
-    return `<main class="kf-main" id="main-content">${pageHero('Herramientas','Cálculo y cruce de datos para entender minería, fiscalidad, jurisdicciones y disponibilidad de hardware sin completar huecos con supuestos ocultos.','Laboratorio Kaufman')}<section class="kf-section"><div class="kf-container"><div class="kf-tool-index"><a href="#rentabilidad-minera"><span>01</span><strong>Rentabilidad minera</strong><small>Precio, red, energía y hardware</small></a><a href="#cruce-fiscal"><span>02</span><strong>Cruce fiscal</strong><small>Normativa entre jurisdicciones</small></a><a href="#stock-hardware"><span>03</span><strong>Alertas de stock</strong><small>ASIC, RAM, PSU y refrigeración</small></a></div>
-      <article class="kf-tool-workbench" id="rentabilidad-minera"><div class="kf-tool-heading"><div><p class="kf-kicker">Herramienta conectada</p><h2>Rentabilidad minera de hoy</h2><p>El motor usa la referencia diaria de red Bitcoin, precio BTC y especificación oficial del equipo. Introduce tus costes para obtener un resultado propio.</p></div>${statusBadge('auto')}</div><div class="kf-tool-grid"><form class="kf-calculator-controls" data-mining-calculator><div class="kf-field"><label for="tool-hardware">Hardware</label><select class="kf-select" id="tool-hardware" data-calc-hardware><option value="s21-xp">Antminer S21 XP · conectado</option><option disabled>Otros equipos · DEMO</option></select></div><div class="kf-field"><label for="tool-country">País / tarifa eléctrica</label><select class="kf-select" id="tool-country" data-calc-country><option value="manual">Coste manual</option>${countries.map((country)=>`<option value="demo:${country}">${country} · DEMO</option>`).join('')}</select></div><div class="kf-field"><label for="tool-electricity">Electricidad · USD/kWh</label><input id="tool-electricity" data-calc-electricity inputmode="decimal" type="number" min="0" step="0.001" placeholder="Ej. 0,08"></div><div class="kf-field"><label for="tool-uptime">Uptime · %</label><input id="tool-uptime" data-calc-uptime inputmode="decimal" type="number" min="0" max="100" step="0.1" value="100"></div><div class="kf-field"><label for="tool-pool">Comisión de pool · %</label><input id="tool-pool" data-calc-pool inputmode="decimal" type="number" min="0" max="100" step="0.1" value="0"></div><div class="kf-field"><label for="tool-cooling">Refrigeración extra · %</label><input id="tool-cooling" data-calc-cooling inputmode="decimal" type="number" min="0" step="0.1" value="0"></div><div class="kf-field"><label for="tool-hardware-cost">Coste de hardware · USD</label><input id="tool-hardware-cost" data-calc-hardware-cost inputmode="decimal" type="number" min="0" step="1" placeholder="Opcional"></div><div class="kf-calc-source" data-calc-status>Cargando datos de red…</div></form><div class="kf-calculator-output"><div class="kf-calc-kpi"><span>Ingreso bruto / día</span><strong data-calc-gross>—</strong></div><div class="kf-calc-kpi"><span>Consumo / día</span><strong data-calc-energy>—</strong></div><div class="kf-calc-kpi"><span>Electricidad / día</span><strong data-calc-power-cost>Introduce tu tarifa</strong></div><div class="kf-calc-kpi primary"><span>Resultado / día</span><strong data-calc-profit>—</strong></div><div class="kf-calc-kpi"><span>Recuperación del hardware</span><strong data-calc-payback>Introduce coste</strong></div><p>Resultado antes de impuestos, averías, reparaciones, financiación, aranceles y variaciones de dificultad. No es una promesa de rentabilidad.</p></div></div></article>
-      <article class="kf-tool-workbench" id="cruce-fiscal"><div class="kf-tool-heading"><div><p class="kf-kicker">Próxima herramienta</p><h2>Cruce fiscal y regulatorio</h2><p>Comparará residencia, actividad, vehículo, fiscalidad, licencias y obligaciones de dos jurisdicciones con fuentes primarias.</p></div>${statusBadge('demo')}</div><div class="kf-jurisdiction-tool"><div class="kf-compare-controls"><div class="kf-field"><label for="jurisdiction-a">Jurisdicción A</label><select class="kf-select" id="jurisdiction-a" data-jurisdiction-a>${countries.map((country)=>`<option>${country}</option>`).join('')}</select></div><div class="kf-field"><label for="jurisdiction-b">Jurisdicción B</label><select class="kf-select" id="jurisdiction-b" data-jurisdiction-b>${countries.map((country,index)=>`<option${index===1?' selected':''}>${country}</option>`).join('')}</select></div><button class="kf-button small secondary" type="button" data-jurisdiction-run>Preparar cruce</button></div><div data-jurisdiction-result><div class="kf-live-empty">Selecciona dos jurisdicciones. Los resultados permanecerán en DEMO hasta conectar normativa y fiscalidad verificadas.</div></div></div></article>
-      <article class="kf-tool-workbench" id="stock-hardware"><div class="kf-tool-heading"><div><p class="kf-kicker">Monitor de suministro</p><h2>Alertas de stock y roturas</h2><p>El objetivo es detectar disponibilidad, reposición y roturas de stock sin confundir una tienda aislada con el mercado completo.</p></div>${statusBadge('demo')}</div><div class="kf-stock-grid">${[['ASIC','Fabricantes y distribuidores'],['RAM','Nodos, servidores y rigs'],['PSU','Fuentes y distribución eléctrica'],['Refrigeración','Aire, inmersión e hidráulica']].map(([name,scope])=>`<div class="kf-stock-card"><span>${name}</span><strong>Monitor pendiente</strong><small>${scope}</small>${statusBadge('demo')}</div>`).join('')}</div><div class="kf-data-note"><span>${statusBadge('demo')}</span><div><strong>Qué falta para activar alertas</strong><p>Feeds de inventario autorizados, normalización por región, identificación de vendedor y reglas contra falsos positivos.</p></div><a href="/fuentes/">Ver fuentes →</a></div></article>
+    return `<main class="kf-main" id="main-content">${pageHero('Herramientas','Cálculo y cruce de datos para entender minería y fiscalidad sin completar huecos con supuestos ocultos.','Laboratorio Kaufman','auto')}<section class="kf-section"><div class="kf-container"><div class="kf-tool-index"><a href="#rentabilidad-minera"><span>01</span><strong>Rentabilidad minera</strong><small>Precio, red, energía y hardware</small></a><a href="#cruce-fiscal"><span>02</span><strong>Cruce fiscal</strong><small>Hechos entre jurisdicciones</small></a></div>
+      <article class="kf-tool-workbench" id="rentabilidad-minera"><div class="kf-tool-heading"><div><p class="kf-kicker">Herramienta conectada</p><h2>Rentabilidad minera de hoy</h2><p>El motor usa la referencia diaria de red Bitcoin, precio BTC y especificación oficial del equipo. Introduce tus costes para obtener un resultado propio.</p></div>${statusBadge('auto')}</div><div class="kf-tool-grid"><form class="kf-calculator-controls" data-mining-calculator><div class="kf-field"><label for="tool-hardware">Hardware</label><select class="kf-select" id="tool-hardware" data-calc-hardware><option value="s21-xp">Antminer S21 XP · BITMAIN</option></select></div><input type="hidden" value="manual" data-calc-country><div class="kf-field"><label for="tool-electricity">Electricidad · USD/kWh</label><input id="tool-electricity" data-calc-electricity inputmode="decimal" type="number" min="0" step="0.001" placeholder="Ej. 0,08"><small>Tu contrato local; Kaufman no inventa una tarifa nacional.</small></div><div class="kf-field"><label for="tool-uptime">Uptime · %</label><input id="tool-uptime" data-calc-uptime inputmode="decimal" type="number" min="0" max="100" step="0.1" value="100"></div><div class="kf-field"><label for="tool-pool">Comisión de pool · %</label><input id="tool-pool" data-calc-pool inputmode="decimal" type="number" min="0" max="100" step="0.1" value="0"></div><div class="kf-field"><label for="tool-cooling">Refrigeración extra · %</label><input id="tool-cooling" data-calc-cooling inputmode="decimal" type="number" min="0" step="0.1" value="0"></div><div class="kf-field"><label for="tool-hardware-cost">Coste de hardware · USD</label><input id="tool-hardware-cost" data-calc-hardware-cost inputmode="decimal" type="number" min="0" step="1" placeholder="Opcional"></div><div class="kf-calc-source" data-calc-status>Cargando datos de red…</div></form><div class="kf-calculator-output"><div class="kf-calc-kpi"><span>Ingreso bruto / día</span><strong data-calc-gross>—</strong></div><div class="kf-calc-kpi"><span>Consumo / día</span><strong data-calc-energy>—</strong></div><div class="kf-calc-kpi"><span>Electricidad / día</span><strong data-calc-power-cost>Introduce tu tarifa</strong></div><div class="kf-calc-kpi primary"><span>Resultado / día</span><strong data-calc-profit>—</strong></div><div class="kf-calc-kpi"><span>Recuperación del hardware</span><strong data-calc-payback>Introduce coste</strong></div><p>Resultado antes de impuestos, averías, reparaciones, financiación, aranceles y variaciones de dificultad. No es una promesa de rentabilidad.</p></div></div></article>
+      <article class="kf-tool-workbench" id="cruce-fiscal" data-fiscal-dashboard><div class="kf-tool-heading"><div><p class="kf-kicker">Herramienta conectada</p><h2>Cruce fiscal por hecho económico</h2><p>La matriz pública compara venta, permuta, staking, minería y tenencia con fuente, nivel de certeza y límites por jurisdicción.</p></div>${statusBadge('auto')}</div><div class="kf-fiscal-kpis"><article><span>Jurisdicciones</span><strong data-fiscal-kpi="jurisdiction_count">—</strong><small>Mismo contrato comparativo</small></article><article><span>Hechos fiscales</span><strong data-fiscal-kpi="fact_count">—</strong><small>Cinco eventos por jurisdicción</small></article><article><span>Hechos resueltos</span><strong data-fiscal-kpi="resolved_fact_pct">—</strong><small>El resto se bloquea</small></article><article><span>Última revisión</span><strong data-fiscal-reviewed>—</strong><small>Fuentes primarias</small></article></div><div class="kf-section-action"><span data-fiscal-status>Cargando registro fiscal…</span><a class="kf-button primary" href="/fiscal/">Abrir comparador fiscal →</a></div></article>
     </div></section></main>`;
   }
 
   function renderReturns(){
-    return `<main class="kf-main" id="main-content">${pageHero('Rentabilidades','Rendimiento observado, no promesas. La variación de 24 horas usa la misma fuente conectada del mercado; otros periodos permanecen en DEMO.','Datos históricos')}${marketBandMarkup()}<section class="kf-section"><div class="kf-container"><div class="kf-section-head"><div><p class="kf-kicker">Horizontes</p><h2 class="kf-title small">El periodo cambia la lectura.</h2></div><p class="kf-intro">No se extrapola un rendimiento pasado y no se calcula rentabilidad minera sin energía, hardware y uptime verificables.</p></div><div class="kf-data-table-wrap"><table class="kf-data-table"><thead><tr><th>Activo</th><th class="number">24 horas</th><th class="number">7 días</th><th class="number">30 días</th><th class="number">1 año</th><th>Estado</th></tr></thead><tbody>${[['bitcoin','BTC'],['ethereum','ETH'],['solana','SOL']].map(([id,symbol])=>`<tr data-market-asset="${id}"><td><strong>${symbol}</strong></td><td class="number kf-market-change na">—</td><td class="number"><span class="kf-demo-value">DEMO</span></td><td class="number"><span class="kf-demo-value">DEMO</span></td><td class="number"><span class="kf-demo-value">DEMO</span></td><td>${statusBadge('auto')}</td></tr>`).join('')}</tbody></table></div><div class="kf-data-note"><span>${statusBadge('demo')}</span><div><strong>Rentabilidad minera</strong><p>Ingresos, energía, hardware, pool, dificultad e impuestos requieren fuentes conectadas. No se muestra una cifra estimada de relleno.</p></div><a href="/mineria/">Ver minería →</a></div></div></section></main>`;
+    return `<main class="kf-main" id="main-content">${pageHero('Rentabilidades','Rendimientos observados en mercados públicos para 7, 30 y 365 días. Son contexto histórico, no predicciones.','Datos históricos','auto')}${marketBandMarkup()}<section class="kf-section"><div class="kf-container"><div class="kf-section-head"><div><p class="kf-kicker">Horizontes conectados</p><h2 class="kf-title small">El periodo cambia la lectura.</h2></div><p class="kf-intro">Los cierres diarios proceden de Kraken OHLC. La referencia actual conserva la mediana de mercados elegibles y se identifica por separado.</p></div><div class="kf-data-table-wrap"><table class="kf-data-table"><thead><tr><th>Activo</th><th class="number">7 días</th><th class="number">30 días</th><th class="number">1 año</th><th>Observación</th></tr></thead><tbody>${[['bitcoin','BTC'],['ethereum','ETH'],['solana','SOL']].map(([id,symbol])=>`<tr data-return-asset="${id}"><td><strong>${symbol}</strong></td><td class="number" data-return-period="7d">—</td><td class="number" data-return-period="30d">—</td><td class="number" data-return-period="365d">—</td><td data-return-status>Cargando histórico…</td></tr>`).join('')}</tbody></table></div><div class="kf-data-note"><span>${statusBadge('auto')}</span><div><strong>Serie diaria auditable</strong><p>Cambio porcentual entre cierres diarios. No incluye comisiones, impuestos, slippage ni rendimiento de staking.</p></div><a href="https://docs.kraken.com/api/docs/rest-api/get-ohlc-data" target="_blank" rel="noopener noreferrer">Kraken OHLC ↗</a></div></div></section></main>`;
   }
 
   function compareFields(type){
@@ -325,15 +320,16 @@
     const left=catalog.items.find((item)=>item.id===leftId)||catalog.items[0];
     const right=catalog.items.find((item)=>item.id===rightId)||catalog.items[1]||catalog.items[0];
     const fields=compareFields(type);
-    const value=(item,field)=>item.fields?.[field]||DEMO_VALUE;
-    return `<div class="kf-compare-grid"><div class="kf-compare-cell label heading">Campo</div><div class="kf-compare-cell heading">${left.name}<br>${statusBadge(left.status)}</div><div class="kf-compare-cell heading">${right.name}<br>${statusBadge(right.status)}</div>${fields.map((field)=>`<div class="kf-compare-cell label">${field}</div><div class="kf-compare-cell"><span class="kf-demo-value">${escapeHtml(value(left,field))}</span></div><div class="kf-compare-cell"><span class="kf-demo-value">${escapeHtml(value(right,field))}</span></div>`).join('')}</div>`;
+    const value=(item,field)=>item.fields?.[field]||MISSING_VALUE;
+    const cell=(content)=>`<span${content===MISSING_VALUE?' class="kf-muted-value"':''}>${escapeHtml(content)}</span>`;
+    return `<div class="kf-compare-grid"><div class="kf-compare-cell label heading">Campo</div><div class="kf-compare-cell heading">${left.name}<br>${statusBadge(left.status)}</div><div class="kf-compare-cell heading">${right.name}<br>${statusBadge(right.status)}</div>${fields.map((field)=>`<div class="kf-compare-cell label">${field}</div><div class="kf-compare-cell">${cell(value(left,field))}</div><div class="kf-compare-cell">${cell(value(right,field))}</div>`).join('')}</div>`;
   }
 
   function compareToolMarkup(){
     const categories=['fiscal','exchanges','wallets','bancos','hardware','proyectos'];
     const type='fiscal',items=CATALOGS[type].items;
     const options=(list)=>list.map((item)=>`<option value="${item.id}">${item.name}</option>`).join('');
-    return `<section class="kf-fiscal-compare"><div class="kf-cost-heading"><p class="kf-kicker">Comparación fiscal y operativa</p><h2>Dos jurisdicciones, los mismos campos.</h2><p>Compara jurisdicciones, exchanges, wallets, bancos, hardware o proyectos con el mismo contrato de datos. Todo valor sin fuente activa permanece en DEMO.</p></div><div class="kf-compare-controls"><div class="kf-field"><label for="compare-type">Categoría</label><select class="kf-select" id="compare-type" data-compare-type>${categories.map((key)=>`<option value="${key}">${CATALOGS[key].label}</option>`).join('')}</select></div><div class="kf-field"><label for="compare-left">Ficha A</label><select class="kf-select" id="compare-left" data-compare-left>${options(items)}</select></div><div class="kf-field"><label for="compare-right">Ficha B</label><select class="kf-select" id="compare-right" data-compare-right>${options(items).replace(`value="${items[1].id}"`,`value="${items[1].id}" selected`)}</select></div><a class="kf-button small secondary" href="/fuentes/">Criterios</a></div><div data-compare-table>${compareTableMarkup(type,items[0].id,items[1].id)}</div><div class="kf-data-note"><span>${statusBadge('demo')}</span><div><strong>Comparador funcional, datos de demostración</strong><p>La interacción es real. Las celdas se activarán solo al conectar y validar sus fuentes.</p></div><a href="/fuentes/">Registro de fuentes →</a></div></section>`;
+    return `<section class="kf-fiscal-compare"><div class="kf-cost-heading"><p class="kf-kicker">Comparación fiscal y operativa</p><h2>Dos fichas, los mismos campos.</h2><p>Compara jurisdicciones, exchanges, wallets, bancos, hardware o proyectos con un contrato común. Cuando una fuente no cubre un campo, la celda lo declara sin completarlo por inferencia.</p></div><div class="kf-compare-controls"><div class="kf-field"><label for="compare-type">Categoría</label><select class="kf-select" id="compare-type" data-compare-type>${categories.map((key)=>`<option value="${key}">${CATALOGS[key].label}</option>`).join('')}</select></div><div class="kf-field"><label for="compare-left">Ficha A</label><select class="kf-select" id="compare-left" data-compare-left>${options(items)}</select></div><div class="kf-field"><label for="compare-right">Ficha B</label><select class="kf-select" id="compare-right" data-compare-right>${options(items).replace(`value="${items[1].id}"`,`value="${items[1].id}" selected`)}</select></div><a class="kf-button small secondary" href="/fuentes/">Criterios</a></div><div data-compare-table>${compareTableMarkup(type,items[0].id,items[1].id)}</div><div class="kf-data-note"><span>${statusBadge('verified')}</span><div><strong>Comparador basado en fichas con fuente</strong><p>Las diferencias de cobertura se muestran como tales; no se sustituyen por valores estimados.</p></div><a href="/fuentes/">Registro de fuentes →</a></div></section>`;
   }
 
   function renderProfile(){
@@ -343,8 +339,8 @@
     const catalog=CATALOGS[type];
     const item=catalog?.items.find((entry)=>entry.id===id);
     if(!catalog||!item)return renderNotFound('Ficha no encontrada');
-    const facts=Object.entries(item.fields||{}).map(([key,value])=>`<div class="kf-fact"><dt>${key}</dt><dd>${value.includes?.('DEMO')?`<span class="kf-demo-value">${escapeHtml(value)}</span>`:escapeHtml(value)}</dd></div>`).join('');
-    const source=item.source?`<div class="kf-source-item"><strong>${item.source.name}</strong><span>${item.source.type}</span><a href="${item.source.url}" target="_blank" rel="noopener noreferrer">Abrir fuente ↗</a></div>`:`<div class="kf-source-item"><strong>Fuente</strong><span>No conectada</span></div><div class="kf-source-item"><strong>Estado</strong><span>DEMO · sin datos publicados</span></div>`;
+    const facts=Object.entries(item.fields||{}).map(([key,value])=>`<div class="kf-fact"><dt>${key}</dt><dd>${escapeHtml(value)}</dd></div>`).join('');
+    const source=item.source?`<div class="kf-source-item"><strong>${item.source.name}</strong><span>${item.source.type}</span><a href="${item.source.url}" target="_blank" rel="noopener noreferrer">Abrir fuente ↗</a></div>`:`<div class="kf-source-item"><strong>Fuente</strong><span>No publicada; ficha bloqueada</span></div>`;
     return `<main class="kf-main" id="main-content">${pageHero(item.name,item.subtitle,`Ficha / ${catalog.label}`,item.status)}<section class="kf-section"><div class="kf-container"><div class="kf-profile"><article class="kf-profile-main"><div class="kf-profile-title"><div><h2>${item.name}</h2><p>${item.subtitle}</p></div>${statusBadge(item.status)}</div><dl class="kf-fact-list">${facts}</dl></article><aside class="kf-source-panel"><h3>Prueba del dato</h3>${source}<div class="kf-source-item"><strong>Fuentes</strong><a href="/fuentes/">Ver fuente y alcance →</a></div></aside></div><div style="margin-top:24px"><a class="kf-button secondary" href="/${type}/">← Volver a ${catalog.label}</a></div></div></section></main>`;
   }
 
@@ -370,10 +366,11 @@
       {name:'CBUAE · Payment Token Services',scope:'Emisión, conversión, custodia y transferencia',cadence:'Monitor diario · rulebook oficial',status:'auto',url:'https://rulebook.centralbank.ae/en/rulebook/payment-token-services-regulation'},
       {name:'VARA · Virtual Assets Regulations',scope:'Dubái, salvo DIFC',cadence:'Monitor diario · rulebook oficial',status:'auto',url:'https://rulebooks.vara.ae/rulebook/virtual-assets-and-related-activities-regulations-2023'},
       {name:'Google News RSS',scope:'Actualidad regulatoria internacional y noticias mineras',cadence:'Diaria',status:'auto',url:'https://news.google.com/'},
+      {name:'Traducción automática de titulares',scope:'Castellano de España; se conserva el enlace y titular original',cadence:'Durante el build diario · sin claves en el navegador',status:'auto',url:'https://translate.google.com/'},
       {name:'mempool.space API',scope:'Hashrate de red y altura de bloque de Bitcoin',cadence:'Diaria',status:'auto',url:'https://mempool.space/docs/api/rest'},
       {name:'BITMAIN Support',scope:'Especificaciones del Antminer S21 XP',cadence:'Referencia oficial',status:'verified',url:'https://support.bitmain.com/hc/en-us/articles/35383015643673-S21-XP-Specifications'},
-      {name:'Directorios de Kaufman',scope:'Fiscal, empresas, bancos y herramientas',cadence:'Pendiente',status:'demo',url:null},
-      {name:'Minería y hardware',scope:'Red, equipos y rentabilidad',cadence:'Pendiente',status:'demo',url:null}
+      {name:'SEC EDGAR Submissions',scope:'Empresas cotizadas y filings corporativos',cadence:'Consulta pública',status:'auto',url:'https://www.sec.gov/edgar/sec-api-documentation'},
+      {name:'OWASP Smart Contract Top 10',scope:'Taxonomía de riesgos de contratos inteligentes',cadence:'Edición 2026',status:'verified',url:'https://scs.owasp.org/sctop10/'}
     ];
     return `<main class="kf-main" id="main-content">${pageHero('Fuentes','Registro visible de proveedores, cobertura, cadencia y estado de cada integración.','Trazabilidad')}<section class="kf-section"><div class="kf-container"><div class="kf-source-register">${sources.map((source)=>`<div class="kf-source-row"><strong>${source.name}</strong><span>${source.scope}</span><span>${source.cadence}</span><div>${statusBadge(source.status)}${source.url?` <a href="${source.url}" target="_blank" rel="noopener noreferrer">Abrir ↗</a>`:''}</div></div>`).join('')}</div></div></section></main>`;
   }
@@ -384,8 +381,8 @@
         ['1. Titular y contacto','<dl><div><dt>Titular</dt><dd>Kaufman Advisory Group LLC</dd></div><div><dt>Constitución</dt><dd>Limited Liability Company · Wyoming, Estados Unidos</dd></div><div><dt>Nombre público</dt><dd>Kaufman</dd></div><div><dt>Dominio</dt><dd>kaufmanadvisory.io</dd></div><div><dt>Contacto</dt><dd><a href="mailto:contact@kaufmanadvisory.io">contact@kaufmanadvisory.io</a></dd></div></dl><p>Los identificadores fiscales no se publican como credenciales de contacto. Las solicitudes legítimas sobre información registral pueden dirigirse al correo indicado.</p>'],
         ['2. Objeto de la plataforma','<p>Kaufman organiza información pública y datos técnicos sobre blockchain, mercados, tokenización, regulación, fiscalidad, entidades, minería, hardware y riesgos. El servicio no mantiene fondos, no transmite órdenes, no ofrece custodia y no intermedia pagos.</p>'],
         ['3. Información, no asesoramiento','<p>El contenido es general y educativo. No constituye asesoramiento jurídico, fiscal, financiero, contable, técnico o de inversión; tampoco una oferta, recomendación o invitación para comprar, vender, custodiar, tokenizar o minar activos. La consulta de la plataforma no crea una relación profesional ni fiduciaria.</p>'],
-        ['4. Estados y límites del dato','<p>Kaufman diferencia información automática, verificada, interpretativa, DEMO y no disponible. DEMO identifica estructura sin dato conectado. Los precios pueden sufrir latencia; la normativa puede depender de fechas, residencia, actividad y hechos no conocidos por la plataforma. La fuente original prevalece ante cualquier discrepancia.</p>'],
-        ['5. Uso permitido','<ul><li>Consultar, citar y enlazar contenido para fines lícitos, respetando autoría y fuentes.</li><li>No alterar un dato y atribuirlo a Kaufman.</li><li>No presentar contenido DEMO como verificado.</li><li>No eludir controles técnicos, sobrecargar el servicio, extraer datos de forma abusiva ni utilizar la plataforma para fraude o actividades ilícitas.</li></ul>'],
+        ['4. Estados y límites del dato','<p>Kaufman diferencia información automática, verificada, interpretativa, en snapshot y no disponible. Los precios pueden sufrir latencia; la normativa puede depender de fechas, residencia, actividad y hechos no conocidos por la plataforma. La fuente original prevalece ante cualquier discrepancia.</p>'],
+        ['5. Uso permitido','<ul><li>Consultar, citar y enlazar contenido para fines lícitos, respetando autoría y fuentes.</li><li>No alterar un dato y atribuirlo a Kaufman.</li><li>No presentar una interpretación como verificación jurídica.</li><li>No eludir controles técnicos, sobrecargar el servicio, extraer datos de forma abusiva ni utilizar la plataforma para fraude o actividades ilícitas.</li></ul>'],
         ['6. Propiedad intelectual y reutilización','<p>El diseño, código propio, estructura editorial, textos, taxonomías y análisis de Kaufman pertenecen a Kaufman Advisory Group LLC. Marcas, logotipos, documentos, imágenes y datos de terceros pertenecen a sus titulares y se utilizan conforme a sus condiciones. El acceso gratuito no concede una licencia de redistribución comercial masiva.</p>'],
         ['7. Fuentes, APIs y enlaces externos','<p>La plataforma enlaza administraciones, reguladores, redes, protocolos, medios y proveedores de datos. Kaufman no controla sus políticas, licencias, disponibilidad o cambios posteriores. Abrir un enlace externo implica utilizar un servicio independiente bajo sus propios términos.</p>'],
         ['8. Disponibilidad, cambios y correcciones','<p>Kaufman puede actualizar, corregir, suspender o retirar datos y funcionalidades. Una fuente caída puede convertir un dato en no disponible. Los errores materiales pueden comunicarse a <a href="mailto:contact@kaufmanadvisory.io?subject=Corrección%20de%20dato">contact@kaufmanadvisory.io</a> indicando URL, dato afectado y fuente de contraste.</p>'],
@@ -409,7 +406,7 @@
       ]},
       terminos:{title:'Términos de uso',description:'Condiciones para acceder y utilizar la plataforma informativa Kaufman.',sections:[
         ['1. Objeto','Estos términos regulan el acceso a Kaufman, una plataforma informativa operada por Kaufman Advisory Group LLC. La versión actual no ofrece contratación de asesoría, suscripciones ni pagos.'],
-        ['2. Uso permitido','Puedes consultar y enlazar el contenido para fines lícitos. No debes eludir controles técnicos, interferir con el servicio, atribuir a Kaufman datos modificados ni presentar un registro DEMO como información verificada.'],
+        ['2. Uso permitido','Puedes consultar y enlazar el contenido para fines lícitos. No debes eludir controles técnicos, interferir con el servicio, atribuir a Kaufman datos modificados ni presentar una interpretación como información jurídicamente verificada.'],
         ['3. Alcance de la información','Los datos de mercado pueden contener latencia o interrupciones. La normativa puede cambiar, estar sujeta a transición o depender del caso. El estado de cada registro forma parte esencial del contenido.'],
         ['4. Decisiones del usuario','El uso de la plataforma no crea una relación de asesoramiento. Eres responsable de verificar la fuente y obtener criterio profesional antes de tomar decisiones legales, fiscales, financieras, técnicas o de inversión.'],
         ['5. Servicios de terceros','APIs, fuentes, enlaces y herramientas externas se rigen por sus propios términos. Su inclusión no implica recomendación, certificación ni garantía.'],
@@ -423,7 +420,8 @@
 
   function renderAllProfiles(){
     const entries=Object.entries(CATALOGS).flatMap(([type,catalog])=>catalog.items.map((item)=>({type,...item})));
-    return `<main class="kf-main" id="main-content">${pageHero('Fichas','Índice transversal de entidades, jurisdicciones, herramientas y conceptos de Kaufman.','Directorio global')}<section class="kf-section"><div class="kf-container"><div class="kf-toolbar"><div class="kf-search-field"><input type="search" data-directory-search placeholder="Buscar en todas las fichas…" aria-label="Buscar fichas"></div><select class="kf-select" data-status-filter><option value="all">Todos los estados</option><option value="verified">Verificado</option><option value="demo">Demo</option></select><span class="kf-result-count" data-result-count>${entries.length} fichas</span></div><div class="kf-record-grid" data-record-grid>${entries.map((item,index)=>recordCard(item.type,item,index)).join('')}<div class="kf-empty" data-empty hidden>No hay fichas que coincidan con el filtro.</div></div></div></section></main>`;
+    const states=[...new Set(entries.map((item)=>item.status))];
+    return `<main class="kf-main" id="main-content">${pageHero('Fichas','Índice transversal de entidades, jurisdicciones, herramientas y conceptos de Kaufman.','Directorio global')}<section class="kf-section"><div class="kf-container"><div class="kf-toolbar"><div class="kf-search-field"><input type="search" data-directory-search placeholder="Buscar en todas las fichas…" aria-label="Buscar fichas"></div><select class="kf-select" data-status-filter><option value="all">Todos los estados</option>${states.map((state)=>`<option value="${state}">${STATUS_LABELS[state]}</option>`).join('')}</select><span class="kf-result-count" data-result-count>${entries.length} fichas</span></div><div class="kf-record-grid" data-record-grid>${entries.map((item,index)=>recordCard(item.type,item,index)).join('')}<div class="kf-empty" data-empty hidden>No hay fichas que coincidan con el filtro.</div></div></div></section></main>`;
   }
 
   function renderNotFound(title='Ruta no encontrada'){
@@ -442,7 +440,10 @@
     if(page==='herramientas')return renderTools();
     if(page==='rentabilidades')return renderReturns();
     if(page==='ficha')return renderProfile();
-    if(page==='fichas')return location.search?renderProfile():renderAllProfiles();
+    if(page==='fichas'){
+      const params=new URLSearchParams(location.search);
+      return params.has('tipo')||params.has('id')?renderProfile():renderAllProfiles();
+    }
     if(page==='fuentes')return renderSources();
     if(page==='aviso'||page==='privacidad'||page==='terminos')return renderLegal(page);
     if(page==='retirado')return renderRetired();
@@ -600,14 +601,7 @@
     const energy=Number(metrics.hardware.power_w)/1000*24*uptime/100*(1+cooling/100);
     grossNode.textContent=PRICE.format(gross);
     energyNode.textContent=`${energy.toLocaleString('es-ES',{maximumFractionDigits:2})} kWh`;
-    if(!isManual){
-      const label=country.options[country.selectedIndex].text.replace(' · DEMO','');
-      status.textContent=`DEMO · tarifa eléctrica de ${label} no conectada`;
-      powerNode.innerHTML='<span class="kf-demo-value">DEMO</span>';
-      profitNode.innerHTML='<span class="kf-demo-value">DEMO</span>';
-      paybackNode.innerHTML='<span class="kf-demo-value">DEMO</span>';
-      return;
-    }
+    if(!isManual)return;
     status.textContent='mempool.space · Kaufman Reference Price · BITMAIN';
     const electricityRaw=electricityInput.value.trim();
     if(electricityRaw===''){
@@ -650,13 +644,7 @@
   }
 
   function initJurisdictionTool(){
-    const button=document.querySelector('[data-jurisdiction-run]');
-    if(!button)return;
-    button.addEventListener('click',()=>{
-      const left=document.querySelector('[data-jurisdiction-a]').value,right=document.querySelector('[data-jurisdiction-b]').value,result=document.querySelector('[data-jurisdiction-result]');
-      const fields=['Fiscalidad de minería','Licencia o registro','Impuesto sobre hardware','Residencia y establecimiento','Obligaciones de información'];
-      result.innerHTML=`<div class="kf-compare-grid"><div class="kf-compare-cell label heading">Campo</div><div class="kf-compare-cell heading">${escapeHtml(left)}<br>${statusBadge('demo')}</div><div class="kf-compare-cell heading">${escapeHtml(right)}<br>${statusBadge('demo')}</div>${fields.map((field)=>`<div class="kf-compare-cell label">${field}</div><div class="kf-compare-cell"><span class="kf-demo-value">DEMO · fuente fiscal pendiente</span></div><div class="kf-compare-cell"><span class="kf-demo-value">DEMO · fuente fiscal pendiente</span></div>`).join('')}</div>`;
-    });
+    return;
   }
 
   function initCountryCostStack(){
@@ -703,20 +691,22 @@
     document.querySelectorAll('[data-market-asset]').forEach((element)=>{
       const reference=references[element.dataset.marketAsset];
       const currentAge=reference?.provider_timestamp?ageMs(reference.provider_timestamp):null;
-      const status=reference?.price?freshnessFromAge(currentAge):'UNAVAILABLE';
-      const publishable=status==='FRESH'&&Number.isFinite(Number(reference?.price));
+      const staticSnapshot=latestMarketSnapshot?.delivery_mode==='STATIC_SNAPSHOT';
+      const staticValid=staticSnapshot&&Number.isFinite(currentAge)&&currentAge<=Number(latestMarketSnapshot?.thresholds?.snapshot_max_age_ms||93600000);
+      const status=reference?.price?(staticValid?'SNAPSHOT':freshnessFromAge(currentAge)):'UNAVAILABLE';
+      const publishable=(status==='FRESH'||status==='SNAPSHOT')&&Number.isFinite(Number(reference?.price));
       if(publishable)freshAssets.add(element.dataset.marketAsset);
       if(publishable&&element.dataset.marketAsset==='ethereum')latestEthUsd=Number(reference.price);
       const price=element.querySelector('.kf-market-price'),age=element.querySelector('[data-market-age]'),venues=element.querySelector('[data-market-venues]');
       if(price)price.textContent=publishable?PRICE.format(reference.price):'No disponible';
-      if(age){age.textContent=reference?.provider_timestamp?`${ageLabel(currentAge)} · ${status}`:'Sin precio fresco';setFreshness(age,status)}
-      if(venues)venues.textContent=publishable?reference.venues.join(' · '):'Sin fuentes frescas';
+      if(age){age.textContent=reference?.provider_timestamp?`${ageLabel(currentAge)} · ${status==='SNAPSHOT'?'SNAPSHOT PÚBLICO':status}`:'Sin precio observado';setFreshness(age,status==='SNAPSHOT'?'STALE':status)}
+      if(venues)venues.textContent=publishable?reference.venues.join(' · '):'Sin fuentes dentro del umbral';
       const confidence=element.querySelector('[data-market-confidence]');
       if(confidence){const confidenceLabel={HIGH:'ALTA',MEDIUM:'MEDIA',LOW:'BAJA'}[reference?.confidence]||reference?.confidence;const verificationLabel={VERIFIED:'VERIFICADO',SINGLE_SOURCE:'UNA FUENTE'}[reference?.verification_status]||reference?.verification_status;confidence.textContent=publishable?`${confidenceLabel} · ${verificationLabel}`:'—'}
       const divergence=element.querySelector('[data-market-divergence]');
       if(divergence)divergence.textContent=publishable&&Number.isFinite(reference.metrics?.max_divergence_pct)?`${reference.metrics.max_divergence_pct.toFixed(3)} %`:'—';
     });
-    document.querySelectorAll('[data-market-status]').forEach((node)=>node.textContent=antennaConnected?`${freshAssets.size}/3 referencias frescas · SSE interno`:'Reconectando con la antena interna…');
+    document.querySelectorAll('[data-market-status]').forEach((node)=>node.textContent=latestMarketSnapshot?.delivery_mode==='STATIC_SNAPSHOT'?`${freshAssets.size}/3 referencias · snapshot público ${ageLabel(ageMs(latestMarketSnapshot.generated_at))}`:antennaConnected?`${freshAssets.size}/3 referencias frescas · SSE interno`:'Reconectando con la antena interna…');
     updateGasCost();
   }
 
@@ -742,7 +732,9 @@
 
   function applyEthereumFees(item,oracle){
     const receivedAge=ageMs(item?.received_at);
-    const valid=item?.verification_status==='CHAIN_OBSERVED'&&Number.isFinite(receivedAge)&&receivedAge<=960000&&Number.isFinite(Number(item?.base_fee_gwei));
+    const staticSnapshot=latestMarketSnapshot?.delivery_mode==='STATIC_SNAPSHOT';
+    const maxAge=staticSnapshot?Number(latestMarketSnapshot?.thresholds?.snapshot_max_age_ms||93600000):960000;
+    const valid=item?.verification_status==='CHAIN_OBSERVED'&&Number.isFinite(receivedAge)&&receivedAge<=maxAge&&Number.isFinite(Number(item?.base_fee_gwei));
     const setText=(selector,value)=>document.querySelectorAll(selector).forEach((node)=>node.textContent=value);
     setText('[data-gas-base]',valid?Number(item.base_fee_gwei).toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:3}):'No disponible');
     setText('[data-gas-utilization]',valid&&Number.isFinite(Number(item.gas_used_ratio))?`${(Number(item.gas_used_ratio)*100).toLocaleString('es-ES',{maximumFractionDigits:1})} %`:'No disponible');
@@ -756,7 +748,7 @@
       if(label)label.textContent=publishable?gas.toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:3}):'No disponible';
       if(publishable)card.dataset.gasGwei=String(gas);else delete card.dataset.gasGwei;
     });
-    setText('[data-gas-status]',valid?`Ethereum directo · ${ageLabel(receivedAge)} · actualización cada 15 min`:'Comisiones no disponibles: sin observación de Ethereum inferior a 16 min');
+    setText('[data-gas-status]',valid?`${staticSnapshot?'Snapshot público Ethereum':'Ethereum directo'} · ${ageLabel(receivedAge)}${staticSnapshot?' · no es tiempo real':' · actualización cada 15 min'}`:'Comisiones no disponibles: no existe una observación dentro del umbral');
     const oracleAge=ageMs(oracle?.received_at);
     const oracleValid=oracle?.verification_status==='SOURCE_OBSERVED'&&Number.isFinite(oracleAge)&&oracleAge<=960000;
     setText('[data-gas-etherscan]',oracleValid?`Gas Oracle conectado · divergencia estándar ${Number(oracle.divergence_standard_pct).toLocaleString('es-ES',{maximumFractionDigits:2})} % · ${ageLabel(oracleAge)}`:'Clave gratuita no configurada; Ethereum directo continúa activo');
@@ -776,7 +768,8 @@
   function renderProviders(providers={}){
     const root=document.querySelector('[data-provider-grid]');
     if(!root)return;
-    const names={coinbase:'Coinbase WebSocket',kraken:'Kraken WebSocket v2',binance:'Binance WebSocket',dexscreener:'DEX Screener',coingecko_metadata:'CoinGecko · solo metadatos',defillama_tokenization:'DefiLlama · tokenización',l2beat_projects:'L2BEAT · proyectos L2',ethereum_rpc:'Ethereum RPC',etherscan_gas_oracle:'Etherscan · contraste gas',kraken_fees:'Kraken · comisiones'};
+    const snapshot=latestMarketSnapshot?.delivery_mode==='STATIC_SNAPSHOT';
+    const names={coinbase:snapshot?'Coinbase REST · snapshot':'Coinbase WebSocket',kraken:snapshot?'Kraken REST · snapshot':'Kraken WebSocket v2',binance:'Binance WebSocket',dexscreener:'DEX Screener',coingecko_metadata:'CoinGecko · solo metadatos',defillama_tokenization:'DefiLlama · tokenización',l2beat_projects:'L2BEAT · proyectos L2',ethereum_rpc:'Ethereum RPC',etherscan_gas_oracle:'Etherscan · contraste gas',kraken_fees:'Kraken · comisiones'};
     const keys=['coinbase','kraken','binance','dexscreener','coingecko_metadata','defillama_tokenization','l2beat_projects','ethereum_rpc'];
     if(providers.etherscan_gas_oracle)keys.push('etherscan_gas_oracle');
     root.innerHTML=keys.map((key)=>{const item=providers[key]||{},status=item.connection_status||'UNAVAILABLE';return `<article class="kf-provider-card"><div><span>${escapeHtml(names[key])}</span><i class="kf-health-dot ${status.toLowerCase()}"></i></div><strong>${escapeHtml(status)}</strong><small>${item.last_message_at?ageLabel(ageMs(item.last_message_at)):'Sin mensajes'}</small><dl><div><dt>Mensajes</dt><dd>${Number(item.messages||0).toLocaleString('es-ES')}</dd></div><div><dt>Huecos</dt><dd>${Number(item.gaps||0).toLocaleString('es-ES')}</dd></div><div><dt>Reconexiones</dt><dd>${Number(item.reconnects||0).toLocaleString('es-ES')}</dd></div></dl>${item.last_error?`<p>${escapeHtml(item.last_error)}</p>`:''}</article>`}).join('');
@@ -785,7 +778,7 @@
   function renderStablecoins(stablecoins={}){
     const root=document.querySelector('[data-stablecoin-grid]');
     if(!root)return;
-    root.innerHTML=['USDT','USDC'].map((currency)=>{const item=stablecoins[currency],valid=item?.price&&freshnessFromAge(ageMs(item.provider_timestamp))==='FRESH';return `<article class="kf-stable-card"><span>${currency} / USD</span><strong>${valid?Number(item.price).toFixed(6):'No disponible'}</strong><small>${item?.provider_timestamp?ageLabel(ageMs(item.provider_timestamp)):'Sin tipo fresco'} · ${valid?item.venues.join(' · '):'no se normalizan parejas '+currency}</small></article>`}).join('');
+    root.innerHTML=['USDT','USDC'].map((currency)=>{const item=stablecoins[currency],itemAge=ageMs(item?.provider_timestamp),snapshot=latestMarketSnapshot?.delivery_mode==='STATIC_SNAPSHOT',valid=item?.price&&(snapshot?Number.isFinite(itemAge)&&itemAge<=Number(latestMarketSnapshot?.thresholds?.snapshot_max_age_ms||93600000):freshnessFromAge(itemAge)==='FRESH');return `<article class="kf-stable-card"><span>${currency} / USD</span><strong>${valid?Number(item.price).toFixed(6):'No disponible'}</strong><small>${item?.provider_timestamp?ageLabel(itemAge):'Sin tipo observado'} · ${valid?item.venues.join(' · '):'no se normalizan parejas '+currency}${snapshot?' · snapshot público':''}</small></article>`}).join('');
   }
 
   function renderDexPools(pools=[]){
@@ -800,7 +793,7 @@
     if(!root)return;
     const compact=new Intl.NumberFormat('es-ES',{notation:'compact',maximumFractionDigits:2});
     const ids=['bitcoin','ethereum','solana'];
-    root.innerHTML=ids.map((id)=>{const item=metadata[id],valid=item?.verification_status==='VERIFIED';return `<article class="kf-metadata-card"><img src="${assetUrl(`/assets/logos/${id}.svg`)}" alt="Logo de ${escapeHtml(item?.name||id)}"><div><span>${escapeHtml(item?.name||id)}</span><strong>${valid&&Number.isFinite(Number(item.market_cap_usd))?`${compact.format(item.market_cap_usd)} USD`:'No disponible'}</strong><small>Capitalización · ${valid&&Number.isFinite(Number(item.circulating_supply))?`${compact.format(item.circulating_supply)} en circulación`:'oferta no disponible'}</small><p>${valid?(item.categories||[]).slice(0,3).map(escapeHtml).join(' · '):escapeHtml(item?.exclusion_reason||'last_updated_at pendiente')}</p></div></article>`}).join('');
+    root.innerHTML=ids.map((id)=>{const item=metadata[id],valid=item?.verification_status==='VERIFIED',categories=(item?.categories||[]).slice(0,3).map(escapeHtml).join(' · ');return `<article class="kf-metadata-card"><img src="${assetUrl(`/assets/logos/${id}.svg`)}" alt="Logo de ${escapeHtml(item?.name||id)}"><div><span>${escapeHtml(item?.name||id)}</span><strong>${valid&&Number.isFinite(Number(item.market_cap_usd))?`${compact.format(item.market_cap_usd)} USD`:'No disponible'}</strong><small>Capitalización · ${valid&&Number.isFinite(Number(item.circulating_supply))?`${compact.format(item.circulating_supply)} en circulación`:'oferta no disponible'}</small><p>${valid?(categories||`Metadatos validados · ${ageLabel(ageMs(item.last_updated_at))}`):escapeHtml(item?.exclusion_reason||'Metadato sin timestamp válido')}</p></div></article>`}).join('');
   }
 
   function tokenizedUsd(value){
@@ -1189,13 +1182,43 @@
     regulationFallbackPromise=new Promise((resolve)=>{
       if(!APP_SCRIPT){resolve(null);return}
       const script=document.createElement('script');
-      script.src=new URL('regulation-data.js',APP_SCRIPT.src).href;
+      const url=new URL('regulation-data.js',APP_SCRIPT.src);url.searchParams.set('snapshot',String(Math.floor(Date.now()/3600000)));script.src=url.href;
       script.async=true;
       script.onload=()=>{const data=window.KAUFMAN_REGULATION_DATA||null;if(data)renderRegulationIntelligence({regulation_intelligence:data});resolve(data)};
       script.onerror=()=>resolve(null);
       document.head.appendChild(script);
     });
     return regulationFallbackPromise;
+  }
+
+  function applyHistoricalReturns(rows={}){
+    document.querySelectorAll('[data-return-asset]').forEach((row)=>{
+      const data=rows[row.dataset.returnAsset];
+      for(const [period,key] of [['7d','change_7d_pct'],['30d','change_30d_pct'],['365d','change_365d_pct']]){
+        const node=row.querySelector(`[data-return-period="${period}"]`),value=Number(data?.[key]);
+        if(!node)continue;
+        node.textContent=Number.isFinite(value)?`${value>=0?'+':''}${value.toLocaleString('es-ES',{maximumFractionDigits:2})} %`:'No disponible';
+        node.classList.toggle('positive',Number.isFinite(value)&&value>0);
+        node.classList.toggle('negative',Number.isFinite(value)&&value<0);
+      }
+      const status=row.querySelector('[data-return-status]');
+      if(status)status.textContent=data?.observed_at?`Kraken OHLC · ${ageLabel(ageMs(data.observed_at))}`:'Histórico no disponible';
+    });
+  }
+
+  function loadPlatformFallback(){
+    if(window.KAUFMAN_PLATFORM_DATA){applyMarketSnapshot(window.KAUFMAN_PLATFORM_DATA);return Promise.resolve(window.KAUFMAN_PLATFORM_DATA)}
+    if(platformFallbackPromise)return platformFallbackPromise;
+    platformFallbackPromise=new Promise((resolve)=>{
+      if(!APP_SCRIPT){resolve(null);return}
+      const script=document.createElement('script');
+      const url=new URL('platform-data.js',APP_SCRIPT.src);url.searchParams.set('snapshot',String(Math.floor(Date.now()/3600000)));script.src=url.href;
+      script.async=true;
+      script.onload=()=>{const data=window.KAUFMAN_PLATFORM_DATA||null;if(data)applyMarketSnapshot(data);resolve(data)};
+      script.onerror=()=>{document.querySelectorAll('[data-market-status],[data-tokenization-status],[data-l2-status],[data-fiscal-status]').forEach((node)=>node.textContent='Snapshot público no disponible');resolve(null)};
+      document.head.appendChild(script);
+    });
+    return platformFallbackPromise;
   }
 
   function applyMarketSnapshot(snapshot){
@@ -1210,13 +1233,14 @@
     renderL2Intelligence(snapshot.l2_intelligence);
     renderFiscalIntelligence(snapshot);
     renderRegulationIntelligence(snapshot);
+    applyHistoricalReturns(snapshot.historical_returns);
     applyGas(snapshot.auxiliary?.ethereum_gas);
     applyEthereumFees(snapshot.auxiliary?.ethereum_fees,snapshot.auxiliary?.etherscan_gas_oracle);
     const fee=snapshot.auxiliary?.exchange_fees;
-    if(fee)applyExchangeFee(fee,`Kraken server-side · ${ageLabel(ageMs(fee.received_at))}`);
+    if(fee)applyExchangeFee(fee,`Kraken ${snapshot.delivery_mode==='STATIC_SNAPSHOT'?'snapshot público':'server-side'} · ${ageLabel(ageMs(fee.received_at))}`);
     else document.querySelectorAll('[data-exchange-fee-status]').forEach((node)=>node.textContent='Kraken no disponible');
     const method=snapshot.reference_prices?.bitcoin?.methodology;
-    document.querySelectorAll('[data-market-methodology]').forEach((node)=>node.textContent=method?`Mediana · frescura < 5 s · volumen mínimo ${Number(method.minimum_volume_usd_24h).toLocaleString('es-ES')} USD · divergencia ≤ ${method.divergence_threshold_pct} % · conexión sana.`:'Metodología pendiente');
+    document.querySelectorAll('[data-market-methodology]').forEach((node)=>node.textContent=method?(snapshot.delivery_mode==='STATIC_SNAPSHOT'?`Snapshot público · mediana de mercados observados · volumen mínimo ${Number(method.minimum_volume_usd_24h).toLocaleString('es-ES')} USD · divergencia ≤ ${method.divergence_threshold_pct} % · hora visible.`:`Mediana · frescura < 5 s · volumen mínimo ${Number(method.minimum_volume_usd_24h).toLocaleString('es-ES')} USD · divergencia ≤ ${method.divergence_threshold_pct} % · conexión sana.`):'Metodología pendiente');
     syncMiningReference();
   }
 
@@ -1225,9 +1249,9 @@
     antennaStream?.close();
     antennaConnected=false;
     if(FILE_ROOT||STATIC_HOST||!('EventSource' in window)){
-      document.querySelectorAll('[data-market-status]').forEach((node)=>node.textContent=STATIC_HOST?'Antena en vivo pendiente de alojamiento server-side':'Abre Kaufman con npm start para activar la antena');
+      document.querySelectorAll('[data-market-status]').forEach((node)=>node.textContent='Cargando snapshot público verificable…');
       refreshMarketDisplay();
-      loadRegulationFallback();
+      loadPlatformFallback();
       return;
     }
     antennaStream=new EventSource(ANTENNA_STREAM);
@@ -1235,7 +1259,7 @@
       try{antennaConnected=true;applyMarketSnapshot(JSON.parse(event.data))}catch(error){antennaConnected=false;refreshMarketDisplay()}
     });
     antennaStream.onopen=()=>{antennaConnected=true;refreshMarketDisplay()};
-    antennaStream.onerror=()=>{antennaConnected=false;refreshMarketDisplay()};
+    antennaStream.onerror=()=>{const hadConnection=antennaConnected;antennaConnected=false;refreshMarketDisplay();if(!hadConnection){antennaStream?.close();loadPlatformFallback()}};
   }
 
   function safeExternalUrl(value){
@@ -1255,7 +1279,8 @@
 
   function feedItemMarkup(item){
     const date=feedDateParts(item.published),url=safeExternalUrl(item.url),status=item.status==='verified'?'verified':'unverified';
-    return `<article class="kf-feed-item"><div class="kf-feed-time"><strong>${date.day}</strong><span>${date.time}</span></div><div class="kf-feed-body"><a class="kf-feed-title" href="${url}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.title)}</a><div class="kf-feed-meta">${escapeHtml(item.publisher)} · ${escapeHtml(item.jurisdiction||'Global')} · ${escapeHtml(item.category||'ACTUALIDAD')}</div><div class="kf-feed-context"><span>Publicado ${date.full}</span><a href="${url}" target="_blank" rel="noopener noreferrer">Fuente ↗</a></div><div class="kf-feed-labels">${statusBadge(status)}<span class="kf-impact">${escapeHtml(item.importance||'Info')}</span></div></div><button class="kf-feed-star" type="button" data-feed-star data-feed-key="${escapeHtml(url)}" aria-label="Guardar noticia" title="Guardar noticia">☆</button></article>`;
+    const translation=item.translated?'<span>Traducido al castellano · titular original en la fuente</span>':'';
+    return `<article class="kf-feed-item"><div class="kf-feed-time"><strong>${date.day}</strong><span>${date.time}</span></div><div class="kf-feed-body"><a class="kf-feed-title" href="${url}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.title)}</a><div class="kf-feed-meta">${escapeHtml(item.publisher)} · ${escapeHtml(item.jurisdiction||'Global')} · ${escapeHtml(item.category||'ACTUALIDAD')}</div><div class="kf-feed-context"><span>Publicado ${date.full}</span>${translation}<a href="${url}" target="_blank" rel="noopener noreferrer">Fuente ↗</a></div><div class="kf-feed-labels">${statusBadge(status)}<span class="kf-impact">${escapeHtml(item.importance||'Info')}</span></div></div><button class="kf-feed-star" type="button" data-feed-star data-feed-key="${escapeHtml(url)}" aria-label="Guardar noticia" title="Guardar noticia">☆</button></article>`;
   }
 
   function renderHomeCurrentAffairs(data){
@@ -1300,7 +1325,7 @@
     if(!APP_SCRIPT)return Promise.resolve(null);
     return new Promise((resolve)=>{
       const script=document.createElement('script');
-      script.src=new URL('daily-data.js',APP_SCRIPT.src).href;
+      const url=new URL('daily-data.js',APP_SCRIPT.src);url.searchParams.set('snapshot',String(Math.floor(Date.now()/3600000)));script.src=url.href;
       script.async=true;
       script.onload=()=>{applyDailySnapshot(window.KAUFMAN_DAILY_DATA);resolve(window.KAUFMAN_DAILY_DATA||null)};
       script.onerror=()=>{document.querySelectorAll('[data-home-regulation],[data-home-mining],[data-regulation-radar]').forEach((node)=>node.innerHTML='<div class="kf-live-empty">Fuente diaria no disponible.</div>');updateMiningCalculator(null);resolve(null)};

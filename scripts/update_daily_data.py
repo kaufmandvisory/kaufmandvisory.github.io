@@ -44,7 +44,43 @@ def fetch_text(url: str) -> str:
         return response.read().decode("utf-8", errors="replace")
 
 
-def google_news_items(query: str, *, language="en-US", country="US", edition="US:en"):
+def translate_headline_es(title: str) -> dict | None:
+    """Translate a headline at build time; never expose the translation service to browsers."""
+    clean = re.sub(r"\s+", " ", title).strip()
+    if not clean:
+        return None
+    params = urlencode(
+        {"client": "gtx", "sl": "auto", "tl": "es", "dt": "t", "q": clean}
+    )
+    request = Request(
+        f"https://translate.googleapis.com/translate_a/single?{params}",
+        headers={"Accept": "application/json", "User-Agent": USER_AGENT},
+    )
+    try:
+        with urlopen(request, timeout=15) as response:
+            payload = json.load(response)
+        translated = "".join(
+            segment[0]
+            for segment in (payload[0] if isinstance(payload, list) and payload else [])
+            if isinstance(segment, list) and segment and isinstance(segment[0], str)
+        ).strip()
+    except (HTTPError, URLError, TimeoutError, ValueError, TypeError, IndexError):
+        return None
+    if not translated:
+        return None
+    translated = re.sub(r"\s+", " ", translated)
+    translated = re.sub(r"\bEE\. UU\.\b", "EE. UU.", translated)
+    translated = re.sub(r"^Solo Miner\b", "Un minero en solitario", translated, flags=re.IGNORECASE)
+    translated = re.sub(r"\bobtiene un bloque de Bitcoin\b", "mina un bloque de Bitcoin", translated, flags=re.IGNORECASE)
+    return {
+        "title": translated,
+        "original_title": clean,
+        "translated": translated.casefold() != clean.casefold(),
+        "language": "es-ES",
+    }
+
+
+def google_news_items(query: str, *, language="es", country="ES", edition="ES:es"):
     params = urlencode({"q": query, "hl": language, "gl": country, "ceid": edition})
     root = ET.fromstring(fetch_text(f"https://news.google.com/rss/search?{params}"))
     rows = []
@@ -126,7 +162,10 @@ def global_regulation_news():
     )
     try:
         rows = google_news_items(
-            "(crypto OR blockchain OR stablecoin) (regulation OR law OR legislation OR regulator) when:30d"
+            "(crypto OR blockchain OR stablecoin) (regulation OR law OR legislation OR regulator) when:30d",
+            language="en-US",
+            country="US",
+            edition="US:en",
         )
     except (HTTPError, URLError, TimeoutError, ET.ParseError, ValueError):
         return []
@@ -149,9 +188,12 @@ def global_regulation_news():
         if jurisdiction in jurisdictions:
             continue
         jurisdictions.add(jurisdiction)
+        headline = translate_headline_es(row["title"])
+        if not headline:
+            continue
         selected.append(
             {
-                "title": row["title"],
+                **headline,
                 "url": row["url"],
                 "publisher": row["publisher"],
                 "jurisdiction": jurisdiction,
@@ -180,15 +222,24 @@ def mining_news():
     }
     try:
         rows = google_news_items(
-            "(bitcoin mining OR crypto mining) (hardware OR ASIC OR profitability OR hashrate) when:1d"
+            "(bitcoin mining OR crypto mining) (hardware OR ASIC OR profitability OR hashrate) when:1d",
+            language="en-US",
+            country="US",
+            edition="US:en",
         )
     except (HTTPError, URLError, TimeoutError, ET.ParseError, ValueError):
         return []
     cutoff = datetime.now(timezone.utc) - timedelta(hours=24)
+    mining_topic = re.compile(
+        r"\b(?:bitcoin miner|mining|miner|Bitaxe|ASIC|hashrate|BitFuFu|Bitdeer|MARA|Riot Platforms|CleanSpark)\b",
+        re.IGNORECASE,
+    )
     candidates = [
         row
         for row in rows
-        if row["published_at"] >= cutoff and row["publisher"] in trusted
+        if row["published_at"] >= cutoff
+        and row["publisher"] in trusted
+        and mining_topic.search(row["title"])
     ]
     candidates.sort(
         key=lambda row: (row["published_at"], trusted[row["publisher"]]), reverse=True
@@ -200,9 +251,12 @@ def mining_news():
         if any(fingerprint[:48] in previous or previous[:48] in fingerprint for previous in seen):
             continue
         seen.add(fingerprint)
+        headline = translate_headline_es(row["title"])
+        if not headline:
+            continue
         selected.append(
             {
-                "title": row["title"],
+                **headline,
                 "url": row["url"],
                 "publisher": row["publisher"],
                 "published": row["published_at"].isoformat(timespec="seconds"),
@@ -368,10 +422,13 @@ def regulation_snapshot():
             text = f"{row.get('title', '')} {row.get('abstract') or ''}"
             if not KEYWORDS.search(text):
                 continue
+            headline = translate_headline_es(str(row.get("title", "Documento sin título")))
+            if not headline:
+                continue
             items.append(
                 {
                     "id": row.get("document_number", row.get("html_url")),
-                    "title": row.get("title", "Documento sin título"),
+                    **headline,
                     "url": row.get("html_url"),
                     "published": row.get("publication_date", ""),
                     "source": "Federal Register",
