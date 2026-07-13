@@ -90,6 +90,7 @@
   const SMALL_USD = new Intl.NumberFormat('es-ES',{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:4});
   const APP_SCRIPT = document.querySelector('script[src*="kaufman-app.js"]');
   const FILE_ROOT = location.protocol==='file:'&&APP_SCRIPT ? new URL('../',APP_SCRIPT.src) : null;
+  const STATIC_HOST = /(^|\.)kaufmanadvisory\.io$|(^|\.)kaufmandvisory\.github\.io$/.test(location.hostname);
   let latestEthUsd = null;
   let latestMarketSnapshot = null;
   let antennaStream = null;
@@ -1223,9 +1224,10 @@
     if(!document.querySelector('[data-market-asset],[data-gas-price],[data-gas-base],[data-l2-projects],[data-tokenization-dashboard],[data-fiscal-dashboard],[data-regulation-dashboard],[data-kraken-maker],[data-provider-grid]'))return;
     antennaStream?.close();
     antennaConnected=false;
-    if(FILE_ROOT||!('EventSource' in window)){
-      document.querySelectorAll('[data-market-status]').forEach((node)=>node.textContent='Abre Kaufman con npm start para activar la antena');
+    if(FILE_ROOT||STATIC_HOST||!('EventSource' in window)){
+      document.querySelectorAll('[data-market-status]').forEach((node)=>node.textContent=STATIC_HOST?'Antena en vivo pendiente de alojamiento server-side':'Abre Kaufman con npm start para activar la antena');
       refreshMarketDisplay();
+      loadRegulationFallback();
       return;
     }
     antennaStream=new EventSource(ANTENNA_STREAM);
