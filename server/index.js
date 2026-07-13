@@ -43,7 +43,11 @@ class MarketAntenna {
       createCoinbaseConnector(callbacks),
       createKrakenConnector(callbacks),
       createBinanceConnector(callbacks),
-      new DexScreenerConnector({ ...callbacks, onPools: (pools) => this.replaceDexPools(pools) }),
+      new DexScreenerConnector({
+        ...callbacks,
+        onPools: (pools) => this.replaceDexPools(pools),
+        getReferencePrice: (assetId) => this.references[assetId]?.price || null
+      }),
       new CoinGeckoMetadataConnector({
         onMetadata: (metadata) => { this.metadata = metadata; },
         onHealth: callbacks.onHealth

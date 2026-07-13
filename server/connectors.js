@@ -3,10 +3,9 @@ import {
   COINBASE_MARKETS,
   CONFIG,
   KRAKEN_MARKETS,
-  ONCHAIN_ASSETS,
-  ONCHAIN_QUOTES,
-  onchainKey
+  ONCHAIN_ASSETS
 } from './config.js';
+import { selectDexPair, verifyDexPair } from './dexscreener.js';
 
 function numberOrNull(value) {
   const number = Number(value);
@@ -227,10 +226,11 @@ export function createBinanceConnector(callbacks) {
 }
 
 export class DexScreenerConnector {
-  constructor({ onQuote, onPools, onHealth, config = CONFIG }) {
+  constructor({ onQuote, onPools, onHealth, getReferencePrice = () => null, config = CONFIG }) {
     this.onQuote = onQuote;
     this.onPools = onPools;
     this.onHealth = onHealth;
+    this.getReferencePrice = getReferencePrice;
     this.config = config;
     this.timer = null;
     this.stopped = false;
@@ -251,49 +251,33 @@ export class DexScreenerConnector {
     const receivedAt = new Date();
     this.onHealth('dexscreener', { connection_status: 'CONNECTING', ...this.metrics });
     try {
-      const allPools = [];
+      const selectedPairs = [];
       for (const asset of ONCHAIN_ASSETS) {
         const url = `https://api.dexscreener.com/token-pairs/v1/${encodeURIComponent(asset.chainId)}/${encodeURIComponent(asset.contractAddress)}`;
         const response = await fetch(url, { headers: { accept: 'application/json', 'user-agent': 'Kaufman-Market-Antenna/1.0' }, signal: AbortSignal.timeout(9_000) });
         if (!response.ok) throw new Error(`DEX Screener HTTP ${response.status}`);
         const pairs = await response.json();
         this.metrics.messages += 1;
-        const targetAddress = asset.contractAddress.toLowerCase();
-        for (const pair of Array.isArray(pairs) ? pairs : []) {
-          const baseAddress = String(pair.baseToken?.address || '').toLowerCase();
-          const quoteAddress = String(pair.quoteToken?.address || '').toLowerCase();
-          const currency = ONCHAIN_QUOTES[asset.chainId]?.[quoteAddress] || null;
-          if (baseAddress !== targetAddress || !currency) continue;
-          const price = numberOrNull(pair.priceNative);
-          const volumeQuote = numberOrNull(pair.volume?.h24);
-          const pool = {
-            identity: onchainKey(asset.chainId, asset.contractAddress),
-            chain_id: asset.chainId,
-            contract_address: asset.contractAddress,
-            canonical_asset_id: asset.canonicalAssetId,
-            name: asset.name,
-            dex: pair.dexId,
-            pair_address: pair.pairAddress,
-            quote_contract_address: pair.quoteToken?.address || null,
-            currency,
-            price,
-            volume_24h_quote: volumeQuote,
-            liquidity_usd: numberOrNull(pair.liquidity?.usd),
-            url: pair.url,
-            received_at: receivedAt.toISOString(),
-            provider_timestamp: null,
-            verification_status: 'TIMESTAMP_UNVERIFIED'
-          };
-          allPools.push(pool);
-        }
+        const pair = selectDexPair(asset, Array.isArray(pairs) ? pairs : []);
+        if (pair) selectedPairs.push({ asset, pair, sourceResponseAt: response.headers.get('date') || receivedAt.toUTCString() });
       }
-      const selectedPools = [];
-      for (const assetId of ['bitcoin', 'ethereum', 'solana']) {
-        selectedPools.push(...allPools
-          .filter((pool) => pool.canonical_asset_id === assetId)
-          .sort((a, b) => (b.liquidity_usd || 0) - (a.liquidity_usd || 0))
-          .slice(0, 5));
-      }
+      const selectedPools = (await Promise.all(selectedPairs.map(async ({ asset, pair, sourceResponseAt }) => {
+        const url = `https://api.dexscreener.com/latest/dex/pairs/${encodeURIComponent(asset.chainId)}/${encodeURIComponent(pair.pairAddress)}`;
+        const response = await fetch(url, { headers: { accept: 'application/json', 'user-agent': 'Kaufman-Market-Antenna/1.0' }, signal: AbortSignal.timeout(9_000) });
+        if (!response.ok) throw new Error(`DEX Screener confirmation HTTP ${response.status}`);
+        const payload = await response.json();
+        this.metrics.messages += 1;
+        const confirmation = payload.pair || payload.pairs?.[0];
+        return verifyDexPair({
+          asset,
+          pair,
+          confirmation,
+          receivedAt: receivedAt.toISOString(),
+          sourceResponseAt,
+          confirmationResponseAt: response.headers.get('date') || receivedAt.toUTCString(),
+          referencePriceUsd: this.getReferencePrice(asset.canonicalAssetId)
+        });
+      }))).filter(Boolean);
       this.metrics.quotes += selectedPools.filter((pool) => pool.price).length;
       this.onPools(selectedPools);
       this.onHealth('dexscreener', { connection_status: 'CONNECTED', last_message_at: receivedAt.toISOString(), ...this.metrics });

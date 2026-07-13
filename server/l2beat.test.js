@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { normalizeL2BeatSummary } from './l2beat.js';
+import { extractL2BeatProjectIcons, normalizeL2BeatSummary } from './l2beat.js';
 
 const fixture = {
   chart: { syncedUntil: 1783900800 },
@@ -24,14 +24,23 @@ const fixture = {
 };
 
 test('normalizes L2BEAT facts while preserving original terms', () => {
-  const result = normalizeL2BeatSummary(fixture, '2026-07-13T10:00:00.000Z');
+  const result = normalizeL2BeatSummary(fixture, '2026-07-13T10:00:00.000Z', { arbitrum: 'https://l2beat.com/static/icons/arbitrum.1234abcd.png' });
   assert.equal(result.coverage.projects, 1);
   assert.equal(result.projects[0].category_es, 'Rollup optimista');
   assert.equal(result.projects[0].stage, 'Stage 1');
+  assert.equal(result.projects[0].stage_label_es, 'Nivel 1 de madurez');
+  assert.match(result.projects[0].logo_url, /^https:\/\/l2beat\.com\/static\/icons\/arbitrum/);
   assert.match(result.projects[0].stage_explanation, /Madurez intermedia/);
   assert.equal(result.projects[0].tvs_change_7d_pct, 2.5);
   assert.equal(result.projects[0].risks[0].original_value, 'Self sequence');
   assert.equal(result.projects[0].risks[0].value, 'El usuario puede secuenciar');
+});
+
+test('extracts versioned project logos from the official L2BEAT summary page', () => {
+  const html = '<img src="/static/icons/arbitrum.038422c5.png"><img src="/static/icons/scroll.dd0923e7.png">';
+  const icons = extractL2BeatProjectIcons(html);
+  assert.equal(icons.arbitrum, 'https://l2beat.com/static/icons/arbitrum.038422c5.png');
+  assert.equal(icons.scroll, 'https://l2beat.com/static/icons/scroll.dd0923e7.png');
 });
 
 test('derives trust, stablecoin and public RWA shares without inventing values', () => {
@@ -49,6 +58,8 @@ test('states that stage is maturity rather than a security score', () => {
   assert.match(result.methodology.stage_caveat, /no equivalen.*seguridad/i);
   assert.equal(result.verification_status, 'SOURCE_OBSERVED');
   assert.equal(result.provider_timestamp, '2026-07-13T00:00:00.000Z');
+  assert.equal(result.methodology.selection_type, 'EDITORIAL_CURATED_SET');
+  assert.match(result.methodology.selection, /no es un ranking/i);
 });
 
 test('rejects incomplete source payloads', () => {

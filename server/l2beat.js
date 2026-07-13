@@ -1,6 +1,7 @@
 import { CONFIG } from './config.js';
 
 const SUMMARY_URL = 'https://l2beat.com/api/scaling/summary';
+const SUMMARY_PAGE_URL = 'https://l2beat.com/scaling/summary';
 const REPOSITORY_URL = 'https://github.com/l2beat/l2beat';
 const CURATED_SLUGS = Object.freeze([
   'arbitrum', 'base', 'op-mainnet', 'starknet', 'linea', 'scroll',
@@ -68,6 +69,22 @@ function stageExplanation(stage) {
   return 'L2BEAT no asigna una etapa publicable a este proyecto.';
 }
 
+function stageLabelEs(stage) {
+  if (stage === 'Stage 2') return 'Nivel 2 de madurez';
+  if (stage === 'Stage 1') return 'Nivel 1 de madurez';
+  if (stage === 'Stage 0') return 'Nivel 0 de madurez';
+  return 'Madurez no asignada';
+}
+
+export function extractL2BeatProjectIcons(html) {
+  const icons = {};
+  const pattern = /\/static\/icons\/([a-z0-9-]+)\.[a-f0-9]+\.(?:png|svg|webp)/gi;
+  for (const match of String(html || '').matchAll(pattern)) {
+    icons[match[1]] = new URL(match[0], SUMMARY_PAGE_URL).href;
+  }
+  return icons;
+}
+
 function riskExplanation(name, value, sentiment) {
   if (name === 'Sequencer Failure') {
     if (/Self sequence|Force via L1|Enqueue via L1/i.test(value)) return 'Existe una ruta en Ethereum para que el usuario no dependa totalmente del secuenciador.';
@@ -114,7 +131,7 @@ function normalizeRisk(risk) {
   };
 }
 
-export function normalizeL2BeatSummary(payload, observedAt = new Date().toISOString()) {
+export function normalizeL2BeatSummary(payload, observedAt = new Date().toISOString(), projectIcons = {}) {
   if (!payload?.projects || typeof payload.projects !== 'object') throw new Error('L2BEAT summary response is incomplete');
   const allProjects = Object.values(payload.projects).filter((project) => project?.type === 'layer2' && project.isArchived !== true);
   const eligible = allProjects.filter((project) => numberOrNull(project?.tvs?.breakdown?.total) !== null && Number(project.tvs.breakdown.total) > 0);
@@ -139,7 +156,10 @@ export function normalizeL2BeatSummary(payload, observedAt = new Date().toISOStr
       purposes: Array.isArray(project.purposes) ? project.purposes : [],
       purposes_es: (project.purposes || []).map((purpose) => PURPOSE_ES[purpose] || purpose),
       stage: project.stage || 'Not applicable',
+      stage_label_es: stageLabelEs(project.stage),
       stage_explanation: stageExplanation(project.stage),
+      logo_url: projectIcons[project.slug] || null,
+      logo_source: projectIcons[project.slug] ? 'L2BEAT summary page' : null,
       is_under_review: project.isUnderReview === true,
       tvs_usd: total,
       tvs_change_7d_pct: numberOrNull(project.tvs.change7d) === null ? null : round(Number(project.tvs.change7d) * 100),
@@ -151,7 +171,6 @@ export function normalizeL2BeatSummary(payload, observedAt = new Date().toISOStr
       data_availability: daBadge?.name || risks.find((risk) => risk.original_name === 'Data Availability')?.original_value || null,
       risks,
       signals: [
-        project.stage === 'Stage 0' ? 'MADUREZ_STAGE_0' : null,
         project.isUnderReview === true ? 'CAMBIOS_EN_REVISION' : null,
         risks.find((risk) => risk.original_name === 'Exit Window')?.sentiment === 'bad' ? 'SIN_VENTANA_SALIDA_EMERGENCIA' : null,
         risks.find((risk) => risk.original_name === 'Data Availability')?.sentiment !== 'good' ? 'DA_CONFIANZA_ADICIONAL' : null
@@ -192,11 +211,15 @@ export function normalizeL2BeatSummary(payload, observedAt = new Date().toISOStr
     methodology: {
       title: 'L2 explicadas, no promocionadas',
       summary: 'Kaufman conserva los campos originales de L2BEAT y añade una explicación española propia. TVS significa valor asegurado, no capitalización ni volumen.',
+      selection: 'Muestra editorial fija de doce L2 de uso general: redes consolidadas y emergentes de distintos stacks. Solo se publican si L2BEAT las mantiene activas y con TVS superior a cero; no es un ranking ni una recomendación.',
+      selection_type: 'EDITORIAL_CURATED_SET',
+      selection_slugs: CURATED_SLUGS,
       stage_caveat: 'Las etapas de L2BEAT son una evaluación opinada de madurez y descentralización; no equivalen a una calificación integral de seguridad.',
       translation_caveat: 'La traducción resume el significado técnico. Ante cualquier discrepancia prevalece el campo original y la ficha enlazada de L2BEAT.'
     },
     sources: [
       { name: 'L2BEAT Public API', url: SUMMARY_URL, role: 'TVS, etapa, stack, propósito y matriz de riesgos' },
+      { name: 'L2BEAT summary page', url: SUMMARY_PAGE_URL, role: 'Logotipos oficiales versionados por proyecto' },
       { name: 'L2BEAT repository', url: REPOSITORY_URL, role: 'Metodología y configuración abierta · licencia MIT' }
     ]
   };
@@ -223,14 +246,23 @@ export class L2BeatConnector {
 
   async refresh() {
     try {
-      const response = await fetch(SUMMARY_URL, {
-        headers: { accept: 'application/json', 'user-agent': 'Kaufman-Market-Antenna/1.0' },
-        signal: AbortSignal.timeout(30_000)
-      });
+      const [response, summaryPage] = await Promise.all([
+        fetch(SUMMARY_URL, {
+          headers: { accept: 'application/json', 'user-agent': 'Kaufman-Market-Antenna/1.0' },
+          signal: AbortSignal.timeout(30_000)
+        }),
+        fetch(SUMMARY_PAGE_URL, {
+          headers: { accept: 'text/html', 'user-agent': 'Kaufman-Market-Antenna/1.0' },
+          signal: AbortSignal.timeout(30_000)
+        })
+      ]);
       if (!response.ok) throw new Error(`L2BEAT summary HTTP ${response.status}`);
+      if (!summaryPage.ok) throw new Error(`L2BEAT summary page HTTP ${summaryPage.status}`);
       const contentType = response.headers.get('content-type') || '';
       if (!contentType.includes('application/json')) throw new Error('L2BEAT returned a non-JSON response');
-      const snapshot = normalizeL2BeatSummary(await response.json(), new Date().toISOString());
+      const icons = extractL2BeatProjectIcons(await summaryPage.text());
+      const snapshot = normalizeL2BeatSummary(await response.json(), new Date().toISOString(), icons);
+      if (snapshot.projects.some((project) => !project.logo_url)) throw new Error('L2BEAT project logos are incomplete');
       this.onData(snapshot);
       this.onHealth('l2beat_projects', {
         connection_status: 'CONNECTED',

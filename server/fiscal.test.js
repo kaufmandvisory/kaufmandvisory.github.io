@@ -10,6 +10,8 @@ test('builds a complete fiscal matrix at jurisdiction by event grain', () => {
   assert.equal(snapshot.data_quality.fact_count, 40);
   assert.equal(snapshot.data_quality.facts_with_source_pct, 100);
   assert.equal(snapshot.data_quality.final_tax_liability_calculated, false);
+  assert.equal(snapshot.data_quality.indicative_calculation_jurisdictions, 8);
+  assert.equal(Object.keys(snapshot.calculation_models).length, 8);
   assert.equal(validateFiscalSnapshot(snapshot), true);
 });
 

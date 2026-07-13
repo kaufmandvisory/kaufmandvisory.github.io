@@ -61,7 +61,10 @@ for (const [currency, reference] of Object.entries(snapshot.stablecoin_fx)) {
 for (const pool of snapshot.onchain_pools) {
   assert.equal(pool.identity, `${pool.chain_id}:${pool.contract_address.toLowerCase()}`, 'onchain identity mismatch');
   assert.equal(pool.provider_timestamp, null, `${pool.identity}: DEX timestamp must not be invented`);
-  assert.equal(pool.verification_status, 'TIMESTAMP_UNVERIFIED', `${pool.identity}: DEX verification status`);
+  assert.ok(['VERIFIED', 'SOURCE_CROSSCHECKED'].includes(pool.verification_status), `${pool.identity}: DEX verification status`);
+  assert.equal(pool.exact_trade_timestamp_available, false, `${pool.identity}: exact trade timestamp contract`);
+  assert.ok(Number.isFinite(Date.parse(pool.source_response_at)), `${pool.identity}: source response time`);
+  assert.ok(Object.entries(pool.verification_checks).filter(([key]) => key !== 'reference_price_match').every(([, value]) => value === true), `${pool.identity}: DEX cross-check failed`);
 }
 
 for (const metadata of Object.values(snapshot.metadata)) {
@@ -115,6 +118,7 @@ assert.match(l2.methodology.stage_caveat, /no equivalen|no equivale/i, 'L2 stage
 for (const project of l2.projects) {
   assert.ok(project.slug && project.name && Number.isFinite(project.tvs_usd), `${project.slug || 'L2'}: incomplete project`);
   assert.match(project.source_url, /^https:\/\/l2beat\.com\/scaling\/projects\//, `${project.slug}: invalid source URL`);
+  assert.match(project.logo_url, /^https:\/\/l2beat\.com\/static\/icons\/[a-z0-9-]+\.[a-f0-9]+\.(?:png|svg|webp)$/i, `${project.slug}: invalid versioned logo URL`);
   assert.ok(project.risks.length > 0, `${project.slug}: risk matrix missing`);
   for (const risk of project.risks) {
     for (const field of ['name', 'value', 'original_name', 'original_value', 'explanation']) {

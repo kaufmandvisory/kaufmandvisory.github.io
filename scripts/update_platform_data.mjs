@@ -2,10 +2,11 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildTokenizationSnapshot } from '../server/tokenization.js';
-import { normalizeL2BeatSummary } from '../server/l2beat.js';
+import { extractL2BeatProjectIcons, normalizeL2BeatSummary } from '../server/l2beat.js';
 import { SOURCE_REGISTRY, buildFiscalSnapshot, checkFiscalSource, validateFiscalSnapshot } from '../server/fiscal.js';
 import { REGULATORY_SOURCES, buildRegulationSnapshot, checkRegulatorySource, validateRegulationSnapshot } from '../server/regulation.js';
 import { buildEthereumFeeSnapshot } from '../server/auxiliary.js';
+import { selectDexPair, verifyDexPair } from '../server/dexscreener.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const receivedAt = new Date().toISOString();
@@ -15,6 +16,18 @@ async function fetchJson(url, options = {}) {
   const response = await fetch(url, { ...options, headers: { ...headers, ...(options.headers || {}) }, signal: AbortSignal.timeout(options.timeout || 25_000) });
   if (!response.ok) throw new Error(`${new URL(url).hostname} HTTP ${response.status}`);
   return response.json();
+}
+
+async function fetchJsonWithMeta(url, options = {}) {
+  const response = await fetch(url, { ...options, headers: { ...headers, ...(options.headers || {}) }, signal: AbortSignal.timeout(options.timeout || 25_000) });
+  if (!response.ok) throw new Error(`${new URL(url).hostname} HTTP ${response.status}`);
+  return { payload: await response.json(), response_at: response.headers.get('date') || new Date().toUTCString() };
+}
+
+async function fetchText(url, options = {}) {
+  const response = await fetch(url, { ...options, headers: { ...headers, accept: 'text/html', ...(options.headers || {}) }, signal: AbortSignal.timeout(options.timeout || 25_000) });
+  if (!response.ok) throw new Error(`${new URL(url).hostname} HTTP ${response.status}`);
+  return response.text();
 }
 
 async function attempt(task, fallback = null) {
@@ -125,7 +138,15 @@ const tokenizationMarkets = await attempt(async () => {
   return buildTokenizationSnapshot(protocols, stablecoins, receivedAt);
 });
 
-const l2Intelligence = await attempt(async () => normalizeL2BeatSummary(await fetchJson('https://l2beat.com/api/scaling/summary'), receivedAt));
+const l2Intelligence = await attempt(async () => {
+  const [summary, page] = await Promise.all([
+    fetchJson('https://l2beat.com/api/scaling/summary'),
+    fetchText('https://l2beat.com/scaling/summary')
+  ]);
+  const snapshot = normalizeL2BeatSummary(summary, receivedAt, extractL2BeatProjectIcons(page));
+  if (snapshot.projects.some((project) => !project.logo_url)) throw new Error('L2BEAT project logos are incomplete');
+  return snapshot;
+});
 
 const fiscalHealth = Object.fromEntries(await Promise.all(SOURCE_REGISTRY.filter((source) => source.monitor).map(async (source) => [source.id, await checkFiscalSource(source)])));
 const fiscalIntelligence = buildFiscalSnapshot(fiscalHealth, receivedAt);
@@ -165,15 +186,19 @@ const onchainAssets = [
   { id: 'solana', name: 'Wrapped SOL', chain: 'solana', address: 'So11111111111111111111111111111111111111112' }
 ];
 const onchainPools = (await Promise.all(onchainAssets.map(async (asset) => attempt(async () => {
-  const payload = await fetchJson(`https://api.dexscreener.com/latest/dex/tokens/${asset.address}`);
-  const pairs = (payload.pairs || []).filter((pair) => String(pair.chainId).toLowerCase() === asset.chain && ['USDC', 'USDT'].includes(String(pair.quoteToken?.symbol).toUpperCase()));
-  const pair = pairs.sort((a, b) => Number(b.liquidity?.usd || 0) - Number(a.liquidity?.usd || 0))[0];
+  const primary = await fetchJsonWithMeta(`https://api.dexscreener.com/latest/dex/tokens/${asset.address}`);
+  const pair = selectDexPair(asset, primary.payload.pairs || []);
   if (!pair) throw new Error(`DEX pool unavailable: ${asset.id}`);
-  return {
-    name: asset.name, canonical_asset_id: asset.id, identity: `${asset.chain}:${asset.address.toLowerCase()}`, chain_id: asset.chain, contract_address: asset.address,
-    dex: pair.dexId, pair_address: pair.pairAddress, url: pair.url, price: Number(pair.priceUsd), currency: 'USD', volume_24h_quote: Number(pair.volume?.h24),
-    liquidity_usd: Number(pair.liquidity?.usd), provider_timestamp: null, received_at: receivedAt, verification_status: 'SOURCE_OBSERVED_NO_TIMESTAMP'
-  };
+  const confirmation = await fetchJsonWithMeta(`https://api.dexscreener.com/latest/dex/pairs/${asset.chain}/${pair.pairAddress}`);
+  return verifyDexPair({
+    asset,
+    pair,
+    confirmation: confirmation.payload.pair || confirmation.payload.pairs?.[0],
+    receivedAt,
+    sourceResponseAt: primary.response_at,
+    confirmationResponseAt: confirmation.response_at,
+    referencePriceUsd: referencePrices[asset.id]?.price || null
+  });
 })))).filter(Boolean);
 
 const providers = {

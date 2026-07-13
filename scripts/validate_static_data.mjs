@@ -28,9 +28,23 @@ for (const asset of ['bitcoin', 'ethereum', 'solana']) {
   assert.ok(Array.isArray(row.venues) && row.venues.length > 0, `${asset}: mercados ausentes`);
 }
 
+assert.equal(platform.onchain_pools?.length, 3, 'cobertura DEX incompleta');
+for (const pool of platform.onchain_pools) {
+  assert.equal(pool.verification_status, 'VERIFIED', `${pool.identity}: observación DEX no verificada`);
+  assert.equal(pool.identity, `${pool.chain_id}:${pool.contract_address.toLowerCase()}`, `${pool.identity}: identidad onchain incorrecta`);
+  assert.ok(Number.isFinite(Date.parse(pool.source_response_at)), `${pool.identity}: hora de respuesta ausente`);
+  assert.equal(pool.provider_timestamp, null, `${pool.identity}: se inventó la hora de la última operación`);
+  assert.equal(pool.exact_trade_timestamp_available, false, `${pool.identity}: contrato temporal incorrecto`);
+  assert.ok(Object.entries(pool.verification_checks).filter(([key]) => key !== 'reference_price_match').every(([, value]) => value === true), `${pool.identity}: falló el doble contraste DEX`);
+  assert.equal(pool.verification_checks.reference_price_match, true, `${pool.identity}: precio DEX divergente frente a Kaufman`);
+}
+
 assert.ok(platform.tokenization_markets?.products?.length > 0, 'universo de tokenización vacío');
 assert.ok(platform.l2_intelligence?.projects?.length > 0, 'universo L2 vacío');
+assert.ok(platform.l2_intelligence.projects.every((project) => /^https:\/\/l2beat\.com\/static\/icons\/[a-z0-9-]+\.[a-f0-9]+\.(?:png|svg|webp)$/i.test(project.logo_url || '')), 'logotipos L2 incompletos o no versionados');
 assert.equal(platform.fiscal_intelligence?.data_quality?.fact_count, 40, 'matriz fiscal incompleta');
+assert.equal(Object.keys(platform.fiscal_intelligence?.calculation_models || {}).length, 8, 'cobertura de cálculo fiscal incompleta');
+assert.equal(platform.fiscal_intelligence?.data_quality?.indicative_calculation_jurisdictions, 8, 'el motor fiscal no cubre las ocho jurisdicciones');
 assert.equal(platform.regulation_intelligence?.data_quality?.demo_record_count, 0, 'regulación contiene demostraciones');
 assert.equal(platform.regulation_intelligence?.source_contract_version, 'official-public-v2', 'contrato regulatorio público desactualizado');
 assert.equal(
@@ -51,6 +65,10 @@ assert.equal(daily.mining_news?.length, 2, 'la portada necesita dos noticias min
 for (const item of [...daily.home_regulation, ...daily.mining_news]) {
   assert.equal(item.language, 'es-ES', `titular no publicado en castellano: ${item.title}`);
   assert.ok(item.title && item.original_title && item.url && item.publisher, 'noticia incompleta');
+  assert.equal(item.status, 'sourcechecked', `fuente periodística sin contraste: ${item.title}`);
+  assert.equal(item.verification_status, 'SOURCE_METADATA_VERIFIED', `contrato de verificación ausente: ${item.title}`);
+  assert.ok(Number.isFinite(Date.parse(item.source_observed_at)), `observación de fuente ausente: ${item.title}`);
+  assert.ok(item.verification_method, `metodología periodística ausente: ${item.title}`);
 }
 
 assert.doesNotMatch(JSON.stringify(platform), /"status":"demo"|DEMO · dato no conectado/i);
