@@ -35,16 +35,16 @@ img{max-width:100%;display:block}
 .kf-skip:focus{top:18px}
 
 .kf-header{position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(215,213,205,.86);background:rgba(245,244,239,.9);backdrop-filter:blur(18px)}
-.kf-header-row{height:76px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:32px}
+.kf-header-row{height:70px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:32px}
 .kf-brand{display:flex;align-items:center;gap:12px;min-width:max-content}
-.kf-chain-logo{position:relative;display:block;width:48px;height:34px;flex:0 0 48px}
-.kf-chain-logo i{position:absolute;width:24px;height:14px;border:2.5px solid var(--kf-ink);border-radius:999px;background:var(--kf-lilac);transform:rotate(-34deg);box-shadow:0 0 0 2px var(--kf-paper)}
-.kf-chain-logo i:nth-child(1){left:0;top:2px}
-.kf-chain-logo i:nth-child(2){left:12px;top:9px;z-index:2}
-.kf-chain-logo i:nth-child(3){left:24px;top:16px;z-index:3}
+.kf-chain-logo{position:relative;display:block;width:58px;height:24px;flex:0 0 58px}
+.kf-chain-logo i{position:absolute;top:5px;width:29px;height:13px;border:2px solid var(--kf-ink);border-radius:999px;background:var(--kf-paper)}
+.kf-chain-logo i:nth-child(1){left:0}
+.kf-chain-logo i:nth-child(2){left:14px;z-index:2;background:transparent}
+.kf-chain-logo i:nth-child(3){left:28px;z-index:3}
 .kf-brand-copy{display:grid;gap:1px}
-.kf-brand-name{font-size:16px;font-weight:900;line-height:1;letter-spacing:-.02em;text-transform:uppercase}
-.kf-brand-tag{color:var(--kf-muted);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.kf-brand-name{font-size:17px;font-weight:900;line-height:1;letter-spacing:.17em;text-transform:uppercase}
+.kf-brand-tag{color:var(--kf-muted);font-size:9px;font-weight:800;letter-spacing:.2em;text-transform:uppercase}
 .kf-nav{display:flex;align-items:center;justify-content:center;gap:22px}
 .kf-nav a{position:relative;padding:28px 0 25px;color:#454754;font-size:15px;font-weight:700}
 .kf-nav a::after{content:'';position:absolute;left:0;right:100%;bottom:-1px;height:3px;background:var(--kf-violet);transition:right .2s ease}
@@ -101,7 +101,6 @@ img{max-width:100%;display:block}
 .kf-market-band{border-bottom:1px solid var(--kf-line);background:var(--kf-white)}
 .kf-market-meta{display:flex;align-items:center;gap:12px;padding:17px 0 12px;color:var(--kf-muted);font-size:12px;font-weight:700}
 .kf-market-meta strong{color:var(--kf-ink);font-weight:900;text-transform:uppercase;letter-spacing:.08em}
-.kf-market-meta button{margin-left:auto;border:0;background:transparent;color:var(--kf-violet);cursor:pointer;font-size:12px;font-weight:900}
 .kf-market-grid{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--kf-line)}
 .kf-market-cell{display:grid;grid-template-columns:auto 1fr auto;gap:13px;align-items:center;padding:22px;border-right:1px solid var(--kf-line)}
 .kf-market-cell:first-child{padding-left:0}
@@ -235,7 +234,7 @@ img{max-width:100%;display:block}
 .kf-provider-card dt{color:var(--kf-muted)}.kf-provider-card dd{margin:0;font-weight:900}
 .kf-provider-card p{margin:10px 0 0;color:var(--kf-red);font-size:11px;line-height:1.45;word-break:break-word}
 .kf-health-dot{flex:0 0 auto;width:8px;height:8px;border-radius:50%;background:var(--kf-muted)}
-.kf-health-dot.connected{background:var(--kf-green);box-shadow:0 0 0 4px rgba(36,168,121,.1)}
+.kf-health-dot.live,.kf-health-dot.connected{background:var(--kf-green);box-shadow:0 0 0 4px rgba(36,168,121,.1)}
 .kf-health-dot.snapshot{background:var(--kf-blue);box-shadow:0 0 0 4px rgba(45,91,211,.1)}
 .kf-health-dot.connecting,.kf-health-dot.reconnecting{background:var(--kf-yellow)}
 .kf-health-dot.degraded,.kf-health-dot.disconnected,.kf-health-dot.unavailable{background:var(--kf-red)}
@@ -250,12 +249,12 @@ img{max-width:100%;display:block}
 .kf-metadata-card strong{display:block;margin-top:24px;font-size:19px;letter-spacing:-.03em}
 .kf-metadata-card small,.kf-metadata-card p{display:block;margin:4px 0 0;color:var(--kf-muted);font-size:12px}
 
-.kf-ecosystem{position:relative;overflow:hidden;border-block:1px solid var(--kf-line-dark);background:var(--kf-paper)}
-.kf-ecosystem-head{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.65fr);gap:72px;align-items:end;margin-bottom:44px}
-.kf-ecosystem-head h2{max-width:870px;margin:0;font-size:clamp(43px,5.6vw,75px);font-weight:900;line-height:.97;letter-spacing:-.064em}
+.kf-ecosystem{position:relative;overflow:hidden;padding:48px 0 44px;border-top:0;border-bottom:1px solid var(--kf-line-dark);background:var(--kf-paper)}
+.kf-ecosystem-head{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.65fr);gap:72px;align-items:end;margin-bottom:30px}
+.kf-ecosystem-head h1{max-width:870px;margin:0;font-size:clamp(42px,5vw,66px);font-weight:900;line-height:.97;letter-spacing:-.064em}
 .kf-ecosystem-head>p{max-width:430px;margin:0;color:var(--kf-muted);font-size:16px;line-height:1.65}
 .kf-eco-shell{display:grid;grid-template-columns:minmax(0,1fr) 330px;border-block:1px solid var(--kf-line-dark)}
-.kf-eco-canvas{position:relative;min-width:0;min-height:700px;overflow:hidden}
+.kf-eco-canvas{position:relative;min-width:0;min-height:610px;overflow:hidden}
 .kf-eco-geometry{position:absolute;inset:4% 2%;width:96%;height:92%;overflow:visible}
 .kf-eco-orbit,.kf-eco-core-orbit,.kf-eco-link,.kf-eco-cross,.kf-eco-flow{fill:none;vector-effect:non-scaling-stroke}
 .kf-eco-orbit{stroke:rgba(17,19,31,.24);stroke-width:1}.kf-eco-orbit.secondary{stroke-dasharray:2 7;stroke:rgba(17,19,31,.19)}
@@ -654,6 +653,17 @@ img{max-width:100%;display:block}
 }
 @media(max-width:680px){
   .kf-fiscal-live{padding-top:64px}.kf-fiscal-kpis{grid-template-columns:1fr}.kf-fiscal-kpis article{min-height:126px;border-right:0}.kf-fiscal-kpis article:last-child{grid-column:auto}.kf-fiscal-engine{margin-top:58px}.kf-fiscal-engine-copy{padding:22px}.kf-fiscal-engine-copy h2{font-size:31px}.kf-fiscal-controls{grid-template-columns:1fr;padding:20px}.kf-fiscal-result{margin:0 20px 20px}.kf-fiscal-result header{display:grid}.kf-fiscal-decision,.kf-fiscal-calculation-grid{grid-template-columns:1fr}.kf-fiscal-decision article,.kf-fiscal-decision article:nth-child(4),.kf-fiscal-calculation-grid article{min-height:95px;border-right:0;border-bottom:1px solid var(--kf-line)}.kf-fiscal-calculation-grid article{border-color:#3c3d4c}.kf-fiscal-decision article.economic{grid-column:auto}.kf-fiscal-calculation-method{grid-template-columns:1fr}.kf-fiscal-calculation-method small{grid-column:1}.kf-fiscal-calculation .kf-fiscal-evidence{grid-template-columns:1fr}.kf-fiscal-scenario-signal,.kf-fiscal-result-bottom{grid-template-columns:1fr}.kf-fiscal-section-head{margin-top:68px}.kf-fiscal-compare-controls{grid-template-columns:1fr}.kf-fiscal-difference{grid-template-columns:1fr;min-width:760px}[data-fiscal-comparison]{overflow:auto}.kf-fiscal-matrix{min-width:760px;grid-template-columns:135px 1fr 1fr}.kf-fiscal-matrix-cell{padding:12px;font-size:12px}.kf-fiscal-change-list article{grid-template-columns:35px 1fr;gap:10px}.kf-fiscal-change-list article>time{grid-column:2}.kf-fiscal-change-list article>div{grid-column:2}.kf-fiscal-change-list article>a{grid-column:2;justify-self:start}.kf-fiscal-quality-grid{grid-template-columns:1fr}.kf-fiscal-source-row{grid-template-columns:auto 1fr auto}.kf-fiscal-source-row>small{grid-column:2}.kf-fiscal-source-row>a{grid-column:3;grid-row:1/3}.kf-fiscal-globe-section{margin-top:72px;padding:22px;border-radius:20px}.kf-fiscal-space{min-height:390px}.kf-fiscal-earth{width:84%}.kf-fiscal-earth-shadow{bottom:38px}.kf-fiscal-globe-country h3{font-size:31px}.kf-fiscal-globe-sheet{padding:20px}.kf-fiscal-globe-head .kf-title{font-size:38px}
+}
+
+@media(max-width:1040px){.kf-nav{inset:71px 0 auto}}
+@media(max-width:680px){
+  .kf-ecosystem-head h1{font-size:39px}
+  .kf-chain-logo{width:46px;height:22px;flex-basis:46px}
+  .kf-chain-logo i{top:5px;width:24px;height:11px}
+  .kf-chain-logo i:nth-child(1){left:0;top:5px}
+  .kf-chain-logo i:nth-child(2){left:11px;top:5px}
+  .kf-chain-logo i:nth-child(3){left:22px;top:5px}
+  .kf-nav{top:auto;inset:69px 0 auto}
 }
 .kf-fiscal-markers button{transition:left .1s linear,top .1s linear,opacity .1s linear,transform .1s linear}
 @media(max-width:1040px){.kf-home-directory-grid{grid-template-columns:repeat(2,1fr)}.kf-directory-contract{grid-template-columns:repeat(3,1fr)}.kf-directory-contract>p{grid-column:1/-1;justify-content:flex-start;border-top:1px solid var(--kf-line)}}

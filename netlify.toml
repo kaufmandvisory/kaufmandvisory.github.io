@@ -1,0 +1,12 @@
+[build]
+  publish = "."
+
+[functions]
+  directory = ".netlify-functions"
+  node_bundler = "esbuild"
+
+[[headers]]
+  for = "/api/market/snapshot"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    X-Content-Type-Options = "nosniff"
