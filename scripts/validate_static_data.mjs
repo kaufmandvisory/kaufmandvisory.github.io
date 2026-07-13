@@ -42,6 +42,13 @@ for (const pool of platform.onchain_pools) {
 assert.ok(platform.tokenization_markets?.products?.length > 0, 'universo de tokenización vacío');
 assert.ok(platform.l2_intelligence?.projects?.length > 0, 'universo L2 vacío');
 assert.ok(platform.l2_intelligence.projects.every((project) => /^https:\/\/l2beat\.com\/static\/icons\/[a-z0-9-]+\.[a-f0-9]+\.(?:png|svg|webp)$/i.test(project.logo_url || '')), 'logotipos L2 incompletos o no versionados');
+assert.equal(platform.wallet_intelligence?.schema_version, 'kaufman-wallet-intelligence-v1', 'contrato de wallets ausente');
+assert.equal(platform.wallet_intelligence?.products?.length, 3, 'releases oficiales de wallets incompletas');
+for (const product of platform.wallet_intelligence.products) {
+  assert.equal(product.verification_status, 'OFFICIAL_RELEASE_OBSERVED', `${product.id}: release no observada`);
+  assert.ok(product.version && Number.isFinite(Date.parse(product.published_at)), `${product.id}: versión o fecha ausente`);
+  assert.match(product.source_url || '', /^https:\/\/github\.com\//, `${product.id}: fuente de release no oficial`);
+}
 assert.equal(platform.fiscal_intelligence?.data_quality?.fact_count, 40, 'matriz fiscal incompleta');
 assert.equal(Object.keys(platform.fiscal_intelligence?.calculation_models || {}).length, 8, 'cobertura de cálculo fiscal incompleta');
 assert.equal(platform.fiscal_intelligence?.data_quality?.indicative_calculation_jurisdictions, 8, 'el motor fiscal no cubre las ocho jurisdicciones');
@@ -79,6 +86,7 @@ console.log(JSON.stringify({
   prices: Object.keys(platform.reference_prices).length,
   tokenization_products: platform.tokenization_markets.products.length,
   l2_projects: platform.l2_intelligence.projects.length,
+  wallet_releases: platform.wallet_intelligence.products.length,
   fiscal_facts: platform.fiscal_intelligence.data_quality.fact_count,
   regulation_news_es: daily.home_regulation.length,
   mining_news_es: daily.mining_news.length

@@ -148,6 +148,34 @@ const l2Intelligence = await attempt(async () => {
   return snapshot;
 });
 
+const walletReleaseSources = [
+  { id: 'ledger', name: 'Ledger Wallet', repository: 'LedgerHQ/ledger-live' },
+  { id: 'trezor', name: 'Trezor Suite', repository: 'trezor/trezor-suite' },
+  { id: 'metamask', name: 'MetaMask Extension', repository: 'MetaMask/metamask-extension' }
+];
+const walletProducts = (await Promise.all(walletReleaseSources.map(async (source) => attempt(async () => {
+  const release = await fetchJson(`https://api.github.com/repos/${source.repository}/releases/latest`, {
+    headers: { accept: 'application/vnd.github+json', 'x-github-api-version': '2022-11-28' }
+  });
+  if (!release?.tag_name || !release?.published_at || !release?.html_url) throw new Error(`Release incompleta: ${source.repository}`);
+  return {
+    id: source.id,
+    name: source.name,
+    version: String(release.tag_name),
+    published_at: new Date(release.published_at).toISOString(),
+    source_url: release.html_url,
+    repository: source.repository,
+    verification_status: 'OFFICIAL_RELEASE_OBSERVED'
+  };
+})))).filter(Boolean);
+const walletIntelligence = {
+  schema_version: 'kaufman-wallet-intelligence-v1',
+  generated_at: receivedAt,
+  products: walletProducts,
+  coverage: { expected: walletReleaseSources.length, observed: walletProducts.length },
+  methodology: 'Última release no marcada como borrador ni prerelease devuelta por la API oficial de GitHub. No equivale a la versión instalada por el usuario.'
+};
+
 const fiscalHealth = Object.fromEntries(await Promise.all(SOURCE_REGISTRY.filter((source) => source.monitor).map(async (source) => [source.id, await checkFiscalSource(source)])));
 const fiscalIntelligence = buildFiscalSnapshot(fiscalHealth, receivedAt);
 validateFiscalSnapshot(fiscalIntelligence);
@@ -213,6 +241,7 @@ const providers = {
   fiscal_registry: { connection_status: 'SNAPSHOT', last_message_at: fiscalIntelligence.generated_at },
   regulation_registry: { connection_status: 'SNAPSHOT', last_message_at: regulationIntelligence.generated_at }
 };
+providers.wallet_releases = { connection_status: walletProducts.length === walletReleaseSources.length ? 'SNAPSHOT' : walletProducts.length ? 'DEGRADED' : 'UNAVAILABLE', last_message_at: walletIntelligence.generated_at, records: walletProducts.length };
 
 const snapshot = {
   schema_version: 'kaufman-public-platform-v1',
@@ -229,7 +258,8 @@ const snapshot = {
   l2_intelligence: l2Intelligence,
   fiscal_intelligence: fiscalIntelligence,
   regulation_intelligence: regulationIntelligence,
-  thresholds: { snapshot_max_age_ms: 26 * 60 * 60_000, tokenization_max_age_ms: 24 * 60 * 60_000, l2beat_max_age_ms: 24 * 60 * 60_000, fiscal_max_age_ms: 48 * 60 * 60_000 },
+  wallet_intelligence: walletIntelligence,
+  thresholds: { snapshot_max_age_ms: 26 * 60 * 60_000, tokenization_max_age_ms: 24 * 60 * 60_000, l2beat_max_age_ms: 24 * 60 * 60_000, wallet_max_age_ms: 48 * 60 * 60_000, fiscal_max_age_ms: 48 * 60 * 60_000 },
   data_quality: {
     reference_assets: Object.keys(referencePrices).length,
     historical_assets: Object.keys(historicalReturns).length,
@@ -237,7 +267,8 @@ const snapshot = {
     tokenization_available: Boolean(tokenizationMarkets),
     l2_available: Boolean(l2Intelligence),
     fiscal_jurisdictions: fiscalIntelligence.jurisdictions.length,
-    regulation_regimes: regulationIntelligence.regimes.length
+    regulation_regimes: regulationIntelligence.regimes.length,
+    wallet_releases: walletProducts.length
   }
 };
 
