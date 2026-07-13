@@ -83,6 +83,15 @@
     ]}
   };
   const HOME_DIRECTORY_KEYS = ['empresas','bancos','exchanges','wallets','proyectos','mineria','hardware','riesgos'];
+  const ECOSYSTEM_ORDER = ['mercado','regulacion','empresas','infraestructura','custodia','riesgo'];
+  const ECOSYSTEM_TERRITORIES = {
+    mercado:{index:'01',label:'Mercado',x:50,y:10,side:'top',headline:'Capital, precio y liquidez en contexto.',description:'Une el precio de referencia, la tokenización, los mercados centralizados y el efecto fiscal de cada operación.',href:'/mercados/',linkLabel:'Abrir inteligencia de mercado',sublayers:[['Precios','/mercados/'],['RWA','/tokenizacion/'],['Exchanges','/exchanges/'],['Rentabilidad','/rentabilidades/'],['Fiscalidad','/fiscal/']]},
+    regulacion:{index:'02',label:'Regulación',x:14,y:34,side:'left',headline:'La norma situada en su territorio.',description:'Relaciona fuentes primarias, fechas efectivas, autoridades y efectos prácticos sin confundir acceso técnico con vigencia jurídica.',href:'/regulacion/',linkLabel:'Abrir regulación blockchain',sublayers:[['Marcos vigentes','/regulacion/'],['Fiscalidad','/fiscal/'],['Bancos','/bancos/']]},
+    empresas:{index:'03',label:'Empresas',x:86,y:34,side:'right',headline:'Actividad real detrás del anuncio.',description:'Conecta compañías, bancos e iniciativas tokenizadas con la fuente que permite comprobar su estado y alcance.',href:'/empresas/',linkLabel:'Abrir inteligencia empresarial',sublayers:[['Empresas','/empresas/'],['Bancos','/bancos/'],['RWA','/tokenizacion/'],['Proyectos','/proyectos/']]},
+    infraestructura:{index:'04',label:'Infraestructura',x:79,y:76,side:'right',headline:'La capa que sostiene el sistema.',description:'Expone redes L2, proyectos, minería y hardware junto a sus dependencias, costes y señales operativas.',href:'/mercados/',linkLabel:'Abrir inteligencia de infraestructura',sublayers:[['L2','/mercados/'],['Minería','/mineria/'],['Hardware','/hardware/'],['Proyectos','/proyectos/'],['Herramientas','/herramientas/']]},
+    custodia:{index:'05',label:'Custodia',x:50,y:91,side:'bottom',headline:'Quién controla, conserva y recupera.',description:'Cruza wallets, exchanges y bancos para separar control de claves, contraparte, autorización y superficie de recuperación.',href:'/wallets/',linkLabel:'Abrir inteligencia de custodia',sublayers:[['Wallets','/wallets/'],['Exchanges','/exchanges/'],['Bancos','/bancos/']]},
+    riesgo:{index:'06',label:'Riesgo',x:22,y:76,side:'left',headline:'Dependencias visibles antes de decidir.',description:'Reúne riesgo tecnológico, regulatorio, de custodia y de infraestructura sin convertir señales parciales en una puntuación opaca.',href:'/riesgos/',linkLabel:'Abrir mapa de riesgos',sublayers:[['Riesgos','/riesgos/'],['Regulación','/regulacion/'],['Custodia','/wallets/'],['Proyectos','/proyectos/']]}
+  };
 
   const STATUS_LABELS = {verified:'VERIFICADO',sourcechecked:'FUENTE CONTRASTADA',unverified:'REVISIÓN NECESARIA',auto:'AUTOMÁTICO',offline:'NO DISPONIBLE'};
   const REGULATION_LEVEL_LABELS = {BINDING:'VINCULANTE',OFFICIAL_RULEBOOK:'REGLAMENTO OFICIAL',OFFICIAL_GUIDANCE:'GUÍA OFICIAL',PRIMARY_LAW:'LEY PRIMARIA'};
@@ -105,6 +114,7 @@
   let fiscalGlobeFrame = null;
   let fiscalGlobeSelected = 'espana';
   let fiscalGlobeVisible = false;
+  let ecosystemPinned = 'infraestructura';
 
   function statusBadge(status){return `<span class="kf-status ${status}">${STATUS_LABELS[status]||status}</span>`}
   function escapeHtml(value){return String(value).replace(/[&<>'"]/g,(ch)=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]))}
@@ -134,18 +144,6 @@
   }
   function profileUrl(type,id){return internalUrl(`/fichas/?tipo=${encodeURIComponent(type)}&id=${encodeURIComponent(id)}`)}
   function findRoute(key){return ROUTES.find((route)=>route.key===key)}
-
-  function sacredGeometryMarkup(index){
-    const common='fill="none" stroke="currentColor" stroke-width="1.25" vector-effect="non-scaling-stroke"';
-    const patterns=[
-      `<circle cx="100" cy="100" r="72"/><circle cx="100" cy="100" r="36"/><circle cx="100" cy="64" r="36"/><circle cx="131.18" cy="82" r="36"/><circle cx="131.18" cy="118" r="36"/><circle cx="100" cy="136" r="36"/><circle cx="68.82" cy="118" r="36"/><circle cx="68.82" cy="82" r="36"/>`,
-      `<circle cx="100" cy="100" r="72"/><circle cx="100" cy="28" r="10"/><circle cx="162" cy="64" r="10"/><circle cx="162" cy="136" r="10"/><circle cx="100" cy="172" r="10"/><circle cx="38" cy="136" r="10"/><circle cx="38" cy="64" r="10"/><circle cx="100" cy="100" r="13"/><path d="M100 28 162 136 38 136ZM38 64 162 64 100 172ZM100 28 100 172M38 64 162 136M162 64 38 136"/>`,
-      `<circle cx="100" cy="100" r="74"/><path d="M100 28 166 142H34ZM100 172 40 68h120ZM100 46 151 134H49ZM100 154 54 74h92ZM100 64 136 126H64ZM100 136 70 84h60"/><circle cx="100" cy="100" r="13"/>`,
-      `<circle cx="100" cy="100" r="74"/><path d="M100 29 161 135H39ZM100 171 39 65h122ZM100 48 145 126H55ZM100 152 55 74h90"/><circle cx="100" cy="100" r="28"/>`,
-      `<circle cx="100" cy="70" r="52"/><circle cx="100" cy="130" r="52"/><path d="M52 100h96M64 79c22 28 50 28 72 0M64 121c22-28 50-28 72 0"/><circle cx="100" cy="100" r="15"/>`
-    ];
-    return `<span class="kf-module-geometry geometry-${index%patterns.length}" aria-hidden="true"><svg viewBox="0 0 200 200" ${common}>${patterns[index%patterns.length]}</svg></span>`;
-  }
 
   function headerMarkup(page){
     const mainNav=[findRoute('mercados'),findRoute('regulacion'),findRoute('tokenizacion'),findRoute('herramientas'),findRoute('fiscal')];
@@ -202,6 +200,61 @@
     return `<section class="kf-section alt kf-home-directories" id="directorios" data-home-directories><div class="kf-container"><div class="kf-section-head" data-reveal><div><p class="kf-kicker">Directorios conectados</p><h2 class="kf-title small">De la categoría a la ficha, sin callejones sin salida.</h2></div><p class="kf-intro">Cada directorio abre su índice, sus filtros y sus fichas individuales. Cada ficha identifica la fuente, el alcance y el límite de la evidencia publicada.</p></div><div class="kf-directory-contract" data-reveal><div><strong>${HOME_DIRECTORY_KEYS.length}</strong><span>directorios navegables</span></div><div><strong>${totalProfiles}</strong><span>fichas enlazadas</span></div><div><strong>1</strong><span>búsqueda común</span></div><p><i></i>Rutas internas verificadas</p></div><div class="kf-home-directory-grid">${cards}</div></div></section>`;
   }
 
+  function ecosystemMetrics(territoryId,snapshot){
+    const referencePrices=Object.values(snapshot?.reference_prices||{});
+    const tokenization=snapshot?.tokenization_markets||{};
+    const l2=snapshot?.l2_intelligence||{};
+    const fiscal=snapshot?.fiscal_intelligence||{};
+    const regulation=snapshot?.regulation_intelligence||{};
+    const connectedProviders=Object.values(snapshot?.providers||{}).filter((provider)=>['CONNECTED','SNAPSHOT'].includes(provider?.connection_status)).length;
+    const metric=(value,label,source)=>({value:value??'—',label,source});
+    const countItems=(keys)=>keys.reduce((total,key)=>total+(CATALOGS[key]?.items.length||0),0);
+    if(territoryId==='mercado')return [
+      metric(referencePrices.filter((item)=>item?.verification_status==='VERIFIED').length||'—','precios de referencia publicados','Coinbase · Kraken · Binance'),
+      metric(tokenization?.coverage?.rwa_protocols??'—','protocolos RWA rastreados','DefiLlama Open API'),
+      metric(tokenizedUsd(tokenization?.kpis?.tracked_rwa_tvl_usd),'capital RWA onchain','Snapshot público conectado')
+    ];
+    if(territoryId==='regulacion')return [
+      metric(regulation?.data_quality?.regime_count??'—','regímenes documentados','Fuentes públicas oficiales'),
+      metric(regulation?.data_quality?.source_count??'—','fuentes regulatorias','Comprobación server-side'),
+      metric(regulation?.events?.length??'—','cambios y fechas operativas','Registro jurídico Kaufman')
+    ];
+    if(territoryId==='empresas')return [
+      metric(countItems(['empresas','bancos']),'entidades con ficha navegable','Fuentes corporativas y registros'),
+      metric(tokenization?.leaders?.length??'—','productos RWA líderes observados','DefiLlama Open API'),
+      metric(tokenization?.coverage?.networks??'—','redes con capital tokenizado','Distribución chainTvls')
+    ];
+    if(territoryId==='infraestructura')return [
+      metric(l2?.coverage?.curated_projects??'—','proyectos L2 explicados','L2BEAT · muestra editorial'),
+      metric(l2?.coverage?.projects??'—','proyectos L2 observados','L2BEAT API pública'),
+      metric(Number.isFinite(Number(snapshot?.auxiliary?.ethereum_gas?.gas_gwei))?`${Number(snapshot.auxiliary.ethereum_gas.gas_gwei).toLocaleString('es-ES',{maximumFractionDigits:3})} Gwei`:'—','gas Ethereum observado','eth_feeHistory')
+    ];
+    if(territoryId==='custodia')return [
+      metric(countItems(['wallets','exchanges','bancos']),'proveedores y herramientas comparables','Fichas Kaufman con fuente'),
+      metric(connectedProviders||'—','conectores de datos activos','Heartbeat server-side'),
+      metric(new Set(referencePrices.flatMap((item)=>item?.venues||[])).size||'—','mercados usados en referencias','Venues elegibles')
+    ];
+    return [
+      metric(l2?.kpis?.projects_without_emergency_exit_window??'—','proyectos sin ventana de salida urgente','L2BEAT · universo completo'),
+      metric(l2?.coverage?.under_review??'—','proyectos L2 en revisión','Estado de la fuente'),
+      metric(CATALOGS.riesgos?.items.length||'—','marcos de riesgo accionables','OWASP · L2BEAT · ESMA')
+    ];
+  }
+
+  function ecosystemPanelMarkup(territoryId,snapshot=latestMarketSnapshot){
+    const territory=ECOSYSTEM_TERRITORIES[territoryId]||ECOSYSTEM_TERRITORIES.infraestructura;
+    const observedAt=snapshot?.generated_at||snapshot?.tokenization_markets?.received_at||snapshot?.l2_intelligence?.received_at;
+    const observedLabel=observedAt&&!Number.isNaN(Date.parse(observedAt))?new Intl.DateTimeFormat('es-ES',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'UTC'}).format(new Date(observedAt)).replace('.','')+' UTC':'Esperando snapshot conectado';
+    const metrics=ecosystemMetrics(territoryId,snapshot).map((item)=>`<div class="kf-eco-metric"><strong>${escapeHtml(item.value)}</strong><span>${escapeHtml(item.label)}</span><small>${escapeHtml(item.source)}</small></div>`).join('');
+    const sublayers=territory.sublayers.map(([label,href],index)=>`<a href="${href}"><span>${String(index+1).padStart(2,'0')}</span><strong>${escapeHtml(label)}</strong><i aria-hidden="true">→</i></a>`).join('');
+    return `<div class="kf-eco-panel-head"><p>${escapeHtml(territory.index)} / ${escapeHtml(territory.label)}</p><span>${escapeHtml(observedLabel)}</span></div><h3>${escapeHtml(territory.headline)}</h3><p class="kf-eco-panel-copy">${escapeHtml(territory.description)}</p><div class="kf-eco-metrics">${metrics}</div><div class="kf-eco-layers"><span>Capas relacionadas</span><nav aria-label="Capas de ${escapeHtml(territory.label)}">${sublayers}</nav></div><a class="kf-eco-open" href="${territory.href}">${escapeHtml(territory.linkLabel)} <span>→</span></a>`;
+  }
+
+  function ecosystemMapMarkup(){
+    const nodes=ECOSYSTEM_ORDER.map((id)=>{const territory=ECOSYSTEM_TERRITORIES[id];const active=id==='infraestructura';return `<button class="kf-eco-node${active?' active':''}" id="ecosystem-tab-${id}" type="button" role="tab" aria-selected="${active}" aria-controls="kaufman-ecosystem-panel" data-eco-territory="${id}" data-side="${territory.side}" style="--eco-x:${territory.x}%;--eco-y:${territory.y}%"><span class="kf-eco-node-ring"><i></i></span><strong>${escapeHtml(territory.label)}</strong><small>${territory.index}</small></button>`}).join('');
+    return `<section class="kf-section kf-ecosystem" id="explorar" data-ecosystem data-reveal><div class="kf-container"><header class="kf-ecosystem-head"><div><p class="kf-kicker">Mapa vivo de evidencia</p><h2>Kaufman conecta mercado, regulación, infraestructura y riesgo bajo una misma capa de evidencia.</h2></div><p>No es un catálogo plano. Selecciona un territorio para desplegar únicamente sus relaciones, métricas y rutas verificables.</p></header><div class="kf-eco-shell"><div class="kf-eco-canvas" data-eco-current="infraestructura"><svg class="kf-eco-geometry" viewBox="0 0 760 620" aria-hidden="true"><ellipse class="kf-eco-orbit" cx="380" cy="310" rx="286" ry="248"/><ellipse class="kf-eco-orbit secondary" cx="380" cy="310" rx="218" ry="188"/><circle class="kf-eco-core-orbit" cx="380" cy="310" r="114"/><path class="kf-eco-link" data-eco-link="mercado" d="M380 310 C380 230 380 145 380 62"/><path class="kf-eco-link" data-eco-link="regulacion" d="M380 310 C292 287 198 230 106 211"/><path class="kf-eco-link" data-eco-link="empresas" d="M380 310 C468 287 562 230 654 211"/><path class="kf-eco-link" data-eco-link="infraestructura" d="M380 310 C468 352 538 419 600 471"/><path class="kf-eco-link" data-eco-link="custodia" d="M380 310 C380 394 380 482 380 564"/><path class="kf-eco-link" data-eco-link="riesgo" d="M380 310 C300 352 230 419 167 471"/><path class="kf-eco-cross" d="M106 211 C238 84 522 84 654 211 C720 355 630 526 380 564 C130 526 40 355 106 211Z"/><path class="kf-eco-cross" d="M167 471 C208 275 263 134 380 62 C497 134 552 275 600 471"/><path class="kf-eco-flow" d="M106 211 C238 84 522 84 654 211 C720 355 630 526 380 564"/><circle class="kf-eco-pulse-dot one" cx="279" cy="118" r="4"/><circle class="kf-eco-pulse-dot two" cx="540" cy="396" r="4"/><circle class="kf-eco-pulse-dot three" cx="250" cy="424" r="4"/></svg><div class="kf-eco-center"><span>Capa de evidencia</span><strong>Kaufman</strong><i></i></div><div class="kf-eco-node-list" role="tablist" aria-label="Territorios del ecosistema Kaufman">${nodes}</div><div class="kf-eco-signals" aria-live="polite"><span data-eco-signal="updated">Conectando fuentes…</span><span data-eco-signal="market">Precios · esperando</span><span data-eco-signal="regulation">Regulación · esperando</span><span data-eco-signal="fiscal">Fiscal · esperando</span></div></div><aside class="kf-eco-panel" id="kaufman-ecosystem-panel" role="tabpanel" aria-labelledby="ecosystem-tab-infraestructura" aria-live="polite" data-eco-panel>${ecosystemPanelMarkup('infraestructura',null)}</aside></div><p class="kf-eco-instruction"><span aria-hidden="true">↳</span> Selecciona un territorio para desplegar sus capas</p></div></section>`;
+  }
+
   function renderHome(){
     return `<main class="kf-main" id="main-content">
       <section class="kf-hero"><div class="kf-container kf-hero-grid">
@@ -212,7 +265,7 @@
       ${directoryHubMarkup()}
       <section class="kf-section kf-current-section"><div class="kf-container"><div class="kf-section-head" data-reveal><div><p class="kf-kicker">Actualidad regulatoria mundial</p><h2 class="kf-title small">Tres cambios que merece la pena seguir.</h2></div><p class="kf-intro">Selección automática internacional. Kaufman enlaza la publicación original o el medio que informa del cambio; la ficha jurídica solo se verifica con fuente primaria.</p></div><div data-home-regulation><div class="kf-live-empty">Cargando actualidad regulatoria…</div></div><div class="kf-section-action"><a class="kf-button secondary" href="/regulacion/">Abrir radar regulatorio →</a></div></div></section>
       <section class="kf-section alt kf-current-section"><div class="kf-container"><div class="kf-section-head" data-reveal><div><p class="kf-kicker">Minería, rentabilidad y hardware</p><h2 class="kf-title small">La red, las máquinas y las noticias.</h2></div><p class="kf-intro">Dos noticias mundiales publicadas dentro de las últimas 24 horas y un cálculo de referencia basado en datos de red, precio de BTC y especificaciones oficiales.</p></div><div data-home-mining><div class="kf-live-empty">Cargando actualidad minera…</div></div><div class="kf-section-action"><a class="kf-button secondary" href="/mineria/">Explorar minería →</a><a class="kf-button secondary" href="/hardware/">Ver hardware →</a></div></div></section>
-      <section class="kf-section" id="explorar"><div class="kf-container"><div class="kf-section-head" data-reveal><div><p class="kf-kicker">Mapa de información</p><h2 class="kf-title">Todo el ecosistema, bajo el mismo estándar.</h2></div><p class="kf-intro">Rutas conectadas por fichas y comparadores. Los registros enlazan su evidencia y los paneles automáticos muestran la hora de observación.</p></div><div class="kf-module-grid">${ROUTES.map((route,index)=>`<a class="kf-module geometry-card-${index%5}" href="${route.path}" data-reveal>${sacredGeometryMarkup(index)}<div class="kf-module-top"><span class="kf-module-code">${route.code}</span>${statusBadge(route.tone)}</div><h3>${route.label}</h3><p>${route.description}</p><span class="kf-module-arrow">→</span></a>`).join('')}</div></div></section>
+      ${ecosystemMapMarkup()}
       <section class="kf-section alt"><div class="kf-container"><div class="kf-section-head" data-reveal><div><p class="kf-kicker">Contrato de datos</p><h2 class="kf-title small">Nada aparece sin estado.</h2></div><p class="kf-intro">La interfaz separa integraciones automáticas, verificación editorial, instantáneas públicas y fuentes temporalmente caídas.</p></div><div class="kf-proof-grid" data-reveal><article class="kf-proof"><span class="kf-proof-index">01 / AUTO</span><h3>Automático</h3><p>Dato obtenido de una integración activa.</p></article><article class="kf-proof"><span class="kf-proof-index">02 / CHECK</span><h3>Verificado</h3><p>Información contrastada con una fuente primaria.</p></article><article class="kf-proof"><span class="kf-proof-index">03 / SNAP</span><h3>Snapshot público</h3><p>Copia automática fechada para que la web estática nunca dependa de cifras inventadas.</p></article><article class="kf-proof"><span class="kf-proof-index">04 / OFF</span><h3>No disponible</h3><p>La fuente falló, caducó o no respondió.</p></article></div></div></section>
       <section class="kf-section"><div class="kf-container"><div class="kf-section-head" data-reveal><div><p class="kf-kicker">Fiscal</p><h2 class="kf-title small">La misma pregunta, dos jurisdicciones.</h2></div><p class="kf-intro">Compara marcos fiscales, costes operativos y fichas con los mismos campos y estados.</p></div><a class="kf-button primary" href="/fiscal/">Abrir Fiscal →</a></div></section>
     </main>`;
@@ -1317,6 +1370,7 @@
   function applyMarketSnapshot(snapshot){
     latestMarketSnapshot=snapshot;
     refreshMarketDisplay();
+    renderEcosystemMap(snapshot);
     renderProviders(snapshot.providers);
     renderStablecoins(snapshot.stablecoin_fx);
     renderDexPools(snapshot.onchain_pools);
@@ -1335,6 +1389,62 @@
     const method=snapshot.reference_prices?.bitcoin?.methodology;
     document.querySelectorAll('[data-market-methodology]').forEach((node)=>node.textContent=method?(snapshot.delivery_mode==='STATIC_SNAPSHOT'?`Snapshot público · mediana de mercados observados · volumen mínimo ${Number(method.minimum_volume_usd_24h).toLocaleString('es-ES')} USD · divergencia ≤ ${method.divergence_threshold_pct} % · hora visible.`:`Mediana · frescura < 5 s · volumen mínimo ${Number(method.minimum_volume_usd_24h).toLocaleString('es-ES')} USD · divergencia ≤ ${method.divergence_threshold_pct} % · conexión sana.`):'Metodología pendiente');
     syncMiningReference();
+  }
+
+  function activateEcosystemTerritory(territoryId,{pin=false}={}){
+    const root=document.querySelector('[data-ecosystem]');
+    if(!root||!ECOSYSTEM_TERRITORIES[territoryId])return;
+    if(pin)ecosystemPinned=territoryId;
+    const canvas=root.querySelector('.kf-eco-canvas'),panel=root.querySelector('[data-eco-panel]');
+    if(canvas)canvas.dataset.ecoCurrent=territoryId;
+    root.querySelectorAll('[data-eco-territory]').forEach((button)=>{
+      const active=button.dataset.ecoTerritory===territoryId;
+      button.classList.toggle('active',active);
+      button.setAttribute('aria-selected',String(active));
+    });
+    if(panel){panel.setAttribute('aria-labelledby',`ecosystem-tab-${territoryId}`);panel.innerHTML=ecosystemPanelMarkup(territoryId,latestMarketSnapshot);localizeRenderedLinks(panel)}
+  }
+
+  function renderEcosystemMap(snapshot){
+    const root=document.querySelector('[data-ecosystem]');
+    if(!root)return;
+    const references=Object.values(snapshot?.reference_prices||{});
+    const regulation=snapshot?.regulation_intelligence||{};
+    const fiscal=snapshot?.fiscal_intelligence||{};
+    const observedAt=snapshot?.generated_at||snapshot?.tokenization_markets?.received_at||snapshot?.l2_intelligence?.received_at;
+    const observed=observedAt&&!Number.isNaN(Date.parse(observedAt))?new Intl.DateTimeFormat('es-ES',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'UTC'}).format(new Date(observedAt)).replace('.','').toUpperCase()+' UTC':'HORA NO DISPONIBLE';
+    const signals={
+      updated:`ACT. ${observed}`,
+      market:`${references.filter((item)=>item?.verification_status==='VERIFIED').length} PRECIOS DE REFERENCIA`,
+      regulation:`${regulation?.events?.length??0} CAMBIOS REGULATORIOS`,
+      fiscal:`${fiscal?.data_quality?.source_count??0} FUENTES FISCALES`
+    };
+    for(const [key,value] of Object.entries(signals)){const node=root.querySelector(`[data-eco-signal="${key}"]`);if(node)node.textContent=value}
+    activateEcosystemTerritory(ecosystemPinned);
+  }
+
+  function initEcosystemMap(){
+    const root=document.querySelector('[data-ecosystem]');
+    if(!root)return;
+    const canvas=root.querySelector('.kf-eco-canvas'),buttons=[...root.querySelectorAll('[data-eco-territory]')];
+    buttons.forEach((button,index)=>{
+      const territoryId=button.dataset.ecoTerritory;
+      button.addEventListener('pointerenter',()=>activateEcosystemTerritory(territoryId));
+      button.addEventListener('focus',()=>activateEcosystemTerritory(territoryId));
+      button.addEventListener('click',()=>activateEcosystemTerritory(territoryId,{pin:true}));
+      button.addEventListener('keydown',(event)=>{
+        if(!['ArrowRight','ArrowDown','ArrowLeft','ArrowUp','Home','End'].includes(event.key))return;
+        event.preventDefault();
+        let next=index;
+        if(['ArrowRight','ArrowDown'].includes(event.key))next=(index+1)%buttons.length;
+        if(['ArrowLeft','ArrowUp'].includes(event.key))next=(index-1+buttons.length)%buttons.length;
+        if(event.key==='Home')next=0;
+        if(event.key==='End')next=buttons.length-1;
+        buttons[next].focus();
+      });
+    });
+    canvas?.addEventListener('pointerleave',()=>activateEcosystemTerritory(ecosystemPinned));
+    activateEcosystemTerritory(ecosystemPinned);
   }
 
   function connectMarketAntenna(){
@@ -1466,7 +1576,7 @@
   localizeRenderedLinks(app);
   const pageTitle=page==='home'?'Kaufman | Inteligencia blockchain':`${CATALOGS[page]?.label||({mercados:'Mercados',tokenizacion:'Tokenización',herramientas:'Herramientas',rentabilidades:'Rentabilidades',ficha:'Ficha',fichas:'Fichas',fuentes:'Fuentes',aviso:'Aviso legal',privacidad:'Política de privacidad',terminos:'Términos de uso'}[page]||'Kaufman')} | Kaufman`;
   document.title=pageTitle;
-  initMenu();initSearch();initDirectoryFilters();initTokenizationFilters();initFiscalDashboard();initComparator();initFeedStars();initMiningCalculator();initJurisdictionTool();initCountryCostStack();initReveal();
+  initMenu();initSearch();initDirectoryFilters();initTokenizationFilters();initFiscalDashboard();initComparator();initFeedStars();initMiningCalculator();initJurisdictionTool();initCountryCostStack();initEcosystemMap();initReveal();
   document.querySelectorAll('[data-market-refresh]').forEach((button)=>button.addEventListener('click',connectMarketAntenna));
   connectMarketAntenna();
   loadRegulationFallback();
