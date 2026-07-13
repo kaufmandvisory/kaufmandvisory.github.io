@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /checkout.html
+Disallow: /intake.html
+
+Sitemap: https://kaufmanadvisory.io/sitemap.xml

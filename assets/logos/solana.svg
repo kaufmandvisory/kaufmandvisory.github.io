@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">Solana</title>
+  <defs><linearGradient id="sol" x1="8" y1="55" x2="56" y2="9" gradientUnits="userSpaceOnUse"><stop stop-color="#9945ff"/><stop offset="1" stop-color="#14f195"/></linearGradient></defs>
+  <path d="M15 10h39l-7 8H8l7-8Z" fill="url(#sol)"/>
+  <path d="M8 28h39l7 8H15l-7-8Z" fill="url(#sol)"/>
+  <path d="M15 46h39l-7 8H8l7-8Z" fill="url(#sol)"/>
+</svg>

@@ -1,0 +1,15 @@
+{
+  "name": "kaufman-market-antenna",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Kaufman Market Antenna v1: agregación server-side de mercados públicos.",
+  "scripts": {
+    "start": "node server/index.js",
+    "test": "node --test server/*.test.js",
+    "validate": "node scripts/validate_market_antenna.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

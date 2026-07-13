@@ -1,0 +1,37 @@
+name: Update Kaufman daily data
+
+on:
+  schedule:
+    - cron: "17 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Build daily public-source snapshot
+        run: |
+          python scripts/update_daily_data.py
+          node scripts/update_regulation_data.mjs
+      - name: Commit changed snapshot
+        shell: bash
+        run: |
+          if git diff --quiet -- assets/daily-data.js assets/regulation-data.js; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/daily-data.js assets/regulation-data.js
+          git commit -m "data: update daily public sources"
+          git push

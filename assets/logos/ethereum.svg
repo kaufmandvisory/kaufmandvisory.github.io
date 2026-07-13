@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">Ethereum</title>
+  <path d="M32 3 14 32l18-8.2L50 32 32 3Z" fill="#343434"/>
+  <path d="m32 3 18 29-18-8.2V3Z" fill="#8c8c8c"/>
+  <path d="m14 35 18 25V27l-18 8Z" fill="#3c3c3b"/>
+  <path d="m32 27 18 8-18 25V27Z" fill="#8c8c8c"/>
+  <path d="m14 32 18-8.2L50 32l-18 10.4L14 32Z" fill="#141414" opacity=".38"/>
+</svg>
