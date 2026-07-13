@@ -208,6 +208,7 @@ export function buildRegulationSnapshot(sourceHealth = {}, receivedAt = new Date
   const jurisdictionCount = new Set(regimes.map((regime) => regime.jurisdiction)).size;
   return {
     schema_version: 'kaufman-regulation-intelligence-v1',
+    source_contract_version: 'official-public-v2',
     generated_at: receivedAt,
     legal_reviewed_at: '2026-07-13',
     review_policy: 'La fuente se monitoriza automáticamente cada 24 horas. Un HTTP correcto prueba accesibilidad, no vigencia jurídica; los cambios de contenido activan revisión editorial.',
@@ -232,6 +233,7 @@ export function buildRegulationSnapshot(sourceHealth = {}, receivedAt = new Date
 
 export function validateRegulationSnapshot(snapshot) {
   if (snapshot?.schema_version !== 'kaufman-regulation-intelligence-v1') throw new Error('Invalid regulation schema');
+  if (snapshot?.source_contract_version !== 'official-public-v2') throw new Error('Invalid regulation source contract');
   const sourceIds = new Set(snapshot.sources.map((source) => source.id));
   if (sourceIds.size !== snapshot.sources.length) throw new Error('Duplicate regulation source IDs');
   const regimeIds = new Set(snapshot.regimes.map((regime) => regime.id));

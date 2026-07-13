@@ -151,6 +151,7 @@ assert.notEqual(
 const regulation = snapshot.regulation_intelligence;
 assert.ok(regulation, 'regulation intelligence snapshot missing');
 assert.equal(regulation.schema_version, 'kaufman-regulation-intelligence-v1');
+assert.equal(regulation.source_contract_version, 'official-public-v2', 'outdated regulation source contract');
 assert.ok(Date.now() - Date.parse(regulation.generated_at) <= snapshot.thresholds.regulation_max_age_ms, 'regulation snapshot is stale');
 assert.equal(regulation.regimes.length, 5, 'unexpected regulation regime coverage');
 assert.equal(regulation.data_quality.demo_record_count, 0, 'regulation layer contains demo records');

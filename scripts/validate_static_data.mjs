@@ -32,6 +32,7 @@ assert.ok(platform.tokenization_markets?.products?.length > 0, 'universo de toke
 assert.ok(platform.l2_intelligence?.projects?.length > 0, 'universo L2 vacío');
 assert.equal(platform.fiscal_intelligence?.data_quality?.fact_count, 40, 'matriz fiscal incompleta');
 assert.equal(platform.regulation_intelligence?.data_quality?.demo_record_count, 0, 'regulación contiene demostraciones');
+assert.equal(platform.regulation_intelligence?.source_contract_version, 'official-public-v2', 'contrato regulatorio público desactualizado');
 assert.equal(
   platform.regulation_intelligence?.data_quality?.reachable_source_count,
   platform.regulation_intelligence?.data_quality?.source_count,

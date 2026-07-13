@@ -10,6 +10,7 @@ import {
 test('publishes complete regulation regimes without demo placeholders', () => {
   const snapshot = buildRegulationSnapshot({}, '2026-07-13T12:00:00.000Z');
   assert.equal(validateRegulationSnapshot(snapshot), true);
+  assert.equal(snapshot.source_contract_version, 'official-public-v2');
   assert.equal(snapshot.data_quality.demo_record_count, 0);
   assert.equal(snapshot.regimes.length, 5);
   assert.equal(snapshot.data_quality.sourced_regime_pct, 100);

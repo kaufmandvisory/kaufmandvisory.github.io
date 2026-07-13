@@ -90,6 +90,8 @@
   const PRICE = new Intl.NumberFormat('es-ES',{style:'currency',currency:'USD',maximumFractionDigits:2});
   const SMALL_USD = new Intl.NumberFormat('es-ES',{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:4});
   const APP_SCRIPT = document.querySelector('script[src*="kaufman-app.js"]');
+  const APP_CACHE_VERSION = APP_SCRIPT ? new URL(APP_SCRIPT.src).searchParams.get('v') || 'dev' : 'dev';
+  const REGULATION_SOURCE_CONTRACT = 'official-public-v2';
   const FILE_ROOT = location.protocol==='file:'&&APP_SCRIPT ? new URL('../',APP_SCRIPT.src) : null;
   const STATIC_HOST = /(^|\.)kaufmanadvisory\.io$|(^|\.)kaufmandvisory\.github\.io$/.test(location.hostname);
   let latestEthUsd = null;
@@ -119,6 +121,12 @@
   function assetUrl(path){
     if(!FILE_ROOT)return path;
     return new URL(path.replace(/^\/assets\//,''),APP_SCRIPT.src).href;
+  }
+  function dataAssetUrl(filename){
+    const url=new URL(filename,APP_SCRIPT.src);
+    url.searchParams.set('v',APP_CACHE_VERSION);
+    url.searchParams.set('snapshot',String(Math.floor(Date.now()/3600000)));
+    return url.href;
   }
   function localizeRenderedLinks(root=document){
     if(!FILE_ROOT)return;
@@ -1143,9 +1151,11 @@
   function renderRegulationIntelligence(snapshot){
     const dashboard=document.querySelector('[data-regulation-dashboard]');if(!dashboard)return;
     const data=snapshot?.regulation_intelligence;
-    const valid=data?.schema_version==='kaufman-regulation-intelligence-v1'&&Array.isArray(data.regimes)&&Array.isArray(data.sources)&&data.regimes.length>0;
+    const valid=data?.schema_version==='kaufman-regulation-intelligence-v1'&&data?.source_contract_version===REGULATION_SOURCE_CONTRACT&&Array.isArray(data.regimes)&&Array.isArray(data.sources)&&data.regimes.length>0;
     const status=document.querySelector('[data-regulation-status]');
-    if(!valid){if(status)status.textContent='Registro regulatorio no disponible';return}
+    if(!valid){if(status)status.textContent='Actualizando registro regulatorio…';return}
+    const currentSnapshot=Date.parse(dashboard.dataset.snapshot||''),incomingSnapshot=Date.parse(data.generated_at||'');
+    if(Number.isFinite(currentSnapshot)&&Number.isFinite(incomingSnapshot)&&incomingSnapshot<currentSnapshot)return;
     const quality=data.data_quality||{},sourcesById=new Map(data.sources.map((source)=>[source.id,source]));
     const checked=Number(quality.checked_source_count)||0,sourceCount=Number(quality.source_count)||data.sources.length,reachable=Number(quality.reachable_source_count)||0;
     if(status)status.textContent=checked?`Registro conectado · ${reachable}/${sourceCount} fuentes accesibles`:'Registro cargado · comprobando fuentes oficiales';
@@ -1179,12 +1189,12 @@
 
   function loadRegulationFallback(){
     if(!document.querySelector('[data-regulation-dashboard]'))return Promise.resolve(null);
-    if(window.KAUFMAN_REGULATION_DATA){renderRegulationIntelligence({regulation_intelligence:window.KAUFMAN_REGULATION_DATA});return Promise.resolve(window.KAUFMAN_REGULATION_DATA)}
+    if(window.KAUFMAN_REGULATION_DATA?.source_contract_version===REGULATION_SOURCE_CONTRACT){renderRegulationIntelligence({regulation_intelligence:window.KAUFMAN_REGULATION_DATA});return Promise.resolve(window.KAUFMAN_REGULATION_DATA)}
     if(regulationFallbackPromise)return regulationFallbackPromise;
     regulationFallbackPromise=new Promise((resolve)=>{
       if(!APP_SCRIPT){resolve(null);return}
       const script=document.createElement('script');
-      const url=new URL('regulation-data.js',APP_SCRIPT.src);url.searchParams.set('snapshot',String(Math.floor(Date.now()/3600000)));script.src=url.href;
+      script.src=dataAssetUrl('regulation-data.js');
       script.async=true;
       script.onload=()=>{const data=window.KAUFMAN_REGULATION_DATA||null;if(data)renderRegulationIntelligence({regulation_intelligence:data});resolve(data)};
       script.onerror=()=>resolve(null);
@@ -1214,7 +1224,7 @@
     platformFallbackPromise=new Promise((resolve)=>{
       if(!APP_SCRIPT){resolve(null);return}
       const script=document.createElement('script');
-      const url=new URL('platform-data.js',APP_SCRIPT.src);url.searchParams.set('snapshot',String(Math.floor(Date.now()/3600000)));script.src=url.href;
+      script.src=dataAssetUrl('platform-data.js');
       script.async=true;
       script.onload=()=>{const data=window.KAUFMAN_PLATFORM_DATA||null;if(data)applyMarketSnapshot(data);resolve(data)};
       script.onerror=()=>{document.querySelectorAll('[data-market-status],[data-tokenization-status],[data-l2-status],[data-fiscal-status]').forEach((node)=>node.textContent='Snapshot público no disponible');resolve(null)};
@@ -1327,7 +1337,7 @@
     if(!APP_SCRIPT)return Promise.resolve(null);
     return new Promise((resolve)=>{
       const script=document.createElement('script');
-      const url=new URL('daily-data.js',APP_SCRIPT.src);url.searchParams.set('snapshot',String(Math.floor(Date.now()/3600000)));script.src=url.href;
+      script.src=dataAssetUrl('daily-data.js');
       script.async=true;
       script.onload=()=>{applyDailySnapshot(window.KAUFMAN_DAILY_DATA);resolve(window.KAUFMAN_DAILY_DATA||null)};
       script.onerror=()=>{document.querySelectorAll('[data-home-regulation],[data-home-mining],[data-regulation-radar]').forEach((node)=>node.innerHTML='<div class="kf-live-empty">Fuente diaria no disponible.</div>');updateMiningCalculator(null);resolve(null)};
