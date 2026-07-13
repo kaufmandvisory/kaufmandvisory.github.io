@@ -181,7 +181,7 @@
       <div class="kf-footer-grid">
         <div class="kf-footer-brand"><div class="kf-brand-name">Kaufman</div><p>Información sobre mercados, regulación y ecosistema blockchain conectada a fuentes públicas. Los campos sin integración se identifican de forma explícita.</p></div>
         <nav class="kf-footer-nav" aria-label="Mapa del sitio">${ROUTES.map((route)=>`<a href="${route.path}">${route.label}</a>`).join('')}<a href="/fuentes/">Fuentes</a><a href="/fichas/">Fichas</a></nav>
-        <div class="kf-footer-meta"><span class="kf-footer-meta-title">Legal y privacidad</span><a href="/aviso-legal.html">Aviso legal</a><a href="/privacidad.html">Política de privacidad</a><a href="/terminos.html">Términos de uso</a><button type="button" data-consent-manage>Gestionar analítica</button><a href="mailto:contact@kaufmanadvisory.io">Contacto</a></div>
+      <div class="kf-footer-meta"><span class="kf-footer-meta-title">Legal y contacto</span><a href="/aviso-legal.html">Aviso legal</a><a href="/privacidad.html">Política de privacidad</a><a href="/terminos.html">Términos de uso</a><button type="button" data-consent-manage>Gestionar analítica</button><a href="/contacto/">Contacto</a></div>
       </div>
       <div class="kf-footer-bottom"><span>© 2026 Kaufman Advisory Group LLC</span><span>Los datos pueden contener latencia. Verifica la fuente antes de decidir.</span></div>
     </div></footer>`;
@@ -540,6 +540,17 @@
     return `<main class="kf-main" id="main-content">${pageHero('Fichas','Índice transversal de entidades, jurisdicciones, herramientas y conceptos de Kaufman.','Directorio global')}<section class="kf-section"><div class="kf-container"><div class="kf-toolbar"><div class="kf-search-field"><input type="search" data-directory-search placeholder="Buscar en todas las fichas…" aria-label="Buscar fichas"></div><select class="kf-select" data-status-filter><option value="all">Todos los estados</option>${states.map((state)=>`<option value="${state}">${STATUS_LABELS[state]}</option>`).join('')}</select><span class="kf-result-count" data-result-count>${entries.length} fichas</span></div><div class="kf-record-grid" data-record-grid>${entries.map((item,index)=>recordCard(item.type,item,index)).join('')}<div class="kf-empty" data-empty hidden>No hay fichas que coincidan con el filtro.</div></div></div></section></main>`;
   }
 
+  function renderContact(){
+    const email='contact@kaufmanadvisory.io';
+    const matters=[
+      ['Corrección de un dato','Incluye la URL, el campo afectado y una fuente primaria de contraste.','Corrección de dato'],
+      ['Fuentes e integraciones','Propón una API, registro o dataset público indicando licencia y frecuencia.','Fuente o integración'],
+      ['Licencias y colaboración','Explica el caso de uso, la organización y la cobertura que necesitas.','Licencias y colaboración'],
+      ['Privacidad o derechos','Indica el derecho que quieres ejercer y evita adjuntar información innecesaria.','Privacidad']
+    ];
+    return `<main class="kf-main" id="main-content">${pageHero('Contacto','Un canal directo para corregir datos, proponer fuentes o hablar de colaboración.','Kaufman / contacto','verified')}<section class="kf-section"><div class="kf-container"><div class="kf-contact"><section class="kf-contact-primary"><p class="kf-kicker">Canal oficial</p><h2>Escríbenos con contexto verificable.</h2><p>Kaufman no utiliza un formulario intermedio sin backend. El mensaje sale desde tu proveedor de correo y conserva una dirección de respuesta comprobable.</p><div class="kf-contact-address"><div><span>Correo</span><a href="mailto:${email}">${email}</a></div><button class="kf-button small secondary" type="button" data-contact-copy data-copy-value="${email}">Copiar correo</button></div><span class="kf-contact-copy-status" data-contact-copy-status aria-live="polite"></span><a class="kf-button primary" href="mailto:${email}?subject=Contacto%20desde%20Kaufman">Redactar correo →</a></section><aside class="kf-contact-security"><span>SEGURIDAD</span><h3>No envíes secretos ni fondos.</h3><ul><li>Nunca compartas seed phrases o claves privadas.</li><li>No envíes contraseñas, códigos de acceso ni archivos de wallet.</li><li>No adjuntes declaraciones fiscales completas ni documentos de identidad sin una solicitud legítima y un canal acordado.</li></ul><p>Kaufman no presta soporte por mensajes directos en redes sociales.</p></aside></div><div class="kf-contact-matters"><div class="kf-subsection-label">Motivo del contacto</div>${matters.map(([title,copy,subject],index)=>`<article><span>0${index+1}</span><div><h3>${title}</h3><p>${copy}</p></div><a href="mailto:${email}?subject=${encodeURIComponent(subject)}">Escribir →</a></article>`).join('')}</div><div class="kf-contact-legal"><span>Responsable</span><strong>Kaufman Advisory Group LLC · Wyoming, Estados Unidos</strong><a href="/privacidad.html">Tratamiento de datos y derechos →</a></div></div></section></main>`;
+  }
+
   function renderNotFound(title='Ruta no encontrada'){
     return `<main class="kf-main" id="main-content">${pageHero(title,'La ruta no existe o la ficha todavía no está registrada.','Error 404')}<section class="kf-section"><div class="kf-container"><a class="kf-button primary" href="/">Volver al inicio</a></div></section></main>`;
   }
@@ -561,6 +572,7 @@
       return params.has('tipo')||params.has('id')?renderProfile():renderAllProfiles();
     }
     if(page==='fuentes')return renderSources();
+    if(page==='contacto')return renderContact();
     if(page==='aviso'||page==='privacidad'||page==='terminos')return renderLegal(page);
     if(page==='retirado')return renderRetired();
     if(CATALOGS[page])return renderDirectory(page);
@@ -1678,13 +1690,30 @@
     banner.querySelector('[data-consent-reject]').addEventListener('click',()=>decide('rejected'));
   }
 
+  function initContact(){
+    const button=document.querySelector('[data-contact-copy]');
+    if(!button)return;
+    const status=document.querySelector('[data-contact-copy-status]');
+    button.addEventListener('click',async()=>{
+      const value=button.dataset.copyValue||'';
+      let copied=false;
+      try{await navigator.clipboard.writeText(value);copied=true}catch(error){}
+      if(!copied){
+        const address=document.querySelector('.kf-contact-address a');
+        if(address){const range=document.createRange();range.selectNodeContents(address);const selection=window.getSelection();selection.removeAllRanges();selection.addRange(range)}
+      }
+      if(status)status.textContent=copied?'Correo copiado.':'Correo seleccionado. Pulsa Ctrl+C para copiarlo.';
+      if(copied){button.textContent='Copiado';window.setTimeout(()=>{button.textContent='Copiar correo';if(status)status.textContent=''},2200)}
+    });
+  }
+
   const page=new URLSearchParams(location.search).get('pagina')||document.body.dataset.page||'home';
   const app=document.getElementById('kaufman-app');
   app.innerHTML=`<div class="kf-shell">${headerMarkup(page)}${renderPage(page)}${footerMarkup()}</div>${searchOverlayMarkup()}`;
   localizeRenderedLinks(app);
-  const pageTitle=page==='home'?'Kaufman | Inteligencia blockchain':`${CATALOGS[page]?.label||({mercados:'Mercados',tokenizacion:'Tokenización',herramientas:'Herramientas',rentabilidades:'Rentabilidades',ficha:'Ficha',fichas:'Fichas',fuentes:'Fuentes',aviso:'Aviso legal',privacidad:'Política de privacidad',terminos:'Términos de uso'}[page]||'Kaufman')} | Kaufman`;
+  const pageTitle=page==='home'?'Kaufman | Inteligencia blockchain':`${CATALOGS[page]?.label||({mercados:'Mercados',tokenizacion:'Tokenización',herramientas:'Herramientas',rentabilidades:'Rentabilidades',ficha:'Ficha',fichas:'Fichas',fuentes:'Fuentes',contacto:'Contacto',aviso:'Aviso legal',privacidad:'Política de privacidad',terminos:'Términos de uso'}[page]||'Kaufman')} | Kaufman`;
   document.title=pageTitle;
-  initMenu();initSearch();initDirectoryFilters();initTokenizationFilters();initFiscalDashboard();initComparator();initFeedStars();initMiningCalculator();initJurisdictionTool();initCountryCostStack();initEcosystemMap();initReveal();
+  initMenu();initSearch();initDirectoryFilters();initTokenizationFilters();initFiscalDashboard();initComparator();initFeedStars();initMiningCalculator();initJurisdictionTool();initCountryCostStack();initEcosystemMap();initContact();initReveal();
   connectMarketAntenna();
   loadRegulationFallback();
   if(document.querySelector('[data-market-asset]'))window.setInterval(refreshMarketDisplay,1000);
