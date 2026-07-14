@@ -65,5 +65,3 @@ export default async (request) => {
   };
   return new Response(JSON.stringify(payload), { status: available ? 200 : 503, headers: publicHeaders });
 };
-
-export const config = { path: '/api/market/context' };

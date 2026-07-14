@@ -314,4 +314,3 @@ export default async (request) => {
   return new Response(JSON.stringify(payload), { status: published.length ? 200 : 503, headers: publicHeaders });
 };
 
-export const config = { path: '/api/market/snapshot' };
