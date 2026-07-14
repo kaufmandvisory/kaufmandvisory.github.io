@@ -5,6 +5,24 @@
   directory = ".netlify-functions"
   node_bundler = "esbuild"
 
+[[redirects]]
+  from = "/api/market/snapshot"
+  to = "/.netlify/functions/market-snapshot"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/market/context"
+  to = "/.netlify/functions/market-context"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/market/gas"
+  to = "/.netlify/functions/ethereum-gas"
+  status = 200
+  force = true
+
 [[headers]]
   for = "/api/market/snapshot"
   [headers.values]
