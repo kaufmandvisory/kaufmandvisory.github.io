@@ -44,7 +44,12 @@ const fetchCoinbase = async (receivedAt) => {
     ...Object.values(STABLECOINS).map((asset) => asset.coinbase),
   ];
   const settled = await Promise.allSettled(products.map(async (product) => {
-    const data = await fetchJson(`https://api.exchange.coinbase.com/products/${product}/ticker`);
+    let data;
+    try {
+      data = await fetchJson(`https://api.exchange.coinbase.com/products/${product}/ticker`);
+    } catch (error) {
+      throw new Error(`${product}: ${error?.message || 'mercado no disponible'}`);
+    }
     const price = Number(data.price);
     const baseVolume = Number(data.volume);
     if (!Number.isFinite(price) || price <= 0) throw new Error(`${product}: precio inválido`);
@@ -117,7 +122,7 @@ const fetchBinance = async (receivedAt) => {
   return { observations, errors: [] };
 };
 
-const providerState = (result, receivedAt) => {
+export const providerState = (result, receivedAt) => {
   if (result.status === 'rejected') {
     return {
       connection_status: 'UNAVAILABLE',
@@ -127,11 +132,13 @@ const providerState = (result, receivedAt) => {
     };
   }
   const timestamps = result.value.observations.map((item) => Date.parse(item.providerTimestamp)).filter(Number.isFinite);
+  const hasObservations = result.value.observations.length > 0;
+  const hasErrors = Boolean(result.value.errors?.length);
   return {
-    connection_status: result.value.observations.length ? 'LIVE' : 'UNAVAILABLE',
+    connection_status: hasObservations ? (hasErrors ? 'DEGRADED' : 'LIVE') : 'UNAVAILABLE',
     last_message_at: timestamps.length ? new Date(Math.max(...timestamps)).toISOString() : receivedAt,
     messages: result.value.observations.length,
-    last_error: result.value.errors?.length ? result.value.errors.join(' · ') : null,
+    last_error: hasErrors ? result.value.errors.join(' · ') : null,
   };
 };
 
@@ -287,6 +294,12 @@ export default async (request) => {
     referencePrice(assetId, normalizedObservations.filter((item) => item.assetId === assetId), calculatedAt, nowMs),
   ]));
   const published = Object.values(referencePrices).filter((item) => Number.isFinite(item.price));
+  const providers = {
+    coinbase: providerState(coinbaseResult, requestTimestamp),
+    kraken: providerState(krakenResult, requestTimestamp),
+    binance: providerState(binanceResult, requestTimestamp),
+  };
+  const allProvidersHealthy = Object.values(providers).every((provider) => provider.connection_status === 'LIVE' && provider.last_error === null);
   const payload = {
     schema_version: 'kaufman-market-edge-v1',
     delivery_mode: 'LIVE_EDGE',
@@ -294,13 +307,9 @@ export default async (request) => {
     processing_ms: Date.now() - startedAt,
     reference_prices: referencePrices,
     stablecoin_fx: { USDT: usdt, USDC: usdc },
-    providers: {
-      coinbase: providerState(coinbaseResult, requestTimestamp),
-      kraken: providerState(krakenResult, requestTimestamp),
-      binance: providerState(binanceResult, requestTimestamp),
-    },
+    providers,
     thresholds: { fresh_ms: FRESH_MS, stale_ms: 5_000, degraded_ms: 15_000, unavailable_ms: 60_000 },
-    status: published.length === 3 ? 'LIVE' : published.length ? 'DEGRADED' : 'UNAVAILABLE',
+    status: published.length === 3 && allProvidersHealthy ? 'LIVE' : published.length ? 'DEGRADED' : 'UNAVAILABLE',
   };
   return new Response(JSON.stringify(payload), { status: published.length ? 200 : 503, headers: publicHeaders });
 };

@@ -1,0 +1,39 @@
+name: Update Kaufman public market API
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: kaufman-data-writes
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Build same-origin market snapshots
+        run: node scripts/update_public_market_api.mjs
+      - name: Validate generated contracts
+        run: |
+          node -e "for (const name of ['snapshot','context','gas','stream']) JSON.parse(require('node:fs').readFileSync('api/market/'+name,'utf8'))"
+      - name: Commit changed snapshots
+        shell: bash
+        run: |
+          if git diff --quiet -- api/market; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add api/market
+          git commit -m "data: refresh public market api"
+          git push

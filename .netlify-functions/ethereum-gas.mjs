@@ -27,7 +27,7 @@ export default async (request) => {
     if (!response.ok) throw new Error(`Ethereum RPC HTTP ${response.status}`);
     const payload = await response.json();
     const fees = buildEthereumFeeSnapshot(payload.find((row) => row.id === 1)?.result, payload.find((row) => row.id === 2)?.result, receivedAt);
-    return new Response(JSON.stringify({ schema_version: 'kaufman-ethereum-gas-v1', delivery_mode: 'LIVE_EDGE_GAS', generated_at: receivedAt, refresh_interval_ms: 60_000, ethereum_fees: fees }), { status: 200, headers });
+    return new Response(JSON.stringify({ schema_version: 'kaufman-ethereum-gas-v1', delivery_mode: 'LIVE_EDGE_GAS', generated_at: receivedAt, refresh_interval_ms: 60_000, status: 'LIVE', ethereum_fees: fees }), { status: 200, headers });
   } catch (error) {
     return new Response(JSON.stringify({ schema_version: 'kaufman-ethereum-gas-v1', status: 'UNAVAILABLE', error: error?.message || 'Ethereum RPC no disponible' }), { status: 503, headers });
   }

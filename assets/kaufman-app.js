@@ -92,20 +92,20 @@
   const HOME_DIRECTORY_KEYS = ['empresas','bancos','exchanges','wallets','proyectos','mineria','hardware','riesgos'];
   const ECOSYSTEM_ORDER = ['mercado','regulacion','empresas','infraestructura','custodia','riesgo'];
   const ECOSYSTEM_TERRITORIES = {
-    mercado:{index:'01',label:'Mercado',x:21,y:22,side:'left',headline:'Capital, precio y liquidez en contexto.',description:'Une el precio de referencia, la tokenización, los mercados centralizados y el efecto fiscal de cada operación.',href:'/mercados/',linkLabel:'Abrir inteligencia de mercado',sublayers:[['Precios','/mercados/'],['RWA','/tokenizacion/'],['Exchanges','/exchanges/'],['Rentabilidad','/rentabilidades/'],['Fiscalidad','/fiscal/']]},
-    regulacion:{index:'02',label:'Regulación',x:10,y:63,side:'left',headline:'La norma situada en su territorio.',description:'Relaciona fuentes primarias, fechas efectivas, autoridades y efectos prácticos sin confundir acceso técnico con vigencia jurídica.',href:'/regulacion/',linkLabel:'Abrir regulación blockchain',sublayers:[['Marcos vigentes','/regulacion/'],['Fiscalidad','/fiscal/'],['Bancos','/bancos/']]},
-    empresas:{index:'03',label:'Empresas',x:54,y:13,side:'top',headline:'Actividad real detrás del anuncio.',description:'Conecta compañías, bancos e iniciativas tokenizadas con la fuente que permite comprobar su estado y alcance.',href:'/empresas/',linkLabel:'Abrir inteligencia empresarial',sublayers:[['Empresas','/empresas/'],['Bancos','/bancos/'],['RWA','/tokenizacion/'],['Proyectos','/proyectos/']]},
-    infraestructura:{index:'04',label:'Infraestructura',x:86,y:35,side:'right',headline:'La capa que sostiene el sistema.',description:'Expone redes L2, proyectos, minería y hardware junto a sus dependencias, costes y señales operativas.',href:'/mercados/',linkLabel:'Abrir inteligencia de infraestructura',sublayers:[['L2','/mercados/'],['Minería','/mineria/'],['Hardware','/hardware/'],['Proyectos','/proyectos/'],['Herramientas','/herramientas/']]},
-    custodia:{index:'05',label:'Custodia',x:70,y:82,side:'right',headline:'Quién controla, conserva y recupera.',description:'Cruza wallets, exchanges y bancos para separar control de claves, contraparte, autorización y superficie de recuperación.',href:'/wallets/',linkLabel:'Abrir inteligencia de custodia',sublayers:[['Wallets','/wallets/'],['Exchanges','/exchanges/'],['Bancos','/bancos/']]},
-    riesgo:{index:'06',label:'Riesgo',x:30,y:89,side:'bottom',headline:'Dependencias visibles antes de decidir.',description:'Reúne riesgo tecnológico, regulatorio, de custodia y de infraestructura sin convertir señales parciales en una puntuación opaca.',href:'/riesgos/',linkLabel:'Abrir mapa de riesgos',sublayers:[['Riesgos','/riesgos/'],['Regulación','/regulacion/'],['Custodia','/wallets/'],['Proyectos','/proyectos/']]}
+    mercado:{index:'01',label:'Mercado',x:21,y:22,side:'left',headline:'Capital, precio y liquidez en contexto.',description:'Une el precio de referencia, la tokenización, los mercados centralizados y el efecto fiscal de cada operación.',decision:'Determina si el tamaño, la liquidez y el coste hacen viable la operación ahora.',action:'Cuantificar mercado y coste',href:'/mercados/',linkLabel:'Abrir inteligencia de mercado',sublayers:[['Precios','/mercados/'],['RWA','/tokenizacion/'],['Exchanges','/exchanges/'],['Rentabilidad','/rentabilidades/'],['Fiscalidad','/fiscal/']]},
+    regulacion:{index:'02',label:'Regulación',x:10,y:63,side:'left',headline:'La norma situada en su territorio.',description:'Relaciona fuentes primarias, fechas efectivas, autoridades y efectos prácticos sin confundir acceso técnico con vigencia jurídica.',decision:'Aclara qué autorización, fecha y autoridad pueden impedir o condicionar la operación.',action:'Comprobar perímetro regulatorio',href:'/regulacion/',linkLabel:'Abrir regulación blockchain',sublayers:[['Marcos vigentes','/regulacion/'],['Fiscalidad','/fiscal/'],['Bancos','/bancos/']]},
+    empresas:{index:'03',label:'Empresas',x:54,y:13,side:'top',headline:'Actividad real detrás del anuncio.',description:'Conecta compañías, bancos e iniciativas tokenizadas con la fuente que permite comprobar su estado y alcance.',decision:'Separa una iniciativa operativa de un anuncio y revela qué entidad asume la ejecución.',action:'Verificar entidad y actividad',href:'/empresas/',linkLabel:'Abrir inteligencia empresarial',sublayers:[['Empresas','/empresas/'],['Bancos','/bancos/'],['RWA','/tokenizacion/'],['Proyectos','/proyectos/']]},
+    infraestructura:{index:'04',label:'Infraestructura',x:86,y:35,side:'right',headline:'La capa que sostiene el sistema.',description:'Expone redes L2, proyectos, minería y hardware junto a sus dependencias, costes y señales operativas.',decision:'Hace visibles las dependencias técnicas que afectan continuidad, coste y capacidad de salida.',action:'Evaluar dependencias técnicas',href:'/mercados/',linkLabel:'Abrir inteligencia de infraestructura',sublayers:[['L2','/mercados/'],['Minería','/mineria/'],['Hardware','/hardware/'],['Proyectos','/proyectos/'],['Herramientas','/herramientas/']]},
+    custodia:{index:'05',label:'Custodia',x:70,y:82,side:'right',headline:'Quién controla, conserva y recupera.',description:'Cruza wallets, exchanges y bancos para separar control de claves, contraparte, autorización y superficie de recuperación.',decision:'Define quién controla las claves, cómo se recupera el acceso y qué contraparte queda expuesta.',action:'Elegir modelo de custodia',href:'/wallets/',linkLabel:'Abrir inteligencia de custodia',sublayers:[['Wallets','/wallets/'],['Exchanges','/exchanges/'],['Bancos','/bancos/']]},
+    riesgo:{index:'06',label:'Riesgo',x:30,y:89,side:'bottom',headline:'Dependencias visibles antes de decidir.',description:'Reúne riesgo tecnológico, regulatorio, de custodia y de infraestructura sin convertir señales parciales en una puntuación opaca.',decision:'Convierte dependencias dispersas en una lista de comprobaciones y condiciones de no ejecución.',action:'Construir condiciones de control',href:'/riesgos/',linkLabel:'Abrir mapa de riesgos',sublayers:[['Riesgos','/riesgos/'],['Regulación','/regulacion/'],['Custodia','/wallets/'],['Proyectos','/proyectos/']]}
   };
 
   const STATUS_LABELS = {verified:'VERIFICADO',sourcechecked:'FUENTE CONTRASTADA',unverified:'REVISIÓN NECESARIA',auto:'AUTOMÁTICO',offline:'NO DISPONIBLE'};
   const REGULATION_LEVEL_LABELS = {BINDING:'VINCULANTE',OFFICIAL_RULEBOOK:'REGLAMENTO OFICIAL',OFFICIAL_GUIDANCE:'GUÍA OFICIAL',PRIMARY_LAW:'LEY PRIMARIA'};
   const ANTENNA_STREAM = '/api/market/stream';
   const MARKET_EDGE_ENDPOINT = 'https://leafy-pudding-3f3427.netlify.app/api/market/snapshot';
-  const MARKET_CONTEXT_ENDPOINT = 'https://leafy-pudding-3f3427.netlify.app/api/market/context';
-  const GAS_EDGE_ENDPOINT = 'https://leafy-pudding-3f3427.netlify.app/api/market/gas';
+  const MARKET_CONTEXT_ENDPOINT = '/api/market/context';
+  const GAS_EDGE_ENDPOINT = '/api/market/gas';
   const PRICE = new Intl.NumberFormat('es-ES',{style:'currency',currency:'USD',maximumFractionDigits:2});
   const SMALL_USD = new Intl.NumberFormat('es-ES',{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:4});
   const APP_SCRIPT = document.querySelector('script[src*="kaufman-app.js"]');
@@ -155,6 +155,11 @@
     url.searchParams.set('snapshot',String(Math.floor(Date.now()/3600000)));
     return url.href;
   }
+  function pollingUrl(endpoint,windowMs=60000){
+    const url=new URL(endpoint,location.href);
+    url.searchParams.set('window',String(Math.floor(Date.now()/windowMs)));
+    return url.href;
+  }
   function localizeRenderedLinks(root=document){
     if(!FILE_ROOT)return;
     root.querySelectorAll('a[href^="/"]').forEach((link)=>link.setAttribute('href',internalUrl(link.getAttribute('href'))));
@@ -201,18 +206,29 @@
     const normalized=title.toLowerCase();
     const signature=normalized.includes('mercado')?'market':normalized.includes('regulación')?'regulation':normalized.includes('tokenización')?'tokenization':normalized.includes('herramienta')?'tools':normalized.includes('fiscal')?'fiscal':'directory';
     const signal={market:['Comparar','Medir','Contextualizar'],regulation:['Territorio','Vigencia','Autoridad'],tokenization:['Activo','Vehículo','Red'],tools:['Entrada','Ejecución','Resultado'],fiscal:['Escenario A','Contraste','Escenario B'],directory:['Índice','Evidencia','Ficha']}[signature];
-    return `<section class="kf-page-hero kf-signature-${signature}"><div class="kf-container kf-page-hero-inner"><div class="kf-breadcrumbs"><a href="/">Inicio</a><span>/</span><span>${title}</span></div><div class="kf-page-heading"><div><p class="kf-kicker">${kicker}</p><h1 class="kf-page-title">${title}</h1></div><div class="kf-page-copy"><p>${description}</p><div class="kf-page-state ${state}"><i></i><span>${stateCopy}</span></div></div><aside class="kf-page-signature" aria-hidden="true"><svg viewBox="0 0 300 120"><path d="M8 88 C58 88 65 24 118 40 S188 104 292 27"/><path d="M8 103 C75 55 144 112 292 73"/><circle cx="8" cy="88" r="4"/><circle cx="118" cy="40" r="5"/><circle cx="292" cy="27" r="4"/></svg><ol>${signal.map((item,index)=>`<li><span>0${index+1}</span>${item}</li>`).join('')}</ol></aside></div></div></section>`;
+    const actions={
+      market:{question:'¿Qué señal cambia la lectura del capital hoy?',label:'Interrogar señales de mercado',href:'/mercados/#senales-de-mercado'},
+      regulation:{question:'¿Qué norma, fecha o autoridad condiciona la operación?',label:'Abrir radar regulatorio',href:'/regulacion/'},
+      tokenization:{question:'¿Qué producto, red y concentración sostienen el activo?',label:'Explorar capital tokenizado',href:'/tokenizacion/'},
+      tools:{question:'¿Qué resultado cambia al introducir tus costes reales?',label:'Abrir herramientas operativas',href:'/herramientas/#rentabilidad-minera'},
+      fiscal:{question:'¿Cuándo nace el hecho imponible y qué dato falta?',label:'Calcular un escenario',href:'/fiscal/'},
+      directory:{question:'¿Qué entidad, infraestructura o riesgo necesitas comprobar?',label:'Buscar una ficha',href:'/fichas/'}
+    };
+    const noAction=['Aviso legal','Política de privacidad','Términos de uso','Contacto','Ruta retirada'].includes(title)||kicker==='Error 404';
+    const action=actions[signature];
+    return `<section class="kf-page-hero kf-signature-${signature}"><div class="kf-container kf-page-hero-inner"><div class="kf-breadcrumbs"><a href="/">Inicio</a><span>/</span><span>${title}</span></div><div class="kf-page-heading"><div><p class="kf-kicker">${kicker}</p><h1 class="kf-page-title">${title}</h1></div><div class="kf-page-copy"><p>${description}</p><div class="kf-page-state ${state}"><i></i><span>${stateCopy}</span></div>${noAction?'':`<div class="kf-page-action"><strong>${action.question}</strong><a href="${action.href}">${action.label} →</a></div>`}</div><aside class="kf-page-signature" aria-hidden="true"><svg viewBox="0 0 300 120"><path d="M8 88 C58 88 65 24 118 40 S188 104 292 27"/><path d="M8 103 C75 55 144 112 292 73"/><circle cx="8" cy="88" r="4"/><circle cx="118" cy="40" r="5"/><circle cx="292" cy="27" r="4"/></svg><ol>${signal.map((item,index)=>`<li><span>0${index+1}</span>${item}</li>`).join('')}</ol></aside></div></div></section>`;
   }
 
   function homeHeroMarkup(){
-    const stages=[
-      ['01','Fuente','Mercados, normas y registros públicos'],
-      ['02','Contraste','Fecha, perímetro y coherencia'],
-      ['03','Evidencia','Procedencia conservada'],
-      ['04','Señal','Dato publicable o bloqueo'],
-      ['05','Ruta','Módulo y ficha navegable']
+    const operations=[
+      ['operar','Operar o invertir con criptoactivos'],
+      ['tokenizar','Tokenizar un activo o producto'],
+      ['custodiar','Elegir custodia o proveedor'],
+      ['infraestructura','Seleccionar red o infraestructura Web3'],
+      ['mineria','Evaluar una operación minera']
     ];
-    return `<section class="kf-engine-hero"><div class="kf-container"><div class="kf-engine-grid"><div class="kf-engine-copy"><p class="kf-eyebrow">Motor de evidencia blockchain</p><h1>La señal importa.<br><span>Su procedencia, más.</span></h1><p>Kaufman conecta mercado, regulación, infraestructura y riesgo para convertir fuentes públicas en inteligencia navegable, sin ocultar el límite de cada dato.</p><div class="kf-engine-actions"><a class="kf-button primary" href="#explorar">Explorar inteligencia <span>→</span></a><a class="kf-text-link" href="/fuentes/">Ver fuentes y cobertura</a></div><dl><div><dt>Mercado</dt><dd>actualización continua</dd></div><div><dt>Regulación</dt><dd>fuentes primarias</dd></div><div><dt>Decisión</dt><dd>perímetro visible</dd></div></dl></div><div class="kf-engine-product" aria-label="Demostración del flujo de evidencia Kaufman"><header><span>Actividad del sistema</span><strong data-engine-state><i></i> Fuentes conectadas</strong></header><ol>${stages.map(([index,label,copy],stageIndex)=>`<li class="${stageIndex===3?'active':''}"><span>${index}</span><div><strong>${label}</strong><small>${copy}</small></div>${stageIndex<stages.length-1?'<i aria-hidden="true"></i>':''}</li>`).join('')}</ol><div class="kf-engine-signal" data-market-asset="bitcoin"><span>Señal observada · BTC/USD</span><strong class="kf-market-price">—</strong><small data-market-age>Esperando mercados frescos</small><a href="/mercados/">Abrir ruta de mercado →</a></div></div></div><div class="kf-engine-market">${marketBandMarkup()}</div></div></section>`;
+    const jurisdictions=[['ES','España'],['UE','Unión Europea'],['US','Estados Unidos'],['GB','Reino Unido'],['AE','Emiratos Árabes Unidos'],['CH','Suiza'],['SG','Singapur'],['MX','México']];
+    return `<section class="kf-engine-hero"><div class="kf-container"><div class="kf-engine-grid"><div class="kf-engine-copy"><p class="kf-eyebrow">Kaufman Decision Brief</p><h1>Antes de operar, sepa <span>qué puede cambiar la decisión.</span></h1><p>Describa una operación blockchain. Kaufman ordena jurisdicción, costes, infraestructura, custodia y riesgos en una ruta de comprobación con fuentes.</p><div class="kf-engine-actions"><a class="kf-button primary" href="#decision-brief">Definir mi operación <span>→</span></a><a class="kf-text-link" href="#explorar">Ver cómo se construye</a></div><dl><div><dt>Una operación</dt><dd>alcance concreto</dd></div><div><dt>Una ruta</dt><dd>controles priorizados</dd></div><div><dt>Una entrega</dt><dd>evidencia y límites</dd></div></dl></div><form class="kf-decision-builder" id="decision-brief" data-decision-builder><header><span>Configurar decisión</span><strong data-engine-state><i></i> Fuentes conectadas</strong></header><div class="kf-decision-fields"><label>Operación<select data-decision-operation>${operations.map(([value,label])=>`<option value="${value}">${label}</option>`).join('')}</select></label><label>Jurisdicción<select data-decision-jurisdiction>${jurisdictions.map(([value,label])=>`<option value="${value}">${label}</option>`).join('')}</select></label></div><div class="kf-decision-output" aria-live="polite"><span>RUTA PROPUESTA</span><h2 data-decision-title>Operar o invertir desde España</h2><p data-decision-summary>Comprueba tratamiento fiscal, proveedor, coste total, custodia y condiciones de salida antes de ejecutar.</p><ol data-decision-checks><li>Hecho fiscal y obligación de información</li><li>Autorización del proveedor</li><li>Coste total y custodia</li></ol><div class="kf-decision-live" data-market-asset="bitcoin"><span>Referencia BTC/USD</span><strong class="kf-market-price">—</strong><small data-market-age>Esperando precio fresco</small></div></div><div class="kf-decision-actions"><a class="kf-button secondary" data-decision-public href="/fiscal/">Abrir ruta pública</a><a class="kf-button primary" data-decision-contact href="/contacto/?asunto=decision-brief&operacion=operar&jurisdiccion=ES">Solicitar Decision Brief →</a></div><small>La ruta pública orienta. El Brief contratado delimita la operación, fuentes, supuestos y comprobaciones pendientes.</small></form></div><div class="kf-engine-market">${marketBandMarkup()}</div></div></section>`;
   }
 
   function marketBandMarkup(){
@@ -282,22 +298,34 @@
     const observedLabel=observedAt&&!Number.isNaN(Date.parse(observedAt))?new Intl.DateTimeFormat('es-ES',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'UTC'}).format(new Date(observedAt)).replace('.','')+' UTC':'Esperando snapshot conectado';
     const metrics=ecosystemMetrics(territoryId,snapshot).map((item)=>`<div class="kf-eco-metric"><strong>${escapeHtml(item.value)}</strong><span>${escapeHtml(item.label)}</span><small>${escapeHtml(item.source)}</small></div>`).join('');
     const sublayers=territory.sublayers.map(([label,href],index)=>`<a href="${href}"><span>${String(index+1).padStart(2,'0')}</span><strong>${escapeHtml(label)}</strong><i aria-hidden="true">→</i></a>`).join('');
-    return `<div class="kf-eco-panel-head"><p>${escapeHtml(territory.index)} / ${escapeHtml(territory.label)}</p><span>${escapeHtml(observedLabel)}</span></div><h3>${escapeHtml(territory.headline)}</h3><p class="kf-eco-panel-copy">${escapeHtml(territory.description)}</p><div class="kf-eco-metrics">${metrics}</div><div class="kf-eco-layers"><span>Capas relacionadas</span><nav aria-label="Capas de ${escapeHtml(territory.label)}">${sublayers}</nav></div><a class="kf-eco-open" href="${territory.href}">${escapeHtml(territory.linkLabel)} <span>→</span></a>`;
+    const briefHref=`/contacto/?asunto=decision-brief&territorio=${encodeURIComponent(territoryId)}`;
+    return `<div class="kf-eco-panel-head"><p>${escapeHtml(territory.index)} / ${escapeHtml(territory.label)}</p><span>${escapeHtml(observedLabel)}</span></div><h3>${escapeHtml(territory.headline)}</h3><p class="kf-eco-panel-copy">${escapeHtml(territory.description)}</p><div class="kf-eco-decision"><span>IMPLICACIÓN PARA LA DECISIÓN</span><strong>${escapeHtml(territory.decision)}</strong></div><div class="kf-eco-metrics">${metrics}</div><div class="kf-eco-layers"><span>Capas relacionadas</span><nav aria-label="Capas de ${escapeHtml(territory.label)}">${sublayers}</nav></div><div class="kf-eco-panel-actions"><a class="kf-eco-open" href="${territory.href}">${escapeHtml(territory.linkLabel)} <span>→</span></a><a class="kf-eco-brief" href="${briefHref}">${escapeHtml(territory.action)}</a></div>`;
   }
 
   function ecosystemMapMarkup(){
     const nodes=ECOSYSTEM_ORDER.map((id)=>{const territory=ECOSYSTEM_TERRITORIES[id];const active=id==='infraestructura';return `<button class="kf-eco-node${active?' active':''}" id="ecosystem-tab-${id}" type="button" role="tab" aria-selected="${active}" aria-controls="kaufman-ecosystem-panel" data-eco-territory="${id}" data-side="${territory.side}" style="--eco-x:${territory.x}%;--eco-y:${territory.y}%"><span class="kf-eco-node-ring"><i></i></span><strong>${escapeHtml(territory.label)}</strong><small>${territory.index}</small></button>`}).join('');
-    return `<section class="kf-section kf-ecosystem" id="explorar" data-ecosystem><div class="kf-container"><header class="kf-ecosystem-head"><div><p class="kf-kicker">Kaufman Evidence Atlas</p><h2>Una fuente entra. Una ruta explica en qué puede convertirse.</h2></div><p>Seis territorios, una capa común de procedencia. Selecciona un nodo para iluminar solo sus relaciones, métricas y fichas.</p></header><div class="kf-eco-shell"><div class="kf-eco-canvas" data-eco-current="infraestructura"><svg class="kf-eco-geometry" viewBox="0 0 960 600" aria-hidden="true"><path class="kf-eco-scaffold" d="M49 484 C77 211 272 44 548 62 C769 76 892 231 870 408 C850 541 711 581 576 520 C435 457 415 300 514 210 C592 139 713 167 747 253"/><path class="kf-eco-scaffold secondary" d="M94 518 C235 573 350 536 405 430 C457 331 425 208 335 150"/><path class="kf-eco-core-orbit" d="M331 318 C331 252 385 199 451 199 C517 199 570 252 570 318 C570 384 517 437 451 437 C385 437 331 384 331 318Z"/><path class="kf-eco-link" data-eco-link="mercado" d="M451 318 C369 273 285 197 197 131"/><path class="kf-eco-link" data-eco-link="regulacion" d="M451 318 C324 329 213 357 89 385"/><path class="kf-eco-link" data-eco-link="empresas" d="M451 318 C448 226 478 132 528 75"/><path class="kf-eco-link" data-eco-link="infraestructura" d="M451 318 C579 264 699 223 827 207"/><path class="kf-eco-link" data-eco-link="custodia" d="M451 318 C553 379 623 451 682 503"/><path class="kf-eco-link" data-eco-link="riesgo" d="M451 318 C397 416 342 485 283 539"/><path class="kf-eco-cross" d="M197 131 C334 88 456 84 528 75"/><path class="kf-eco-cross" d="M89 385 C243 393 338 421 283 539"/><path class="kf-eco-cross" d="M827 207 C776 332 745 425 682 503"/></svg><div class="kf-eco-center"><span>Núcleo de evidencia</span><strong>K</strong><i></i></div><div class="kf-eco-node-list" role="tablist" aria-label="Territorios del ecosistema Kaufman">${nodes}</div><div class="kf-eco-signals" aria-live="polite"><span data-eco-signal="updated">Conectando fuentes…</span><span data-eco-signal="market">Precios · esperando</span><span data-eco-signal="regulation">Regulación · esperando</span><span data-eco-signal="fiscal">Fiscal · esperando</span></div></div><aside class="kf-eco-panel" id="kaufman-ecosystem-panel" role="tabpanel" aria-labelledby="ecosystem-tab-infraestructura" aria-live="polite" data-eco-panel>${ecosystemPanelMarkup('infraestructura',null)}</aside></div><p class="kf-eco-instruction"><span aria-hidden="true">↳</span> Selecciona un territorio; solo su ruta activa adquiere color.</p></div></section>`;
+    return `<section class="kf-section kf-ecosystem" id="explorar" data-ecosystem><div class="kf-container"><header class="kf-ecosystem-head"><div><p class="kf-kicker">Mapa Kaufman de Evidencia</p><h2>Qué puede cambiar una decisión.</h2></div><p>Cada territorio responde una pregunta operativa. Selecciona uno para ver su implicación, las métricas conectadas y la siguiente comprobación.</p></header><div class="kf-eco-shell"><div class="kf-eco-canvas" data-eco-current="infraestructura"><svg class="kf-eco-geometry" viewBox="0 0 960 600" aria-hidden="true"><path class="kf-eco-scaffold" d="M49 484 C77 211 272 44 548 62 C769 76 892 231 870 408 C850 541 711 581 576 520 C435 457 415 300 514 210 C592 139 713 167 747 253"/><path class="kf-eco-scaffold secondary" d="M94 518 C235 573 350 536 405 430 C457 331 425 208 335 150"/><path class="kf-eco-core-orbit" d="M331 318 C331 252 385 199 451 199 C517 199 570 252 570 318 C570 384 517 437 451 437 C385 437 331 384 331 318Z"/><path class="kf-eco-link" data-eco-link="mercado" d="M451 318 C369 273 285 197 197 131"/><path class="kf-eco-link" data-eco-link="regulacion" d="M451 318 C324 329 213 357 89 385"/><path class="kf-eco-link" data-eco-link="empresas" d="M451 318 C448 226 478 132 528 75"/><path class="kf-eco-link" data-eco-link="infraestructura" d="M451 318 C579 264 699 223 827 207"/><path class="kf-eco-link" data-eco-link="custodia" d="M451 318 C553 379 623 451 682 503"/><path class="kf-eco-link" data-eco-link="riesgo" d="M451 318 C397 416 342 485 283 539"/><path class="kf-eco-cross" d="M197 131 C334 88 456 84 528 75"/><path class="kf-eco-cross" d="M89 385 C243 393 338 421 283 539"/><path class="kf-eco-cross" d="M827 207 C776 332 745 425 682 503"/></svg><div class="kf-eco-center"><span>Decision Brief</span><strong>K</strong><i></i></div><div class="kf-eco-node-list" role="tablist" aria-label="Territorios del ecosistema Kaufman">${nodes}</div><div class="kf-eco-signals" aria-live="polite"><span data-eco-signal="updated">Conectando fuentes…</span><span data-eco-signal="market">Precios · esperando</span><span data-eco-signal="regulation">Regulación · esperando</span><span data-eco-signal="fiscal">Fiscal · esperando</span></div></div><aside class="kf-eco-panel" id="kaufman-ecosystem-panel" role="tabpanel" aria-labelledby="ecosystem-tab-infraestructura" aria-live="polite" data-eco-panel>${ecosystemPanelMarkup('infraestructura',null)}</aside></div><p class="kf-eco-instruction"><span aria-hidden="true">↳</span> Selecciona un territorio para cambiar la ruta de comprobación.</p></div></section>`;
   }
 
   function renderHome(){
     return `<main class="kf-main" id="main-content">
       ${homeHeroMarkup()}
       ${ecosystemMapMarkup()}
-      <section class="kf-section kf-intelligence-briefing"><div class="kf-container"><header><div><p class="kf-kicker">Briefing conectado</p><h2>Lo que ha cambiado y por qué importa.</h2></div><p>Regulación, minería y hardware en una lectura editorial. La noticia abre la fuente; el dato técnico conserva su método.</p></header><div class="kf-briefing-grid"><section><div class="kf-briefing-label"><span>Regulación mundial</span><a href="/regulacion/">Abrir radar →</a></div><div data-home-regulation><div class="kf-live-empty">Cargando actualidad regulatoria…</div></div></section><section><div class="kf-briefing-label"><span>Minería y hardware</span><span><a href="/mineria/">Minería →</a> <a href="/hardware/">Hardware →</a></span></div><div data-home-mining><div class="kf-live-empty">Cargando actualidad minera…</div></div></section><aside class="kf-briefing-metrics" data-home-mining-metrics><div class="kf-live-empty">Cargando referencia minera…</div></aside></div></div></section>
+      <section class="kf-section kf-intelligence-briefing"><div class="kf-container"><header><div><p class="kf-kicker">Briefing conectado</p><h2>Lo que ha cambiado y qué decisión puede afectar.</h2></div><p>Una lectura principal regulatoria y una columna operativa de minería. La fuente conserva fecha, alcance y método.</p></header><div class="kf-briefing-grid"><section class="kf-briefing-lead"><div class="kf-briefing-label"><span>Regulación mundial</span><a href="/regulacion/">Abrir radar →</a></div><div data-home-regulation><div class="kf-live-empty">Cargando actualidad regulatoria…</div></div></section><aside class="kf-briefing-rail"><section><div class="kf-briefing-label"><span>Minería y hardware</span><span><a href="/mineria/">Minería →</a> <a href="/hardware/">Hardware →</a></span></div><div data-home-mining><div class="kf-live-empty">Cargando actualidad minera…</div></div></section><div class="kf-briefing-metrics" data-home-mining-metrics><div class="kf-live-empty">Cargando referencia minera…</div></div></aside></div></div></section>
       ${directoryHubMarkup()}
-      <section class="kf-section kf-home-fiscal"><div class="kf-container"><div><p class="kf-kicker">Contraste fiscal</p><h2>La misma operación cambia cuando cambia la jurisdicción.</h2></div><p>Compara hechos fiscales, costes operativos y fuentes oficiales con los mismos campos y límites.</p><a class="kf-button primary" href="/fiscal/">Abrir escenarios fiscales →</a></div></section>
     </main>`;
+  }
+
+  function decisionCloseMarkup(page){
+    const context={
+      home:['De la evidencia a una decisión concreta.','Describe la operación. Kaufman devuelve alcance, controles prioritarios, fuentes y preguntas que aún necesitan confirmación.'],
+      mercados:['Antes de mover capital, delimita la operación.','Conecta estructura de mercado, vehículo tokenizado, liquidez, costes y jurisdicción en una sola lectura.'],
+      regulacion:['La norma importa cuando se aplica a una operación.','Sitúa actividad, territorio, proveedor y fecha para construir el perímetro que debe comprobarse.'],
+      tokenizacion:['Una emisión necesita más que una red.','Ordena activo, vehículo, jurisdicción, infraestructura, custodia y riesgos antes de elegir arquitectura.'],
+      herramientas:['Convierte el cálculo en una condición de decisión.','Kaufman documenta entradas, fuentes, sensibilidad del resultado y datos que siguen pendientes.'],
+      fiscal:['Lleva el escenario al siguiente nivel de comprobación.','Transforma el cálculo en una lista de hechos, fuentes, supuestos y puntos para revisión profesional.']
+    }[page]||['Convierte esta ficha en una decisión comprobable.','Incluye la entidad, el territorio y el objetivo; Kaufman conecta las evidencias relevantes y señala los huecos.'];
+    return `<section class="kf-decision-close" aria-labelledby="decision-close-title"><div class="kf-container"><div><p class="kf-kicker">Kaufman Decision Brief</p><h2 id="decision-close-title">${context[0]}</h2><p>${context[1]}</p></div><ol><li><span>01</span>Operación y jurisdicción</li><li><span>02</span>Mercado, coste e infraestructura</li><li><span>03</span>Regulación, custodia y riesgo</li></ol><div class="kf-decision-close-action"><strong>Entrega definida antes de empezar</strong><span>Alcance, formato, plazo y presupuesto se confirman por escrito.</span><a class="kf-button primary" href="/contacto/?asunto=decision-brief&origen=${encodeURIComponent(page)}">Solicitar Decision Brief →</a></div></div></section>`;
   }
 
   function dataNoteMarkup(hasVerified=false){
@@ -570,13 +598,23 @@
 
   function renderContact(){
     const email='contact@kaufmanadvisory.io';
+    const params=new URLSearchParams(location.search);
+    const isDecisionBrief=params.get('asunto')==='decision-brief';
+    const operation=params.get('operacion')||params.get('territorio')||params.get('origen')||'';
+    const jurisdiction=params.get('jurisdiccion')||'';
+    const operationLabel={operar:'Operar o invertir',tokenizar:'Tokenizar un activo',custodiar:'Elegir custodia',infraestructura:'Infraestructura Web3',mineria:'Operación minera'}[operation]||operation;
+    const jurisdictionLabel={ES:'España',UE:'Unión Europea',US:'Estados Unidos',GB:'Reino Unido',AE:'Emiratos Árabes Unidos',CH:'Suiza',SG:'Singapur',MX:'México'}[jurisdiction]||jurisdiction;
+    const context=[operation&&`Operación: ${operationLabel}`,jurisdiction&&`Jurisdicción: ${jurisdictionLabel}`].filter(Boolean).join(' · ');
     const matters=[
+      ['Solicitar Kaufman Decision Brief','Indica la operación, jurisdicción, objetivo y fecha de decisión. Confirmaremos alcance, entrega, plazo y presupuesto antes de empezar.','Solicitud · Kaufman Decision Brief'],
       ['Corrección de un dato','Incluye la URL, el campo afectado y una fuente primaria de contraste.','Corrección de dato'],
       ['Fuentes e integraciones','Propón una API, registro o dataset público indicando licencia y frecuencia.','Fuente o integración'],
       ['Licencias y colaboración','Explica el caso de uso, la organización y la cobertura que necesitas.','Licencias y colaboración'],
       ['Privacidad o derechos','Indica el derecho que quieres ejercer y evita adjuntar información innecesaria.','Privacidad']
     ];
-    return `<main class="kf-main" id="main-content">${pageHero('Contacto','Un canal directo para corregir datos, proponer fuentes o hablar de colaboración.','Kaufman / contacto','verified')}<section class="kf-section"><div class="kf-container"><div class="kf-contact"><section class="kf-contact-primary"><p class="kf-kicker">Canal oficial</p><h2>Escríbenos con contexto verificable.</h2><p>Kaufman no utiliza un formulario intermedio sin backend. El mensaje sale desde tu proveedor de correo y conserva una dirección de respuesta comprobable.</p><div class="kf-contact-address"><div><span>Correo</span><a href="mailto:${email}">${email}</a></div><button class="kf-button small secondary" type="button" data-contact-copy data-copy-value="${email}">Copiar correo</button></div><span class="kf-contact-copy-status" data-contact-copy-status aria-live="polite"></span><a class="kf-button primary" href="mailto:${email}?subject=Contacto%20desde%20Kaufman">Redactar correo →</a></section><aside class="kf-contact-security"><span>SEGURIDAD</span><h3>No envíes secretos ni fondos.</h3><ul><li>Nunca compartas seed phrases o claves privadas.</li><li>No envíes contraseñas, códigos de acceso ni archivos de wallet.</li><li>No adjuntes declaraciones fiscales completas ni documentos de identidad sin una solicitud legítima y un canal acordado.</li></ul><p>Kaufman no presta soporte por mensajes directos en redes sociales.</p></aside></div><div class="kf-contact-matters"><div class="kf-subsection-label">Motivo del contacto</div>${matters.map(([title,copy,subject],index)=>`<article><span>0${index+1}</span><div><h3>${title}</h3><p>${copy}</p></div><a href="mailto:${email}?subject=${encodeURIComponent(subject)}">Escribir →</a></article>`).join('')}</div><div class="kf-contact-legal"><span>Responsable</span><strong>Kaufman Advisory Group LLC · Wyoming, Estados Unidos</strong><a href="/privacidad.html">Tratamiento de datos y derechos →</a></div></div></section></main>`;
+    const subject=isDecisionBrief?'Solicitud · Kaufman Decision Brief':'Contacto desde Kaufman';
+    const body=isDecisionBrief?encodeURIComponent(`Hola Kaufman,\n\nQuiero solicitar un Decision Brief.\n${context}\n\nObjetivo de la decisión:\nFecha límite:\nContexto adicional:\n`):'';
+    return `<main class="kf-main" id="main-content">${pageHero('Contacto',isDecisionBrief?'Delimita una operación y recibe una propuesta de alcance para convertir datos dispersos en una decisión comprobable.':'Un canal directo para solicitar un Decision Brief, corregir datos, proponer fuentes o hablar de colaboración.','Kaufman / contacto','verified')}<section class="kf-section"><div class="kf-container"><div class="kf-contact"><section class="kf-contact-primary"><p class="kf-kicker">${isDecisionBrief?'Solicitud de alcance':'Canal oficial'}</p><h2>${isDecisionBrief?'Cuéntanos qué decisión necesitas resolver.':'Escríbenos con contexto verificable.'}</h2><p>${isDecisionBrief?'No pedimos datos sensibles. Con la operación, jurisdicción, objetivo y fecha límite podemos confirmar qué fuentes y comprobaciones entran en la entrega.':'Kaufman no utiliza un formulario intermedio sin backend. El mensaje sale desde tu proveedor de correo y conserva una dirección de respuesta comprobable.'}</p>${context?`<div class="kf-contact-context"><span>Contexto recibido</span><strong>${escapeHtml(context)}</strong></div>`:''}<div class="kf-contact-address"><div><span>Correo</span><a href="mailto:${email}">${email}</a></div><button class="kf-button small secondary" type="button" data-contact-copy data-copy-value="${email}">Copiar correo</button></div><span class="kf-contact-copy-status" data-contact-copy-status aria-live="polite"></span><a class="kf-button primary" href="mailto:${email}?subject=${encodeURIComponent(subject)}${body?`&body=${body}`:''}">${isDecisionBrief?'Solicitar alcance y presupuesto':'Redactar correo'} →</a></section><aside class="kf-contact-security"><span>SEGURIDAD</span><h3>No envíes secretos ni fondos.</h3><ul><li>Nunca compartas seed phrases o claves privadas.</li><li>No envíes contraseñas, códigos de acceso ni archivos de wallet.</li><li>No adjuntes declaraciones fiscales completas ni documentos de identidad sin una solicitud legítima y un canal acordado.</li></ul><p>Kaufman no presta soporte por mensajes directos en redes sociales.</p></aside></div><div class="kf-contact-matters"><div class="kf-subsection-label">Motivo del contacto</div>${matters.map(([title,copy,matterSubject],index)=>`<article><span>${String(index+1).padStart(2,'0')}</span><div><h3>${title}</h3><p>${copy}</p></div><a href="mailto:${email}?subject=${encodeURIComponent(matterSubject)}">Escribir →</a></article>`).join('')}</div><div class="kf-contact-legal"><span>Responsable</span><strong>Kaufman Advisory Group LLC · Wyoming, Estados Unidos</strong><a href="/privacidad.html">Tratamiento de datos y derechos →</a></div></div></section></main>`;
   }
 
   function renderNotFound(title='Ruta no encontrada'){
@@ -1531,6 +1569,10 @@
 
   function applyLiveMarketSnapshot(snapshot){
     if(!snapshot||snapshot.delivery_mode!=='LIVE_EDGE'||!snapshot.reference_prices)return false;
+    const providers=Object.fromEntries(Object.entries(snapshot.providers||{}).map(([name,provider])=>{
+      const contradictory=['LIVE','CONNECTED'].includes(provider?.connection_status)&&Boolean(provider?.last_error);
+      return [name,contradictory?{...provider,connection_status:'DEGRADED'}:provider];
+    }));
     latestMarketSnapshot={
       ...(latestMarketSnapshot||{}),
       schema_version:snapshot.schema_version,
@@ -1540,7 +1582,7 @@
       status:snapshot.status,
       reference_prices:snapshot.reference_prices,
       stablecoin_fx:snapshot.stablecoin_fx||{},
-      providers:{...(latestMarketSnapshot?.providers||{}),...(snapshot.providers||{})},
+      providers:{...(latestMarketSnapshot?.providers||{}),...providers},
       thresholds:{...(latestMarketSnapshot?.thresholds||{}),...(snapshot.thresholds||{})}
     };
     antennaConnected=true;
@@ -1580,7 +1622,7 @@
     if(marketContextRequest||document.hidden||!document.querySelector('[data-market-context]'))return;
     marketContextRequest=(async()=>{
       try{
-        const response=await fetch(MARKET_CONTEXT_ENDPOINT,{headers:{Accept:'application/json'}});
+        const response=await fetch(pollingUrl(MARKET_CONTEXT_ENDPOINT,300000),{headers:{Accept:'application/json'},cache:'no-store'});
         if(!response.ok)throw new Error(`HTTP ${response.status}`);
         const context=await response.json();
         if(context?.delivery_mode!=='LIVE_EDGE_CONTEXT')throw new Error('Respuesta de contexto no válida');
@@ -1601,7 +1643,7 @@
     if(gasEdgeRequest||document.hidden||!document.querySelector('[data-gas-base]'))return;
     gasEdgeRequest=(async()=>{
       try{
-        const response=await fetch(GAS_EDGE_ENDPOINT,{headers:{Accept:'application/json'}});
+        const response=await fetch(pollingUrl(GAS_EDGE_ENDPOINT,60000),{headers:{Accept:'application/json'},cache:'no-store'});
         if(!response.ok)throw new Error(`HTTP ${response.status}`);
         const payload=await response.json();
         if(!payload?.ethereum_fees)throw new Error('Respuesta de gas no válida');
@@ -1696,7 +1738,7 @@
       try{antennaConnected=true;applyMarketSnapshot(JSON.parse(event.data))}catch(error){antennaConnected=false;refreshMarketDisplay()}
     });
     antennaStream.onopen=()=>{antennaConnected=true;refreshMarketDisplay()};
-    antennaStream.onerror=async()=>{const hadConnection=antennaConnected;antennaConnected=false;refreshMarketDisplay();if(!hadConnection){antennaStream?.close();await loadPlatformFallback();startMarketEdgePolling()}};
+    antennaStream.onerror=async()=>{const hadConnection=antennaConnected;antennaConnected=false;refreshMarketDisplay();if(!hadConnection){antennaStream?.close();await loadPlatformFallback();startMarketEdgePolling();pollMarketContext();pollGasEdge()}};
   }
 
   function safeExternalUrl(value){
@@ -1824,13 +1866,45 @@
     });
   }
 
+  function initDecisionBrief(){
+    const form=document.querySelector('[data-decision-builder]');
+    if(!form)return;
+    const operation=form.querySelector('[data-decision-operation]');
+    const jurisdiction=form.querySelector('[data-decision-jurisdiction]');
+    const scenarios={
+      operar:{verb:'Operar o invertir',summary:'Comprueba tratamiento fiscal, proveedor, coste total, custodia y condiciones de salida antes de ejecutar.',checks:['Hecho fiscal y obligación de información','Autorización del proveedor','Coste total, custodia y salida'],route:'/fiscal/'},
+      tokenizar:{verb:'Tokenizar un activo',summary:'Delimita vehículo, derechos, jurisdicción, red, distribución y custodia antes de diseñar la emisión.',checks:['Naturaleza jurídica del activo','Vehículo, derechos e inversores','Red, custodia y distribución'],route:'/tokenizacion/'},
+      custodiar:{verb:'Elegir custodia',summary:'Contrasta control de claves, entidad contractual, recuperación, segregación y superficie operativa.',checks:['Entidad, licencia y contrato','Control y segregación de claves','Recuperación, incidentes y salida'],route:'/wallets/'},
+      infraestructura:{verb:'Seleccionar infraestructura Web3',summary:'Compara disponibilidad, coste, upgrades, secuenciación, datos y capacidad de salida.',checks:['Dependencias y control de upgrades','Disponibilidad de datos y salida','Coste, capacidad y continuidad'],route:'/mercados/'},
+      mineria:{verb:'Evaluar una operación minera',summary:'Cruza hardware, electricidad, red, disponibilidad, fiscalidad y sensibilidad de la rentabilidad.',checks:['Equipo, stock y rendimiento','Electricidad y coste operativo','Fiscalidad, red y sensibilidad'],route:'/herramientas/#rentabilidad-minera'}
+    };
+    const jurisdictions={ES:'España',UE:'la Unión Europea',US:'Estados Unidos',GB:'Reino Unido',AE:'Emiratos Árabes Unidos',CH:'Suiza',SG:'Singapur',MX:'México'};
+    const update=()=>{
+      const scenario=scenarios[operation.value]||scenarios.operar;
+      const territory=jurisdictions[jurisdiction.value]||jurisdiction.value;
+      form.querySelector('[data-decision-title]').textContent=`${scenario.verb} desde ${territory}`;
+      form.querySelector('[data-decision-summary]').textContent=scenario.summary;
+      form.querySelector('[data-decision-checks]').innerHTML=scenario.checks.map((item)=>`<li>${escapeHtml(item)}</li>`).join('');
+      form.querySelector('[data-decision-public]').setAttribute('href',scenario.route);
+      form.querySelector('[data-decision-contact]').setAttribute('href',`/contacto/?asunto=decision-brief&operacion=${encodeURIComponent(operation.value)}&jurisdiccion=${encodeURIComponent(jurisdiction.value)}`);
+      localizeRenderedLinks(form);
+    };
+    operation.addEventListener('change',update);
+    jurisdiction.addEventListener('change',update);
+    form.addEventListener('submit',(event)=>event.preventDefault());
+    update();
+  }
+
   const page=new URLSearchParams(location.search).get('pagina')||document.body.dataset.page||'home';
   const app=document.getElementById('kaufman-app');
-  app.innerHTML=`<div class="kf-shell">${headerMarkup(page)}${renderPage(page)}${footerMarkup()}</div>${searchOverlayMarkup()}`;
+  const commercialPages=!['contacto','aviso','privacidad','terminos','retirado'].includes(page);
+  const renderedPage=renderPage(page);
+  const pageWithClose=commercialPages?renderedPage.replace('</main>',`${decisionCloseMarkup(page)}</main>`):renderedPage;
+  app.innerHTML=`<div class="kf-shell">${headerMarkup(page)}${pageWithClose}${footerMarkup()}</div>${searchOverlayMarkup()}`;
   localizeRenderedLinks(app);
   const pageTitle=page==='home'?'Kaufman | Inteligencia blockchain':`${CATALOGS[page]?.label||({mercados:'Mercados',tokenizacion:'Tokenización',herramientas:'Herramientas',rentabilidades:'Rentabilidades',ficha:'Ficha',fichas:'Fichas',fuentes:'Fuentes',contacto:'Contacto',aviso:'Aviso legal',privacidad:'Política de privacidad',terminos:'Términos de uso'}[page]||'Kaufman')} | Kaufman`;
   document.title=pageTitle;
-  initMenu();initSearch();initDirectoryFilters();initTokenizationFilters();initFiscalDashboard();initComparator();initFeedStars();initMiningCalculator();initJurisdictionTool();initCountryCostStack();initEcosystemMap();initContact();initReveal();
+  initMenu();initSearch();initDirectoryFilters();initTokenizationFilters();initFiscalDashboard();initComparator();initFeedStars();initMiningCalculator();initJurisdictionTool();initCountryCostStack();initEcosystemMap();initDecisionBrief();initContact();initReveal();
   Promise.resolve(connectMarketAntenna()).finally(()=>{startMarketContextPolling();startGasEdgePolling()});
   loadRegulationFallback();
   if(document.querySelector('[data-market-asset]'))window.setInterval(refreshMarketDisplay,1000);
