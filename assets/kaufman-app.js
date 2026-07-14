@@ -104,8 +104,8 @@
   const REGULATION_LEVEL_LABELS = {BINDING:'VINCULANTE',OFFICIAL_RULEBOOK:'REGLAMENTO OFICIAL',OFFICIAL_GUIDANCE:'GUÍA OFICIAL',PRIMARY_LAW:'LEY PRIMARIA'};
   const ANTENNA_STREAM = '/api/market/stream';
   const MARKET_EDGE_ENDPOINT = 'https://leafy-pudding-3f3427.netlify.app/api/market/snapshot';
-  const MARKET_CONTEXT_ENDPOINT = '/api/market/context';
-  const GAS_EDGE_ENDPOINT = '/api/market/gas';
+  const MARKET_CONTEXT_ENDPOINT = 'https://leafy-pudding-3f3427.netlify.app/api/market/context';
+  const GAS_EDGE_ENDPOINT = 'https://leafy-pudding-3f3427.netlify.app/api/market/gas';
   const PRICE = new Intl.NumberFormat('es-ES',{style:'currency',currency:'USD',maximumFractionDigits:2});
   const SMALL_USD = new Intl.NumberFormat('es-ES',{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:4});
   const APP_SCRIPT = document.querySelector('script[src*="kaufman-app.js"]');
