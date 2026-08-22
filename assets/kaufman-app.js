@@ -102,10 +102,10 @@
 
   const STATUS_LABELS = {verified:'VERIFICADO',sourcechecked:'FUENTE CONTRASTADA',unverified:'REVISIÓN NECESARIA',auto:'AUTOMÁTICO',offline:'NO DISPONIBLE'};
   const REGULATION_LEVEL_LABELS = {BINDING:'VINCULANTE',OFFICIAL_RULEBOOK:'REGLAMENTO OFICIAL',OFFICIAL_GUIDANCE:'GUÍA OFICIAL',PRIMARY_LAW:'LEY PRIMARIA'};
-  const ANTENNA_STREAM = 'https://leafy-pudding-3f3427.netlify.app/api/market/stream';
-  const MARKET_EDGE_ENDPOINT = 'https://leafy-pudding-3f3427.netlify.app/api/market/snapshot';
-  const MARKET_CONTEXT_ENDPOINT = 'https://leafy-pudding-3f3427.netlify.app/api/market/context';
-  const GAS_EDGE_ENDPOINT = 'https://leafy-pudding-3f3427.netlify.app/api/market/gas';
+  const ANTENNA_STREAM = 'https://leafy-pudding-3f3427.netlify.app/.netlify/functions/market-stream';
+  const MARKET_EDGE_ENDPOINT = 'https://leafy-pudding-3f3427.netlify.app/.netlify/functions/market-snapshot';
+  const MARKET_CONTEXT_ENDPOINT = 'https://leafy-pudding-3f3427.netlify.app/.netlify/functions/market-context';
+  const GAS_EDGE_ENDPOINT = 'https://leafy-pudding-3f3427.netlify.app/.netlify/functions/ethereum-gas';
   const PRICE = new Intl.NumberFormat('es-ES',{style:'currency',currency:'USD',maximumFractionDigits:2});
   const SMALL_USD = new Intl.NumberFormat('es-ES',{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:4});
   const APP_SCRIPT = document.querySelector('script[src*="kaufman-app.js"]');
@@ -1650,8 +1650,21 @@
         if(!response.ok)throw new Error(`HTTP ${response.status}`);
         const context=await response.json();
         if(context?.delivery_mode!=='LIVE_EDGE_CONTEXT')throw new Error('Respuesta de contexto no válida');
-        latestMarketSnapshot={...(latestMarketSnapshot||{}),market_context:context};
-        renderMarketContext(context);
+        const fallbackEtf=latestMarketSnapshot?.market_context?.etf_flows;
+        const liveEtf=context.etf_flows;
+        const etfFlows=liveEtf?{
+          ...liveEtf,
+          issuer_observations:liveEtf.issuer_observations?.length?liveEtf.issuer_observations:(fallbackEtf?.issuer_observations||[]),
+          reconciliation:liveEtf.reconciliation||fallbackEtf?.reconciliation,
+          assets:Object.fromEntries(['bitcoin','ethereum'].map((asset)=>{
+            const liveRow=liveEtf.assets?.[asset]||{};
+            const fallbackRow=fallbackEtf?.assets?.[asset]||{};
+            return [asset,{...fallbackRow,...liveRow,issuer_observation:liveRow.issuer_observation||fallbackRow.issuer_observation}];
+          }))
+        }:fallbackEtf;
+        const mergedContext={...context,etf_flows:etfFlows};
+        latestMarketSnapshot={...(latestMarketSnapshot||{}),market_context:mergedContext};
+        renderMarketContext(mergedContext);
       }catch(error){}finally{marketContextRequest=null}
     })();
     return marketContextRequest;

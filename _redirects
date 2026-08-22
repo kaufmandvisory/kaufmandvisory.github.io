@@ -1,0 +1,4 @@
+/api/market/stream  /.netlify/functions/market-stream  200!
+/api/market/snapshot  /.netlify/functions/market-snapshot  200!
+/api/market/context  /.netlify/functions/market-context  200!
+/api/market/gas  /.netlify/functions/ethereum-gas  200!
