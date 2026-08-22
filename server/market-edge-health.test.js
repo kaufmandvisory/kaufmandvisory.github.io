@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { providerState } from '../.netlify-functions/market-snapshot.mjs';
+import { coinbaseProducts, providerState } from '../.netlify-functions/market-snapshot.mjs';
 
 const timestamp = '2026-07-14T10:00:00.000Z';
 const observation = { providerTimestamp: timestamp };
@@ -21,5 +21,10 @@ test('LIVE provider health cannot retain a last error', () => {
   }, timestamp);
   assert.equal(health.connection_status, 'LIVE');
   assert.equal(health.last_error, null);
+});
+
+test('Coinbase is queried only for markets exposed by its public ticker API', () => {
+  assert.ok(coinbaseProducts().includes('USDT-USD'));
+  assert.ok(!coinbaseProducts().includes('USDC-USD'));
 });
 

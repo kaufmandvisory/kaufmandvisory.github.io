@@ -6,7 +6,10 @@ const ASSETS = {
 
 const STABLECOINS = {
   USDT: { coinbase: 'USDT-USD', kraken: ['USDTZUSD', 'USDTUSD'] },
-  USDC: { coinbase: 'USDC-USD', kraken: ['USDCUSD'] },
+  // Coinbase Exchange does not expose USDC-USD on this public ticker API.
+  // Kraken supplies the direct fiat market and Binance is only used through
+  // the separately observed USDC/USDT cross, so no USD parity is assumed.
+  USDC: { coinbase: null, kraken: ['USDCUSD'] },
 };
 
 const FRESH_MS = 5_000;
@@ -38,11 +41,13 @@ const fetchJson = async (url) => {
   return response.json();
 };
 
-const fetchCoinbase = async (receivedAt) => {
-  const products = [
+export const coinbaseProducts = () => [
     ...Object.values(ASSETS).map((asset) => asset.coinbase),
     ...Object.values(STABLECOINS).map((asset) => asset.coinbase),
-  ];
+  ].filter(Boolean);
+
+const fetchCoinbase = async (receivedAt) => {
+  const products = coinbaseProducts();
   const settled = await Promise.allSettled(products.map(async (product) => {
     let data;
     try {
