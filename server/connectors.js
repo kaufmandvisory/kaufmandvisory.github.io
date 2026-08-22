@@ -202,7 +202,9 @@ export function createBinanceConnector(callbacks) {
   const streams = Object.keys(BINANCE_MARKETS).map((symbol) => `${symbol.toLowerCase()}@ticker`).join('/');
   return new ResilientWebSocketConnector({
     name: 'binance',
-    url: `wss://stream.binance.com:9443/stream?streams=${streams}`,
+    // Host público de market-data sin API key; evita el endpoint de trading
+    // regionalmente restringido y no expone ninguna conexión al navegador.
+    url: `wss://data-stream.binance.vision/stream?streams=${streams}`,
     ...callbacks,
     subscribe: () => [],
     parse: (payload, receivedAt) => {
