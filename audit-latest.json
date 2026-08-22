@@ -1,0 +1,87 @@
+{
+  "status": "AUDITED_WITH_GAPS",
+  "generated_at": "2026-08-22T18:22:05.598Z",
+  "evidence_snapshot_at": "2026-08-22T18:21:50.679Z",
+  "findings": [
+    {
+      "id": "A01",
+      "severity": "RESOLVED",
+      "area": "Mercados",
+      "finding": "Transporte server-side WebSocket → SSE implantado.",
+      "evidence": "Tres conectores WebSocket=true; SSE con heartbeat y renovación silenciosa; REST queda como respaldo (1 fetch).",
+      "remediation": "Vigilar SLO de conexión y migrar a proceso 24/7 cuando exista infraestructura persistente autorizada."
+    },
+    {
+      "id": "A02",
+      "severity": "MEDIUM",
+      "area": "ETF",
+      "finding": "Los flujos ETF automáticos dependen de un único agregador público y todavía no se reconcilian contra cada emisor.",
+      "evidence": "Contexto automático=true; gas independiente a un minuto=true; fuente ETF=CoinFlows public ETF tracker.",
+      "remediation": "Añadir una segunda fuente y reconciliar por ticker con los datos publicados por cada emisor antes de elevar la confianza."
+    },
+    {
+      "id": "A03",
+      "severity": "RESOLVED",
+      "area": "DEX",
+      "finding": "Cada pool conserva el último swap verificado en la cadena.",
+      "evidence": "3 pools; 3 con bloque/slot, transacción y timestamp verificable.",
+      "remediation": "Mantener doble RPC y bloquear la fila cuando falte evidencia onchain."
+    },
+    {
+      "id": "A04",
+      "severity": "RESOLVED",
+      "area": "Exchanges",
+      "finding": "Comparador plural con semántica de disponibilidad implantado.",
+      "evidence": "5 exchanges; 2 con tarifa pública exacta y 3 bloqueados hasta cotización de cuenta.",
+      "remediation": "Añadir depósitos y retiradas únicamente desde tarifas oficiales versionadas."
+    },
+    {
+      "id": "A05",
+      "severity": "MEDIUM",
+      "area": "Wallets",
+      "finding": "El monitor de wallets observa releases de aplicaciones, no firmware, advisories, compatibilidad ni estado del dispositivo.",
+      "evidence": "3/3 releases de aplicación observadas.",
+      "remediation": "Conectar feeds oficiales de firmware y seguridad por modelo, conservando versión afectada y fecha de publicación."
+    },
+    {
+      "id": "A06",
+      "severity": "MEDIUM",
+      "area": "Web3",
+      "finding": "La arquitectura Web3 está explicada, pero casi toda su telemetría sigue siendo documental.",
+      "evidence": "7 perfiles Web3; 1 con datos automáticos de proyecto (L2BEAT).",
+      "remediation": "Añadir salud, upgrades, gobernanza y uso con fuentes primarias por protocolo sin convertir actividad en una puntuación opaca."
+    },
+    {
+      "id": "A07",
+      "severity": "IMPROVED",
+      "area": "Regulación",
+      "finding": "Cobertura prioritaria ampliada a diez regímenes globales; todavía no es exhaustiva.",
+      "evidence": "10 regímenes y 10 jurisdicciones.",
+      "remediation": "Priorizar G20 y hubs de activos digitales con texto primario, fecha efectiva, transición y registro de proveedores."
+    },
+    {
+      "id": "A08",
+      "severity": "CONTROL_READY",
+      "area": "Regulación",
+      "finding": "Flujo de firma jurídica implantado; la aprobación humana autorizada sigue pendiente.",
+      "evidence": "10 regímenes; firmas jurídicas válidas=0; pendientes=10.",
+      "remediation": "Un revisor jurídico autorizado debe firmar las fichas; el sistema ya valida identidad de clave, huellas, cadena y manipulación."
+    },
+    {
+      "id": "A09",
+      "severity": "HIGH",
+      "area": "Fiscal",
+      "finding": "El motor fiscal tiene cobertura limitada y parte de sus fuentes no se monitoriza automáticamente.",
+      "evidence": "8 jurisdicciones; 3/40 hechos no determinados; 8/29 fuentes comprobadas en el build.",
+      "remediation": "Ampliar residencia, regiones, convenios y perfiles, y monitorizar todas las fuentes que alimentan cálculo."
+    },
+    {
+      "id": "A10",
+      "severity": "MEDIUM",
+      "area": "Noticias",
+      "finding": "La verificación de noticias valida metadatos y medio, no el hecho contra una fuente primaria.",
+      "evidence": "1 titular periodístico; 3 señales de fuente oficial; 1 señal calculada; Google News=true.",
+      "remediation": "Resolver cada noticia a comunicado, filing, bloque, registro o documento oficial y separar hecho confirmado de cobertura periodística."
+    }
+  ]
+}

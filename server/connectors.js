@@ -5,7 +5,7 @@ import {
   KRAKEN_MARKETS,
   ONCHAIN_ASSETS
 } from './config.js';
-import { selectDexPair, verifyDexPair } from './dexscreener.js';
+import { fetchOnchainSwapEvidence, selectDexPair, verifyDexPair } from './dexscreener.js';
 
 function numberOrNull(value) {
   const number = Number(value);
@@ -268,6 +268,7 @@ export class DexScreenerConnector {
         const payload = await response.json();
         this.metrics.messages += 1;
         const confirmation = payload.pair || payload.pairs?.[0];
+        const onchainEvidence = await fetchOnchainSwapEvidence({ chainId: asset.chainId, pairAddress: pair.pairAddress });
         return verifyDexPair({
           asset,
           pair,
@@ -275,7 +276,8 @@ export class DexScreenerConnector {
           receivedAt: receivedAt.toISOString(),
           sourceResponseAt,
           confirmationResponseAt: response.headers.get('date') || receivedAt.toUTCString(),
-          referencePriceUsd: this.getReferencePrice(asset.canonicalAssetId)
+          referencePriceUsd: this.getReferencePrice(asset.canonicalAssetId),
+          onchainEvidence
         });
       }))).filter(Boolean);
       this.metrics.quotes += selectedPools.filter((pool) => pool.price).length;

@@ -1,4 +1,5 @@
 import { CONFIG } from './config.js';
+import { buildExchangeFeeRegistry } from './exchange-fees.js';
 
 function median(values) {
   const sorted = values.filter(Number.isFinite).sort((a, b) => a - b);
@@ -141,28 +142,12 @@ export class AuxiliaryConnector {
 
   async refreshFees() {
     try {
-      const response = await fetch('https://api.kraken.com/0/public/AssetPairs?pair=XBTUSD&info=fees', {
-        headers: { accept: 'application/json', 'user-agent': 'Kaufman-Market-Antenna/1.0' },
-        signal: AbortSignal.timeout(9_000)
-      });
-      if (!response.ok) throw new Error(`Kraken REST HTTP ${response.status}`);
-      const payload = await response.json();
-      if (payload.error?.length) throw new Error(payload.error.join(', '));
-      const pair = Object.values(payload.result || {})[0];
-      const maker = Number(pair?.fees_maker?.[0]?.[1]);
-      const taker = Number(pair?.fees?.[0]?.[1]);
-      if (!Number.isFinite(maker) || !Number.isFinite(taker)) throw new Error('Incomplete fee response');
-      this.data.exchange_fees = {
-        exchange: 'Kraken', pair: 'BTC/USD', maker, taker,
-        received_at: new Date().toISOString(),
-        verification_status: 'OBSERVED',
-        methodology: 'primer tramo público de volumen de 30 días; actualización server-side diaria'
-      };
-      this.onHealth('kraken_fees', { connection_status: 'CONNECTED', last_message_at: this.data.exchange_fees.received_at });
+      this.data.exchange_fees = await buildExchangeFeeRegistry();
+      this.onHealth('exchange_fees', { connection_status: 'CONNECTED', last_message_at: this.data.exchange_fees.received_at, records: this.data.exchange_fees.entries.length });
       this.publish();
     } catch (error) {
       this.data.exchange_fees = null;
-      this.onHealth('kraken_fees', { connection_status: 'DEGRADED', last_error: error.message });
+      this.onHealth('exchange_fees', { connection_status: 'DEGRADED', last_error: error.message });
       this.publish();
     } finally {
       if (!this.stopped) this.feesTimer = setTimeout(() => this.refreshFees(), this.config.feesIntervalMs);

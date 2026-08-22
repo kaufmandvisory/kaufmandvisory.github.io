@@ -6,8 +6,9 @@ import { extractL2BeatProjectIcons, normalizeL2BeatSummary } from '../server/l2b
 import { SOURCE_REGISTRY, buildFiscalSnapshot, checkFiscalSource, validateFiscalSnapshot } from '../server/fiscal.js';
 import { REGULATORY_SOURCES, buildRegulationSnapshot, checkRegulatorySource, validateRegulationSnapshot } from '../server/regulation.js';
 import { buildEthereumFeeSnapshot } from '../server/auxiliary.js';
+import { buildExchangeFeeRegistry } from '../server/exchange-fees.js';
 import { buildDominanceSnapshot, buildOpenInterestSnapshot, buildDvolSnapshot, buildEtfFlowSnapshot } from '../server/market-context.js';
-import { selectDexPair, verifyDexPair } from '../server/dexscreener.js';
+import { fetchOnchainSwapEvidence, selectDexPair, verifyDexPair } from '../server/dexscreener.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const receivedAt = new Date().toISOString();
@@ -223,12 +224,7 @@ const marketContext = {
   ethereum_fees: ethereumFees
 };
 auxiliary.exchange_fees = await attempt(async () => {
-  const payload = await fetchJson('https://api.kraken.com/0/public/AssetPairs?pair=XBTUSD&info=fees');
-  const pair = Object.values(payload.result || {})[0];
-  const maker = Number(pair?.fees_maker?.[0]?.[1]);
-  const taker = Number(pair?.fees?.[0]?.[1]);
-  if (!Number.isFinite(maker) || !Number.isFinite(taker)) throw new Error('Kraken fee response incomplete');
-  return { exchange: 'Kraken', pair: 'BTC/USD', maker, taker, received_at: receivedAt, verification_status: 'OBSERVED', methodology: 'Primer tramo público de volumen de 30 días.' };
+  return buildExchangeFeeRegistry(fetch, receivedAt);
 });
 
 const onchainAssets = [
@@ -241,6 +237,7 @@ const onchainPools = (await Promise.all(onchainAssets.map(async (asset) => attem
   const pair = selectDexPair(asset, primary.payload.pairs || []);
   if (!pair) throw new Error(`DEX pool unavailable: ${asset.id}`);
   const confirmation = await fetchJsonWithMeta(`https://api.dexscreener.com/latest/dex/pairs/${asset.chain}/${pair.pairAddress}`);
+  const onchainEvidence = await fetchOnchainSwapEvidence({ chainId: asset.chain, pairAddress: pair.pairAddress });
   return verifyDexPair({
     asset,
     pair,
@@ -248,7 +245,8 @@ const onchainPools = (await Promise.all(onchainAssets.map(async (asset) => attem
     receivedAt,
     sourceResponseAt: primary.response_at,
     confirmationResponseAt: confirmation.response_at,
-    referencePriceUsd: referencePrices[asset.id]?.price || null
+    referencePriceUsd: referencePrices[asset.id]?.price || null,
+    onchainEvidence
   });
 })))).filter(Boolean);
 

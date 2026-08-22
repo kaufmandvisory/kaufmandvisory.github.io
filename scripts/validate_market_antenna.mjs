@@ -60,9 +60,11 @@ for (const [currency, reference] of Object.entries(snapshot.stablecoin_fx)) {
 
 for (const pool of snapshot.onchain_pools) {
   assert.equal(pool.identity, `${pool.chain_id}:${pool.contract_address.toLowerCase()}`, 'onchain identity mismatch');
-  assert.equal(pool.provider_timestamp, null, `${pool.identity}: DEX timestamp must not be invented`);
+  assert.ok(Number.isFinite(Date.parse(pool.provider_timestamp)), `${pool.identity}: DEX onchain timestamp missing`);
   assert.ok(['VERIFIED', 'SOURCE_CROSSCHECKED'].includes(pool.verification_status), `${pool.identity}: DEX verification status`);
-  assert.equal(pool.exact_trade_timestamp_available, false, `${pool.identity}: exact trade timestamp contract`);
+  assert.equal(pool.exact_trade_timestamp_available, true, `${pool.identity}: exact trade timestamp contract`);
+  assert.equal(pool.onchain_evidence?.verification_status, 'CHAIN_TRADE_VERIFIED', `${pool.identity}: onchain evidence status`);
+  assert.match(pool.onchain_evidence?.evidence_url || '', /^https:\/\//, `${pool.identity}: onchain evidence URL`);
   assert.ok(Number.isFinite(Date.parse(pool.source_response_at)), `${pool.identity}: source response time`);
   assert.ok(Object.entries(pool.verification_checks).filter(([key]) => key !== 'reference_price_match').every(([, value]) => value === true), `${pool.identity}: DEX cross-check failed`);
 }
@@ -157,7 +159,7 @@ assert.ok(regulation, 'regulation intelligence snapshot missing');
 assert.equal(regulation.schema_version, 'kaufman-regulation-intelligence-v1');
 assert.equal(regulation.source_contract_version, 'official-public-v2', 'outdated regulation source contract');
 assert.ok(Date.now() - Date.parse(regulation.generated_at) <= snapshot.thresholds.regulation_max_age_ms, 'regulation snapshot is stale');
-assert.equal(regulation.regimes.length, 5, 'unexpected regulation regime coverage');
+assert.ok(regulation.regimes.length >= 10, 'regulation regime coverage is incomplete');
 assert.equal(regulation.data_quality.demo_record_count, 0, 'regulation layer contains demo records');
 assert.equal(regulation.data_quality.sourced_regime_pct, 100, 'unsourced regulation regimes');
 assert.equal(regulation.data_quality.reachable_source_count, regulation.data_quality.source_count, 'official regulation sources are not fully reachable');
@@ -169,11 +171,13 @@ for (const source of regulation.sources) {
   assert.match(source.content_fingerprint || '', /^[a-f0-9]{64}$/, `${source.id}: source fingerprint missing`);
 }
 for (const regime of regulation.regimes) {
-  assert.equal(regime.legal_status, 'VERIFIED', `${regime.id}: legal review status`);
+  assert.ok(['VERIFIED', 'SOURCE_GROUNDED', 'SIGNED_LEGAL_REVIEW'].includes(regime.legal_status), `${regime.id}: legal review status`);
   assert.ok(regime.authority && regime.effective && regime.scope && regime.practical_effect && regime.limitation, `${regime.id}: incomplete regulation regime`);
   assert.ok(regime.source_ids.length > 0 && regime.source_ids.every((id) => regulationSourceIds.has(id)), `${regime.id}: broken source reference`);
   assert.doesNotMatch(JSON.stringify(regime), /DEMO/i, `${regime.id}: demo value leaked into regulation`);
 }
+assert.equal(regulation.legal_review_ledger?.schema_version, 'kaufman-legal-review-ledger-v1', 'legal review ledger missing');
+assert.equal(regulation.data_quality.signed_regime_count, regulation.legal_review_ledger.signed_regime_ids.length, 'signed legal review count mismatch');
 
 const fees = snapshot.auxiliary?.ethereum_fees;
 assert.ok(fees, 'Ethereum fee snapshot missing');

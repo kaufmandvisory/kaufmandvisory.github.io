@@ -40,8 +40,7 @@ export const COINBASE_MARKETS = Object.freeze({
   'BTC-USD': { assetId: 'bitcoin', currency: 'USD' },
   'ETH-USD': { assetId: 'ethereum', currency: 'USD' },
   'SOL-USD': { assetId: 'solana', currency: 'USD' },
-  'USDT-USD': { assetId: 'usdt', currency: 'USD' },
-  'USDC-USD': { assetId: 'usdc', currency: 'USD' }
+  'USDT-USD': { assetId: 'usdt', currency: 'USD' }
 });
 
 export const KRAKEN_MARKETS = Object.freeze({

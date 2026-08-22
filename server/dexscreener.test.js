@@ -35,12 +35,13 @@ test('verifies the DEX observation through both endpoints and Kaufman reference'
     receivedAt: '2026-07-13T15:00:01.000Z',
     sourceResponseAt: 'Mon, 13 Jul 2026 15:00:00 GMT',
     confirmationResponseAt: 'Mon, 13 Jul 2026 15:00:01 GMT',
-    referencePriceUsd: 1799
+    referencePriceUsd: 1799,
+    onchainEvidence: { chain_id: 'ethereum', pair_address: '0xpool', provider_timestamp: '2026-07-13T15:00:00.000Z', exact_trade_timestamp_available: true, verification_status: 'CHAIN_TRADE_VERIFIED', transaction_hash: '0xtx', evidence_url: 'https://etherscan.io/tx/0xtx' }
   });
   assert.equal(result.verification_status, 'VERIFIED');
   assert.equal(result.identity, `ethereum:${asset.address.toLowerCase()}`);
-  assert.equal(result.provider_timestamp, null);
-  assert.equal(result.exact_trade_timestamp_available, false);
+  assert.equal(result.provider_timestamp, '2026-07-13T15:00:00.000Z');
+  assert.equal(result.exact_trade_timestamp_available, true);
   assert.equal(result.verification_checks.contract_match, true);
   assert.ok(result.reference_deviation_pct < 2.5);
 });

@@ -102,7 +102,7 @@
 
   const STATUS_LABELS = {verified:'VERIFICADO',sourcechecked:'FUENTE CONTRASTADA',unverified:'REVISIÓN NECESARIA',auto:'AUTOMÁTICO',offline:'NO DISPONIBLE'};
   const REGULATION_LEVEL_LABELS = {BINDING:'VINCULANTE',OFFICIAL_RULEBOOK:'REGLAMENTO OFICIAL',OFFICIAL_GUIDANCE:'GUÍA OFICIAL',PRIMARY_LAW:'LEY PRIMARIA'};
-  const ANTENNA_STREAM = '/api/market/stream';
+  const ANTENNA_STREAM = 'https://leafy-pudding-3f3427.netlify.app/api/market/stream';
   const MARKET_EDGE_ENDPOINT = 'https://leafy-pudding-3f3427.netlify.app/api/market/snapshot';
   const MARKET_CONTEXT_ENDPOINT = 'https://leafy-pudding-3f3427.netlify.app/api/market/context';
   const GAS_EDGE_ENDPOINT = 'https://leafy-pudding-3f3427.netlify.app/api/market/gas';
@@ -342,11 +342,11 @@
   }
 
   function exchangeFeesMarkup(){
-    return `<section class="kf-live-panel"><div class="kf-live-panel-head"><div><p class="kf-kicker">Comisiones conectadas</p><h2>Tarifa pública base</h2></div><div class="kf-live-actions"><span data-exchange-fee-status aria-live="polite">Cargando tarifa pública…</span></div></div><div class="kf-data-table-wrap"><table class="kf-data-table"><thead><tr><th>Exchange</th><th>Mercado</th><th class="number">Maker</th><th class="number">Taker</th><th>Fuente</th></tr></thead><tbody><tr><td><strong>Kraken</strong></td><td>BTC / USD · primer tramo publicado</td><td class="number" data-kraken-maker>—</td><td class="number" data-kraken-taker>—</td><td><a href="https://docs.kraken.com/api/docs/rest-api/get-tradable-asset-pairs" target="_blank" rel="noopener noreferrer">Kraken API ↗</a></td></tr></tbody></table></div><p class="kf-live-footnote">Actualización diaria. No se muestran otros exchanges hasta disponer de una tarifa pública comparable por mercado y tramo; el total tampoco incluye spread, conversión, retirada ni condiciones particulares.</p></section>`;
+    return `<section class="kf-live-panel"><div class="kf-live-panel-head"><div><p class="kf-kicker">Comisiones conectadas</p><h2>Qué tarifa puede calcularse y cuál exige cuenta.</h2></div><div class="kf-live-actions"><span data-exchange-fee-status aria-live="polite">Cargando fuentes oficiales…</span></div></div><div class="kf-data-table-wrap"><table class="kf-data-table"><thead><tr><th>Exchange</th><th>Mercado y condición</th><th class="number">Maker</th><th class="number">Taker</th><th>Fuente</th></tr></thead><tbody data-exchange-fee-rows><tr><td colspan="5">Conectando tarifas oficiales…</td></tr></tbody></table></div><p class="kf-live-footnote">Actualización diaria. La tabla separa tarifa exacta pública de tarifa condicionada a cuenta, volumen, región o programa. No incluye spread, conversión, retirada ni deslizamiento.</p></section>`;
   }
 
   function regulationRadarMarkup(){
-    return `<section class="kf-reg-dashboard" data-regulation-dashboard><div class="kf-reg-head"><div><h2>Regulación Blockchain</h2></div><span data-regulation-status>Conectando registro regulatorio…</span></div><div class="kf-reg-kpis"><article><span>Regímenes conectados</span><strong data-reg-kpi="regime_count">—</strong><small>Sin fichas de demostración</small></article><article><span>Jurisdicciones</span><strong data-reg-kpi="jurisdiction_count">—</strong><small>Perímetros separados</small></article><article><span>Fuentes accesibles</span><strong data-reg-reachable>—</strong><small>Comprobación server-side</small></article><article><span>Revisión jurídica</span><strong data-reg-reviewed>—</strong><small>No equivale a disponibilidad HTTP</small></article></div><div class="kf-reg-layout"><section><div class="kf-subsection-label">Cambios y fechas operativas</div><div class="kf-reg-events" data-regulation-events><div class="kf-live-empty">Cargando fechas verificadas…</div></div></section><aside><div class="kf-subsection-label">Monitor de fuentes primarias</div><div class="kf-reg-source-list" data-regulation-sources><div class="kf-live-empty">Comprobando fuentes…</div></div></aside></div><div class="kf-subsection-label kf-reg-regimes-label">Mapa de regímenes</div><div class="kf-reg-regimes" data-regulation-regimes><div class="kf-live-empty">Construyendo fichas regulatorias…</div></div><p class="kf-reg-method" data-regulation-methodology>La conexión técnica no sustituye la revisión jurídica.</p></section>`;
+    return `<section class="kf-reg-dashboard" data-regulation-dashboard><div class="kf-reg-head"><div><h2>Regulación Blockchain</h2></div><span data-regulation-status>Conectando registro regulatorio…</span></div><div class="kf-reg-kpis"><article><span>Regímenes conectados</span><strong data-reg-kpi="regime_count">—</strong><small>Sin fichas de demostración</small></article><article><span>Jurisdicciones</span><strong data-reg-kpi="jurisdiction_count">—</strong><small>Perímetros separados</small></article><article><span>Fuentes accesibles</span><strong data-reg-reachable>—</strong><small>Comprobación server-side</small></article><article><span>Firma jurídica válida</span><strong data-reg-signed>—</strong><small>Ed25519 · huellas y cadena de revisión</small></article></div><div class="kf-reg-layout"><section><div class="kf-subsection-label">Cambios y fechas operativas</div><div class="kf-reg-events" data-regulation-events><div class="kf-live-empty">Cargando fechas verificadas…</div></div></section><aside><div class="kf-subsection-label">Monitor de fuentes primarias</div><div class="kf-reg-source-list" data-regulation-sources><div class="kf-live-empty">Comprobando fuentes…</div></div></aside></div><div class="kf-subsection-label kf-reg-regimes-label">Mapa de regímenes</div><div class="kf-reg-regimes" data-regulation-regimes><div class="kf-live-empty">Construyendo fichas regulatorias…</div></div><p class="kf-reg-method" data-regulation-methodology>La conexión técnica no sustituye la revisión jurídica.</p></section>`;
   }
 
   function recordCard(type,item,index){
@@ -990,14 +990,12 @@
     document.querySelectorAll('[data-dvol-time]').forEach((node)=>node.textContent=dvolTimestamp?`Último índice · ${ageLabel(ageMs(dvolTimestamp))}`:'DVOL no disponible');
   }
 
-  function applyExchangeFee(item,sourceLabel='Kraken API'){
+  function applyExchangeFee(item,sourceLabel='Fuentes oficiales'){
     if(!item)return false;
-    const maker=Number(item.maker),taker=Number(item.taker);
-    if(!Number.isFinite(maker)||!Number.isFinite(taker))return false;
-    document.querySelectorAll('[data-kraken-maker]').forEach((node)=>{node.textContent=`${maker.toFixed(2)}%`;node.dataset.ready='true'});
-    document.querySelectorAll('[data-kraken-taker]').forEach((node)=>{node.textContent=`${taker.toFixed(2)}%`;node.dataset.ready='true'});
+    const rows=Array.isArray(item.entries)?item.entries:[];
+    document.querySelectorAll('[data-exchange-fee-rows]').forEach((root)=>{root.innerHTML=rows.map((row)=>{const exact=row.availability==='PUBLIC_EXACT';const format=(value)=>Number.isFinite(Number(value))?`${Number(value).toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:3})} %`:'Según cuenta';return `<tr><td><strong>${escapeHtml(row.exchange)}</strong><small>${exact?'Tabla pública exacta':'Cifra exacta bloqueada'}</small></td><td>${escapeHtml(row.market)}<small>${escapeHtml(row.conditions)}</small></td><td class="number">${format(row.maker_pct)}</td><td class="number">${format(row.taker_pct)}</td><td><a href="${safeExternalUrl(row.source_url)}" target="_blank" rel="noopener noreferrer">Fuente oficial ↗</a></td></tr>`}).join('')||'<tr><td colspan="5">Tarifas no disponibles.</td></tr>'});
     document.querySelectorAll('[data-exchange-fee-status]').forEach((node)=>node.textContent=sourceLabel);
-    return true;
+    return rows.length>0;
   }
 
   function renderProviders(providers={}){
@@ -1021,11 +1019,12 @@
     if(!root)return;
     const compact=new Intl.NumberFormat('es-ES',{notation:'compact',maximumFractionDigits:2});
     root.innerHTML=pools.length?pools.map((pool)=>{
-      const verified=['VERIFIED','SOURCE_CROSSCHECKED'].includes(pool.verification_status);
-      const observedAge=ageMs(pool.source_response_at||pool.received_at);
-      const status=verified?'VERIFICADO EN FUENTE':'REVISIÓN NECESARIA';
-      const evidence=verified?`Doble endpoint · ${ageLabel(observedAge)}${Number.isFinite(Number(pool.reference_deviation_pct))?` · desv. ${Number(pool.reference_deviation_pct).toLocaleString('es-ES',{maximumFractionDigits:2})} %`:''}`:'Cifras bloqueadas hasta reconciliar la fuente';
-      return `<tr><td><strong>${escapeHtml(pool.name)}</strong><small class="kf-contract">${escapeHtml(pool.chain_id)} · ${escapeHtml(pool.contract_address)}</small></td><td><a href="${safeExternalUrl(pool.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(pool.dex||'DEX')} ↗</a><small class="kf-contract">${escapeHtml(pool.pair_address||'')}</small></td><td class="number">${verified&&Number.isFinite(Number(pool.price))?`${Number(pool.price).toLocaleString('es-ES',{maximumFractionDigits:6})} ${escapeHtml(pool.currency)}`:'—'}</td><td class="number">${verified&&Number.isFinite(Number(pool.volume_24h_quote))?compact.format(pool.volume_24h_quote):'—'}</td><td class="number">${verified&&Number.isFinite(Number(pool.liquidity_usd))?`${compact.format(pool.liquidity_usd)} USD`:'—'}</td><td><span class="kf-data-state ${verified?'verified':'unverified'}">${status}</span><small class="kf-data-evidence">${escapeHtml(evidence)}</small></td></tr>`;
+      const verified=['VERIFIED','SOURCE_CROSSCHECKED'].includes(pool.verification_status)&&pool.exact_trade_timestamp_available;
+      const observedAge=ageMs(pool.provider_timestamp);
+      const status=verified?'SWAP ONCHAIN VERIFICADO':'REVISIÓN NECESARIA';
+      const chainRef=Number.isFinite(Number(pool.onchain_evidence?.block_number))?`bloque #${Number(pool.onchain_evidence.block_number).toLocaleString('es-ES')}`:Number.isFinite(Number(pool.onchain_evidence?.slot))?`slot ${Number(pool.onchain_evidence.slot).toLocaleString('es-ES')}`:'referencia onchain';
+      const evidence=verified?`Último swap · ${chainRef} · ${ageLabel(observedAge)}${Number.isFinite(Number(pool.reference_deviation_pct))?` · desv. ${Number(pool.reference_deviation_pct).toLocaleString('es-ES',{maximumFractionDigits:2})} %`:''}`:'Cifras bloqueadas hasta reconciliar DEX y cadena';
+      return `<tr><td><strong>${escapeHtml(pool.name)}</strong><small class="kf-contract">${escapeHtml(pool.chain_id)} · ${escapeHtml(pool.contract_address)}</small></td><td><a href="${safeExternalUrl(pool.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(pool.dex||'DEX')} ↗</a><small class="kf-contract">${escapeHtml(pool.pair_address||'')}</small></td><td class="number">${verified&&Number.isFinite(Number(pool.price))?`${Number(pool.price).toLocaleString('es-ES',{maximumFractionDigits:6})} ${escapeHtml(pool.currency)}`:'—'}</td><td class="number">${verified&&Number.isFinite(Number(pool.volume_24h_quote))?compact.format(pool.volume_24h_quote):'—'}</td><td class="number">${verified&&Number.isFinite(Number(pool.liquidity_usd))?`${compact.format(pool.liquidity_usd)} USD`:'—'}</td><td><span class="kf-data-state ${verified?'verified':'unverified'}">${status}</span><small class="kf-data-evidence"><a href="${safeExternalUrl(pool.onchain_evidence?.evidence_url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(evidence)} ↗</a></small></td></tr>`;
     }).join(''):'<tr><td colspan="6">DEX Screener no disponible.</td></tr>';
   }
 
@@ -1469,7 +1468,7 @@
     if(status)status.textContent=checked?`Registro conectado · ${reachable}/${sourceCount} fuentes accesibles`:'Registro cargado · comprobando fuentes oficiales';
     document.querySelectorAll('[data-reg-kpi]').forEach((node)=>{const value=quality[node.dataset.regKpi];node.textContent=Number.isFinite(Number(value))?Number(value).toLocaleString('es-ES'):'—'});
     const reachableNode=document.querySelector('[data-reg-reachable]');if(reachableNode)reachableNode.textContent=checked?`${reachable}/${sourceCount}`:'Comprobando';
-    const reviewed=document.querySelector('[data-reg-reviewed]');if(reviewed)reviewed.textContent=new Intl.DateTimeFormat('es-ES',{day:'2-digit',month:'short',year:'numeric'}).format(new Date(`${data.legal_reviewed_at}T12:00:00Z`));
+    const signed=document.querySelector('[data-reg-signed]');if(signed)signed.textContent=`${Number(quality.signed_regime_count||0).toLocaleString('es-ES')} / ${Number(quality.regime_count||data.regimes.length).toLocaleString('es-ES')}`;
     if(dashboard.dataset.snapshot===data.generated_at)return;
     dashboard.dataset.snapshot=data.generated_at;
     const events=document.querySelector('[data-regulation-events]');
@@ -1488,9 +1487,10 @@
     }).join('');
     const regimeRoot=document.querySelector('[data-regulation-regimes]');
     if(regimeRoot)regimeRoot.innerHTML=data.regimes.map((regime)=>{
-      const state=regime.state==='TRANSITION_ENDED'?'TRANSICIÓN FINALIZADA':'EN VIGOR';
+      const state=regime.state==='TRANSITION_ENDED'?'TRANSICIÓN FINALIZADA':regime.state==='ENACTED'?'PROMULGADA':regime.state==='IN_FORCE_AND_TRANSITION'?'EN VIGOR · CAMBIO PROGRAMADO':'EN VIGOR';
       const links=regime.source_ids.map((id)=>sourcesById.get(id)).filter(Boolean).map((source)=>`<a href="${safeExternalUrl(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.authority)} ↗</a>`).join('');
-      return `<article class="kf-reg-regime"><header><span>${escapeHtml(regime.code)} · ${escapeHtml(regime.jurisdiction)}</span>${statusBadge('verified')}</header><h3>${escapeHtml(regime.name)}</h3><div class="kf-reg-state">${escapeHtml(state)} · ${escapeHtml(regime.effective)}</div><dl><div><dt>Autoridad</dt><dd>${escapeHtml(regime.authority)}</dd></div><div><dt>Perímetro</dt><dd>${escapeHtml(regime.scope)}</dd></div><div><dt>Efecto operativo</dt><dd>${escapeHtml(regime.practical_effect)}</dd></div><div><dt>Límite</dt><dd>${escapeHtml(regime.limitation)}</dd></div></dl><footer>${links}<small>Revisión jurídica ${escapeHtml(regime.legal_reviewed_at)}</small></footer></article>`;
+      const signedReview=regime.review_status==='SIGNED',reviewLabel=signedReview?'REVISIÓN JURÍDICA FIRMADA':regime.legal_reviewed_at?`REVISIÓN ${regime.legal_reviewed_at} · FIRMA PENDIENTE`:`FUENTE VERIFICADA ${regime.source_verified_at} · FIRMA PENDIENTE`;
+      return `<article class="kf-reg-regime"><header><span>${escapeHtml(regime.code)} · ${escapeHtml(regime.jurisdiction)}</span>${statusBadge(signedReview?'verified':'sourcechecked')}</header><h3>${escapeHtml(regime.name)}</h3><div class="kf-reg-state">${escapeHtml(state)} · ${escapeHtml(regime.effective)}</div><dl><div><dt>Autoridad</dt><dd>${escapeHtml(regime.authority)}</dd></div><div><dt>Perímetro</dt><dd>${escapeHtml(regime.scope)}</dd></div><div><dt>Efecto operativo</dt><dd>${escapeHtml(regime.practical_effect)}</dd></div><div><dt>Límite</dt><dd>${escapeHtml(regime.limitation)}</dd></div></dl><footer>${links}<small>${escapeHtml(reviewLabel)}</small></footer></article>`;
     }).join('');
     const methodology=document.querySelector('[data-regulation-methodology]');if(methodology)methodology.textContent=`${data.methodology} ${data.review_policy}`;
   }
@@ -1560,15 +1560,15 @@
     applyGas(snapshot.auxiliary?.ethereum_gas);
     applyEthereumFees(snapshot.auxiliary?.ethereum_fees,snapshot.auxiliary?.etherscan_gas_oracle);
     const fee=snapshot.auxiliary?.exchange_fees;
-    if(fee)applyExchangeFee(fee,`Kraken ${snapshot.delivery_mode==='STATIC_SNAPSHOT'?'snapshot público':'server-side'} · ${ageLabel(ageMs(fee.received_at))}`);
-    else document.querySelectorAll('[data-exchange-fee-status]').forEach((node)=>node.textContent='Kraken no disponible');
+    if(fee)applyExchangeFee(fee,`${fee.entries?.length||0} exchanges · ${snapshot.delivery_mode==='STATIC_SNAPSHOT'?'snapshot público':'server-side'} · ${ageLabel(ageMs(fee.received_at))}`);
+    else document.querySelectorAll('[data-exchange-fee-status]').forEach((node)=>node.textContent='Tarifas no disponibles');
     const method=snapshot.reference_prices?.bitcoin?.methodology;
     document.querySelectorAll('[data-market-methodology]').forEach((node)=>node.textContent=method?(snapshot.delivery_mode==='STATIC_SNAPSHOT'?`Snapshot público · mediana de mercados observados · volumen mínimo ${Number(method.minimum_volume_usd_24h).toLocaleString('es-ES')} USD · divergencia ≤ ${method.divergence_threshold_pct} % · hora visible.`:`Mediana · frescura < 5 s · volumen mínimo ${Number(method.minimum_volume_usd_24h).toLocaleString('es-ES')} USD · divergencia ≤ ${method.divergence_threshold_pct} % · conexión sana.`):'Metodología pendiente');
     syncMiningReference();
   }
 
   function applyLiveMarketSnapshot(snapshot){
-    if(!snapshot||snapshot.delivery_mode!=='LIVE_EDGE'||!snapshot.reference_prices)return false;
+    if(!snapshot||!['LIVE_EDGE','LIVE_SSE_WEBSOCKET'].includes(snapshot.delivery_mode)||!snapshot.reference_prices)return false;
     const providers=Object.fromEntries(Object.entries(snapshot.providers||{}).map(([name,provider])=>{
       const contradictory=['LIVE','CONNECTED'].includes(provider?.connection_status)&&Boolean(provider?.last_error);
       return [name,contradictory?{...provider,connection_status:'DEGRADED'}:provider];
@@ -1576,7 +1576,7 @@
     latestMarketSnapshot={
       ...(latestMarketSnapshot||{}),
       schema_version:snapshot.schema_version,
-      delivery_mode:'LIVE_EDGE',
+      delivery_mode:snapshot.delivery_mode,
       generated_at:snapshot.generated_at,
       processing_ms:snapshot.processing_ms,
       status:snapshot.status,
@@ -1726,7 +1726,8 @@
     antennaStream?.close();
     if(marketEdgeTimer){window.clearInterval(marketEdgeTimer);marketEdgeTimer=null}
     antennaConnected=false;
-    if(FILE_ROOT||STATIC_HOST||!('EventSource' in window)){
+    await loadPlatformFallback();
+    if(FILE_ROOT||!('EventSource' in window)){
       document.querySelectorAll('[data-market-status]').forEach((node)=>node.textContent='Actualizando precios…');
       refreshMarketDisplay();
       await loadPlatformFallback();
@@ -1735,10 +1736,10 @@
     }
     antennaStream=new EventSource(ANTENNA_STREAM);
     antennaStream.addEventListener('snapshot',(event)=>{
-      try{antennaConnected=true;applyMarketSnapshot(JSON.parse(event.data))}catch(error){antennaConnected=false;refreshMarketDisplay()}
+      try{if(!applyLiveMarketSnapshot(JSON.parse(event.data)))throw new Error('Snapshot SSE no válido')}catch(error){antennaConnected=false;refreshMarketDisplay()}
     });
     antennaStream.onopen=()=>{antennaConnected=true;refreshMarketDisplay()};
-    antennaStream.onerror=async()=>{const hadConnection=antennaConnected;antennaConnected=false;refreshMarketDisplay();if(!hadConnection){antennaStream?.close();await loadPlatformFallback();startMarketEdgePolling();pollMarketContext();pollGasEdge()}};
+    antennaStream.onerror=()=>{antennaConnected=false;refreshMarketDisplay();window.setTimeout(()=>{if(!antennaConnected)pollMarketEdge()},1250)};
   }
 
   function safeExternalUrl(value){

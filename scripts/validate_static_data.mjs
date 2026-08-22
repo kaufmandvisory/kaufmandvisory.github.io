@@ -39,8 +39,10 @@ for (const pool of platform.onchain_pools) {
   assert.equal(pool.verification_status, 'VERIFIED', `${pool.identity}: observación DEX no verificada`);
   assert.equal(pool.identity, `${pool.chain_id}:${pool.contract_address.toLowerCase()}`, `${pool.identity}: identidad onchain incorrecta`);
   assert.ok(Number.isFinite(Date.parse(pool.source_response_at)), `${pool.identity}: hora de respuesta ausente`);
-  assert.equal(pool.provider_timestamp, null, `${pool.identity}: se inventó la hora de la última operación`);
-  assert.equal(pool.exact_trade_timestamp_available, false, `${pool.identity}: contrato temporal incorrecto`);
+  assert.ok(Number.isFinite(Date.parse(pool.provider_timestamp)), `${pool.identity}: hora onchain ausente`);
+  assert.equal(pool.exact_trade_timestamp_available, true, `${pool.identity}: contrato temporal incorrecto`);
+  assert.equal(pool.onchain_evidence?.verification_status, 'CHAIN_TRADE_VERIFIED', `${pool.identity}: evidencia onchain ausente`);
+  assert.match(pool.onchain_evidence?.evidence_url || '', /^https:\/\//, `${pool.identity}: enlace de transacción ausente`);
   assert.ok(Object.entries(pool.verification_checks).filter(([key]) => key !== 'reference_price_match').every(([, value]) => value === true), `${pool.identity}: falló el doble contraste DEX`);
   assert.equal(pool.verification_checks.reference_price_match, true, `${pool.identity}: precio DEX divergente frente a Kaufman`);
 }
@@ -72,6 +74,9 @@ for (const source of platform.regulation_intelligence.sources) {
 }
 assert.ok(Number.isFinite(platform.auxiliary?.ethereum_fees?.base_fee_gwei), 'gas Ethereum ausente');
 assert.ok(Number.isFinite(platform.auxiliary?.exchange_fees?.maker), 'comisión maker ausente');
+assert.equal(platform.auxiliary?.exchange_fees?.entries?.length, 5, 'comparador de exchanges incompleto');
+assert.equal(platform.auxiliary.exchange_fees.entries.filter((row) => row.availability === 'PUBLIC_EXACT').length, 2, 'tarifas públicas exactas no separadas');
+assert.ok(platform.auxiliary.exchange_fees.entries.filter((row) => row.availability === 'ACCOUNT_REQUIRED').every((row) => row.maker_pct === null && row.taker_pct === null), 'tarifa de cuenta inventada');
 
 assert.equal(daily.home_regulation?.length, 3, 'la portada necesita tres noticias regulatorias');
 assert.equal(daily.mining_news?.length, 2, 'la portada necesita dos noticias mineras');

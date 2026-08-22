@@ -6,6 +6,12 @@
   node_bundler = "esbuild"
 
 [[redirects]]
+  from = "/api/market/stream"
+  to = "/.netlify/functions/market-stream"
+  status = 200
+  force = true
+
+[[redirects]]
   from = "/api/market/snapshot"
   to = "/.netlify/functions/market-snapshot"
   status = 200
@@ -22,6 +28,14 @@
   to = "/.netlify/functions/ethereum-gas"
   status = 200
   force = true
+
+[[headers]]
+  for = "/api/market/stream"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Cache-Control = "no-cache, no-store, no-transform"
+    X-Accel-Buffering = "no"
+    X-Content-Type-Options = "nosniff"
 
 [[headers]]
   for = "/api/market/snapshot"

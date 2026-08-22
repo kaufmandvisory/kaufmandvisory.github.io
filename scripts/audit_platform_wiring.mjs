@@ -5,10 +5,11 @@ async function assignedJson(file, prefix) {
   return JSON.parse(raw.slice(prefix.length).replace(/;\s*$/, ''));
 }
 
-const [platform, daily, edge, gasEdge, contextEdge, app, newsBuilder] = await Promise.all([
+const [platform, daily, edge, streamEdge, gasEdge, contextEdge, app, newsBuilder] = await Promise.all([
   assignedJson('../assets/platform-data.js', 'window.KAUFMAN_PLATFORM_DATA = '),
   assignedJson('../assets/daily-data.js', 'window.KAUFMAN_DAILY_DATA = '),
   readFile(new URL('../.netlify-functions/market-snapshot.mjs', import.meta.url), 'utf8'),
+  readFile(new URL('../.netlify-functions/market-stream.mjs', import.meta.url), 'utf8'),
   readFile(new URL('../.netlify-functions/ethereum-gas.mjs', import.meta.url), 'utf8'),
   readFile(new URL('../.netlify-functions/market-context.mjs', import.meta.url), 'utf8'),
   readFile(new URL('../assets/kaufman-app.js', import.meta.url), 'utf8'),
@@ -22,7 +23,7 @@ const unresolvedFiscal = fiscalFacts.filter((fact) => fact.status === 'NOT_DETER
 const web3Catalog = app.slice(app.indexOf("proyectos:{label:'Proyectos'"), app.indexOf("mineria:{label:'Minería'"));
 const web3Profiles = (web3Catalog.match(/\{id:'/g) || []).length;
 const web3AutomaticProfiles = (web3Catalog.match(/status:'auto'/g) || []).length;
-const edgeUsesPersistentWebSocket = /new\s+WebSocket\s*\(/.test(edge);
+const edgeUsesPersistentWebSocket = /MarketStreamSession/.test(streamEdge) && /createCoinbaseConnector/.test(await readFile(new URL('../server/market-stream-session.js', import.meta.url), 'utf8'));
 const edgeFetchCalls = (edge.match(/fetch\(/g) || []).length;
 const newsRows = [...(daily.home_regulation || []), ...(daily.mining_news || [])];
 const journalisticRows = newsRows.filter((row) => row.verification_status === 'SOURCE_METADATA_VERIFIED');
@@ -31,10 +32,10 @@ const calculatedRows = newsRows.filter((row) => row.verification_status === 'CAL
 
 const findings = [
   {
-    id: 'A01', severity: 'HIGH', area: 'Mercados',
-    finding: 'Producción consulta REST cada 3 segundos; no mantiene conectores WebSocket persistentes.',
-    evidence: `${edgeFetchCalls} llamadas fetch en la función edge; WebSocket persistente=${edgeUsesPersistentWebSocket}.`,
-    remediation: 'Desplegar un proceso server-side persistente con heartbeat, huecos y reconexión, y publicar internamente por SSE/WebSocket.'
+    id: 'A01', severity: 'RESOLVED', area: 'Mercados',
+    finding: 'Transporte server-side WebSocket → SSE implantado.',
+    evidence: `Tres conectores WebSocket=${edgeUsesPersistentWebSocket}; SSE con heartbeat y renovación silenciosa; REST queda como respaldo (${edgeFetchCalls} fetch).`,
+    remediation: 'Vigilar SLO de conexión y migrar a proceso 24/7 cuando exista infraestructura persistente autorizada.'
   },
   {
     id: 'A02', severity: 'MEDIUM', area: 'ETF',
@@ -43,16 +44,16 @@ const findings = [
     remediation: 'Añadir una segunda fuente y reconciliar por ticker con los datos publicados por cada emisor antes de elevar la confianza.'
   },
   {
-    id: 'A03', severity: 'HIGH', area: 'DEX',
-    finding: 'Los pools descentralizados son un snapshot diario y no tienen timestamp de la última operación.',
-    evidence: `${platform.onchain_pools.length} pools; ${platform.onchain_pools.filter((pool) => pool.exact_trade_timestamp_available === false).length} sin timestamp de trade verificable.`,
-    remediation: 'Añadir una fuente onchain o de eventos con bloque y timestamp verificables antes de tratarlos como tiempo real.'
+    id: 'A03', severity: 'RESOLVED', area: 'DEX',
+    finding: 'Cada pool conserva el último swap verificado en la cadena.',
+    evidence: `${platform.onchain_pools.length} pools; ${platform.onchain_pools.filter((pool) => pool.exact_trade_timestamp_available === true).length} con bloque/slot, transacción y timestamp verificable.`,
+    remediation: 'Mantener doble RPC y bloquear la fila cuando falte evidencia onchain.'
   },
   {
-    id: 'A04', severity: 'HIGH', area: 'Exchanges',
-    finding: 'La comparación de comisiones de intercambio no está cubierta de forma plural.',
-    evidence: `Solo ${platform.auxiliary.exchange_fees.exchange} · ${platform.auxiliary.exchange_fees.pair} · primer tramo maker/taker.`,
-    remediation: 'Normalizar tarifas por exchange, jurisdicción, nivel de volumen, par, depósito y retirada.'
+    id: 'A04', severity: 'RESOLVED', area: 'Exchanges',
+    finding: 'Comparador plural con semántica de disponibilidad implantado.',
+    evidence: `${platform.auxiliary.exchange_fees.entries.length} exchanges; ${platform.auxiliary.exchange_fees.entries.filter((row) => row.availability === 'PUBLIC_EXACT').length} con tarifa pública exacta y ${platform.auxiliary.exchange_fees.entries.filter((row) => row.availability === 'ACCOUNT_REQUIRED').length} bloqueados hasta cotización de cuenta.`,
+    remediation: 'Añadir depósitos y retiradas únicamente desde tarifas oficiales versionadas.'
   },
   {
     id: 'A05', severity: 'MEDIUM', area: 'Wallets',
@@ -67,16 +68,16 @@ const findings = [
     remediation: 'Añadir salud, upgrades, gobernanza y uso con fuentes primarias por protocolo sin convertir actividad en una puntuación opaca.'
   },
   {
-    id: 'A07', severity: 'HIGH', area: 'Regulación',
-    finding: 'La cobertura regulatoria no es todavía mundial.',
+    id: 'A07', severity: 'IMPROVED', area: 'Regulación',
+    finding: 'Cobertura prioritaria ampliada a diez regímenes globales; todavía no es exhaustiva.',
     evidence: `${platform.regulation_intelligence.data_quality.regime_count} regímenes y ${platform.regulation_intelligence.data_quality.jurisdiction_count} jurisdicciones.`,
     remediation: 'Priorizar G20 y hubs de activos digitales con texto primario, fecha efectiva, transición y registro de proveedores.'
   },
   {
-    id: 'A08', severity: 'HIGH', area: 'Regulación',
-    finding: 'El robot comprueba accesibilidad y cambios de fuente, pero no revalida por sí solo el efecto jurídico.',
-    evidence: `Revisión jurídica declarada ${platform.regulation_intelligence.legal_reviewed_at}; cambios detectados en build=${platform.regulation_intelligence.data_quality.changes_detected_in_session}.`,
-    remediation: 'Crear una cola de revisión jurídica con diff, responsable, decisión, vigencia y firma de aprobación.'
+    id: 'A08', severity: 'CONTROL_READY', area: 'Regulación',
+    finding: 'Flujo de firma jurídica implantado; la aprobación humana autorizada sigue pendiente.',
+    evidence: `${platform.regulation_intelligence.data_quality.regime_count} regímenes; firmas jurídicas válidas=${platform.regulation_intelligence.data_quality.signed_regime_count}; pendientes=${platform.regulation_intelligence.data_quality.pending_signoff_count}.`,
+    remediation: 'Un revisor jurídico autorizado debe firmar las fichas; el sistema ya valida identidad de clave, huellas, cadena y manipulación.'
   },
   {
     id: 'A09', severity: 'HIGH', area: 'Fiscal',

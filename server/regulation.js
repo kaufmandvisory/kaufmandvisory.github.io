@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
 import { CONFIG } from './config.js';
+import { buildLegalReviewSummary, legalReviewConfigFromEnvironment } from './legal-review.js';
 
 export const REGULATORY_SOURCES = Object.freeze([
   {
@@ -73,6 +74,31 @@ export const REGULATORY_SOURCES = Object.freeze([
     url: 'https://rulebooks.vara.ae/rulebook/virtual-assets-and-related-activities-regulations-2023',
     source_type: 'REGULATORY_RULEBOOK',
     binding_level: 'BINDING'
+  },
+  {
+    id: 'uk_fca_cryptoassets', jurisdiction: 'reino-unido', authority: 'Financial Conduct Authority',
+    title: 'Cryptoassets · quién debe registrarse bajo las MLR', url: 'https://www.fca.org.uk/firms/cryptoassets/who-needs-register',
+    source_type: 'OFFICIAL_GUIDANCE', binding_level: 'OFFICIAL_GUIDANCE'
+  },
+  {
+    id: 'hk_sfc_vatp', jurisdiction: 'hong-kong', authority: 'Securities and Futures Commission',
+    title: 'Operadores de plataformas de negociación de activos virtuales', url: 'https://www.sfc.hk/en/Welcome-to-the-Fintech-Contact-Point/Virtual-assets/Virtual-asset-trading-platforms-operators',
+    source_type: 'OFFICIAL_LICENSING_GUIDANCE', binding_level: 'OFFICIAL_GUIDANCE'
+  },
+  {
+    id: 'jp_fsa_crypto_register', jurisdiction: 'japon', authority: 'Financial Services Agency',
+    title: 'Lista de proveedores registrados de intercambio de criptoactivos', url: 'https://www.fsa.go.jp/en/regulated/licensed/en_kasoutuka.pdf',
+    source_type: 'OFFICIAL_REGISTER', binding_level: 'OFFICIAL_REGISTER'
+  },
+  {
+    id: 'au_austrac_vasp', jurisdiction: 'australia', authority: 'Federal Register of Legislation',
+    title: 'AML/CTF Act 2006 · texto vigente y registro VASP', url: 'https://www.legislation.gov.au/C2006A00169/latest/text',
+    source_type: 'PRIMARY_LAW', binding_level: 'PRIMARY_LAW'
+  },
+  {
+    id: 'us_genius_act', jurisdiction: 'estados-unidos', authority: 'U.S. Government Publishing Office',
+    title: 'GENIUS Act · Public Law 119-27', url: 'https://www.govinfo.gov/content/pkg/PLAW-119publ27/pdf/PLAW-119publ27.pdf',
+    source_type: 'PRIMARY_LAW', binding_level: 'PRIMARY_LAW'
   }
 ]);
 
@@ -151,6 +177,51 @@ export const REGULATORY_REGIMES = Object.freeze([
     limitation: 'DIFC tiene un marco separado; tampoco debe extrapolarse esta ficha al resto de emiratos o a payment tokens bajo competencia del CBUAE.',
     source_ids: ['ae_vara_regulations'],
     legal_reviewed_at: '2026-07-13'
+  },
+  {
+    id: 'uk-cryptoassets', code: 'GB', name: 'Criptoactivos · Reino Unido', jurisdiction: 'Reino Unido',
+    legal_status: 'SOURCE_GROUNDED', review_status: 'PENDING_LEGAL_SIGNOFF', state: 'IN_FORCE_AND_TRANSITION', authority: 'Financial Conduct Authority',
+    effective: 'MLR vigente; nuevo régimen regulatorio anunciado para 25 oct 2027',
+    scope: 'Determinadas actividades de criptoactivos realizadas por negocio en Reino Unido y promoción financiera dirigida a clientes británicos.',
+    practical_effect: 'La FCA exige registro MLR antes de iniciar actividades comprendidas; la promoción financiera tiene un perímetro adicional.',
+    limitation: 'El registro MLR no equivale a autorización general de servicios financieros y la futura entrada en vigor requiere seguimiento separado.',
+    source_ids: ['uk_fca_cryptoassets'], source_verified_at: '2026-08-22', legal_reviewed_at: null
+  },
+  {
+    id: 'hong-kong-vatp', code: 'HK', name: 'VATP · Hong Kong', jurisdiction: 'Hong Kong',
+    legal_status: 'SOURCE_GROUNDED', review_status: 'PENDING_LEGAL_SIGNOFF', state: 'IN_FORCE', authority: 'Securities and Futures Commission',
+    effective: 'Régimen de licencias AMLO en vigor desde 1 jun 2023',
+    scope: 'Plataformas centralizadas que operen en Hong Kong o comercialicen activamente servicios a inversores de Hong Kong.',
+    practical_effect: 'Los operadores dentro del perímetro deben estar licenciados; la SFC recomienda considerar ambos regímenes cuando pueda haber security y non-security tokens.',
+    limitation: 'La clasificación de cada token y la actividad concreta determinan el régimen SFO, AMLO o ambos.',
+    source_ids: ['hk_sfc_vatp'], source_verified_at: '2026-08-22', legal_reviewed_at: null
+  },
+  {
+    id: 'japan-crypto-exchange', code: 'JP', name: 'Crypto-asset exchange · Japón', jurisdiction: 'Japón',
+    legal_status: 'SOURCE_GROUNDED', review_status: 'PENDING_LEGAL_SIGNOFF', state: 'IN_FORCE', authority: 'Financial Services Agency · Local Finance Bureaus',
+    effective: 'Sistema de registro bajo Payment Services Act; lista oficial observada 1 abr 2026',
+    scope: 'Compra, venta, intercambio, intermediación y determinadas formas de custodia o gestión de criptoactivos.',
+    practical_effect: 'Debe comprobarse el proveedor en el registro FSA y el conjunto de activos que figura en su ficha.',
+    limitation: 'La inclusión de un activo en la lista no garantiza ni respalda su valor; otros productos tokenizados pueden quedar bajo Financial Instruments and Exchange Act.',
+    source_ids: ['jp_fsa_crypto_register'], source_verified_at: '2026-08-22', legal_reviewed_at: null
+  },
+  {
+    id: 'australia-vasp', code: 'AU', name: 'VASP · Australia', jurisdiction: 'Australia',
+    legal_status: 'SOURCE_GROUNDED', review_status: 'PENDING_LEGAL_SIGNOFF', state: 'IN_FORCE', authority: 'AUSTRAC',
+    effective: 'Servicios VASP cubiertos desde 31 mar 2026 según la ficha oficial de implementación',
+    scope: 'Intercambio fiat/virtual, cripto/cripto, custodia y determinadas transferencias u ofertas dentro de los servicios designados.',
+    practical_effect: 'Un VASP debe registrarse antes de prestar servicios virtuales en Australia y renovar el registro cada tres años.',
+    limitation: 'Es un perímetro AML/CTF; no resuelve por sí solo licencias de servicios financieros, valores, fiscalidad o protección al consumidor.',
+    source_ids: ['au_austrac_vasp'], source_verified_at: '2026-08-22', legal_reviewed_at: null
+  },
+  {
+    id: 'us-payment-stablecoins', code: 'US', name: 'Payment stablecoins · Estados Unidos', jurisdiction: 'Estados Unidos · federal',
+    legal_status: 'SOURCE_GROUNDED', review_status: 'PENDING_LEGAL_SIGNOFF', state: 'ENACTED', authority: 'Federal y estatales según emisor',
+    effective: 'Public Law 119-27 promulgada 18 jul 2025; calendario operativo sujeto al propio texto y reglas de aplicación',
+    scope: 'Emisión de payment stablecoins para personas de Estados Unidos, reservas, redención, divulgación y supervisión de emisores permitidos.',
+    practical_effect: 'La emisión queda reservada a categorías de emisor permitidas y sujeta a respaldo y divulgación; el régimen federal y estatal se distribuye según el caso.',
+    limitation: 'No es una licencia federal general para exchanges, tokens de inversión, DeFi ni cualquier criptoactivo; debe verificarse la actividad y normativa sectorial concurrente.',
+    source_ids: ['us_genius_act'], source_verified_at: '2026-08-22', legal_reviewed_at: null
   }
 ]);
 
@@ -206,11 +277,20 @@ export function buildRegulationSnapshot(sourceHealth = {}, receivedAt = new Date
   const checked = sources.filter((source) => source.connection_status !== 'NOT_CHECKED');
   const reachable = sources.filter((source) => source.connection_status === 'CONNECTED');
   const jurisdictionCount = new Set(regimes.map((regime) => regime.jurisdiction)).size;
+  const reviewConfig = legalReviewConfigFromEnvironment();
+  const reviewLedger = buildLegalReviewSummary(reviewConfig.records, regimes.map((regime) => regime.id), reviewConfig.trustedKeys);
+  for (const regime of regimes) {
+    if (reviewLedger.signed_regime_ids.includes(regime.id)) {
+      regime.legal_status = 'SIGNED_LEGAL_REVIEW';
+      regime.review_status = 'SIGNED';
+    } else if (!regime.review_status) regime.review_status = regime.legal_reviewed_at ? 'UNSIGNED_LEGACY_REVIEW' : 'PENDING_LEGAL_SIGNOFF';
+  }
   return {
     schema_version: 'kaufman-regulation-intelligence-v1',
     source_contract_version: 'official-public-v2',
     generated_at: receivedAt,
     legal_reviewed_at: '2026-07-13',
+    legal_review_ledger: reviewLedger,
     review_policy: 'La fuente se monitoriza automáticamente cada 24 horas. Un HTTP correcto prueba accesibilidad, no vigencia jurídica; los cambios de contenido activan revisión editorial.',
     scope: 'Mapa informativo de perímetros regulatorios. No determina si una actividad o entidad concreta necesita licencia.',
     regimes,
@@ -226,6 +306,8 @@ export function buildRegulationSnapshot(sourceHealth = {}, receivedAt = new Date
       sourced_regime_pct: Math.round(regimes.filter((regime) => regime.source_ids.length).length / regimes.length * 10_000) / 100,
       demo_record_count: 0,
       changes_detected_in_session: detectedChanges.length
+      ,signed_regime_count: reviewLedger.signed_regime_ids.length
+      ,pending_signoff_count: reviewLedger.pending_regime_ids.length
     },
     methodology: 'Cada ficha conserva jurisdicción, autoridad, fecha efectiva, perímetro, efecto práctico, límite y enlaces primarios. Kaufman no infiere equivalencia entre registros, licencias o territorios.'
   };
@@ -239,8 +321,9 @@ export function validateRegulationSnapshot(snapshot) {
   const regimeIds = new Set(snapshot.regimes.map((regime) => regime.id));
   if (regimeIds.size !== snapshot.regimes.length) throw new Error('Duplicate regulation regime IDs');
   for (const regime of snapshot.regimes) {
-    const required = ['name', 'jurisdiction', 'legal_status', 'state', 'authority', 'effective', 'scope', 'practical_effect', 'limitation', 'legal_reviewed_at'];
+    const required = ['name', 'jurisdiction', 'legal_status', 'state', 'authority', 'effective', 'scope', 'practical_effect', 'limitation'];
     if (required.some((key) => !regime[key])) throw new Error(`Incomplete regulation regime: ${regime.id}`);
+    if (!regime.legal_reviewed_at && !regime.source_verified_at) throw new Error(`Missing review provenance: ${regime.id}`);
     if (!regime.source_ids?.length || regime.source_ids.some((id) => !sourceIds.has(id))) throw new Error(`Invalid regulation sources: ${regime.id}`);
     if (JSON.stringify(regime).toUpperCase().includes('DEMO')) throw new Error(`Demo value in regulation regime: ${regime.id}`);
   }

@@ -12,11 +12,11 @@ test('publishes complete regulation regimes without demo placeholders', () => {
   assert.equal(validateRegulationSnapshot(snapshot), true);
   assert.equal(snapshot.source_contract_version, 'official-public-v2');
   assert.equal(snapshot.data_quality.demo_record_count, 0);
-  assert.equal(snapshot.regimes.length, 5);
+  assert.equal(snapshot.regimes.length, 10);
   assert.equal(snapshot.data_quality.sourced_regime_pct, 100);
   for (const regime of snapshot.regimes) {
     assert.ok(regime.source_ids.length > 0);
-    assert.equal(regime.legal_status, 'VERIFIED');
+    assert.ok(['VERIFIED', 'SOURCE_GROUNDED'].includes(regime.legal_status));
     assert.doesNotMatch(JSON.stringify(regime), /DEMO/i);
   }
 });
@@ -29,6 +29,9 @@ test('keeps source accessibility separate from legal review', () => {
   const regime = snapshot.regimes.find((row) => row.id === 'mica-union-europea');
   assert.equal(source.connection_status, 'DEGRADED');
   assert.equal(regime.legal_status, 'VERIFIED');
+  assert.equal(snapshot.legal_review_ledger.status, 'EMPTY');
+  assert.equal(snapshot.data_quality.signed_regime_count, 0);
+  assert.equal(snapshot.data_quality.pending_signoff_count, 10);
   assert.match(snapshot.review_policy, /accesibilidad, no vigencia jurídica/i);
 });
 
