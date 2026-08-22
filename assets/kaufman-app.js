@@ -333,7 +333,7 @@
   }
 
   function marketSignalsMarkup(){
-    return `<section class="kf-section kf-market-signals" id="senales-de-mercado" data-market-context><div class="kf-container"><div class="kf-section-head"><div><p class="kf-kicker">Señales de estructura</p><h2 class="kf-title small">Capital institucional, dominio y riesgo.</h2></div><p class="kf-intro">Flujos ETF estadounidenses, cuota de capitalización, interés abierto monitorizado y volatilidad implícita. Cada cifra conserva fuente y perímetro: no se mezclan definiciones incompatibles.</p></div><div class="kf-market-signal-layout"><article class="kf-etf-signal"><header><div><span>ETF spot de EE. UU.</span><h3>Flujo neto por sesión</h3></div><small data-etf-status>Conectando agregador público…</small></header><div class="kf-etf-latest"><div><span>Bitcoin · última sesión</span><strong data-etf-latest="bitcoin">—</strong><small data-etf-date="bitcoin">Fecha pendiente</small></div><div><span>Ethereum · última sesión</span><strong data-etf-latest="ethereum">—</strong><small data-etf-date="ethereum">Fecha pendiente</small></div></div><div class="kf-etf-legend"><span><i class="btc"></i>Bitcoin</span><span><i class="eth"></i>Ethereum</span><small>USD · barras sobre/bajo cero</small></div><div class="kf-etf-chart" data-etf-chart><div class="kf-live-empty">Esperando sesiones publicadas…</div></div><footer><span data-etf-period>Últimas sesiones disponibles</span><a href="https://coinflows.org/" target="_blank" rel="noopener noreferrer">CoinFlows ↗</a></footer></article><aside class="kf-market-structure"><article class="kf-dominance-signal"><header><span>Dominancia por capitalización</span><small data-dominance-time>CoinGecko Global</small></header><div class="kf-dominance-values"><div><i class="btc"></i><span>Bitcoin</span><strong data-dominance="btc">—</strong></div><div><i class="eth"></i><span>Ethereum</span><strong data-dominance="eth">—</strong></div><div><i class="other"></i><span>Resto</span><strong data-dominance="others">—</strong></div></div><div class="kf-dominance-bar"><i data-dominance-bar="btc"></i><i data-dominance-bar="eth"></i><i data-dominance-bar="others"></i></div></article><article class="kf-oi-signal"><header><span>Interés abierto monitorizado</span><a href="https://defillama.com/open-interest" target="_blank" rel="noopener noreferrer">DefiLlama ↗</a></header><strong data-open-interest>—</strong><div><span data-open-interest-change>Variación 7 d —</span><small data-open-interest-time>Perímetro de adaptadores de la fuente</small></div><ol data-open-interest-venues></ol></article><article class="kf-vol-signal"><header><span>Volatilidad implícita · DVOL</span><a href="https://docs.deribit.com/api-reference/market-data/public-get_volatility_index_data" target="_blank" rel="noopener noreferrer">Deribit ↗</a></header><div><span>Bitcoin<strong data-dvol="btc">—</strong></span><span>Ethereum<strong data-dvol="eth">—</strong></span></div><small data-dvol-time>Último cierre horario disponible</small></article></aside></div>${gasPanelMarkup()}</div></section>`;
+    return `<section class="kf-section kf-market-signals" id="senales-de-mercado" data-market-context><div class="kf-container"><div class="kf-section-head"><div><p class="kf-kicker">Señales de estructura</p><h2 class="kf-title small">Capital institucional, dominio y riesgo.</h2></div><p class="kf-intro">Flujos ETF estadounidenses, cuota de capitalización, interés abierto monitorizado y volatilidad implícita. Cada cifra conserva fuente y perímetro: no se mezclan definiciones incompatibles.</p></div><div class="kf-market-signal-layout"><article class="kf-etf-signal"><header><div><span>ETF spot de EE. UU.</span><h3>Flujo neto por sesión</h3></div><small data-etf-status>Conectando fuentes públicas…</small></header><div class="kf-etf-latest"><div><span>Bitcoin · última sesión</span><strong data-etf-latest="bitcoin">—</strong><small data-etf-date="bitcoin">Fecha pendiente</small></div><div><span>Ethereum · última sesión</span><strong data-etf-latest="ethereum">—</strong><small data-etf-date="ethereum">Fecha pendiente</small></div></div><div class="kf-etf-legend"><span><i class="btc"></i>Bitcoin</span><span><i class="eth"></i>Ethereum</span><small>USD · barras sobre/bajo cero</small></div><div class="kf-etf-chart" data-etf-chart><div class="kf-live-empty">Esperando sesiones publicadas…</div></div><footer><span data-etf-period>Últimas sesiones disponibles</span><nav><a href="https://coinflows.org/" target="_blank" rel="noopener noreferrer">Agregado ↗</a><a href="https://www.ishares.com/us/products/333011/ishares-bitcoin-trust-etf" target="_blank" rel="noopener noreferrer">Emisor ↗</a></nav></footer></article><aside class="kf-market-structure"><article class="kf-dominance-signal"><header><span>Dominancia por capitalización</span><small data-dominance-time>CoinGecko Global</small></header><div class="kf-dominance-values"><div><i class="btc"></i><span>Bitcoin</span><strong data-dominance="btc">—</strong></div><div><i class="eth"></i><span>Ethereum</span><strong data-dominance="eth">—</strong></div><div><i class="other"></i><span>Resto</span><strong data-dominance="others">—</strong></div></div><div class="kf-dominance-bar"><i data-dominance-bar="btc"></i><i data-dominance-bar="eth"></i><i data-dominance-bar="others"></i></div></article><article class="kf-oi-signal"><header><span>Interés abierto monitorizado</span><a href="https://defillama.com/open-interest" target="_blank" rel="noopener noreferrer">DefiLlama ↗</a></header><strong data-open-interest>—</strong><div><span data-open-interest-change>Variación 7 d —</span><small data-open-interest-time>Perímetro de adaptadores de la fuente</small></div><ol data-open-interest-venues></ol></article><article class="kf-vol-signal"><header><span>Volatilidad implícita · DVOL</span><a href="https://docs.deribit.com/api-reference/market-data/public-get_volatility_index_data" target="_blank" rel="noopener noreferrer">Deribit ↗</a></header><div><span>Bitcoin<strong data-dvol="btc">—</strong></span><span>Ethereum<strong data-dvol="eth">—</strong></span></div><small data-dvol-time>Último cierre horario disponible</small></article></aside></div>${gasPanelMarkup()}</div></section>`;
   }
 
   function gasPanelMarkup(){
@@ -374,7 +374,7 @@
       {code:'05',name:'Indexación',copy:'Quién transforma la cadena en consultas útiles.',items:['The Graph']},
       {code:'06',name:'Identidad',copy:'Cómo se resuelve una identidad a una dirección.',items:['ENS']}
     ];
-    return `<section class="kf-web3-map"><div class="kf-intel-lead"><div><p class="kf-kicker">Infraestructura Web3</p><h2>Una aplicación descentralizada sigue teniendo dependencias.</h2></div><p>Kaufman no clasifica un proyecto por su token. Lo sitúa en la función que resuelve y muestra qué debe verificarse: contratos, operadores, proveedores de datos, almacenamiento, governance y ruta de salida.</p></div><div class="kf-web3-flow">${layers.map((layer,index)=>`<article><span>${layer.code}</span><div><small>${index===0?'ORIGEN':index===layers.length-1?'INTERFAZ':'CAPA'}</small><h3>${layer.name}</h3><p>${layer.copy}</p><strong>${layer.items.join(' · ')}</strong></div></article>`).join('')}</div><div class="kf-decentralization-rule"><div><span>DESCENTRALIZACIÓN</span><strong>No es una etiqueta binaria.</strong></div><ol><li><b>Control</b><span>Quién puede actualizar, pausar o censurar.</span></li><li><b>Verificación</b><span>Qué puede comprobar el usuario sin confiar en la interfaz.</span></li><li><b>Disponibilidad</b><span>Qué ocurre si falla un operador, RPC, indexador o proveedor.</span></li><li><b>Salida</b><span>Si existe una ruta para recuperar control o fondos.</span></li></ol><a href="/riesgos/">Abrir controles de descentralización →</a></div><div class="kf-intel-evidence"><p><strong>Criterio de inclusión:</strong> una pieza ocupa una función diferenciada del stack y dispone de documentación técnica primaria o de una matriz pública conectada. No es un ranking ni una recomendación.</p><nav><a href="https://ethereum.org/developers/docs/" target="_blank" rel="noopener noreferrer">Stack Ethereum ↗</a><a href="https://docs.ipfs.tech/concepts/what-is-ipfs/" target="_blank" rel="noopener noreferrer">Qué es —y qué no es— IPFS ↗</a><a href="https://thegraph.com/docs/en/about/" target="_blank" rel="noopener noreferrer">Indexación onchain ↗</a></nav></div></section>`;
+    return `<section class="kf-web3-map"><div class="kf-intel-lead"><div><p class="kf-kicker">Infraestructura Web3</p><h2>Una aplicación descentralizada sigue teniendo dependencias.</h2></div><p>Kaufman no clasifica un proyecto por su token. Lo sitúa en la función que resuelve y muestra qué debe verificarse: contratos, operadores, proveedores de datos, almacenamiento, governance y ruta de salida.</p></div><div class="kf-web3-flow">${layers.map((layer,index)=>`<article><span>${layer.code}</span><div><small>${index===0?'ORIGEN':index===layers.length-1?'INTERFAZ':'CAPA'}</small><h3>${layer.name}</h3><p>${layer.copy}</p><strong>${layer.items.join(' · ')}</strong></div></article>`).join('')}</div><div class="kf-subsection-label">Telemetría de dependencias</div><div class="kf-web3-telemetry" data-web3-telemetry><div class="kf-live-empty">Observando cadena, contratos, gateways y releases…</div></div><div class="kf-decentralization-rule"><div><span>DESCENTRALIZACIÓN</span><strong>No es una etiqueta binaria.</strong></div><ol><li><b>Control</b><span>Quién puede actualizar, pausar o censurar.</span></li><li><b>Verificación</b><span>Qué puede comprobar el usuario sin confiar en la interfaz.</span></li><li><b>Disponibilidad</b><span>Qué ocurre si falla un operador, RPC, indexador o proveedor.</span></li><li><b>Salida</b><span>Si existe una ruta para recuperar control o fondos.</span></li></ol><a href="/riesgos/">Abrir controles de descentralización →</a></div><div class="kf-intel-evidence"><p><strong>Criterio de inclusión:</strong> una pieza ocupa una función diferenciada del stack y dispone de documentación técnica primaria o de una matriz pública conectada. No es un ranking ni una recomendación.</p><nav><a href="https://ethereum.org/developers/docs/" target="_blank" rel="noopener noreferrer">Stack Ethereum ↗</a><a href="https://docs.ipfs.tech/concepts/what-is-ipfs/" target="_blank" rel="noopener noreferrer">Qué es —y qué no es— IPFS ↗</a><a href="https://thegraph.com/docs/en/about/" target="_blank" rel="noopener noreferrer">Indexación onchain ↗</a></nav></div></section>`;
   }
 
   function decentralizationRiskMarkup(){
@@ -963,7 +963,9 @@
       document.querySelectorAll(`[data-etf-latest="${asset}"]`).forEach((node)=>{node.textContent=row?flow(row.latest_net_flow_usd):'No disponible';node.classList.toggle('positive',Number(row?.latest_net_flow_usd)>0);node.classList.toggle('negative',Number(row?.latest_net_flow_usd)<0)});
       document.querySelectorAll(`[data-etf-date="${asset}"]`).forEach((node)=>node.textContent=row?formatDate(row.latest_date):'Fecha no disponible');
     }
-    document.querySelectorAll('[data-etf-status]').forEach((node)=>node.textContent=etf?`Actualización automática · ${ageLabel(generatedAge)}`:'Flujos ETF no disponibles');
+    const reconciliation=etf?.reconciliation?.status;
+    const reconciliationLabel={RECONCILED:'Agregado reconciliado con emisor',BASELINE_ESTABLISHED:'Base de emisor creada; espera siguiente sesión',CONFLICT:'Conflicto entre agregado y emisor',AGGREGATOR_ONLY:'Solo agregado; no reconciliado'}[reconciliation]||'Control de emisor pendiente';
+    document.querySelectorAll('[data-etf-status]').forEach((node)=>node.textContent=etf?`${reconciliationLabel} · ${ageLabel(generatedAge)}`:'Flujos ETF no disponibles');
     const chart=document.querySelector('[data-etf-chart]');
     if(chart){
       const byAsset=Object.fromEntries(['bitcoin','ethereum'].map((asset)=>[asset,new Map((etf?.assets?.[asset]?.series||[]).map((row)=>[row.date,Number(row.net_flow_usd)]))]));
@@ -1241,15 +1243,27 @@
 
   function renderWalletIntelligence(data){
     const receivedAge=ageMs(data?.generated_at);
-    const valid=data?.schema_version==='kaufman-wallet-intelligence-v1'&&Number.isFinite(receivedAge)&&receivedAge<=172800000;
+    const valid=['kaufman-wallet-intelligence-v1','kaufman-wallet-intelligence-v2'].includes(data?.schema_version)&&Number.isFinite(receivedAge)&&receivedAge<=172800000;
     const products=Object.fromEntries((valid?data.products:[]).map((item)=>[item.id,item]));
     document.querySelectorAll('[data-wallet-release]').forEach((node)=>{
       const item=products[node.dataset.walletRelease];
       if(!item){node.textContent=node.dataset.walletRelease==='safe'?'No aplica · configuración onchain':'Release oficial no disponible';return}
-      const published=new Intl.DateTimeFormat('es-ES',{day:'2-digit',month:'short',year:'numeric'}).format(new Date(item.published_at));
-      node.innerHTML=`<a href="${safeExternalUrl(item.source_url)}" target="_blank" rel="noopener noreferrer"><strong>${escapeHtml(item.version)}</strong><span>Publicada ${escapeHtml(published)} ↗</span></a>`;
+      const release=item.application||item;
+      const published=release?.published_at?new Intl.DateTimeFormat('es-ES',{day:'2-digit',month:'short',year:'numeric'}).format(new Date(release.published_at)):'fecha no disponible';
+      const firmware=(item.firmware||[]).map((row)=>`${escapeHtml(row.model||'Firmware')}: ${escapeHtml(row.version||row.label||row.status)}`).join(' · ');
+      const advisories=item.advisories?`${Number(item.advisories.open_or_published_count||0).toLocaleString('es-ES')} avisos públicos observados`:'Registro de avisos no observado';
+      const service=item.service?.indicator?`Servicio: ${escapeHtml(item.service.indicator)}`:'Estado público no publicado';
+      node.innerHTML=`<a href="${safeExternalUrl(release?.source_url)}" target="_blank" rel="noopener noreferrer"><strong>${escapeHtml(release?.version||'Release no disponible')}</strong><span>Aplicación · ${escapeHtml(published)} ↗</span></a><small>${firmware||'Firmware no aplica'}</small><small>${advisories} · ${service}</small>`;
       node.title=data.methodology||'';
     });
+  }
+
+  function renderWeb3Telemetry(data){
+    const root=document.querySelector('[data-web3-telemetry]');if(!root)return;
+    const valid=data?.schema_version==='kaufman-web3-telemetry-v1'&&Number.isFinite(ageMs(data.generated_at))&&ageMs(data.generated_at)<=172800000;
+    const rows=valid?(data.profiles||[]):[];
+    root.innerHTML=rows.length?rows.map((row)=>`<article class="${row.verification_status==='UNAVAILABLE'?'unavailable':''}"><span>${escapeHtml(row.layer)}</span><h3>${escapeHtml(row.name)}</h3><strong>${escapeHtml(row.metric||'No disponible')}</strong><small>${escapeHtml(row.detail||row.error||'Sin observación')}</small>${row.source_url?`<a href="${safeExternalUrl(row.source_url)}" target="_blank" rel="noopener noreferrer">Evidencia ↗</a>`:''}</article>`).join(''):'<div class="kf-live-empty">Telemetría no disponible; no se sustituye por información documental.</div>';
+    root.title=data?.methodology||'';
   }
 
   function fiscalDataValid(data){
@@ -1317,6 +1331,15 @@
     }
     if(model.kind==='CHILE_IGC_2026')return done(Math.max(0,fiscalChileTax(prior+gain,model.annual_table)-fiscalChileTax(prior,model.annual_table)),{method:'Diferencia en IGC anual 2026. El coste introducido debe estar corregido monetariamente.'});
     if(model.kind==='MEXICO_PROVISIONAL_126')return done(input.proceeds*model.provisional_rate_on_gross,{status:'CONDITIONAL_PROVISIONAL',effective_rate:null,method:'20 % sobre el importe total como pago provisional si resulta aplicable el artículo 126. No es la cuota anual.'});
+    if(model.kind==='UK_CGT_2026'){
+      const taxable=Math.max(0,gain-model.annual_exempt_amount),basicCapacity=Math.max(0,model.basic_rate_band-prior),lower=Math.min(taxable,basicCapacity),higher=Math.max(0,taxable-lower);
+      return done(lower*model.basic_rate+higher*model.higher_rate,{method:'Aplica el annual exempt amount de £3.000 y reparte la ganancia restante entre 18 % y 24 % según la capacidad declarada de la banda básica.'});
+    }
+    if(model.kind==='GERMANY_PRIVATE_DISPOSAL'){
+      if(input.holdingDays>model.long_holding_days)return done(0,{status:'OUTSIDE_PRIVATE_DISPOSAL_WINDOW',method:'Tenencia superior a un año: la disposición privada queda fuera de §23 EStG bajo el perfil declarado.'});
+      if(prior+gain<model.annual_exemption_threshold)return done(0,{status:'BELOW_ANNUAL_EXEMPTION_THRESHOLD',method:'La suma declarada de ganancias privadas permanece por debajo de la Freigrenze anual de €1.000.'});
+      return{status:'INPUT_REQUIRED',reason:'La ganancia está dentro de un año y alcanza la Freigrenze: el tipo depende de la renta imponible total alemana. Kaufman no inventa una cuota.'};
+    }
     return{status:'UNAVAILABLE',reason:'Modelo de cálculo no disponible.'};
   }
 
@@ -1358,7 +1381,7 @@
     const gain=gainApplicable?proceeds-cost:null;
     const estimate=fiscalEstimate(data.calculation_models?.[jurisdiction.id],{event:event.id,profile,holdingDays,proceeds,cost,priorBase,filingStatus,taxContext,turnover,custody});
     const estimateReady=Number.isFinite(estimate.tax_estimate);
-    const estimateLabels={CALCULATED:'ESTIMACIÓN CALCULADA',NO_POSITIVE_GAIN:'SIN GANANCIA POSITIVA',DEFERRED:'DIFERIMIENTO ESTIMADO',CONDITIONAL_EXCLUSION:'EXCLUSIÓN CONDICIONADA',PERSONAL_INVESTMENT_EXCLUDED:'INVERSIÓN PERSONAL EXCLUIDA',BELOW_TURNOVER_THRESHOLD:'BAJO UMBRAL DE TURNOVER',CONDITIONAL_PROVISIONAL:'PAGO PROVISIONAL CONDICIONADO'};
+    const estimateLabels={CALCULATED:'ESTIMACIÓN CALCULADA',NO_POSITIVE_GAIN:'SIN GANANCIA POSITIVA',DEFERRED:'DIFERIMIENTO ESTIMADO',CONDITIONAL_EXCLUSION:'EXCLUSIÓN CONDICIONADA',PERSONAL_INVESTMENT_EXCLUDED:'INVERSIÓN PERSONAL EXCLUIDA',BELOW_TURNOVER_THRESHOLD:'BAJO UMBRAL DE TURNOVER',CONDITIONAL_PROVISIONAL:'PAGO PROVISIONAL CONDICIONADO',OUTSIDE_PRIVATE_DISPOSAL_WINDOW:'FUERA DE LA VENTANA PRIVADA',BELOW_ANNUAL_EXEMPTION_THRESHOLD:'BAJO FREIGRENZE ANUAL'};
     let scenarioSignal=estimate.method||estimate.reason||'La regla oficial conectada se muestra sin calcular una deuda final.';
     if(jurisdiction.id==='espana'&&event.id==='holding'&&custody==='foreign')scenarioSignal='La custodia extranjera activa la revisión de localización y umbrales del Modelo 721.';
     if(outsideScope)scenarioSignal='El contrato conectado cubre personas físicas. No se extrapolan reglas de individuo a sociedades.';
@@ -1553,6 +1576,7 @@
     renderTokenizationIntelligence(snapshot);
     renderL2Intelligence(snapshot.l2_intelligence);
     renderWalletIntelligence(snapshot.wallet_intelligence);
+    renderWeb3Telemetry(snapshot.web3_telemetry);
     renderFiscalIntelligence(snapshot);
     renderRegulationIntelligence(snapshot);
     renderMarketContext(snapshot.market_context);
@@ -1718,8 +1742,8 @@
   }
 
   async function connectMarketAntenna(){
-    if(!document.querySelector('[data-market-asset],[data-gas-price],[data-gas-base],[data-l2-projects],[data-tokenization-dashboard],[data-fiscal-dashboard],[data-regulation-dashboard],[data-wallet-release],[data-exchange-fee-rows],[data-provider-grid]'))return;
-    if(document.querySelector('[data-wallet-release]')&&!document.querySelector('[data-market-asset],[data-gas-price],[data-gas-base],[data-l2-projects],[data-tokenization-dashboard],[data-fiscal-dashboard],[data-regulation-dashboard],[data-exchange-fee-rows],[data-provider-grid]')){
+    if(!document.querySelector('[data-market-asset],[data-gas-price],[data-gas-base],[data-l2-projects],[data-tokenization-dashboard],[data-fiscal-dashboard],[data-regulation-dashboard],[data-wallet-release],[data-web3-telemetry],[data-exchange-fee-rows],[data-provider-grid]'))return;
+    if(document.querySelector('[data-wallet-release],[data-web3-telemetry]')&&!document.querySelector('[data-market-asset],[data-gas-price],[data-gas-base],[data-l2-projects],[data-tokenization-dashboard],[data-fiscal-dashboard],[data-regulation-dashboard],[data-exchange-fee-rows],[data-provider-grid]')){
       await loadPlatformFallback();
       return;
     }

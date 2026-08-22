@@ -93,6 +93,20 @@ export const FISCAL_CALCULATION_MODELS = freeze({
     provisional_rate_on_gross: .20,
     result_label: 'Pago provisional orientativo del artículo 126',
     exclusions: ['Cuota anual final', 'Deducciones', 'Retenedor no residente', 'Actividad empresarial', 'Tratamiento definitivo de la permuta']
+  }),
+  'reino-unido': freeze({
+    kind: 'UK_CGT_2026', currency: 'GBP', year: 2026,
+    events: ['sell_fiat', 'crypto_swap'], source_ids: ['uk_hmrc_crypto_manual', 'uk_cgt_rates'],
+    annual_exempt_amount: 3_000, basic_rate_band: 37_700, basic_rate: .18, higher_rate: .24,
+    result_label: 'CGT incremental estimado',
+    exclusions: ['Pérdidas y ganancias del mismo ejercicio', 'Pooling y reglas same-day/30-day', 'Residencia y remittance basis', 'Actividad profesional']
+  }),
+  alemania: freeze({
+    kind: 'GERMANY_PRIVATE_DISPOSAL', currency: 'EUR', year: 2026,
+    events: ['sell_fiat', 'crypto_swap'], source_ids: ['de_bmf_crypto', 'de_estg_23'],
+    long_holding_days: 365, annual_exemption_threshold: 1_000,
+    result_label: 'Tratamiento orientativo de disposición privada',
+    exclusions: ['Tipo personal final', 'Actividad empresarial', 'Otras disposiciones privadas del año', 'Identificación y valoración de lotes']
   })
 });
 
@@ -172,5 +186,17 @@ export function estimateFiscalScenario(input) {
   }
   if (model.kind === 'CHILE_IGC_2026') return result(model, gain, Math.max(0, chileTax(priorBase + gain, model.annual_table) - chileTax(priorBase, model.annual_table)), { method: 'Diferencia en IGC anual 2026; el coste introducido debe estar corregido monetariamente.' });
   if (model.kind === 'MEXICO_PROVISIONAL_126') return result(model, gain, proceeds * model.provisional_rate_on_gross, { status: 'CONDITIONAL_PROVISIONAL', effective_rate: null, method: '20 % sobre el importe total como pago provisional si resulta aplicable el artículo 126; no es la cuota anual.' });
+  if (model.kind === 'UK_CGT_2026') {
+    const taxableGain = Math.max(0, gain - model.annual_exempt_amount);
+    const basicCapacity = Math.max(0, model.basic_rate_band - priorBase);
+    const lowerPart = Math.min(taxableGain, basicCapacity);
+    const higherPart = Math.max(0, taxableGain - lowerPart);
+    return result(model, gain, lowerPart * model.basic_rate + higherPart * model.higher_rate, { method: 'Aplica el annual exempt amount de £3.000 y reparte la ganancia restante entre 18 % y 24 % según la capacidad declarada de la banda básica.' });
+  }
+  if (model.kind === 'GERMANY_PRIVATE_DISPOSAL') {
+    if (holdingDays > model.long_holding_days) return result(model, gain, 0, { status: 'OUTSIDE_PRIVATE_DISPOSAL_WINDOW', method: 'Tenencia superior a un año: la disposición privada queda fuera de §23 EStG bajo el perfil declarado.' });
+    if (priorBase + gain < model.annual_exemption_threshold) return result(model, gain, 0, { status: 'BELOW_ANNUAL_EXEMPTION_THRESHOLD', method: 'La suma declarada de ganancias privadas permanece por debajo de la Freigrenze anual de €1.000.' });
+    return { status: 'INPUT_REQUIRED', reason: 'La ganancia está dentro de un año y alcanza la Freigrenze: el tipo depende de la renta imponible total alemana. Kaufman no inventa una cuota.' };
+  }
   return { status: 'UNAVAILABLE', reason: 'Modelo de cálculo no disponible.' };
 }

@@ -38,7 +38,11 @@ export const SOURCE_REGISTRY = Object.freeze([
   { id: 'cl_renta_2026', jurisdiction: 'chile', authority: 'Servicio de Impuestos Internos', title: 'Guía Práctica de Declaración de Renta 2026', url: 'https://www.sii.cl/servicios_online/renta/guia_practica_renta_2026.pdf', source_type: 'FILING_GUIDANCE', binding_level: 'OFFICIAL_GUIDANCE', source_updated_at: '2026-04-01' },
   { id: 'cl_f1964', jurisdiction: 'chile', authority: 'Servicio de Impuestos Internos', title: 'Formulario 1964 · activos digitales', url: 'https://www.sii.cl/ayudas/ayudas_por_servicios/2120-formularios_y_plazos_2026-2171.html', source_type: 'REPORTING_REGISTER', binding_level: 'OFFICIAL_GUIDANCE', source_updated_at: '2026-01-01' },
   { id: 'mx_prodecon', jurisdiction: 'mexico', authority: 'PRODECON', title: 'Ingresos de personas físicas por enajenación de criptomonedas', url: 'https://www.prodecon.gob.mx/Documentos/bannerPrincipal/2021/CRIPTOMONEDAS_.pdf', source_type: 'INTERPRETIVE_STUDY', binding_level: 'NON_BINDING_OFFICIAL_GUIDANCE', source_updated_at: '2021-11-01', monitor: true },
-  { id: 'mx_lisr_126', jurisdiction: 'mexico', authority: 'Servicio de Administración Tributaria', title: 'Ley del ISR · artículo 126', url: 'https://wwwmat.sat.gob.mx/articulo/18353/articulo-126', source_type: 'PRIMARY_LAW', binding_level: 'PRIMARY_LAW', source_updated_at: '2026-01-01' }
+  { id: 'mx_lisr_126', jurisdiction: 'mexico', authority: 'Servicio de Administración Tributaria', title: 'Ley del ISR · artículo 126', url: 'https://wwwmat.sat.gob.mx/articulo/18353/articulo-126', source_type: 'PRIMARY_LAW', binding_level: 'PRIMARY_LAW', source_updated_at: '2026-01-01' },
+  { id: 'uk_hmrc_crypto_manual', jurisdiction: 'reino-unido', authority: 'HM Revenue & Customs', title: 'Cryptoassets Manual', url: 'https://www.gov.uk/hmrc-internal-manuals/cryptoassets-manual', source_type: 'ADMINISTRATIVE_GUIDANCE', binding_level: 'OFFICIAL_GUIDANCE', source_updated_at: '2026-08-22' },
+  { id: 'uk_cgt_rates', jurisdiction: 'reino-unido', authority: 'HM Revenue & Customs', title: 'Capital Gains Tax rates and annual exempt amount', url: 'https://www.gov.uk/capital-gains-tax/rates', source_type: 'OFFICIAL_RATE_TABLE', binding_level: 'OFFICIAL_GUIDANCE', source_updated_at: '2026-04-06' },
+  { id: 'de_bmf_crypto', jurisdiction: 'alemania', authority: 'Bundesministerium der Finanzen', title: 'Einzelfragen zur ertragsteuerrechtlichen Behandlung bestimmter Kryptowerte', url: 'https://www.bundesfinanzministerium.de/Content/DE/Downloads/BMF_Schreiben/Steuerarten/Einkommensteuer/2025-03-06-einzelfragen-kryptowerte.html', source_type: 'ADMINISTRATIVE_GUIDANCE', binding_level: 'OFFICIAL_GUIDANCE', source_updated_at: '2025-03-06' },
+  { id: 'de_estg_23', jurisdiction: 'alemania', authority: 'Bundesministerium der Justiz', title: 'Einkommensteuergesetz · § 23 Private Veräußerungsgeschäfte', url: 'https://www.gesetze-im-internet.de/estg/__23.html', source_type: 'CONSOLIDATED_LAW', binding_level: 'PRIMARY_LAW', source_updated_at: '2026-01-01' }
 ]);
 
 const fact = (status, trigger, category, rate, timing, reporting, sourceIds, limitation) => ({
@@ -133,6 +137,28 @@ const JURISDICTIONS = Object.freeze([
       mining: fact('REVIEW_REQUIRED', 'Sí si genera ingreso', 'Actividad empresarial/profesional bajo reglas generales', 'Depende del régimen del contribuyente', 'Según percepción y actividad', 'ISR, IVA y comprobantes según caso', ['mx_prodecon'], 'La fuente conectada se centra en enajenación, no resuelve minería de forma completa.'),
       holding: fact('NOT_DETERMINED', 'Sin hecho específico conectado por mera tenencia', 'No hay impuesto patrimonial federal cripto específico identificado', 'No publicable como exención', 'No determinado', 'Conservar coste y control de wallets/exchanges', ['mx_prodecon'], 'Ausencia de regla específica en la fuente no equivale a exención.')
     }
+  },
+  {
+    id: 'reino-unido', code: 'GB', name: 'Reino Unido', region: 'Europa', currency: 'GBP', coordinates: { lat: 54.0, lon: -2.0 }, confidence: 'HIGH', legal_reviewed_at: '2026-08-22',
+    scope: 'Persona física residente · inversión fuera de actividad profesional', summary: 'La disposición de criptoactivos puede generar CGT; minería y determinadas recompensas pueden entrar en Income Tax.',
+    facts: {
+      sell_fiat: fact('VERIFIED', 'Sí', 'Capital gain o loss', '18 % o 24 % en 2026/27 según renta imponible; annual exempt amount £3.000', 'En la disposición', 'Self Assessment cuando proceda; conservar pool de costes y gastos', ['uk_hmrc_crypto_manual','uk_cgt_rates'], 'La cuota depende del resto de renta y ganancias, pérdidas, residencia y uso profesional.'),
+      crypto_swap: fact('VERIFIED', 'Sí', 'Disposal por intercambio de un activo por otro', 'Mismas tasas CGT y annual exempt amount bajo el perfil cubierto', 'En cada intercambio', 'Valorar ambos activos en GBP y mantener el pool de costes', ['uk_hmrc_crypto_manual','uk_cgt_rates'], 'Las reglas de pooling, same-day y bed-and-breakfasting no se calculan aquí.'),
+      staking: fact('REVIEW_REQUIRED', 'Condicional', 'Income Tax al recibir y CGT en disposición posterior, según naturaleza', 'Depende de actividad, contraprestación y renta total', 'Recepción/control y disposición posterior', 'Self Assessment según categoría', ['uk_hmrc_crypto_manual'], 'DeFi y staking requieren leer los derechos y la contraprestación del contrato.'),
+      mining: fact('REVIEW_REQUIRED', 'Sí si se recibe recompensa', 'Trading income o miscellaneous income según organización', 'Escala de Income Tax; CGT posterior sobre revalorización', 'Al recibir y al disponer', 'Self Assessment y, si hay trade, registros de actividad', ['uk_hmrc_crypto_manual'], 'No determina si existe trade sin hechos de frecuencia, organización y riesgo.'),
+      holding: fact('VERIFIED', 'No por mera tenencia', 'No hay CGT hasta una disposición bajo este perímetro', 'Sin tasa por mera tenencia en CGT', 'En disposición posterior', 'Conservar fecha, coste y wallet/exchange', ['uk_hmrc_crypto_manual'], 'Otros hechos, residencia o patrimonio situado fuera del Reino Unido pueden alterar el análisis.')
+    }
+  },
+  {
+    id: 'alemania', code: 'DE', name: 'Alemania', region: 'Unión Europea', currency: 'EUR', coordinates: { lat: 51.2, lon: 10.4 }, confidence: 'HIGH', legal_reviewed_at: '2026-08-22',
+    scope: 'Persona física residente · patrimonio privado', summary: 'Las disposiciones dentro de un año entran en §23 EStG; superado el año, la ganancia privada queda fuera de esa regla.',
+    facts: {
+      sell_fiat: fact('VERIFIED', 'Sí hasta un año; fuera de §23 después de un año', 'Private Veräußerungsgeschäft', 'Exención total si la suma anual de estas ganancias es inferior a €1.000; si no, tipo personal', 'En la disposición', 'Declaración de renta y documentación por unidad/lote', ['de_bmf_crypto','de_estg_23'], 'El umbral de €1.000 es Freigrenze, no deducción; actividad empresarial queda fuera.'),
+      crypto_swap: fact('VERIFIED', 'Sí hasta un año', 'Intercambio tratado como disposición y nueva adquisición', 'Freigrenze anual de €1.000; después tipo personal si se supera', 'En cada intercambio', 'Valorar en EUR y reiniciar el periodo para el activo recibido', ['de_bmf_crypto','de_estg_23'], 'La identificación de unidades y costes debe seguir la documentación del contribuyente.'),
+      staking: fact('REVIEW_REQUIRED', 'Sí al recibir; tratamiento posterior separado', 'Sonstige Einkünfte o actividad según hechos', 'Tipo personal; umbrales y gastos dependen del caso', 'Recepción y disposición posterior', 'Declaración y trazabilidad de recompensas', ['de_bmf_crypto'], 'No se calcula sin clasificar validación, delegación y organización de la actividad.'),
+      mining: fact('REVIEW_REQUIRED', 'Sí', 'Puede constituir actividad empresarial', 'Tipo personal o régimen empresarial según hechos', 'Generación/recepción y disposición', 'Registros de actividad y gastos', ['de_bmf_crypto'], 'La clasificación exige escala, continuidad, intención de lucro y estructura.'),
+      holding: fact('VERIFIED', 'No por mera tenencia', 'El periodo de un año condiciona la disposición privada', 'Sin cuota por mera tenencia bajo §23', 'En la futura disposición', 'Conservar adquisición, coste y control', ['de_bmf_crypto','de_estg_23'], 'No equivale a exención universal para actividad empresarial u otros rendimientos.')
+    }
   }
 ]);
 
@@ -162,7 +188,7 @@ export function buildFiscalSnapshot(sourceHealth = {}, receivedAt = new Date().t
   return {
     schema_version: 'kaufman-fiscal-intelligence-v1',
     generated_at: receivedAt,
-    legal_reviewed_at: '2026-07-13',
+    legal_reviewed_at: '2026-08-22',
     review_policy: 'Monitorización diaria de disponibilidad; revisión jurídica editorial cuando cambia una fuente. La accesibilidad no certifica vigencia material.',
     scope: 'Comparación informativa para personas físicas residentes. No calcula una deuda tributaria ni sustituye asesoramiento.',
     events: clone(FISCAL_EVENTS),
@@ -251,7 +277,7 @@ export class FiscalConnector {
   stop() { this.stopped = true; clearTimeout(this.timer); }
 
   async refresh() {
-    const monitored = SOURCE_REGISTRY.filter((source) => source.monitor);
+    const monitored = SOURCE_REGISTRY;
     const results = await Promise.all(monitored.map(async (source) => [source.id, await checkFiscalSource(source, this.fetchImpl)]));
     this.sourceHealth = Object.fromEntries(results);
     const snapshot = buildFiscalSnapshot(this.sourceHealth);

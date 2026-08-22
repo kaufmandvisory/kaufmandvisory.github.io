@@ -60,7 +60,7 @@ export async function fetchEthereumLastSwap(pairAddress, fetchImpl = fetch) {
   const fromBlock = `0x${Math.max(0, latest - 1_024).toString(16)}`;
   const logs = await rpc(fetchImpl, ETHEREUM_RPC, {
     jsonrpc: '2.0', id: 2, method: 'eth_getLogs',
-    params: [{ address: pairAddress, fromBlock, toBlock: 'latest', topics: [SWAP_TOPICS] }]
+    params: [{ address: pairAddress, fromBlock, toBlock: latestHex, topics: [SWAP_TOPICS] }]
   });
   if (!Array.isArray(logs) || !logs.length) throw new Error('No recent Ethereum Swap log');
   const log = [...logs].sort((a, b) => Number.parseInt(b.blockNumber, 16) - Number.parseInt(a.blockNumber, 16) || Number.parseInt(b.logIndex, 16) - Number.parseInt(a.logIndex, 16))[0];
@@ -133,9 +133,20 @@ export async function fetchSolanaLastSwap(pairAddress, fetchImpl = fetch) {
 
 export async function fetchOnchainSwapEvidence({ chainId, pairAddress }, fetchImpl = fetch) {
   const chain = normalized(chainId);
-  if (chain === 'ethereum') return fetchEthereumLastSwap(pairAddress, fetchImpl);
-  if (chain === 'solana') return fetchSolanaLastSwap(pairAddress, fetchImpl);
-  throw new Error(`Unsupported onchain evidence chain: ${chain}`);
+  const operation = chain === 'ethereum'
+    ? () => fetchEthereumLastSwap(pairAddress, fetchImpl)
+    : chain === 'solana'
+      ? () => fetchSolanaLastSwap(pairAddress, fetchImpl)
+      : null;
+  if (!operation) throw new Error(`Unsupported onchain evidence chain: ${chain}`);
+  let lastError;
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    try { return await operation(); } catch (error) {
+      lastError = error;
+      if (attempt < 2) await new Promise((resolve) => setTimeout(resolve, 450 * (attempt + 1)));
+    }
+  }
+  throw lastError;
 }
 
 export function selectDexPair(asset, pairs = []) {

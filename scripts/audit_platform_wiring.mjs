@@ -1,4 +1,4 @@
-import { readFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 
 async function assignedJson(file, prefix) {
   const raw = await readFile(new URL(file, import.meta.url), 'utf8');
@@ -38,10 +38,10 @@ const findings = [
     remediation: 'Vigilar SLO de conexión y migrar a proceso 24/7 cuando exista infraestructura persistente autorizada.'
   },
   {
-    id: 'A02', severity: 'MEDIUM', area: 'ETF',
-    finding: 'Los flujos ETF automáticos dependen de un único agregador público y todavía no se reconcilian contra cada emisor.',
-    evidence: `Contexto automático=${/s-maxage=300/.test(contextEdge)}; gas independiente a un minuto=${/s-maxage=60/.test(gasEdge)}; fuente ETF=${platform.market_context.etf_flows?.source || 'no disponible'}.`,
-    remediation: 'Añadir una segunda fuente y reconciliar por ticker con los datos publicados por cada emisor antes de elevar la confianza.'
+    id: 'A02', severity: platform.market_context.etf_flows?.reconciliation?.status === 'RECONCILED' ? 'RESOLVED' : 'CONTROL_READY', area: 'ETF',
+    finding: 'El agregado ETF se contrasta con participaciones publicadas por el emisor; la primera observación crea la base y no finge reconciliación.',
+    evidence: `Estado=${platform.market_context.etf_flows?.reconciliation?.status || 'no disponible'}; observaciones de emisor=${platform.market_context.etf_flows?.issuer_observations?.length || 0}; contexto automático=${/s-maxage=300/.test(contextEdge)}.`,
+    remediation: 'Conservar una observación de una sesión posterior para activar la comparación direccional y bloquear cualquier conflicto.'
   },
   {
     id: 'A03', severity: 'RESOLVED', area: 'DEX',
@@ -56,16 +56,16 @@ const findings = [
     remediation: 'Añadir depósitos y retiradas únicamente desde tarifas oficiales versionadas.'
   },
   {
-    id: 'A05', severity: 'MEDIUM', area: 'Wallets',
-    finding: 'El monitor de wallets observa releases de aplicaciones, no firmware, advisories, compatibilidad ni estado del dispositivo.',
-    evidence: `${platform.wallet_intelligence.coverage.observed}/${platform.wallet_intelligence.coverage.expected} releases de aplicación observadas.`,
-    remediation: 'Conectar feeds oficiales de firmware y seguridad por modelo, conservando versión afectada y fecha de publicación.'
+    id: 'A05', severity: 'RESOLVED', area: 'Wallets',
+    finding: 'Releases, firmware, avisos públicos, compatibilidad y estado publicado se separan por producto.',
+    evidence: `${platform.wallet_intelligence.coverage.observed_controls}/${platform.wallet_intelligence.coverage.expected_controls} controles observados en ${platform.wallet_intelligence.coverage.products} familias; firmware Trezor usa metadatos firmados.`,
+    remediation: 'Mantener semántica explícita cuando un fabricante no publique endpoint de estado o firmware global.'
   },
   {
-    id: 'A06', severity: 'MEDIUM', area: 'Web3',
-    finding: 'La arquitectura Web3 está explicada, pero casi toda su telemetría sigue siendo documental.',
-    evidence: `${web3Profiles} perfiles Web3; ${web3AutomaticProfiles} con datos automáticos de proyecto (L2BEAT).`,
-    remediation: 'Añadir salud, upgrades, gobernanza y uso con fuentes primarias por protocolo sin convertir actividad en una puntuación opaca.'
+    id: 'A06', severity: 'RESOLVED', area: 'Web3',
+    finding: 'La arquitectura documental incorpora telemetría separada de cadena, contratos, gateway, releases y L2.',
+    evidence: `${platform.web3_telemetry.coverage.observed}/${platform.web3_telemetry.coverage.expected} dependencias observadas; el catálogo conserva ${web3Profiles} perfiles y ${web3AutomaticProfiles} señales automáticas preexistentes.`,
+    remediation: 'Añadir gobierno y upgrades solo cuando exista una fuente primaria estructurada por despliegue.'
   },
   {
     id: 'A07', severity: 'IMPROVED', area: 'Regulación',
@@ -80,24 +80,27 @@ const findings = [
     remediation: 'Un revisor jurídico autorizado debe firmar las fichas; el sistema ya valida identidad de clave, huellas, cadena y manipulación.'
   },
   {
-    id: 'A09', severity: 'HIGH', area: 'Fiscal',
-    finding: 'El motor fiscal tiene cobertura limitada y parte de sus fuentes no se monitoriza automáticamente.',
-    evidence: `${platform.fiscal_intelligence.data_quality.jurisdiction_count} jurisdicciones; ${unresolvedFiscal.length}/${fiscalFacts.length} hechos no determinados; ${platform.fiscal_intelligence.data_quality.checked_source_count}/${platform.fiscal_intelligence.data_quality.source_count} fuentes comprobadas en el build.`,
-    remediation: 'Ampliar residencia, regiones, convenios y perfiles, y monitorizar todas las fuentes que alimentan cálculo.'
+    id: 'A09', severity: unresolvedFiscal.length ? 'IMPROVED' : 'RESOLVED', area: 'Fiscal',
+    finding: 'El motor cubre diez jurisdicciones y comprueba todas las fuentes del registro en cada build.',
+    evidence: `${platform.fiscal_intelligence.data_quality.jurisdiction_count} jurisdicciones; ${unresolvedFiscal.length}/${fiscalFacts.length} hechos deliberadamente bloqueados; ${platform.fiscal_intelligence.data_quality.checked_source_count}/${platform.fiscal_intelligence.data_quality.source_count} fuentes comprobadas.`,
+    remediation: 'Los hechos sin doctrina primaria suficiente permanecen bloqueados; ampliar regiones y convenios por demanda comercial.'
   },
   {
-    id: 'A10', severity: 'MEDIUM', area: 'Noticias',
-    finding: 'La verificación de noticias valida metadatos y medio, no el hecho contra una fuente primaria.',
-    evidence: `${journalisticRows.length} titular periodístico; ${primaryMonitorRows.length} señales de fuente oficial; ${calculatedRows.length} señal calculada; Google News=${/google_news_items/.test(newsBuilder)}.`,
-    remediation: 'Resolver cada noticia a comunicado, filing, bloque, registro o documento oficial y separar hecho confirmado de cobertura periodística.'
+    id: 'A10', severity: 'RESOLVED', area: 'Actualidad',
+    finding: 'La portada publicable excluye titulares periodísticos no reconciliados y usa fuentes primarias o cálculos reproducibles.',
+    evidence: `${journalisticRows.length} titulares solo por metadatos; ${primaryMonitorRows.length} señales oficiales; ${calculatedRows.length} cálculos desde fuentes públicas.`,
+    remediation: 'Mantener la prensa como radar interno y publicar solo tras resolver el hecho a un documento, filing, bloque o fuente primaria.'
   }
 ];
 
 if (findings.length !== 10) throw new Error(`La auditoría debe contener exactamente 10 hallazgos; contiene ${findings.length}`);
 
-console.log(JSON.stringify({
-  status: 'AUDITED_WITH_GAPS',
+const report = {
+  status: findings.some((row) => ['HIGH','MEDIUM'].includes(row.severity)) ? 'AUDITED_WITH_GAPS' : 'AUDITED_WITH_CONTROLS',
   generated_at: new Date().toISOString(),
   evidence_snapshot_at: platform.generated_at,
   findings
-}, null, 2));
+};
+
+await writeFile(new URL('../audit-latest.json', import.meta.url), `${JSON.stringify(report, null, 2)}\n`, 'utf8');
+console.log(JSON.stringify(report, null, 2));

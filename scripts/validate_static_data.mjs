@@ -50,16 +50,19 @@ for (const pool of platform.onchain_pools) {
 assert.ok(platform.tokenization_markets?.products?.length > 0, 'universo de tokenización vacío');
 assert.ok(platform.l2_intelligence?.projects?.length > 0, 'universo L2 vacío');
 assert.ok(platform.l2_intelligence.projects.every((project) => /^https:\/\/l2beat\.com\/static\/icons\/[a-z0-9-]+\.[a-f0-9]+\.(?:png|svg|webp)$/i.test(project.logo_url || '')), 'logotipos L2 incompletos o no versionados');
-assert.equal(platform.wallet_intelligence?.schema_version, 'kaufman-wallet-intelligence-v1', 'contrato de wallets ausente');
-assert.equal(platform.wallet_intelligence?.products?.length, 3, 'releases oficiales de wallets incompletas');
+assert.equal(platform.wallet_intelligence?.schema_version, 'kaufman-wallet-intelligence-v2', 'contrato operativo de wallets ausente');
+assert.equal(platform.wallet_intelligence?.products?.length, 3, 'controles oficiales de wallets incompletos');
 for (const product of platform.wallet_intelligence.products) {
-  assert.equal(product.verification_status, 'OFFICIAL_RELEASE_OBSERVED', `${product.id}: release no observada`);
-  assert.ok(product.version && Number.isFinite(Date.parse(product.published_at)), `${product.id}: versión o fecha ausente`);
-  assert.match(product.source_url || '', /^https:\/\/github\.com\//, `${product.id}: fuente de release no oficial`);
+  assert.equal(product.application?.verification_status, 'OFFICIAL_RELEASE_OBSERVED', `${product.id}: release no observada`);
+  assert.ok(product.application?.version && Number.isFinite(Date.parse(product.application?.published_at)), `${product.id}: versión o fecha ausente`);
+  assert.ok(product.firmware?.length && product.compatibility && product.advisories, `${product.id}: controles operativos incompletos`);
 }
-assert.equal(platform.fiscal_intelligence?.data_quality?.fact_count, 40, 'matriz fiscal incompleta');
-assert.equal(Object.keys(platform.fiscal_intelligence?.calculation_models || {}).length, 8, 'cobertura de cálculo fiscal incompleta');
-assert.equal(platform.fiscal_intelligence?.data_quality?.indicative_calculation_jurisdictions, 8, 'el motor fiscal no cubre las ocho jurisdicciones');
+assert.equal(platform.web3_telemetry?.schema_version, 'kaufman-web3-telemetry-v1', 'telemetría Web3 ausente');
+assert.ok(platform.web3_telemetry?.coverage?.observed >= 5, 'telemetría Web3 insuficiente');
+assert.equal(platform.fiscal_intelligence?.data_quality?.fact_count, 50, 'matriz fiscal incompleta');
+assert.equal(Object.keys(platform.fiscal_intelligence?.calculation_models || {}).length, 10, 'cobertura de cálculo fiscal incompleta');
+assert.equal(platform.fiscal_intelligence?.data_quality?.indicative_calculation_jurisdictions, 10, 'el motor fiscal no cubre diez jurisdicciones');
+assert.equal(platform.fiscal_intelligence?.data_quality?.checked_source_count, platform.fiscal_intelligence?.data_quality?.source_count, 'hay fuentes fiscales sin monitorizar');
 assert.equal(platform.regulation_intelligence?.data_quality?.demo_record_count, 0, 'regulación contiene demostraciones');
 assert.equal(platform.regulation_intelligence?.source_contract_version, 'official-public-v2', 'contrato regulatorio público desactualizado');
 assert.equal(
@@ -85,14 +88,11 @@ for (const item of [...daily.home_regulation, ...daily.mining_news]) {
   assert.ok(item.title && item.original_title && item.url && item.publisher, 'noticia incompleta');
   assert.ok(['sourcechecked', 'verified'].includes(item.status), `señal sin contraste: ${item.title}`);
   assert.ok(
-    ['SOURCE_METADATA_VERIFIED', 'OFFICIAL_SOURCE_MONITORED', 'CALCULATED_FROM_PUBLIC_SOURCES'].includes(item.verification_status),
+    ['OFFICIAL_SOURCE_MONITORED', 'CALCULATED_FROM_PUBLIC_SOURCES'].includes(item.verification_status),
     `contrato de verificación ausente: ${item.title}`
   );
   assert.ok(Number.isFinite(Date.parse(item.source_observed_at)), `observación de fuente ausente: ${item.title}`);
   assert.ok(Date.now() - Date.parse(item.source_observed_at) <= 26 * 60 * 60_000, `observación superior a 24 horas: ${item.title}`);
-  if (item.verification_status === 'SOURCE_METADATA_VERIFIED') {
-    assert.ok(Date.now() - Date.parse(item.published) <= 25 * 60 * 60_000, `titular periodístico antiguo: ${item.title}`);
-  }
   assert.ok(item.verification_method, `metodología periodística ausente: ${item.title}`);
 }
 

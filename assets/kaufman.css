@@ -948,3 +948,9 @@ body{font-size:16px;line-height:1.6}
   .kf-decision-close{padding:58px 0}.kf-decision-close>.kf-container{grid-template-columns:1fr;gap:31px}.kf-decision-close h2{font-size:42px}.kf-decision-close-action{padding:18px}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}[data-reveal]{opacity:1;transform:none}}
+
+/* Controles operativos: reconciliación ETF, inteligencia de wallet y telemetría Web3. */
+.kf-etf-signal>footer nav{display:flex;gap:12px}.kf-wallet-compare td[data-wallet-release]>small{display:block;margin-top:7px;color:var(--kf-muted);font-size:11px;font-weight:600;line-height:1.4}
+.kf-web3-telemetry{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin:16px 0 48px;border-top:1px solid var(--kf-line-dark);border-left:1px solid var(--kf-line-dark)}.kf-web3-telemetry article{min-height:178px;padding:20px;border-right:1px solid var(--kf-line-dark);border-bottom:1px solid var(--kf-line-dark)}.kf-web3-telemetry article>span{color:var(--kf-violet);font-size:11px;font-weight:900;letter-spacing:.1em;text-transform:uppercase}.kf-web3-telemetry h3{margin:18px 0 8px;font-size:21px}.kf-web3-telemetry strong,.kf-web3-telemetry small{display:block}.kf-web3-telemetry small{min-height:34px;margin-top:7px;color:var(--kf-muted);font-size:11px;line-height:1.45}.kf-web3-telemetry a{display:inline-block;margin-top:15px;color:var(--kf-violet);font-size:11px;font-weight:900}.kf-web3-telemetry article.unavailable{opacity:.55}
+@media(max-width:1024px){.kf-web3-telemetry{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:680px){.kf-web3-telemetry{grid-template-columns:1fr}.kf-web3-telemetry article{min-height:0}.kf-etf-signal>footer nav{flex-wrap:wrap}}

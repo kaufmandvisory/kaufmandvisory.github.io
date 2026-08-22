@@ -7,10 +7,10 @@ export const REGULATORY_SOURCES = Object.freeze([
     id: 'eu_mica_text',
     jurisdiction: 'union-europea',
     authority: 'EUR-Lex',
-    title: 'Reglamento (UE) 2023/1114 sobre los mercados de criptoactivos (MiCA)',
-    url: 'https://eur-lex.europa.eu/eli/reg/2023/1114/oj?locale=es',
-    source_type: 'PRIMARY_LAW',
-    binding_level: 'BINDING'
+    title: 'Marco MiCA y enlace al Reglamento (UE) 2023/1114',
+    url: 'https://finance.ec.europa.eu/digital-finance/crypto-assets_en',
+    source_type: 'OFFICIAL_LEGISLATION_PORTAL',
+    binding_level: 'OFFICIAL_GUIDANCE'
   },
   {
     id: 'eu_esma_mica',
@@ -333,33 +333,40 @@ export function validateRegulationSnapshot(snapshot) {
 
 export async function checkRegulatorySource(source, fetchImpl = fetch) {
   const checkedAt = new Date().toISOString();
-  try {
-    const response = await fetchImpl(source.url, {
-      method: 'GET',
-      redirect: 'follow',
-      headers: {
-        accept: 'text/html,application/xhtml+xml,application/pdf,application/json;q=0.9,*/*;q=0.8',
-        range: 'bytes=0-65535',
-        'user-agent': 'Mozilla/5.0 (compatible; KaufmanRegulationMonitor/1.1; +https://kaufmanadvisory.io)'
-      },
-      signal: AbortSignal.timeout(12_000)
-    });
-    if (!response.ok) return { checked_at: checkedAt, connection_status: 'DEGRADED', http_status: response.status };
-    const bytes = new Uint8Array(await response.arrayBuffer());
-    const fingerprint = createHash('sha256').update(bytes.subarray(0, 65_536)).digest('hex');
-    return {
-      checked_at: checkedAt,
-      connection_status: 'CONNECTED',
-      http_status: response.status,
-      provider_timestamp: response.headers.get('last-modified'),
-      etag: response.headers.get('etag'),
-      content_fingerprint: fingerprint,
-      content_type: response.headers.get('content-type'),
-      observed_url: response.url || source.url
-    };
-  } catch (error) {
-    return { checked_at: checkedAt, connection_status: 'DEGRADED', http_status: null, error: error.message };
+  let lastError = null;
+  let lastStatus = null;
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    try {
+      const response = await fetchImpl(source.url, {
+        method: 'GET',
+        redirect: 'follow',
+        headers: {
+          accept: 'text/html,application/xhtml+xml,application/pdf,application/json;q=0.9,*/*;q=0.8',
+          range: 'bytes=0-65535',
+          'user-agent': 'Mozilla/5.0 (compatible; KaufmanRegulationMonitor/1.1; +https://kaufmanadvisory.io)'
+        },
+        signal: AbortSignal.timeout(12_000)
+      });
+      lastStatus = response.status;
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const bytes = new Uint8Array(await response.arrayBuffer());
+      const fingerprint = createHash('sha256').update(bytes.subarray(0, 65_536)).digest('hex');
+      return {
+        checked_at: checkedAt,
+        connection_status: 'CONNECTED',
+        http_status: response.status,
+        provider_timestamp: response.headers.get('last-modified'),
+        etag: response.headers.get('etag'),
+        content_fingerprint: fingerprint,
+        content_type: response.headers.get('content-type'),
+        observed_url: response.url || source.url
+      };
+    } catch (error) {
+      lastError = error;
+      if (attempt < 2) await new Promise((resolve) => setTimeout(resolve, 350 * (attempt + 1)));
+    }
   }
+  return { checked_at: checkedAt, connection_status: 'DEGRADED', http_status: lastStatus, error: lastError?.message || 'Source unavailable' };
 }
 
 export class RegulationConnector {

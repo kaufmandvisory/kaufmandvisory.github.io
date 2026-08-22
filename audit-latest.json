@@ -1,7 +1,7 @@
 {
-  "status": "AUDITED_WITH_GAPS",
-  "generated_at": "2026-08-22T18:22:05.598Z",
-  "evidence_snapshot_at": "2026-08-22T18:21:50.679Z",
+  "status": "AUDITED_WITH_CONTROLS",
+  "generated_at": "2026-08-22T19:08:40.677Z",
+  "evidence_snapshot_at": "2026-08-22T19:07:14.467Z",
   "findings": [
     {
       "id": "A01",
@@ -13,11 +13,11 @@
     },
     {
       "id": "A02",
-      "severity": "MEDIUM",
+      "severity": "CONTROL_READY",
       "area": "ETF",
-      "finding": "Los flujos ETF automáticos dependen de un único agregador público y todavía no se reconcilian contra cada emisor.",
-      "evidence": "Contexto automático=true; gas independiente a un minuto=true; fuente ETF=CoinFlows public ETF tracker.",
-      "remediation": "Añadir una segunda fuente y reconciliar por ticker con los datos publicados por cada emisor antes de elevar la confianza."
+      "finding": "El agregado ETF se contrasta con participaciones publicadas por el emisor; la primera observación crea la base y no finge reconciliación.",
+      "evidence": "Estado=BASELINE_ESTABLISHED; observaciones de emisor=2; contexto automático=true.",
+      "remediation": "Conservar una observación de una sesión posterior para activar la comparación direccional y bloquear cualquier conflicto."
     },
     {
       "id": "A03",
@@ -37,19 +37,19 @@
     },
     {
       "id": "A05",
-      "severity": "MEDIUM",
+      "severity": "RESOLVED",
       "area": "Wallets",
-      "finding": "El monitor de wallets observa releases de aplicaciones, no firmware, advisories, compatibilidad ni estado del dispositivo.",
-      "evidence": "3/3 releases de aplicación observadas.",
-      "remediation": "Conectar feeds oficiales de firmware y seguridad por modelo, conservando versión afectada y fecha de publicación."
+      "finding": "Releases, firmware, avisos públicos, compatibilidad y estado publicado se separan por producto.",
+      "evidence": "12/12 controles observados en 3 familias; firmware Trezor usa metadatos firmados.",
+      "remediation": "Mantener semántica explícita cuando un fabricante no publique endpoint de estado o firmware global."
     },
     {
       "id": "A06",
-      "severity": "MEDIUM",
+      "severity": "RESOLVED",
       "area": "Web3",
-      "finding": "La arquitectura Web3 está explicada, pero casi toda su telemetría sigue siendo documental.",
-      "evidence": "7 perfiles Web3; 1 con datos automáticos de proyecto (L2BEAT).",
-      "remediation": "Añadir salud, upgrades, gobernanza y uso con fuentes primarias por protocolo sin convertir actividad en una puntuación opaca."
+      "finding": "La arquitectura documental incorpora telemetría separada de cadena, contratos, gateway, releases y L2.",
+      "evidence": "7/7 dependencias observadas; el catálogo conserva 7 perfiles y 1 señales automáticas preexistentes.",
+      "remediation": "Añadir gobierno y upgrades solo cuando exista una fuente primaria estructurada por despliegue."
     },
     {
       "id": "A07",
@@ -69,19 +69,19 @@
     },
     {
       "id": "A09",
-      "severity": "HIGH",
+      "severity": "IMPROVED",
       "area": "Fiscal",
-      "finding": "El motor fiscal tiene cobertura limitada y parte de sus fuentes no se monitoriza automáticamente.",
-      "evidence": "8 jurisdicciones; 3/40 hechos no determinados; 8/29 fuentes comprobadas en el build.",
-      "remediation": "Ampliar residencia, regiones, convenios y perfiles, y monitorizar todas las fuentes que alimentan cálculo."
+      "finding": "El motor cubre diez jurisdicciones y comprueba todas las fuentes del registro en cada build.",
+      "evidence": "10 jurisdicciones; 3/50 hechos deliberadamente bloqueados; 33/33 fuentes comprobadas.",
+      "remediation": "Los hechos sin doctrina primaria suficiente permanecen bloqueados; ampliar regiones y convenios por demanda comercial."
     },
     {
       "id": "A10",
-      "severity": "MEDIUM",
-      "area": "Noticias",
-      "finding": "La verificación de noticias valida metadatos y medio, no el hecho contra una fuente primaria.",
-      "evidence": "1 titular periodístico; 3 señales de fuente oficial; 1 señal calculada; Google News=true.",
-      "remediation": "Resolver cada noticia a comunicado, filing, bloque, registro o documento oficial y separar hecho confirmado de cobertura periodística."
+      "severity": "RESOLVED",
+      "area": "Actualidad",
+      "finding": "La portada publicable excluye titulares periodísticos no reconciliados y usa fuentes primarias o cálculos reproducibles.",
+      "evidence": "0 titulares solo por metadatos; 3 señales oficiales; 2 cálculos desde fuentes públicas.",
+      "remediation": "Mantener la prensa como radar interno y publicar solo tras resolver el hecho a un documento, filing, bloque o fuente primaria."
     }
   ]
 }

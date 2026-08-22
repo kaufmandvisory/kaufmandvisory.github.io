@@ -5,13 +5,13 @@ import { buildFiscalSnapshot, validateFiscalSnapshot } from './fiscal.js';
 test('builds a complete fiscal matrix at jurisdiction by event grain', () => {
   const snapshot = buildFiscalSnapshot({}, '2026-07-13T12:00:00.000Z');
   assert.equal(snapshot.schema_version, 'kaufman-fiscal-intelligence-v1');
-  assert.equal(snapshot.jurisdictions.length, 8);
+  assert.equal(snapshot.jurisdictions.length, 10);
   assert.equal(snapshot.events.length, 5);
-  assert.equal(snapshot.data_quality.fact_count, 40);
+  assert.equal(snapshot.data_quality.fact_count, 50);
   assert.equal(snapshot.data_quality.facts_with_source_pct, 100);
   assert.equal(snapshot.data_quality.final_tax_liability_calculated, false);
-  assert.equal(snapshot.data_quality.indicative_calculation_jurisdictions, 8);
-  assert.equal(Object.keys(snapshot.calculation_models).length, 8);
+  assert.equal(snapshot.data_quality.indicative_calculation_jurisdictions, 10);
+  assert.equal(Object.keys(snapshot.calculation_models).length, 10);
   assert.equal(validateFiscalSnapshot(snapshot), true);
 });
 
@@ -44,6 +44,6 @@ test('source monitoring stays separate from legal review freshness', () => {
   });
   assert.equal(snapshot.data_quality.checked_source_count, 2);
   assert.equal(snapshot.data_quality.reachable_source_pct, 50);
-  assert.equal(snapshot.legal_reviewed_at, '2026-07-13');
+  assert.equal(snapshot.legal_reviewed_at, '2026-08-22');
   assert.match(snapshot.review_policy, /accesibilidad no certifica vigencia/i);
 });

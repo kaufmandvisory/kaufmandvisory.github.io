@@ -1,4 +1,5 @@
 import { buildDominanceSnapshot, buildOpenInterestSnapshot, buildDvolSnapshot, buildEtfFlowSnapshot } from '../server/market-context.js';
+import { buildIsharesIssuerObservation, reconcileEtfFlows } from '../server/etf-flows.js';
 
 const TIMEOUT_MS = 9_000;
 const USER_AGENT = 'Kaufman-Market-Antenna/1.0 contact@kaufmanadvisory.io';
@@ -27,6 +28,20 @@ const fetchDvol = async (receivedAt) => {
   return buildDvolSnapshot({ BTC, ETH }, receivedAt);
 };
 
+const fetchEtfFlows = async (receivedAt) => {
+  const sources = [
+    { asset: 'bitcoin', ticker: 'IBIT', url: 'https://www.ishares.com/us/products/333011/ishares-bitcoin-trust-etf' },
+    { asset: 'ethereum', ticker: 'ETHA', url: 'https://www.ishares.com/us/products/337614/isharesethereum-trust-etf' }
+  ];
+  const [aggregateHtml, ...issuerHtml] = await Promise.all([
+    fetchText('https://coinflows.org/'),
+    ...sources.map((source) => fetchText(source.url))
+  ]);
+  const aggregate = buildEtfFlowSnapshot(aggregateHtml, receivedAt);
+  const observations = sources.map((source, index) => buildIsharesIssuerObservation({ ...source, html: issuerHtml[index], receivedAt }));
+  return reconcileEtfFlows(aggregate, observations, receivedAt);
+};
+
 const publicHeaders = {
   'Content-Type': 'application/json; charset=utf-8',
   'Access-Control-Allow-Origin': '*',
@@ -46,7 +61,7 @@ export default async (request) => {
     dominance: fetchJson('https://api.coingecko.com/api/v3/global').then((payload) => buildDominanceSnapshot(payload, receivedAt)),
     open_interest: fetchJson('https://api.llama.fi/overview/open-interest?excludeTotalDataChart=false&excludeTotalDataChartBreakdown=true').then((payload) => buildOpenInterestSnapshot(payload, receivedAt)),
     implied_volatility: fetchDvol(receivedAt),
-    etf_flows: fetchText('https://coinflows.org/').then((html) => buildEtfFlowSnapshot(html, receivedAt))
+    etf_flows: fetchEtfFlows(receivedAt)
   };
   const entries = await Promise.all(Object.entries(jobs).map(async ([key, job]) => {
     try { return [key, await job, null]; } catch (error) { return [key, null, error?.message || 'Error de fuente']; }

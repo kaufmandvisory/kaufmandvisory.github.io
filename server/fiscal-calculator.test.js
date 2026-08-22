@@ -45,6 +45,14 @@ test('Argentina, Colombia, Chile and Mexico expose distinct official mechanisms'
   assert.equal(mexico.tax_estimate, 20_000);
 });
 
+test('United Kingdom applies allowance and bands while Germany blocks unknown personal rate', () => {
+  const uk = estimate('reino-unido', { proceeds: 30_000, cost: 10_000, prior_base: 30_000 });
+  assert.equal(uk.tax_estimate, 3_618);
+  assert.equal(estimate('alemania', { holding_days: 400 }).status, 'OUTSIDE_PRIVATE_DISPOSAL_WINDOW');
+  assert.equal(estimate('alemania', { holding_days: 100, proceeds: 10_500, cost: 10_000 }).status, 'BELOW_ANNUAL_EXEMPTION_THRESHOLD');
+  assert.equal(estimate('alemania', { holding_days: 100 }).status, 'INPUT_REQUIRED');
+});
+
 test('losses never silently become a tax benefit', () => {
   const row = estimate('espana', { proceeds: 5_000, cost: 8_000 });
   assert.equal(row.status, 'NO_POSITIVE_GAIN');

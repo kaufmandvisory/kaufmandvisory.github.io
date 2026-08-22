@@ -301,17 +301,8 @@ def official_regulation_updates(limit: int = 3) -> list[dict]:
 
 
 def complete_regulation_briefing(news: list[dict]) -> list[dict]:
-    """Return three fresh signals without recycling old headlines."""
-    selected = list(news[:3])
-    used_jurisdictions = {row.get("jurisdiction") for row in selected}
-    for row in official_regulation_updates(limit=6):
-        if row.get("jurisdiction") in used_jurisdictions:
-            continue
-        selected.append(row)
-        used_jurisdictions.add(row.get("jurisdiction"))
-        if len(selected) == 3:
-            break
-    return selected
+    """Publish only signals reconciled against a connected primary source."""
+    return official_regulation_updates(limit=3)
 
 
 def mining_news():
@@ -415,13 +406,42 @@ def mining_data_update(metrics: dict) -> dict | None:
     }
 
 
+def mining_network_update(metrics: dict) -> dict | None:
+    """Create a second primary-data signal without republishing press claims."""
+    if metrics.get("status") != "auto":
+        return None
+    now = datetime.now(timezone.utc)
+    gross = metrics.get("gross_usd_day")
+    energy = metrics.get("energy_kwh_day")
+    height = metrics.get("block_height")
+    if not all(isinstance(value, (int, float)) for value in (gross, energy, height)):
+        return None
+    title = (
+        f"Red Bitcoin en bloque {int(height):,}: el {metrics['hardware']['model']} "
+        f"produce {gross:.2f} USD brutos/día antes de {energy:.1f} kWh de energía"
+    ).replace(",", ".")
+    return {
+        "title": title,
+        "original_title": title,
+        "translated": False,
+        "language": "es-ES",
+        "url": metrics.get("network_source_url"),
+        "publisher": "Kaufman · mempool.space + BITMAIN",
+        "jurisdiction": "Global",
+        "published": now.isoformat(timespec="seconds"),
+        "category": "RED Y HARDWARE",
+        "status": "verified",
+        "verification_status": "CALCULATED_FROM_PUBLIC_SOURCES",
+        "source_observed_at": now.isoformat(timespec="seconds"),
+        "verification_method": "Cálculo server-side reproducible con bloque y hashrate observados, especificación oficial del equipo y precio BTC/USD reconciliado entre Coinbase y Kraken.",
+        "importance": "Info",
+        "date_verb": "calculado",
+    }
+
+
 def complete_mining_briefing(news: list[dict], metrics: dict) -> list[dict]:
-    selected = list(news[:2])
-    if len(selected) < 2:
-        signal = mining_data_update(metrics)
-        if signal:
-            selected.append(signal)
-    return selected[:2]
+    """Publish calculations from primary data; press remains outside the verified feed."""
+    return [row for row in (mining_data_update(metrics), mining_network_update(metrics)) if row][:2]
 
 
 def mining_profitability():
@@ -613,8 +633,8 @@ def main():
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "exchange_fees": kraken_fees(),
         "regulation": regulation_snapshot(),
-        "home_regulation": complete_regulation_briefing(global_regulation_news()),
-        "mining_news": complete_mining_briefing(mining_news(), profitability),
+        "home_regulation": complete_regulation_briefing([]),
+        "mining_news": complete_mining_briefing([], profitability),
         "mining_profitability": profitability,
     }
     payload = json.dumps(snapshot, ensure_ascii=False, separators=(",", ":"))

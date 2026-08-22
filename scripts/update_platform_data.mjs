@@ -8,11 +8,23 @@ import { REGULATORY_SOURCES, buildRegulationSnapshot, checkRegulatorySource, val
 import { buildEthereumFeeSnapshot } from '../server/auxiliary.js';
 import { buildExchangeFeeRegistry } from '../server/exchange-fees.js';
 import { buildDominanceSnapshot, buildOpenInterestSnapshot, buildDvolSnapshot, buildEtfFlowSnapshot } from '../server/market-context.js';
+import { buildIsharesIssuerObservation, reconcileEtfFlows } from '../server/etf-flows.js';
+import { buildWalletIntelligence } from '../server/wallet-intelligence.js';
+import { buildWeb3Telemetry } from '../server/web3-telemetry.js';
 import { fetchOnchainSwapEvidence, selectDexPair, verifyDexPair } from '../server/dexscreener.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const receivedAt = new Date().toISOString();
 const headers = { accept: 'application/json', 'user-agent': 'Kaufman-Public-Snapshot/1.0 contact@kaufmanadvisory.io' };
+
+async function previousPlatformSnapshot() {
+  try {
+    const raw = await fs.readFile(path.join(root, 'assets', 'platform-data.js'), 'utf8');
+    return JSON.parse(raw.slice('window.KAUFMAN_PLATFORM_DATA = '.length).replace(/;\s*$/, ''));
+  } catch { return null; }
+}
+
+const previousPlatform = await previousPlatformSnapshot();
 
 async function fetchJson(url, options = {}) {
   const response = await fetch(url, { ...options, headers: { ...headers, ...(options.headers || {}) }, signal: AbortSignal.timeout(options.timeout || 25_000) });
@@ -135,12 +147,25 @@ const historicalReturns = Object.fromEntries((await Promise.all(assets.map(async
 const dvolEnd = Date.now();
 const dvolStart = dvolEnd - 6 * 60 * 60_000;
 const dvolUrl = (asset) => `https://www.deribit.com/api/v2/public/get_volatility_index_data?currency=${asset}&start_timestamp=${dvolStart}&end_timestamp=${dvolEnd}&resolution=60`;
-const [dominance, openInterest, impliedVolatility, etfFlows] = await Promise.all([
+const [dominance, openInterest, impliedVolatility, aggregateEtfFlows] = await Promise.all([
   attempt(async () => buildDominanceSnapshot(await fetchJson('https://api.coingecko.com/api/v3/global'), receivedAt)),
   attempt(async () => buildOpenInterestSnapshot(await fetchJson('https://api.llama.fi/overview/open-interest?excludeTotalDataChart=false&excludeTotalDataChartBreakdown=true'), receivedAt)),
   attempt(async () => buildDvolSnapshot({ BTC: await fetchJson(dvolUrl('BTC')), ETH: await fetchJson(dvolUrl('ETH')) }, receivedAt)),
   attempt(async () => buildEtfFlowSnapshot(await fetchText('https://coinflows.org/'), receivedAt))
 ]);
+
+const issuerEtfSources = [
+  { asset: 'bitcoin', ticker: 'IBIT', url: 'https://www.ishares.com/us/products/333011/ishares-bitcoin-trust-etf' },
+  { asset: 'ethereum', ticker: 'ETHA', url: 'https://www.ishares.com/us/products/337614/isharesethereum-trust-etf' }
+];
+const previousIssuerRows = Object.fromEntries((previousPlatform?.market_context?.etf_flows?.issuer_observations || []).map((row) => [row.ticker, row]));
+const issuerEtfObservations = (await Promise.all(issuerEtfSources.map((source) => attempt(async () => buildIsharesIssuerObservation({
+  ...source,
+  html: await fetchText(source.url, { timeout: 35_000 }),
+  receivedAt,
+  previous: previousIssuerRows[source.ticker] || null
+}))))).filter(Boolean);
+const etfFlows = reconcileEtfFlows(aggregateEtfFlows, issuerEtfObservations, receivedAt);
 
 const tokenizationMarkets = await attempt(async () => {
   const [protocols, stablecoins] = await Promise.all([
@@ -160,35 +185,10 @@ const l2Intelligence = await attempt(async () => {
   return snapshot;
 });
 
-const walletReleaseSources = [
-  { id: 'ledger', name: 'Ledger Wallet', repository: 'LedgerHQ/ledger-live' },
-  { id: 'trezor', name: 'Trezor Suite', repository: 'trezor/trezor-suite' },
-  { id: 'metamask', name: 'MetaMask Extension', repository: 'MetaMask/metamask-extension' }
-];
-const walletProducts = (await Promise.all(walletReleaseSources.map(async (source) => attempt(async () => {
-  const release = await fetchJson(`https://api.github.com/repos/${source.repository}/releases/latest`, {
-    headers: { accept: 'application/vnd.github+json', 'x-github-api-version': '2022-11-28' }
-  });
-  if (!release?.tag_name || !release?.published_at || !release?.html_url) throw new Error(`Release incompleta: ${source.repository}`);
-  return {
-    id: source.id,
-    name: source.name,
-    version: String(release.tag_name),
-    published_at: new Date(release.published_at).toISOString(),
-    source_url: release.html_url,
-    repository: source.repository,
-    verification_status: 'OFFICIAL_RELEASE_OBSERVED'
-  };
-})))).filter(Boolean);
-const walletIntelligence = {
-  schema_version: 'kaufman-wallet-intelligence-v1',
-  generated_at: receivedAt,
-  products: walletProducts,
-  coverage: { expected: walletReleaseSources.length, observed: walletProducts.length },
-  methodology: 'Última release no marcada como borrador ni prerelease devuelta por la API oficial de GitHub. No equivale a la versión instalada por el usuario.'
-};
+const walletIntelligence = await buildWalletIntelligence({ fetchJson, fetchText, attempt, receivedAt });
+const web3Telemetry = await buildWeb3Telemetry({ fetchJson, fetchText, attempt, receivedAt, l2Intelligence });
 
-const fiscalHealth = Object.fromEntries(await Promise.all(SOURCE_REGISTRY.filter((source) => source.monitor).map(async (source) => [source.id, await checkFiscalSource(source)])));
+const fiscalHealth = Object.fromEntries(await Promise.all(SOURCE_REGISTRY.map(async (source) => [source.id, await checkFiscalSource(source)])));
 const fiscalIntelligence = buildFiscalSnapshot(fiscalHealth, receivedAt);
 validateFiscalSnapshot(fiscalIntelligence);
 
@@ -258,11 +258,12 @@ const providers = {
   coingecko_metadata: { connection_status: Object.values(metadata).some((row) => row.verification_status === 'VERIFIED') ? 'SNAPSHOT' : 'DEGRADED', last_message_at: receivedAt },
   defillama_tokenization: { connection_status: tokenizationMarkets ? 'SNAPSHOT' : 'DEGRADED', last_message_at: tokenizationMarkets?.received_at || null, records: tokenizationMarkets?.coverage?.rwa_protocols || 0 },
   l2beat_projects: { connection_status: l2Intelligence ? 'SNAPSHOT' : 'DEGRADED', last_message_at: l2Intelligence?.received_at || null, records: l2Intelligence?.coverage?.projects || 0 },
+  web3_telemetry: { connection_status: web3Telemetry?.coverage?.observed === web3Telemetry?.coverage?.expected ? 'SNAPSHOT' : web3Telemetry?.coverage?.observed ? 'DEGRADED' : 'UNAVAILABLE', last_message_at: web3Telemetry?.generated_at || null, records: web3Telemetry?.coverage?.observed || 0 },
   ethereum_rpc: { connection_status: ethereumFees ? 'SNAPSHOT' : 'DEGRADED', last_message_at: ethereumFees?.received_at || null, block_number: ethereumFees?.block_number || null },
   fiscal_registry: { connection_status: 'SNAPSHOT', last_message_at: fiscalIntelligence.generated_at },
   regulation_registry: { connection_status: 'SNAPSHOT', last_message_at: regulationIntelligence.generated_at }
 };
-providers.wallet_releases = { connection_status: walletProducts.length === walletReleaseSources.length ? 'SNAPSHOT' : walletProducts.length ? 'DEGRADED' : 'UNAVAILABLE', last_message_at: walletIntelligence.generated_at, records: walletProducts.length };
+providers.wallet_releases = { connection_status: walletIntelligence.coverage.observed_controls === walletIntelligence.coverage.expected_controls ? 'SNAPSHOT' : walletIntelligence.coverage.observed_controls ? 'DEGRADED' : 'UNAVAILABLE', last_message_at: walletIntelligence.generated_at, records: walletIntelligence.coverage.observed_controls };
 
 const snapshot = {
   schema_version: 'kaufman-public-platform-v1',
@@ -280,6 +281,7 @@ const snapshot = {
   fiscal_intelligence: fiscalIntelligence,
   regulation_intelligence: regulationIntelligence,
   wallet_intelligence: walletIntelligence,
+  web3_telemetry: web3Telemetry,
   market_context: marketContext,
   thresholds: { snapshot_max_age_ms: 26 * 60 * 60_000, tokenization_max_age_ms: 24 * 60 * 60_000, l2beat_max_age_ms: 24 * 60 * 60_000, wallet_max_age_ms: 48 * 60 * 60_000, fiscal_max_age_ms: 48 * 60 * 60_000 },
   data_quality: {
@@ -290,7 +292,9 @@ const snapshot = {
     l2_available: Boolean(l2Intelligence),
     fiscal_jurisdictions: fiscalIntelligence.jurisdictions.length,
     regulation_regimes: regulationIntelligence.regimes.length,
-    wallet_releases: walletProducts.length,
+    wallet_releases: walletIntelligence.products.length,
+    wallet_controls_observed: walletIntelligence.coverage.observed_controls,
+    web3_telemetry_profiles: web3Telemetry.coverage.observed,
     market_context_signals: [dominance, openInterest, impliedVolatility, etfFlows, ethereumFees].filter(Boolean).length
   }
 };
