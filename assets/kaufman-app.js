@@ -1718,8 +1718,8 @@
   }
 
   async function connectMarketAntenna(){
-    if(!document.querySelector('[data-market-asset],[data-gas-price],[data-gas-base],[data-l2-projects],[data-tokenization-dashboard],[data-fiscal-dashboard],[data-regulation-dashboard],[data-wallet-release],[data-kraken-maker],[data-provider-grid]'))return;
-    if(document.querySelector('[data-wallet-release]')&&!document.querySelector('[data-market-asset],[data-gas-price],[data-gas-base],[data-l2-projects],[data-tokenization-dashboard],[data-fiscal-dashboard],[data-regulation-dashboard],[data-kraken-maker],[data-provider-grid]')){
+    if(!document.querySelector('[data-market-asset],[data-gas-price],[data-gas-base],[data-l2-projects],[data-tokenization-dashboard],[data-fiscal-dashboard],[data-regulation-dashboard],[data-wallet-release],[data-exchange-fee-rows],[data-provider-grid]'))return;
+    if(document.querySelector('[data-wallet-release]')&&!document.querySelector('[data-market-asset],[data-gas-price],[data-gas-base],[data-l2-projects],[data-tokenization-dashboard],[data-fiscal-dashboard],[data-regulation-dashboard],[data-exchange-fee-rows],[data-provider-grid]')){
       await loadPlatformFallback();
       return;
     }
