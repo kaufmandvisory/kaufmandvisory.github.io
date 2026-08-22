@@ -52,5 +52,3 @@ export default async (request) => {
   });
   return new Response(stream, { status: 200, headers });
 };
-
-export const config = { path: '/api/market/stream' };
