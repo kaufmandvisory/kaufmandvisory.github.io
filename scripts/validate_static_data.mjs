@@ -15,6 +15,12 @@ const daily = await readAssignedJson(
   new URL('../assets/daily-data.js', import.meta.url),
   'window.KAUFMAN_DAILY_DATA = '
 );
+const staticMarketApi = Object.fromEntries(await Promise.all(
+  ['snapshot', 'context', 'gas', 'stream'].map(async (name) => [
+    name,
+    JSON.parse(await readFile(new URL(`../api/market/${name}`, import.meta.url), 'utf8'))
+  ])
+));
 
 assert.equal(platform.schema_version, 'kaufman-public-platform-v1');
 assert.equal(platform.delivery_mode, 'STATIC_SNAPSHOT');
@@ -72,13 +78,27 @@ assert.equal(daily.mining_news?.length, 2, 'la portada necesita dos noticias min
 for (const item of [...daily.home_regulation, ...daily.mining_news]) {
   assert.equal(item.language, 'es-ES', `titular no publicado en castellano: ${item.title}`);
   assert.ok(item.title && item.original_title && item.url && item.publisher, 'noticia incompleta');
-  assert.equal(item.status, 'sourcechecked', `fuente periodística sin contraste: ${item.title}`);
-  assert.equal(item.verification_status, 'SOURCE_METADATA_VERIFIED', `contrato de verificación ausente: ${item.title}`);
+  assert.ok(['sourcechecked', 'verified'].includes(item.status), `señal sin contraste: ${item.title}`);
+  assert.ok(
+    ['SOURCE_METADATA_VERIFIED', 'OFFICIAL_SOURCE_MONITORED', 'CALCULATED_FROM_PUBLIC_SOURCES'].includes(item.verification_status),
+    `contrato de verificación ausente: ${item.title}`
+  );
   assert.ok(Number.isFinite(Date.parse(item.source_observed_at)), `observación de fuente ausente: ${item.title}`);
+  assert.ok(Date.now() - Date.parse(item.source_observed_at) <= 26 * 60 * 60_000, `observación superior a 24 horas: ${item.title}`);
+  if (item.verification_status === 'SOURCE_METADATA_VERIFIED') {
+    assert.ok(Date.now() - Date.parse(item.published) <= 25 * 60 * 60_000, `titular periodístico antiguo: ${item.title}`);
+  }
   assert.ok(item.verification_method, `metodología periodística ausente: ${item.title}`);
 }
 
 assert.doesNotMatch(JSON.stringify(platform), /"status":"demo"|DEMO · dato no conectado/i);
+for (const name of ['snapshot', 'context', 'gas']) {
+  assert.equal(staticMarketApi[name].delivery_mode, 'STATIC_DAILY_FALLBACK', `${name}: el respaldo estático se anuncia como tiempo real`);
+  assert.equal(staticMarketApi[name].status, 'SNAPSHOT_ONLY', `${name}: estado estático ambiguo`);
+  assert.match(staticMarketApi[name].live_endpoint || '', /^https:\/\//, `${name}: endpoint vivo ausente`);
+}
+assert.equal(staticMarketApi.stream.delivery_mode, 'STATIC_POLLING', 'stream: contrato de transporte inválido');
+assert.ok(staticMarketApi.stream.same_origin_fallbacks?.length === 3, 'stream: respaldos same-origin incompletos');
 
 console.log(JSON.stringify({
   status: 'PASS',

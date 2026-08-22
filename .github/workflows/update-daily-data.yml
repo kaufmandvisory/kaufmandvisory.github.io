@@ -26,17 +26,19 @@ jobs:
           node-version: "22"
       - name: Build daily public-source snapshot
         run: |
-          python scripts/update_daily_data.py
           node scripts/update_regulation_data.mjs
+          python scripts/update_daily_data.py
           node scripts/update_platform_data.mjs
+          node scripts/update_public_market_api.mjs
+          node scripts/validate_static_data.mjs
       - name: Commit changed snapshot
         shell: bash
         run: |
-          if git diff --quiet -- assets/daily-data.js assets/regulation-data.js assets/platform-data.js; then
+          if git diff --quiet -- assets/daily-data.js assets/regulation-data.js assets/platform-data.js api/market; then
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add assets/daily-data.js assets/regulation-data.js assets/platform-data.js
+          git add assets/daily-data.js assets/regulation-data.js assets/platform-data.js api/market
           git commit -m "data: update daily public sources"
           git push

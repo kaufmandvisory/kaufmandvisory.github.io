@@ -17,6 +17,7 @@ from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "assets" / "daily-data.js"
+REGULATION_OUTPUT = ROOT / "assets" / "regulation-data.js"
 USER_AGENT = "Kaufman blockchain information platform contact@kaufmanadvisory.io"
 KEYWORDS = re.compile(
     r"\b(?:cripto\w*|blockchain|bitcoin|ethereum|stablecoin\w*|web3|dlt)\b"
@@ -72,6 +73,18 @@ def translate_headline_es(title: str) -> dict | None:
     translated = re.sub(r"\bEE\. UU\.\b", "EE. UU.", translated)
     translated = re.sub(r"^Solo Miner\b", "Un minero en solitario", translated, flags=re.IGNORECASE)
     translated = re.sub(r"\bobtiene un bloque de Bitcoin\b", "mina un bloque de Bitcoin", translated, flags=re.IGNORECASE)
+    # Google Translate is useful as a first pass, but its literal vocabulary is
+    # not suitable for a Spanish financial publication. Keep a deterministic
+    # editorial glossary so recurring blockchain terms render in es-ES.
+    replacements = (
+        (r"\breglas criptogr[aá]ficas\b", "normas sobre criptoactivos"),
+        (r"\bregulaci[oó]n criptogr[aá]fica\b", "regulación de los criptoactivos"),
+        (r"\bindustria criptogr[aá]fica\b", "industria de los criptoactivos"),
+        (r"\bUtility GM\b", "El director general de la eléctrica"),
+        (r"\btan esperadas\b", "largamente esperadas"),
+    )
+    for pattern, replacement in replacements:
+        translated = re.sub(pattern, replacement, translated, flags=re.IGNORECASE)
     return {
         "title": translated,
         "original_title": clean,
@@ -170,12 +183,14 @@ def global_regulation_news():
     except (HTTPError, URLError, TimeoutError, ET.ParseError, ValueError):
         return []
     now = datetime.now(timezone.utc)
+    cutoff = now - timedelta(hours=24)
     candidates = []
     for row in rows:
         if (
             row["publisher"] not in trusted
-            or now - row["published_at"] > timedelta(days=31)
+            or row["published_at"] < cutoff
             or not topic.search(row["title"])
+            or not action.search(row["title"])
         ):
             continue
         jurisdiction = jurisdiction_from_title(row["title"])
@@ -204,8 +219,96 @@ def global_regulation_news():
                 "source_observed_at": now.isoformat(timespec="seconds"),
                 "verification_method": "Fuente incluida en el registro editorial, titular original preservado, fecha RSS válida y enlace público observado.",
                 "importance": "Alto" if material_action.search(row["title"]) else "Medio",
+                "date_verb": "publicado",
             }
         )
+        if len(selected) == 3:
+            break
+    return selected
+
+
+def read_assigned_json(path: Path, prefix: str) -> dict:
+    raw = path.read_text(encoding="utf-8").strip()
+    if not raw.startswith(prefix):
+        raise ValueError(f"Asignación global no válida: {path.name}")
+    payload = raw[len(prefix) :]
+    if payload.endswith(";"):
+        payload = payload[:-1]
+    return json.loads(payload)
+
+
+def official_regulation_updates(limit: int = 3) -> list[dict]:
+    """Build today's monitored legal signals from connected primary sources.
+
+    This is deliberately not presented as a new law. It reports that Kaufman
+    re-observed the public official source today and preserves the previous
+    legal-review date separately in the regulation intelligence contract.
+    """
+    try:
+        data = read_assigned_json(
+            REGULATION_OUTPUT, "window.KAUFMAN_REGULATION_DATA = "
+        )
+    except (OSError, ValueError, json.JSONDecodeError):
+        return []
+    now = datetime.now(timezone.utc)
+    sources = {row.get("id"): row for row in data.get("sources", [])}
+    selected = []
+    jurisdictions = set()
+    for regime in data.get("regimes", []):
+        jurisdiction = str(regime.get("jurisdiction") or "").strip()
+        if not jurisdiction or jurisdiction in jurisdictions:
+            continue
+        source = next(
+            (
+                sources.get(source_id)
+                for source_id in regime.get("source_ids", [])
+                if sources.get(source_id, {}).get("connection_status") == "CONNECTED"
+            ),
+            None,
+        )
+        if not source:
+            continue
+        checked_at = source.get("checked_at")
+        try:
+            checked = datetime.fromisoformat(str(checked_at).replace("Z", "+00:00"))
+        except ValueError:
+            continue
+        if now - checked.astimezone(timezone.utc) > timedelta(hours=26):
+            continue
+        jurisdictions.add(jurisdiction)
+        selected.append(
+            {
+                "title": f"{regime.get('name', jurisdiction)}: fuente oficial comprobada hoy",
+                "original_title": source.get("title") or regime.get("name"),
+                "translated": False,
+                "language": "es-ES",
+                "url": source.get("url"),
+                "publisher": source.get("authority") or regime.get("authority"),
+                "jurisdiction": jurisdiction,
+                "published": checked.astimezone(timezone.utc).isoformat(timespec="seconds"),
+                "category": "MONITOR OFICIAL",
+                "status": "verified",
+                "verification_status": "OFFICIAL_SOURCE_MONITORED",
+                "source_observed_at": checked.astimezone(timezone.utc).isoformat(timespec="seconds"),
+                "verification_method": "Fuente pública oficial descargada server-side, con respuesta válida y huella de contenido conservada. La comprobación técnica no sustituye una nueva revisión jurídica.",
+                "importance": "Alto" if regime.get("state") == "TRANSITION_ENDED" else "Medio",
+                "date_verb": "comprobada",
+            }
+        )
+        if len(selected) == limit:
+            break
+    return selected
+
+
+def complete_regulation_briefing(news: list[dict]) -> list[dict]:
+    """Return three fresh signals without recycling old headlines."""
+    selected = list(news[:3])
+    used_jurisdictions = {row.get("jurisdiction") for row in selected}
+    for row in official_regulation_updates(limit=6):
+        if row.get("jurisdiction") in used_jurisdictions:
+            continue
+        selected.append(row)
+        used_jurisdictions.add(row.get("jurisdiction"))
         if len(selected) == 3:
             break
     return selected
@@ -269,11 +372,56 @@ def mining_news():
                 "source_observed_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
                 "verification_method": "Fuente incluida en el registro editorial, titular original preservado, fecha RSS dentro de 24 horas y enlace público observado.",
                 "importance": "Info",
+                "date_verb": "publicado",
             }
         )
         if len(selected) == 2:
             break
     return selected
+
+
+def mining_data_update(metrics: dict) -> dict | None:
+    """Turn the live profitability model into a current operational signal."""
+    if metrics.get("status") != "auto":
+        return None
+    hardware = metrics.get("hardware") or {}
+    break_even = metrics.get("break_even_usd_kwh")
+    network = metrics.get("network_hashrate_eh_s")
+    if not isinstance(break_even, (int, float)) or not isinstance(network, (int, float)):
+        return None
+    now = datetime.now(timezone.utc)
+    value = f"{break_even:.3f}".replace(".", ",")
+    hashrate = f"{network:.1f}".replace(".", ",")
+    title = (
+        f"{hardware.get('model', 'Equipo minero')}: electricidad de equilibrio de "
+        f"{value} USD/kWh con la red en {hashrate} EH/s"
+    )
+    return {
+        "title": title,
+        "original_title": title,
+        "translated": False,
+        "language": "es-ES",
+        "url": "https://mempool.space/mining",
+        "publisher": "Kaufman · mempool.space + BITMAIN",
+        "jurisdiction": "Global",
+        "published": now.isoformat(timespec="seconds"),
+        "category": "RENTABILIDAD MINERA",
+        "status": "verified",
+        "verification_status": "CALCULATED_FROM_PUBLIC_SOURCES",
+        "source_observed_at": now.isoformat(timespec="seconds"),
+        "verification_method": "Cálculo server-side con hashrate de red, subsidio y altura observados en mempool.space, especificación oficial de BITMAIN y mediana BTC/USD de Coinbase y Kraken.",
+        "importance": "Info",
+        "date_verb": "calculado",
+    }
+
+
+def complete_mining_briefing(news: list[dict], metrics: dict) -> list[dict]:
+    selected = list(news[:2])
+    if len(selected) < 2:
+        signal = mining_data_update(metrics)
+        if signal:
+            selected.append(signal)
+    return selected[:2]
 
 
 def mining_profitability():
@@ -460,13 +608,14 @@ def regulation_snapshot():
 
 
 def main():
+    profitability = mining_profitability()
     snapshot = {
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "exchange_fees": kraken_fees(),
         "regulation": regulation_snapshot(),
-        "home_regulation": global_regulation_news(),
-        "mining_news": mining_news(),
-        "mining_profitability": mining_profitability(),
+        "home_regulation": complete_regulation_briefing(global_regulation_news()),
+        "mining_news": complete_mining_briefing(mining_news(), profitability),
+        "mining_profitability": profitability,
     }
     payload = json.dumps(snapshot, ensure_ascii=False, separators=(",", ":"))
     OUTPUT.write_text(

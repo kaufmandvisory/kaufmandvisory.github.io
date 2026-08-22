@@ -1,15 +1,15 @@
-name: Update Kaufman public market API
+name: Monitor Kaufman live market edge
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "7,22,37,52 * * * *"
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
-  group: kaufman-data-writes
+  group: kaufman-market-edge-monitor
   cancel-in-progress: true
 
 jobs:
@@ -17,23 +17,32 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Build same-origin market snapshots
-        run: node scripts/update_public_market_api.mjs
-      - name: Validate generated contracts
+      - name: Verify live edge contracts and freshness
+        env:
+          EDGE_ROOT: https://leafy-pudding-3f3427.netlify.app/api/market
         run: |
-          node -e "for (const name of ['snapshot','context','gas','stream']) JSON.parse(require('node:fs').readFileSync('api/market/'+name,'utf8'))"
-      - name: Commit changed snapshots
-        shell: bash
-        run: |
-          if git diff --quiet -- api/market; then
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add api/market
-          git commit -m "data: refresh public market api"
-          git push
+          node --input-type=module <<'EOF'
+          const endpoints = ['snapshot', 'context', 'gas'];
+          for (const endpoint of endpoints) {
+            const response = await fetch(`${process.env.EDGE_ROOT}/${endpoint}`, {
+              headers: { Accept: 'application/json', 'User-Agent': 'Kaufman-edge-monitor/1.0' },
+              signal: AbortSignal.timeout(10_000)
+            });
+            if (!response.ok) throw new Error(`${endpoint}: HTTP ${response.status}`);
+            const payload = await response.json();
+            const age = Date.now() - Date.parse(payload.generated_at);
+            if (!Number.isFinite(age) || age > 90_000) throw new Error(`${endpoint}: snapshot obsoleto (${age} ms)`);
+            if (endpoint === 'snapshot') {
+              for (const asset of ['bitcoin', 'ethereum', 'solana']) {
+                const row = payload.reference_prices?.[asset];
+                if (!Number.isFinite(row?.price) || row.price <= 0 || row.age_ms >= 5_000) {
+                  throw new Error(`${endpoint}: ${asset} no está fresco`);
+                }
+              }
+            }
+            console.log(`${endpoint}: ${payload.status} · ${age} ms`);
+          }
+          EOF

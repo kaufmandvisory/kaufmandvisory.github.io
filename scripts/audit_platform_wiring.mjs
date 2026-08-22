@@ -25,6 +25,9 @@ const web3AutomaticProfiles = (web3Catalog.match(/status:'auto'/g) || []).length
 const edgeUsesPersistentWebSocket = /new\s+WebSocket\s*\(/.test(edge);
 const edgeFetchCalls = (edge.match(/fetch\(/g) || []).length;
 const newsRows = [...(daily.home_regulation || []), ...(daily.mining_news || [])];
+const journalisticRows = newsRows.filter((row) => row.verification_status === 'SOURCE_METADATA_VERIFIED');
+const primaryMonitorRows = newsRows.filter((row) => row.verification_status === 'OFFICIAL_SOURCE_MONITORED');
+const calculatedRows = newsRows.filter((row) => row.verification_status === 'CALCULATED_FROM_PUBLIC_SOURCES');
 
 const findings = [
   {
@@ -84,7 +87,7 @@ const findings = [
   {
     id: 'A10', severity: 'MEDIUM', area: 'Noticias',
     finding: 'La verificación de noticias valida metadatos y medio, no el hecho contra una fuente primaria.',
-    evidence: `${newsRows.length} titulares; Google News=${/google_news_items/.test(newsBuilder)}; método=${newsRows[0]?.verification_status || 'ausente'}.`,
+    evidence: `${journalisticRows.length} titular periodístico; ${primaryMonitorRows.length} señales de fuente oficial; ${calculatedRows.length} señal calculada; Google News=${/google_news_items/.test(newsBuilder)}.`,
     remediation: 'Resolver cada noticia a comunicado, filing, bloque, registro o documento oficial y separar hecho confirmado de cobertura periodística.'
   }
 ];
