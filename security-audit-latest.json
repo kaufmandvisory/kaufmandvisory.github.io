@@ -1,6 +1,6 @@
 {
   "schema_version": "kaufman-security-audit-v1",
-  "generated_at": "2026-08-23T19:39:34.220Z",
+  "generated_at": "2026-08-23T22:19:13.366Z",
   "domain": "kaufmanadvisory.io",
   "status": "EXTERNAL_ACTION_REQUIRED",
   "hosting": {
@@ -10,8 +10,8 @@
       "172.67.218.96"
     ],
     "nameservers": [
-      "treasure.ns.cloudflare.com",
-      "bart.ns.cloudflare.com"
+      "bart.ns.cloudflare.com",
+      "treasure.ns.cloudflare.com"
     ],
     "mail_exchangers": [
       {
@@ -53,9 +53,12 @@
   },
   "response_headers": {
     "cache-control": "max-age=600",
-    "content-security-policy": "frame-ancestors 'none'",
+    "content-security-policy": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; form-action 'self' mailto:; script-src 'self' https://www.googletagmanager.com https://gc.zgo.at; script-src-attr 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://l2beat.com https://*.google-analytics.com https://*.googletagmanager.com; font-src 'self' data:; media-src 'self'; connect-src 'self' https://leafy-pudding-3f3427.netlify.app https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://kaufman.goatcounter.com; upgrade-insecure-requests",
+    "permissions-policy": "geolocation=(), camera=(), microphone=(), payment=(), usb=(), browsing-topics=()",
+    "referrer-policy": "strict-origin-when-cross-origin",
     "server": "cloudflare",
-    "strict-transport-security": "max-age=31556952",
+    "strict-transport-security": "max-age=31556952; includeSubDomains",
+    "x-content-type-options": "nosniff",
     "x-frame-options": "DENY"
   },
   "findings": [
@@ -78,13 +81,13 @@
       "id": "WEB-02",
       "control": "HSTS",
       "status": "PASS",
-      "evidence": "max-age=31556952"
+      "evidence": "max-age=31556952; includeSubDomains"
     },
     {
       "id": "WEB-03",
       "control": "CSP",
       "status": "HEADER",
-      "evidence": "frame-ancestors 'none'"
+      "evidence": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; form-action 'self' mailto:; script-src 'self' https://www.googletagmanager.com https://gc.zgo.at; script-src-attr 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://l2beat.com https://*.google-analytics.com https://*.googletagmanager.com; font-src 'self' data:; media-src 'self'; connect-src 'self' https://leafy-pudding-3f3427.netlify.app https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://kaufman.goatcounter.com; upgrade-insecure-requests"
     },
     {
       "id": "WEB-04",
@@ -97,7 +100,7 @@
       "control": "HTML legible sin JavaScript",
       "status": "PASS",
       "evidence": {
-        "bytes": 2323,
+        "bytes": 1824,
         "h1_in_source": true
       }
     },
@@ -177,8 +180,8 @@
       "control": "IPv6 apex",
       "status": "PASS",
       "evidence": [
-        "2606:4700:3037::6815:1875",
-        "2606:4700:3035::ac43:da60"
+        "2606:4700:3035::ac43:da60",
+        "2606:4700:3037::6815:1875"
       ]
     },
     {
@@ -200,27 +203,7 @@
         {
           "critical": 0,
           "type": "CAA",
-          "issue": "pki.goog; cansignhttpexchanges=yes"
-        },
-        {
-          "critical": 0,
-          "type": "CAA",
-          "issuewild": "comodoca.com"
-        },
-        {
-          "critical": 0,
-          "type": "CAA",
-          "issuewild": "pki.goog; cansignhttpexchanges=yes"
-        },
-        {
-          "critical": 0,
-          "type": "CAA",
-          "issue": "comodoca.com"
-        },
-        {
-          "critical": 0,
-          "type": "CAA",
-          "issue": "digicert.com; cansignhttpexchanges=yes"
+          "issue": "ssl.com"
         },
         {
           "critical": 0,
@@ -230,12 +213,12 @@
         {
           "critical": 0,
           "type": "CAA",
-          "issue": "ssl.com"
+          "issuewild": "pki.goog; cansignhttpexchanges=yes"
         },
         {
           "critical": 0,
           "type": "CAA",
-          "issuewild": "digicert.com; cansignhttpexchanges=yes"
+          "issue": "digicert.com; cansignhttpexchanges=yes"
         },
         {
           "critical": 0,
@@ -246,6 +229,26 @@
           "critical": 0,
           "type": "CAA",
           "issuewild": "ssl.com"
+        },
+        {
+          "critical": 0,
+          "type": "CAA",
+          "issue": "pki.goog; cansignhttpexchanges=yes"
+        },
+        {
+          "critical": 0,
+          "type": "CAA",
+          "issue": "comodoca.com"
+        },
+        {
+          "critical": 0,
+          "type": "CAA",
+          "issuewild": "digicert.com; cansignhttpexchanges=yes"
+        },
+        {
+          "critical": 0,
+          "type": "CAA",
+          "issuewild": "comodoca.com"
         }
       ]
     },
