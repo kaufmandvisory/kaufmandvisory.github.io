@@ -2,17 +2,18 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const VERSION = 'kaufman-v28';
+const VERSION = 'kaufman-v29';
 const CSP = [
   "default-src 'self'",
   "base-uri 'self'",
   "object-src 'none'",
   "frame-src 'none'",
+  "frame-ancestors 'none'",
   "form-action 'self' mailto:",
   "script-src 'self' https://www.googletagmanager.com https://gc.zgo.at",
   "script-src-attr 'none'",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: https:",
+  "img-src 'self' data: blob: https://l2beat.com https://*.google-analytics.com https://*.googletagmanager.com",
   "font-src 'self' data:",
   "media-src 'self'",
   "connect-src 'self' https://leafy-pudding-3f3427.netlify.app https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://kaufman.goatcounter.com",
@@ -40,6 +41,7 @@ const ROUTES = {
   contacto: ['Contacto', 'Consultas, correcciones de datos y solicitudes sobre privacidad: contact@kaufmanadvisory.io.'],
   aviso: ['Aviso legal', 'Kaufman Advisory Group LLC publica información general sobre blockchain. No ejecuta operaciones ni presta asesoramiento personalizado.'],
   privacidad: ['Política de privacidad', 'La analítica opcional solo se carga después del consentimiento. Puedes ejercer tus derechos en contact@kaufmanadvisory.io.'],
+  cookies: ['Política de cookies', 'Tecnologías utilizadas, proveedores, duración, consentimiento y forma de cambiar la elección.'],
   terminos: ['Términos de uso', 'Condiciones de acceso, límites informativos, fuentes y reglas de utilización de Kaufman.'],
   '404': ['Página no encontrada', 'La ruta solicitada no existe. Puedes volver al mapa principal de inteligencia blockchain de Kaufman.'],
   retirado: ['Servicio retirado', 'Esta ruta ya no forma parte de Kaufman. La plataforma actual está disponible desde la portada.']
@@ -120,7 +122,7 @@ for (const file of files) {
 }
 
 const sitemapPath = path.join(ROOT, 'sitemap.xml');
-const sitemap = (await fs.readFile(sitemapPath, 'utf8')).replaceAll(/<lastmod>[^<]+<\/lastmod>/g, '<lastmod>2026-08-23</lastmod>');
+const sitemap = (await fs.readFile(sitemapPath, 'utf8')).replaceAll(/<lastmod>[^<]+<\/lastmod>/g, '<lastmod>2026-08-24</lastmod>');
 await fs.writeFile(sitemapPath, sitemap, 'utf8');
 
 console.log(JSON.stringify({ status: 'OK', app_shells: shells, legacy_noindex: legacy, version: VERSION }, null, 2));
