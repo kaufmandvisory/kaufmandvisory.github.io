@@ -2,7 +2,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const VERSION = 'kaufman-v27';
+const VERSION = 'kaufman-v28';
 const CSP = [
   "default-src 'self'",
   "base-uri 'self'",
@@ -80,13 +80,16 @@ const listHtml = async (directory) => {
 };
 
 const upsertMeta = (html, key, tag) => {
-  const pattern = key instanceof RegExp ? key : new RegExp(`<meta\\s+[^>]*${key}[^>]*>`, 'i');
-  if (pattern.test(html)) return html.replace(pattern, tag);
+  const keyPattern = key instanceof RegExp ? new RegExp(key.source, key.flags.replaceAll('g', '')) : new RegExp(key, 'i');
+  const existing = html.match(/<meta\b[^>]*>/gi)?.find((candidate) => keyPattern.test(candidate));
+  if (existing) return html.replace(existing, tag);
   return html.replace(/(<meta\s+name="viewport"[^>]*>)/i, `$1${tag}`);
 };
 
+const repairMalformedMeta = (html) => html.replace(/<meta\s+(<meta\b[^>]*>)\s+content="[^"]*">/gi, '$1');
+
 const hardenAppShell = (html, page) => {
-  let result = html.replaceAll(/kaufman-v\d+/g, VERSION).replace(/<meta name="theme-color" content="[^"]+">/i, '<meta name="theme-color" content="#f8f5f0">');
+  let result = repairMalformedMeta(html).replaceAll(/kaufman-v\d+/g, VERSION).replace(/<meta name="theme-color" content="[^"]+">/i, '<meta name="theme-color" content="#f8f5f0">');
   result = upsertMeta(result, /http-equiv="Content-Security-Policy"/i, `<meta http-equiv="Content-Security-Policy" content="${escapeHtml(CSP)}">`);
   result = upsertMeta(result, /name="referrer"/i, '<meta name="referrer" content="strict-origin-when-cross-origin">');
   result = upsertMeta(result, /name="color-scheme"/i, '<meta name="color-scheme" content="light">');
@@ -98,7 +101,8 @@ const hardenAppShell = (html, page) => {
 };
 
 const hardenLegacy = (html) => {
-  let result = upsertMeta(html, /name="robots"/i, '<meta name="robots" content="noindex,nofollow,noarchive">');
+  let result = repairMalformedMeta(html);
+  result = upsertMeta(result, /name="robots"/i, '<meta name="robots" content="noindex,nofollow,noarchive">');
   result = upsertMeta(result, /name="referrer"/i, '<meta name="referrer" content="strict-origin-when-cross-origin">');
   return result;
 };

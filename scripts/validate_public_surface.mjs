@@ -20,7 +20,9 @@ for (const relative of shells) {
     referrer: /name="referrer" content="strict-origin-when-cross-origin"/.test(html),
     robots: /name="robots"/.test(html),
     title: /<h1>[^<]{3,}<\/h1>/.test(html),
-    current_assets: /kaufman-v27/.test(html)
+    current_assets: /kaufman-v28/.test(html),
+    valid_meta_markup: !/<meta\s+<meta/i.test(html),
+    no_leaked_meta_attributes: !/<\/head>\s*<body[^>]*>\s*content="/i.test(html)
   };
   for (const [check, passed] of Object.entries(checks)) if (!passed) failures.push(`${relative}: ${check}`);
 }
