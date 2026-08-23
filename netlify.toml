@@ -5,6 +5,16 @@
   directory = ".netlify-functions"
   node_bundler = "esbuild"
 
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()"
+    Content-Security-Policy = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; form-action 'self' mailto:; script-src 'self' https://www.googletagmanager.com https://gc.zgo.at; script-src-attr 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; media-src 'self'; connect-src 'self' https://leafy-pudding-3f3427.netlify.app https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://kaufman.goatcounter.com; upgrade-insecure-requests"
+
 [[redirects]]
   from = "/api/market/stream"
   to = "/.netlify/functions/market-stream"

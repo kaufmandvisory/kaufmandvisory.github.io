@@ -1,0 +1,122 @@
+import { promises as fs } from 'node:fs';
+import path from 'node:path';
+
+const ROOT = path.resolve(import.meta.dirname, '..');
+const VERSION = 'kaufman-v27';
+const CSP = [
+  "default-src 'self'",
+  "base-uri 'self'",
+  "object-src 'none'",
+  "frame-src 'none'",
+  "form-action 'self' mailto:",
+  "script-src 'self' https://www.googletagmanager.com https://gc.zgo.at",
+  "script-src-attr 'none'",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob: https:",
+  "font-src 'self' data:",
+  "media-src 'self'",
+  "connect-src 'self' https://leafy-pudding-3f3427.netlify.app https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://kaufman.goatcounter.com",
+  "upgrade-insecure-requests"
+].join('; ');
+
+const ROUTES = {
+  home: ['Kaufman · Inteligencia blockchain', 'Mercado, regulación, tokenización, infraestructura y riesgo bajo una misma capa de evidencia pública.'],
+  mercados: ['Mercados y capital tokenizado', 'RWA, redes, stablecoins, flujos institucionales, gas y precios de referencia calculados desde mercados públicos.'],
+  regulacion: ['Regulación blockchain', 'Normas, consultas, licencias y textos oficiales organizados por jurisdicción y estado jurídico.'],
+  tokenizacion: ['Tokenización', 'Productos, entidades, redes y capital onchain con metodología, límites y fuentes públicas.'],
+  herramientas: ['Herramientas', 'Cálculo minero, costes de red y cruces fiscales con datos conectados y supuestos visibles.'],
+  fiscal: ['Fiscal', 'Comparador de hechos fiscales por jurisdicción con fuentes oficiales y resultados bloqueados cuando faltan datos.'],
+  empresas: ['Empresas', 'Actividad corporativa, exposición blockchain e iniciativas comprobables.'],
+  bancos: ['Bancos', 'Custodia, pagos, tokenización y servicios bancarios documentados.'],
+  exchanges: ['Exchanges', 'Mercados, comisiones, custodia, contraparte y disponibilidad por proveedor.'],
+  wallets: ['Wallets', 'Custodia fría y caliente, firmware, compatibilidad, recuperación y avisos públicos.'],
+  proyectos: ['Proyectos e infraestructura Web3', 'Dependencias de cadena, contratos, oráculos, almacenamiento, indexación y gobierno.'],
+  mineria: ['Minería', 'Red Bitcoin, producción, rentabilidad y hardware con cálculos reproducibles.'],
+  hardware: ['Hardware', 'Equipos de minería, potencia, eficiencia y requisitos operativos desde especificaciones oficiales.'],
+  rentabilidades: ['Rentabilidades', 'Retornos históricos observados y costes, sin convertirlos en predicciones.'],
+  riesgos: ['Riesgos', 'Controles tecnológicos, regulatorios, de custodia y de infraestructura.'],
+  fichas: ['Directorio Kaufman', 'Fichas de empresas, bancos, exchanges, wallets, proyectos, minería, hardware y riesgos.'],
+  fuentes: ['Fuentes', 'Registro público de conectores, documentación, periodicidad y alcance de cada observación.'],
+  contacto: ['Contacto', 'Consultas, correcciones de datos y solicitudes sobre privacidad: contact@kaufmanadvisory.io.'],
+  aviso: ['Aviso legal', 'Kaufman Advisory Group LLC publica información general sobre blockchain. No ejecuta operaciones ni presta asesoramiento personalizado.'],
+  privacidad: ['Política de privacidad', 'La analítica opcional solo se carga después del consentimiento. Puedes ejercer tus derechos en contact@kaufmanadvisory.io.'],
+  terminos: ['Términos de uso', 'Condiciones de acceso, límites informativos, fuentes y reglas de utilización de Kaufman.'],
+  '404': ['Página no encontrada', 'La ruta solicitada no existe. Puedes volver al mapa principal de inteligencia blockchain de Kaufman.'],
+  retirado: ['Servicio retirado', 'Esta ruta ya no forma parte de Kaufman. La plataforma actual está disponible desde la portada.']
+};
+
+const NAV = [
+  ['/mercados/', 'Mercados'],
+  ['/regulacion/', 'Regulación'],
+  ['/tokenizacion/', 'Tokenización'],
+  ['/herramientas/', 'Herramientas'],
+  ['/fiscal/', 'Fiscal']
+];
+
+const escapeHtml = (value) => String(value)
+  .replaceAll('&', '&amp;')
+  .replaceAll('<', '&lt;')
+  .replaceAll('>', '&gt;')
+  .replaceAll('"', '&quot;');
+
+const fallback = (page) => {
+  const [title, description] = ROUTES[page] || ['Kaufman', 'Inteligencia blockchain conectada a fuentes públicas.'];
+  const contact = page === 'contacto'
+    ? '<p><a class="kf-source-contact" href="mailto:contact@kaufmanadvisory.io">contact@kaufmanadvisory.io</a></p>'
+    : '';
+  return `<div id="kaufman-app"><header class="kf-source-header"><a href="/" aria-label="Kaufman, inicio"><strong>KAUFMAN</strong><span>BLOCKCHAIN INTELLIGENCE</span></a></header><main class="kf-source-fallback" id="main-content"><p class="kf-source-kicker">KAUFMAN · FUENTE PÚBLICA</p><h1>${escapeHtml(title)}</h1><p>${escapeHtml(description)}</p>${contact}<nav aria-label="Secciones principales">${NAV.map(([href, label]) => `<a href="${href}">${label}</a>`).join('')}</nav><p class="kf-source-status">El contenido esencial permanece disponible sin JavaScript. Los datos automáticos y comparadores se activan cuando el navegador carga la aplicación.</p></main></div>`;
+};
+
+const listHtml = async (directory) => {
+  const entries = await fs.readdir(directory, { withFileTypes: true });
+  const files = [];
+  for (const entry of entries) {
+    if (entry.name === '.git' || entry.name === 'node_modules') continue;
+    const target = path.join(directory, entry.name);
+    if (entry.isDirectory()) files.push(...await listHtml(target));
+    else if (entry.isFile() && entry.name.endsWith('.html')) files.push(target);
+  }
+  return files;
+};
+
+const upsertMeta = (html, key, tag) => {
+  const pattern = key instanceof RegExp ? key : new RegExp(`<meta\\s+[^>]*${key}[^>]*>`, 'i');
+  if (pattern.test(html)) return html.replace(pattern, tag);
+  return html.replace(/(<meta\s+name="viewport"[^>]*>)/i, `$1${tag}`);
+};
+
+const hardenAppShell = (html, page) => {
+  let result = html.replaceAll(/kaufman-v\d+/g, VERSION).replace(/<meta name="theme-color" content="[^"]+">/i, '<meta name="theme-color" content="#f8f5f0">');
+  result = upsertMeta(result, /http-equiv="Content-Security-Policy"/i, `<meta http-equiv="Content-Security-Policy" content="${escapeHtml(CSP)}">`);
+  result = upsertMeta(result, /name="referrer"/i, '<meta name="referrer" content="strict-origin-when-cross-origin">');
+  result = upsertMeta(result, /name="color-scheme"/i, '<meta name="color-scheme" content="light">');
+  result = upsertMeta(result, /name="application-name"/i, '<meta name="application-name" content="Kaufman">');
+  const robots = ['404', 'retirado'].includes(page) ? 'noindex,nofollow' : 'index,follow,max-image-preview:large,max-snippet:-1';
+  result = upsertMeta(result, /name="robots"/i, `<meta name="robots" content="${robots}">`);
+  result = result.replace(/<div id="kaufman-app">[\s\S]*?<\/div>(?=<\/body>)/i, fallback(page));
+  return result;
+};
+
+const hardenLegacy = (html) => {
+  let result = upsertMeta(html, /name="robots"/i, '<meta name="robots" content="noindex,nofollow,noarchive">');
+  result = upsertMeta(result, /name="referrer"/i, '<meta name="referrer" content="strict-origin-when-cross-origin">');
+  return result;
+};
+
+const files = await listHtml(ROOT);
+let shells = 0;
+let legacy = 0;
+for (const file of files) {
+  if (file.endsWith(path.join('zohoverify', 'verifyforzoho.html'))) continue;
+  const original = await fs.readFile(file, 'utf8');
+  const page = original.match(/data-page="([^"]+)"/i)?.[1];
+  const next = page ? hardenAppShell(original, page) : hardenLegacy(original);
+  if (next !== original) await fs.writeFile(file, next, 'utf8');
+  if (page) shells += 1; else legacy += 1;
+}
+
+const sitemapPath = path.join(ROOT, 'sitemap.xml');
+const sitemap = (await fs.readFile(sitemapPath, 'utf8')).replaceAll(/<lastmod>[^<]+<\/lastmod>/g, '<lastmod>2026-08-23</lastmod>');
+await fs.writeFile(sitemapPath, sitemap, 'utf8');
+
+console.log(JSON.stringify({ status: 'OK', app_shells: shells, legacy_noindex: legacy, version: VERSION }, null, 2));

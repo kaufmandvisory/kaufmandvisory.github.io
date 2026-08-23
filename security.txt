@@ -1,0 +1,5 @@
+Contact: mailto:contact@kaufmanadvisory.io
+Expires: 2027-08-23T23:59:59Z
+Preferred-Languages: es, en
+Canonical: https://kaufmanadvisory.io/.well-known/security.txt
+Policy: https://kaufmanadvisory.io/terminos.html

@@ -2,5 +2,7 @@ User-agent: *
 Allow: /
 Disallow: /checkout.html
 Disallow: /intake.html
+Disallow: /blog/
+Disallow: /files/
 
 Sitemap: https://kaufmanadvisory.io/sitemap.xml
