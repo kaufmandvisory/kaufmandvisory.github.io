@@ -2,7 +2,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const VERSION = 'kaufman-v30';
+const VERSION = 'kaufman-v31';
 const ROUTES = {
   home: ['Kaufman · Inteligencia blockchain', 'Mercado, regulación, tokenización, infraestructura y riesgo bajo una misma capa de evidencia pública.'],
   mercados: ['Mercados y capital tokenizado', 'RWA, redes, stablecoins, flujos institucionales, gas y precios de referencia calculados desde mercados públicos.'],
@@ -82,6 +82,7 @@ const repairMalformedMeta = (html) => html.replace(/<meta\s+(<meta\b[^>]*>)\s+co
 const hardenAppShell = (html, page) => {
   let result = repairMalformedMeta(html).replaceAll(/kaufman-v\d+/g, VERSION).replace(/<meta name="theme-color" content="[^"]+">/i, '<meta name="theme-color" content="#f8f5f0">');
   result = removeMeta(result, /http-equiv="Content-Security-Policy"/i);
+  result = result.replace(/<link\s+rel="icon"[^>]*>/gi, '').replace(/<\/head>/i, '<link rel="icon" href="/favicon.svg" type="image/svg+xml"></head>');
   result = upsertMeta(result, /name="referrer"/i, '<meta name="referrer" content="strict-origin-when-cross-origin">');
   result = upsertMeta(result, /name="color-scheme"/i, '<meta name="color-scheme" content="light">');
   result = upsertMeta(result, /name="application-name"/i, '<meta name="application-name" content="Kaufman">');
