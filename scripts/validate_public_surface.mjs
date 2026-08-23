@@ -16,11 +16,11 @@ for (const relative of shells) {
   const html = await fs.readFile(path.join(ROOT, relative), 'utf8');
   const checks = {
     fallback: /class="kf-source-fallback"/.test(html),
-    csp: /http-equiv="Content-Security-Policy"/.test(html),
+    csp_header_only: !/http-equiv="Content-Security-Policy"/.test(html),
     referrer: /name="referrer" content="strict-origin-when-cross-origin"/.test(html),
     robots: /name="robots"/.test(html),
     title: /<h1>[^<]{3,}<\/h1>/.test(html),
-    current_assets: /kaufman-v29/.test(html),
+    current_assets: /kaufman-v30/.test(html),
     valid_meta_markup: !/<meta\s+<meta/i.test(html),
     no_leaked_meta_attributes: !/<\/head>\s*<body[^>]*>\s*content="/i.test(html)
   };
@@ -39,4 +39,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(JSON.stringify({ status: 'PASS', shells_checked: shells.length, raw_source_fallback: true, meta_csp: true }, null, 2));
+console.log(JSON.stringify({ status: 'PASS', shells_checked: shells.length, raw_source_fallback: true, csp_header_only: true }, null, 2));

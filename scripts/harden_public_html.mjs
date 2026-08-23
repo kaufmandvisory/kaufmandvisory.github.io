@@ -2,24 +2,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const VERSION = 'kaufman-v29';
-const CSP = [
-  "default-src 'self'",
-  "base-uri 'self'",
-  "object-src 'none'",
-  "frame-src 'none'",
-  "frame-ancestors 'none'",
-  "form-action 'self' mailto:",
-  "script-src 'self' https://www.googletagmanager.com https://gc.zgo.at",
-  "script-src-attr 'none'",
-  "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: https://l2beat.com https://*.google-analytics.com https://*.googletagmanager.com",
-  "font-src 'self' data:",
-  "media-src 'self'",
-  "connect-src 'self' https://leafy-pudding-3f3427.netlify.app https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://kaufman.goatcounter.com",
-  "upgrade-insecure-requests"
-].join('; ');
-
+const VERSION = 'kaufman-v30';
 const ROUTES = {
   home: ['Kaufman · Inteligencia blockchain', 'Mercado, regulación, tokenización, infraestructura y riesgo bajo una misma capa de evidencia pública.'],
   mercados: ['Mercados y capital tokenizado', 'RWA, redes, stablecoins, flujos institucionales, gas y precios de referencia calculados desde mercados públicos.'],
@@ -88,11 +71,17 @@ const upsertMeta = (html, key, tag) => {
   return html.replace(/(<meta\s+name="viewport"[^>]*>)/i, `$1${tag}`);
 };
 
+const removeMeta = (html, key) => {
+  const keyPattern = key instanceof RegExp ? new RegExp(key.source, key.flags.replaceAll('g', '')) : new RegExp(key, 'i');
+  const existing = html.match(/<meta\b[^>]*>/gi)?.find((candidate) => keyPattern.test(candidate));
+  return existing ? html.replace(existing, '') : html;
+};
+
 const repairMalformedMeta = (html) => html.replace(/<meta\s+(<meta\b[^>]*>)\s+content="[^"]*">/gi, '$1');
 
 const hardenAppShell = (html, page) => {
   let result = repairMalformedMeta(html).replaceAll(/kaufman-v\d+/g, VERSION).replace(/<meta name="theme-color" content="[^"]+">/i, '<meta name="theme-color" content="#f8f5f0">');
-  result = upsertMeta(result, /http-equiv="Content-Security-Policy"/i, `<meta http-equiv="Content-Security-Policy" content="${escapeHtml(CSP)}">`);
+  result = removeMeta(result, /http-equiv="Content-Security-Policy"/i);
   result = upsertMeta(result, /name="referrer"/i, '<meta name="referrer" content="strict-origin-when-cross-origin">');
   result = upsertMeta(result, /name="color-scheme"/i, '<meta name="color-scheme" content="light">');
   result = upsertMeta(result, /name="application-name"/i, '<meta name="application-name" content="Kaufman">');

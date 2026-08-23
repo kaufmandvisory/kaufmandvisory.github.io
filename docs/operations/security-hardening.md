@@ -45,4 +45,4 @@ No convertir SPF de `~all` a `-all` hasta confirmar que Zoho y SES son los únic
 
 ## Cabeceras
 
-GitHub Pages ya entrega HSTS, pero no permite configurar todas las cabeceras por repositorio. Kaufman incluye una CSP equivalente en `<meta>` y deja `_headers`/`netlify.toml` listos para un host que sí admita cabeceras. Para disponer de `frame-ancestors`, `X-Frame-Options` y `Permissions-Policy` en el dominio principal hay que activar el proxy de Cloudflare y crear una regla de transformación de cabeceras, o migrar la entrega principal a Netlify.
+GitHub Pages ya entrega HSTS, pero no permite configurar todas las cabeceras por repositorio. La CSP canónica, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy` y HSTS se sirven en el dominio principal mediante una regla de transformación de Cloudflare. Los HTML no conservan una CSP en `<meta>` para evitar políticas simultáneas divergentes. `_headers` y `netlify.toml` mantienen la configuración equivalente para un despliegue alternativo en Netlify.
