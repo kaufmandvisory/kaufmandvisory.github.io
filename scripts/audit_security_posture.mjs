@@ -94,6 +94,19 @@ const headers = Object.fromEntries([...head.headers.entries()].filter(([name]) =
 ].includes(name)));
 
 const html = await fetch(`${BASE}/?audit=raw-source`, { signal: AbortSignal.timeout(15_000) }).then((response) => response.text());
+const publicApi = {};
+for (const route of ['/api/market/context', '/api/market/gas', '/api/market/stream']) {
+  const response = await fetch(`${BASE}${route}?audit=security`, { signal: AbortSignal.timeout(15_000) });
+  let payload = null;
+  try { payload = await response.json(); } catch {}
+  publicApi[route] = {
+    status: response.status,
+    schema_version: payload?.schema_version || null,
+    delivery_mode: payload?.delivery_mode || null,
+    generated_at: payload?.generated_at || null,
+    declared_status: payload?.status || null
+  };
+}
 const legal = {};
 for (const route of ['/privacidad.html', '/aviso-legal.html', '/terminos.html', '/contacto/']) {
   const response = await fetch(`${BASE}${route}`, { redirect: 'follow', signal: AbortSignal.timeout(15_000) });
@@ -110,6 +123,8 @@ const findings = [
   { id: 'WEB-05', control: 'HTML legible sin JavaScript', status: /class="kf-source-fallback"/.test(html) ? 'PASS' : 'MISSING', evidence: { bytes: Buffer.byteLength(html), h1_in_source: /<h1>[^<]{3,}<\/h1>/.test(html) } },
   { id: 'WEB-06', control: 'Páginas legales', status: Object.values(legal).every((item) => item.status === 200 && item.raw_title) ? 'PASS' : 'REVIEW', evidence: legal },
   { id: 'WEB-07', control: 'Security contact', status: securityTxtResponse.ok ? 'PASS' : 'MISSING', evidence: { status: securityTxtResponse.status } },
+  { id: 'WEB-08', control: 'Sintaxis de metadatos', status: !/<meta\s+<meta/i.test(html) ? 'PASS' : 'MALFORMED', evidence: { malformed_meta: /<meta\s+<meta/i.test(html) } },
+  { id: 'DATA-01', control: 'Endpoints públicos de mercado', status: Object.values(publicApi).every((item) => item.status === 200 && item.schema_version) ? 'PASS' : 'MISSING', evidence: publicApi },
   { id: 'DNS-01', control: 'IPv6 apex', status: aaaa.length === 4 ? 'PASS' : 'MISSING', evidence: aaaa },
   { id: 'DNS-02', control: 'DNSSEC', status: ds.length ? 'PASS' : 'MISSING', evidence: ds },
   { id: 'DNS-03', control: 'CAA', status: caa.length ? 'PASS' : 'MISSING', evidence: caa },
@@ -119,7 +134,7 @@ const findings = [
   { id: 'MAIL-03', control: 'DMARC', status: dmarc?.includes('p=reject') ? 'ENFORCED' : dmarc?.includes('p=quarantine') ? 'QUARANTINE' : 'REVIEW', evidence: dmarc }
 ];
 
-const unresolved = findings.filter((item) => ['MISSING', 'HOST_LIMITATION', 'SOFTFAIL', 'WEAK_KEY', 'QUARANTINE', 'REVIEW'].includes(item.status));
+const unresolved = findings.filter((item) => ['MISSING', 'MALFORMED', 'HOST_LIMITATION', 'SOFTFAIL', 'WEAK_KEY', 'QUARANTINE', 'REVIEW'].includes(item.status));
 const report = {
   schema_version: 'kaufman-security-audit-v1',
   generated_at: new Date().toISOString(),

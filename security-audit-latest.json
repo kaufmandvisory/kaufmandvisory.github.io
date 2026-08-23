@@ -1,0 +1,235 @@
+{
+  "schema_version": "kaufman-security-audit-v1",
+  "generated_at": "2026-08-23T18:21:54.698Z",
+  "domain": "kaufmanadvisory.io",
+  "status": "EXTERNAL_ACTION_REQUIRED",
+  "hosting": {
+    "server": "GitHub.com",
+    "addresses_v4": [
+      "185.199.108.153",
+      "185.199.111.153",
+      "185.199.110.153",
+      "185.199.109.153"
+    ],
+    "nameservers": [
+      "treasure.ns.cloudflare.com",
+      "bart.ns.cloudflare.com"
+    ],
+    "mail_exchangers": [
+      {
+        "exchange": "mx2.zoho.eu",
+        "priority": 20,
+        "type": "MX"
+      },
+      {
+        "exchange": "mx3.zoho.eu",
+        "priority": 50,
+        "type": "MX"
+      },
+      {
+        "exchange": "mx.zoho.eu",
+        "priority": 10,
+        "type": "MX"
+      }
+    ]
+  },
+  "registration": {
+    "status": [
+      "active"
+    ],
+    "registrar": "One.com A/S",
+    "registrar_iana_id": "1462",
+    "expiration": "2027-04-13T09:40:29.18Z",
+    "dnssec_delegated": false,
+    "authoritative_url": "https://rdap.identitydigital.services/rdap/domain/kaufmanadvisory.io"
+  },
+  "certificate": {
+    "authorized": true,
+    "protocol": "TLSv1.3",
+    "cipher": "TLS_AES_128_GCM_SHA256",
+    "subject": "kaufmanadvisory.io",
+    "issuer": "YR2",
+    "valid_from": "Aug 20 03:42:23 2026 GMT",
+    "valid_to": "Nov 18 03:42:22 2026 GMT",
+    "fingerprint256": "DB:2A:55:95:92:AF:66:BA:E5:E0:33:CF:40:04:99:96:C6:F2:F6:06:99:D8:6C:ED:C6:A4:34:8D:76:4D:82:61"
+  },
+  "response_headers": {
+    "cache-control": "max-age=600",
+    "server": "GitHub.com",
+    "strict-transport-security": "max-age=31556952"
+  },
+  "findings": [
+    {
+      "id": "WEB-01",
+      "control": "TLS",
+      "status": "PASS",
+      "evidence": {
+        "authorized": true,
+        "protocol": "TLSv1.3",
+        "cipher": "TLS_AES_128_GCM_SHA256",
+        "subject": "kaufmanadvisory.io",
+        "issuer": "YR2",
+        "valid_from": "Aug 20 03:42:23 2026 GMT",
+        "valid_to": "Nov 18 03:42:22 2026 GMT",
+        "fingerprint256": "DB:2A:55:95:92:AF:66:BA:E5:E0:33:CF:40:04:99:96:C6:F2:F6:06:99:D8:6C:ED:C6:A4:34:8D:76:4D:82:61"
+      }
+    },
+    {
+      "id": "WEB-02",
+      "control": "HSTS",
+      "status": "PASS",
+      "evidence": "max-age=31556952"
+    },
+    {
+      "id": "WEB-03",
+      "control": "CSP",
+      "status": "META_FALLBACK",
+      "evidence": "CSP en HTML inicial"
+    },
+    {
+      "id": "WEB-04",
+      "control": "Anti-iframe",
+      "status": "HOST_LIMITATION",
+      "evidence": null
+    },
+    {
+      "id": "WEB-05",
+      "control": "HTML legible sin JavaScript",
+      "status": "PASS",
+      "evidence": {
+        "bytes": 2323,
+        "h1_in_source": true
+      }
+    },
+    {
+      "id": "WEB-06",
+      "control": "Páginas legales",
+      "status": "PASS",
+      "evidence": {
+        "/privacidad.html": {
+          "status": 200,
+          "content_type": "text/html; charset=utf-8",
+          "raw_title": true
+        },
+        "/aviso-legal.html": {
+          "status": 200,
+          "content_type": "text/html; charset=utf-8",
+          "raw_title": true
+        },
+        "/terminos.html": {
+          "status": 200,
+          "content_type": "text/html; charset=utf-8",
+          "raw_title": true
+        },
+        "/contacto/": {
+          "status": 200,
+          "content_type": "text/html; charset=utf-8",
+          "raw_title": true
+        }
+      }
+    },
+    {
+      "id": "WEB-07",
+      "control": "Security contact",
+      "status": "PASS",
+      "evidence": {
+        "status": 200
+      }
+    },
+    {
+      "id": "WEB-08",
+      "control": "Sintaxis de metadatos",
+      "status": "PASS",
+      "evidence": {
+        "malformed_meta": false
+      }
+    },
+    {
+      "id": "DATA-01",
+      "control": "Endpoints públicos de mercado",
+      "status": "PASS",
+      "evidence": {
+        "/api/market/context": {
+          "status": 200,
+          "schema_version": "kaufman-market-context-v1",
+          "delivery_mode": "STATIC_DAILY_FALLBACK",
+          "generated_at": "2026-08-23T04:52:10.506Z",
+          "declared_status": "SNAPSHOT_ONLY"
+        },
+        "/api/market/gas": {
+          "status": 200,
+          "schema_version": "kaufman-ethereum-gas-v1",
+          "delivery_mode": "STATIC_DAILY_FALLBACK",
+          "generated_at": "2026-08-23T04:52:11.078Z",
+          "declared_status": "SNAPSHOT_ONLY"
+        },
+        "/api/market/stream": {
+          "status": 200,
+          "schema_version": "kaufman-market-transport-v1",
+          "delivery_mode": "STATIC_POLLING",
+          "generated_at": "2026-08-23T04:52:11.187Z",
+          "declared_status": "AVAILABLE"
+        }
+      }
+    },
+    {
+      "id": "DNS-01",
+      "control": "IPv6 apex",
+      "status": "MISSING",
+      "evidence": []
+    },
+    {
+      "id": "DNS-02",
+      "control": "DNSSEC",
+      "status": "MISSING",
+      "evidence": []
+    },
+    {
+      "id": "DNS-03",
+      "control": "CAA",
+      "status": "MISSING",
+      "evidence": []
+    },
+    {
+      "id": "DNS-04",
+      "control": "Registro y caducidad",
+      "status": "PASS",
+      "evidence": {
+        "status": [
+          "active"
+        ],
+        "registrar": "One.com A/S",
+        "registrar_iana_id": "1462",
+        "expiration": "2027-04-13T09:40:29.18Z",
+        "dnssec_delegated": false,
+        "authoritative_url": "https://rdap.identitydigital.services/rdap/domain/kaufmanadvisory.io"
+      }
+    },
+    {
+      "id": "MAIL-01",
+      "control": "SPF",
+      "status": "SOFTFAIL",
+      "evidence": "v=spf1 include:zohomail.eu include:amazonses.com ~all"
+    },
+    {
+      "id": "MAIL-02",
+      "control": "DKIM Zoho",
+      "status": "WEAK_KEY",
+      "evidence": {
+        "selector": "zmail",
+        "rsa_bits": 1024
+      }
+    },
+    {
+      "id": "MAIL-03",
+      "control": "DMARC",
+      "status": "QUARANTINE",
+      "evidence": "v=DMARC1; p=quarantine; rua=mailto:contact@kaufmanadvisory.io"
+    }
+  ],
+  "unresolved_count": 7,
+  "limitations": [
+    "Los cambios de DNSSEC, CAA, IPv6 y correo requieren acceso administrativo a Cloudflare, registrador y Zoho.",
+    "Core Web Vitals de campo requieren datos CrUX o analítica de usuarios reales; no se infieren desde una sola carga sintética."
+  ]
+}
