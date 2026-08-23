@@ -6,6 +6,7 @@ import tls from 'node:tls';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const DOMAIN = process.env.KAUFMAN_AUDIT_DOMAIN || 'kaufmanadvisory.io';
+const DKIM_SELECTOR = process.env.KAUFMAN_DKIM_SELECTOR || 'zmail2026';
 const BASE = `https://${DOMAIN}`;
 const RDAP_URL = process.env.KAUFMAN_RDAP_URL || `https://rdap.identitydigital.services/rdap/domain/${DOMAIN}`;
 
@@ -72,7 +73,7 @@ const [a, aaaa, ns, caa, ds, mx, rootTxt, dmarcTxt, dkimTxt] = await Promise.all
   safe(dns.resolveMx(DOMAIN)),
   safe(dns.resolveTxt(DOMAIN)).then(flattenTxt),
   safe(dns.resolveTxt(`_dmarc.${DOMAIN}`)).then(flattenTxt),
-  safe(dns.resolveTxt(`zmail._domainkey.${DOMAIN}`)).then(flattenTxt)
+  safe(dns.resolveTxt(`${DKIM_SELECTOR}._domainkey.${DOMAIN}`)).then(flattenTxt)
 ]);
 
 const spf = rootTxt.find((value) => value.startsWith('v=spf1')) || null;
@@ -125,12 +126,12 @@ const findings = [
   { id: 'WEB-07', control: 'Security contact', status: securityTxtResponse.ok ? 'PASS' : 'MISSING', evidence: { status: securityTxtResponse.status } },
   { id: 'WEB-08', control: 'Sintaxis de metadatos', status: !/<meta\s+<meta/i.test(html) ? 'PASS' : 'MALFORMED', evidence: { malformed_meta: /<meta\s+<meta/i.test(html) } },
   { id: 'DATA-01', control: 'Endpoints públicos de mercado', status: Object.values(publicApi).every((item) => item.status === 200 && item.schema_version) ? 'PASS' : 'MISSING', evidence: publicApi },
-  { id: 'DNS-01', control: 'IPv6 apex', status: aaaa.length === 4 ? 'PASS' : 'MISSING', evidence: aaaa },
+  { id: 'DNS-01', control: 'IPv6 apex', status: aaaa.length > 0 ? 'PASS' : 'MISSING', evidence: aaaa },
   { id: 'DNS-02', control: 'DNSSEC', status: ds.length ? 'PASS' : 'MISSING', evidence: ds },
   { id: 'DNS-03', control: 'CAA', status: caa.length ? 'PASS' : 'MISSING', evidence: caa },
   { id: 'DNS-04', control: 'Registro y caducidad', status: rdap?.status?.includes('active') && rdap?.expiration && Date.parse(rdap.expiration) - Date.now() > 90 * 86_400_000 ? 'PASS' : 'REVIEW', evidence: rdap },
   { id: 'MAIL-01', control: 'SPF', status: spf?.includes('-all') ? 'ENFORCED' : spf?.includes('~all') ? 'SOFTFAIL' : 'REVIEW', evidence: spf },
-  { id: 'MAIL-02', control: 'DKIM Zoho', status: dkimBits >= 2048 ? 'PASS' : 'WEAK_KEY', evidence: { selector: 'zmail', rsa_bits: dkimBits } },
+  { id: 'MAIL-02', control: 'DKIM Zoho', status: dkimBits >= 2048 ? 'PASS' : 'WEAK_KEY', evidence: { selector: DKIM_SELECTOR, rsa_bits: dkimBits } },
   { id: 'MAIL-03', control: 'DMARC', status: dmarc?.includes('p=reject') ? 'ENFORCED' : dmarc?.includes('p=quarantine') ? 'QUARANTINE' : 'REVIEW', evidence: dmarc }
 ];
 
