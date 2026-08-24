@@ -5,7 +5,7 @@ import {
   KRAKEN_MARKETS,
   ONCHAIN_ASSETS
 } from './config.js';
-import { fetchOnchainSwapEvidence, selectDexPair, verifyDexPair } from './dexscreener.js';
+import { fetchDexPairForAsset, fetchOnchainSwapEvidence, verifyDexPair } from './dexscreener.js';
 
 function numberOrNull(value) {
   const number = Number(value);
@@ -255,13 +255,9 @@ export class DexScreenerConnector {
     try {
       const selectedPairs = [];
       for (const asset of ONCHAIN_ASSETS) {
-        const url = `https://api.dexscreener.com/token-pairs/v1/${encodeURIComponent(asset.chainId)}/${encodeURIComponent(asset.contractAddress)}`;
-        const response = await fetch(url, { headers: { accept: 'application/json', 'user-agent': 'Kaufman-Market-Antenna/1.0' }, signal: AbortSignal.timeout(9_000) });
-        if (!response.ok) throw new Error(`DEX Screener HTTP ${response.status}`);
-        const pairs = await response.json();
+        const selected = await fetchDexPairForAsset(asset);
         this.metrics.messages += 1;
-        const pair = selectDexPair(asset, Array.isArray(pairs) ? pairs : []);
-        if (pair) selectedPairs.push({ asset, pair, sourceResponseAt: response.headers.get('date') || receivedAt.toUTCString() });
+        selectedPairs.push({ asset, pair: selected.pair, sourceResponseAt: selected.source_response_at });
       }
       const selectedPools = (await Promise.all(selectedPairs.map(async ({ asset, pair, sourceResponseAt }) => {
         const url = `https://api.dexscreener.com/latest/dex/pairs/${encodeURIComponent(asset.chainId)}/${encodeURIComponent(pair.pairAddress)}`;

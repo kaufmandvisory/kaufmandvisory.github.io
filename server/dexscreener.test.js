@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { selectDexPair, verifyDexPair } from './dexscreener.js';
+import { fetchDexPairForAsset, selectDexPair, verifyDexPair } from './dexscreener.js';
 
 const asset = {
   id: 'ethereum',
@@ -25,6 +25,24 @@ const pair = {
 test('selects a pool only when chain, contract and quote asset match', () => {
   const wrong = { ...pair, pairAddress: '0xwrong', baseToken: { address: '0xother', symbol: 'WETH' }, liquidity: { usd: 100_000_000 } };
   assert.equal(selectDexPair(asset, [wrong, pair]), pair);
+});
+
+test('falls back across official DEX Screener token endpoints when one returns no pool', async () => {
+  const calls = [];
+  const fetchImpl = async (url) => {
+    calls.push(url);
+    const payload = calls.length === 1 ? [] : [pair];
+    return {
+      ok: true,
+      status: 200,
+      headers: { get: () => 'Mon, 13 Jul 2026 15:00:00 GMT' },
+      json: async () => payload
+    };
+  };
+  const result = await fetchDexPairForAsset(asset, fetchImpl);
+  assert.equal(result.pair, pair);
+  assert.equal(calls.length, 2);
+  assert.match(result.source_url, /token-pairs\/v1/);
 });
 
 test('verifies the DEX observation through both endpoints and Kaufman reference', () => {

@@ -35,9 +35,17 @@ if (!/data-page="cookies"/.test(cookies)) failures.push('politica-cookies.html: 
 const robots = await fs.readFile(path.join(ROOT, 'robots.txt'), 'utf8');
 for (const rule of ['/blog/', '/files/']) if (!robots.includes(`Disallow: ${rule}`)) failures.push(`robots.txt: ${rule}`);
 
+const faviconIco = await fs.readFile(path.join(ROOT, 'favicon.ico'));
+const validIcoHeader = faviconIco.length > 22
+  && faviconIco[0] === 0x00
+  && faviconIco[1] === 0x00
+  && faviconIco[2] === 0x01
+  && faviconIco[3] === 0x00;
+if (!validIcoHeader) failures.push('favicon.ico: archivo ICO ausente o inválido');
+
 if (failures.length) {
   console.error(JSON.stringify({ status: 'FAIL', failures }, null, 2));
   process.exit(1);
 }
 
-console.log(JSON.stringify({ status: 'PASS', shells_checked: shells.length, raw_source_fallback: true, csp_header_only: true }, null, 2));
+console.log(JSON.stringify({ status: 'PASS', shells_checked: shells.length, raw_source_fallback: true, csp_header_only: true, favicon_ico: true }, null, 2));

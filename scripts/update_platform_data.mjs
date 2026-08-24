@@ -11,7 +11,7 @@ import { buildDominanceSnapshot, buildOpenInterestSnapshot, buildDvolSnapshot, b
 import { buildIsharesIssuerObservation, reconcileEtfFlows } from '../server/etf-flows.js';
 import { buildWalletIntelligence } from '../server/wallet-intelligence.js';
 import { buildWeb3Telemetry } from '../server/web3-telemetry.js';
-import { fetchOnchainSwapEvidence, selectDexPair, verifyDexPair } from '../server/dexscreener.js';
+import { fetchDexPairForAsset, fetchOnchainSwapEvidence, verifyDexPair } from '../server/dexscreener.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const receivedAt = new Date().toISOString();
@@ -233,9 +233,8 @@ const onchainAssets = [
   { id: 'solana', name: 'Wrapped SOL', chain: 'solana', address: 'So11111111111111111111111111111111111111112' }
 ];
 const onchainPools = (await Promise.all(onchainAssets.map(async (asset) => attempt(async () => {
-  const primary = await fetchJsonWithMeta(`https://api.dexscreener.com/latest/dex/tokens/${asset.address}`);
-  const pair = selectDexPair(asset, primary.payload.pairs || []);
-  if (!pair) throw new Error(`DEX pool unavailable: ${asset.id}`);
+  const selected = await fetchDexPairForAsset(asset);
+  const pair = selected.pair;
   const confirmation = await fetchJsonWithMeta(`https://api.dexscreener.com/latest/dex/pairs/${asset.chain}/${pair.pairAddress}`);
   const onchainEvidence = await fetchOnchainSwapEvidence({ chainId: asset.chain, pairAddress: pair.pairAddress });
   return verifyDexPair({
@@ -243,7 +242,7 @@ const onchainPools = (await Promise.all(onchainAssets.map(async (asset) => attem
     pair,
     confirmation: confirmation.payload.pair || confirmation.payload.pairs?.[0],
     receivedAt,
-    sourceResponseAt: primary.response_at,
+    sourceResponseAt: selected.source_response_at,
     confirmationResponseAt: confirmation.response_at,
     referencePriceUsd: referencePrices[asset.id]?.price || null,
     onchainEvidence

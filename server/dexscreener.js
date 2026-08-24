@@ -55,12 +55,16 @@ async function rpcBatch(fetchImpl, url, body) {
 
 export async function fetchEthereumLastSwap(pairAddress, fetchImpl = fetch) {
   const latestHex = await rpc(fetchImpl, ETHEREUM_RPC, { jsonrpc: '2.0', id: 1, method: 'eth_blockNumber', params: [] });
-  const latest = Number.parseInt(latestHex, 16);
-  if (!Number.isFinite(latest)) throw new Error('Ethereum latest block unavailable');
-  const fromBlock = `0x${Math.max(0, latest - 1_024).toString(16)}`;
+  const reportedHead = Number.parseInt(latestHex, 16);
+  if (!Number.isFinite(reportedHead)) throw new Error('Ethereum latest block unavailable');
+  // Public RPC clusters can briefly disagree about the head between two calls.
+  // Query a small confirmed window so a lagging backend cannot reject toBlock.
+  const safeHead = Math.max(0, reportedHead - 6);
+  const toBlock = `0x${safeHead.toString(16)}`;
+  const fromBlock = `0x${Math.max(0, safeHead - 1_024).toString(16)}`;
   const logs = await rpc(fetchImpl, ETHEREUM_RPC, {
     jsonrpc: '2.0', id: 2, method: 'eth_getLogs',
-    params: [{ address: pairAddress, fromBlock, toBlock: latestHex, topics: [SWAP_TOPICS] }]
+    params: [{ address: pairAddress, fromBlock, toBlock, topics: [SWAP_TOPICS] }]
   });
   if (!Array.isArray(logs) || !logs.length) throw new Error('No recent Ethereum Swap log');
   const log = [...logs].sort((a, b) => Number.parseInt(b.blockNumber, 16) - Number.parseInt(a.blockNumber, 16) || Number.parseInt(b.logIndex, 16) - Number.parseInt(a.logIndex, 16))[0];
@@ -157,6 +161,43 @@ export function selectDexPair(asset, pairs = []) {
     .filter((pair) => ALLOWED_QUOTES.has(String(pair.quoteToken?.symbol || '').toUpperCase()))
     .filter((pair) => numberOrNull(pair.priceUsd) !== null && numberOrNull(pair.liquidity?.usd) !== null)
     .sort((a, b) => Number(b.liquidity?.usd || 0) - Number(a.liquidity?.usd || 0))[0] || null;
+}
+
+export async function fetchDexPairForAsset(asset, fetchImpl = fetch) {
+  const chainId = encodeURIComponent(asset.chainId || asset.chain);
+  const contractAddress = encodeURIComponent(asset.contractAddress || asset.address);
+  const urls = [
+    `https://api.dexscreener.com/tokens/v1/${chainId}/${contractAddress}`,
+    `https://api.dexscreener.com/token-pairs/v1/${chainId}/${contractAddress}`,
+    `https://api.dexscreener.com/latest/dex/tokens/${contractAddress}`
+  ];
+  let lastError = null;
+  for (let round = 0; round < 2; round += 1) {
+    for (const url of urls) {
+      try {
+        const response = await fetchImpl(url, {
+          headers: { accept: 'application/json', 'user-agent': 'Kaufman-Market-Antenna/1.0' },
+          signal: AbortSignal.timeout(9_000)
+        });
+        if (!response.ok) throw new Error(`DEX Screener HTTP ${response.status}`);
+        const payload = await response.json();
+        const pairs = Array.isArray(payload) ? payload : payload?.pairs || [];
+        const pair = selectDexPair(asset, pairs);
+        if (pair) {
+          return {
+            pair,
+            source_response_at: response.headers.get('date') || new Date().toUTCString(),
+            source_url: url
+          };
+        }
+        lastError = new Error(`DEX pool unavailable: ${asset.canonicalAssetId || asset.id}`);
+      } catch (error) {
+        lastError = error;
+      }
+    }
+    if (round === 0) await new Promise((resolve) => setTimeout(resolve, 450));
+  }
+  throw lastError || new Error(`DEX pool unavailable: ${asset.canonicalAssetId || asset.id}`);
 }
 
 export function verifyDexPair({ asset, pair, confirmation, receivedAt, sourceResponseAt, confirmationResponseAt, referencePriceUsd = null, onchainEvidence = null }) {
