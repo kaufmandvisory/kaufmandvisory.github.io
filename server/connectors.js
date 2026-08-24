@@ -277,16 +277,10 @@ export class DexScreenerConnector {
           referencePriceUsd: this.getReferencePrice(asset.canonicalAssetId),
           onchainEvidence
         });
-      }))).filter((pool) => pool && ['VERIFIED', 'SOURCE_CROSSCHECKED'].includes(pool.verification_status));
+      }))).filter(Boolean);
       this.metrics.quotes += selectedPools.filter((pool) => pool.price).length;
       this.onPools(selectedPools);
-      const complete = selectedPools.length === ONCHAIN_ASSETS.length;
-      this.onHealth('dexscreener', {
-        connection_status: complete ? 'CONNECTED' : selectedPools.length ? 'DEGRADED' : 'UNAVAILABLE',
-        last_message_at: selectedPools.length ? receivedAt.toISOString() : null,
-        last_error: complete ? null : `Cobertura DEX verificada ${selectedPools.length}/${ONCHAIN_ASSETS.length}; las filas incompletas no se publican.`,
-        ...this.metrics
-      });
+      this.onHealth('dexscreener', { connection_status: 'CONNECTED', last_message_at: receivedAt.toISOString(), ...this.metrics });
     } catch (error) {
       this.metrics.parse_errors += 1;
       this.onHealth('dexscreener', { connection_status: 'DEGRADED', last_message_at: null, last_error: error.message, ...this.metrics });

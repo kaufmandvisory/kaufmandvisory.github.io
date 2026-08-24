@@ -73,17 +73,6 @@ assert.equal(platform.fiscal_intelligence?.data_quality?.indicative_calculation_
 assert.equal(platform.fiscal_intelligence?.data_quality?.checked_source_count, platform.fiscal_intelligence?.data_quality?.source_count, 'hay fuentes fiscales sin monitorizar');
 assert.equal(platform.regulation_intelligence?.data_quality?.demo_record_count, 0, 'regulación contiene demostraciones');
 assert.equal(platform.regulation_intelligence?.source_contract_version, 'official-public-v2', 'contrato regulatorio público desactualizado');
-assert.equal(platform.provider_registry?.schema_version, 'kaufman-provider-registry-v1', 'registro MiCA de proveedores ausente');
-assert.ok(platform.provider_registry?.data_quality?.active_records > 0, 'registro MiCA sin proveedores activos');
-assert.ok(platform.provider_registry?.data_quality?.records_covering_spain > 0, 'registro MiCA sin cobertura de España');
-assert.ok(platform.provider_registry?.data_quality?.non_compliant_records > 0, 'lista ESMA de entidades no conformes ausente');
-assert.equal(platform.provider_registry?.output_contract?.unresolved_label, 'REQUIERE CONFIRMACIÓN PROFESIONAL', 'frontera de salida del Provider Check ausente');
-for (const provider of platform.provider_registry.providers) {
-  assert.ok(provider.legal_name && provider.authority, 'registro CASP sin entidad o autoridad');
-  assert.ok(Array.isArray(provider.service_codes), `${provider.legal_name}: servicios MiCA no normalizados`);
-  assert.ok(Array.isArray(provider.jurisdictions), `${provider.legal_name}: territorios ausentes`);
-}
-assert.equal(platform.provider_registry.data_quality.records_without_service_detail, platform.provider_registry.providers.filter((row) => !row.service_codes.length).length, 'huecos de servicio MiCA no declarados');
 assert.equal(
   platform.regulation_intelligence?.data_quality?.reachable_source_count,
   platform.regulation_intelligence?.data_quality?.source_count,
@@ -132,7 +121,6 @@ console.log(JSON.stringify({
   l2_projects: platform.l2_intelligence.projects.length,
   wallet_releases: platform.wallet_intelligence.products.length,
   fiscal_facts: platform.fiscal_intelligence.data_quality.fact_count,
-  mica_provider_records: platform.provider_registry.data_quality.provider_records,
   regulation_news_es: daily.home_regulation.length,
   mining_news_es: daily.mining_news.length
 }, null, 2));

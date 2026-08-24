@@ -2,7 +2,6 @@
   'use strict';
 
   const ROUTES = [
-    {key:'comprobar',label:'Comprobar proveedor',path:'/comprobar/',code:'CHECK',description:'Entidad, servicios y cobertura territorial contrastados con el registro MiCA de ESMA.',tone:'auto'},
     {key:'mercados',label:'Mercados',path:'/mercados/',code:'DATA',description:'Precios, variaciones, gas y métricas conectadas.',tone:'auto'},
     {key:'regulacion',label:'Regulación',path:'/regulacion/',code:'LAW',description:'Leyes, consultas y guías por estado jurídico.',tone:'verified'},
     {key:'tokenizacion',label:'Tokenización',path:'/tokenizacion/',code:'RWA',description:'Entidades, iniciativas, redes y madurez verificable.',tone:'auto'},
@@ -169,7 +168,7 @@
   function findRoute(key){return ROUTES.find((route)=>route.key===key)}
 
   function headerMarkup(page){
-    const mainNav=[findRoute('comprobar'),findRoute('mercados'),findRoute('regulacion'),findRoute('tokenizacion'),findRoute('herramientas'),findRoute('fiscal')];
+    const mainNav=[findRoute('mercados'),findRoute('regulacion'),findRoute('tokenizacion'),findRoute('herramientas'),findRoute('fiscal')];
     return `
       <a class="kf-skip" href="#main-content">Saltar al contenido</a>
       <header class="kf-header">
@@ -221,44 +220,15 @@
   }
 
   function homeHeroMarkup(){
-    return `<section class="kf-engine-hero kf-acquisition-hero"><div class="kf-container"><div class="kf-engine-grid"><div class="kf-engine-copy"><p class="kf-eyebrow">Kaufman Provider Check</p><h1>Compruebe quién está detrás <span>antes de enviar fondos.</span></h1><p>Busque una marca, razón social, LEI o dominio. Kaufman contrasta la entidad, los servicios y la cobertura para España con los registros públicos de MiCA.</p><div class="kf-engine-actions"><a class="kf-button primary" href="#provider-check">Comprobar un proveedor <span>→</span></a><a class="kf-text-link" href="#evidence-brief">Necesito analizar una operación</a></div><dl><div><dt>Entrada</dt><dd>marca o entidad</dd></div><div><dt>Prueba</dt><dd>registro oficial</dd></div><div><dt>Salida</dt><dd>resultado y límite</dd></div></dl></div>${providerCheckFormMarkup('home')}</div></div></section>`;
-  }
-
-  const PROVIDER_SERVICES = [
-    ['a','Custodia y administración'],['b','Plataforma de negociación'],['c','Canje por euros u otros fondos'],['d','Canje cripto a cripto'],['e','Ejecución de órdenes'],['f','Colocación de criptoactivos'],['g','Recepción y transmisión de órdenes'],['h','Asesoramiento'],['i','Gestión de carteras'],['j','Transferencias']
-  ];
-
-  function providerCheckFormMarkup(context='page'){
-    const inputId=`provider-query-${context}`,serviceId=`provider-service-${context}`;
-    return `<form class="kf-provider-check${context==='home'?' compact':''}" id="provider-check" data-provider-check data-provider-context="${context}"><header><div><span>Comprobación gratuita</span><strong>Registro MiCA · España</strong></div><small data-provider-registry-meta>Conectando con el snapshot oficial…</small></header><div class="kf-provider-fields"><label for="${inputId}">Proveedor, entidad, LEI o dominio<input id="${inputId}" type="search" autocomplete="organization" placeholder="Ej.: Kraken, Bitstamp, coinbase.com" data-provider-query required minlength="3"></label><label for="${serviceId}">Servicio que desea utilizar<select id="${serviceId}" data-provider-service>${PROVIDER_SERVICES.map(([code,label])=>`<option value="${code}">${label}</option>`).join('')}</select></label><button class="kf-button primary" type="submit">Comprobar ahora →</button></div><div class="kf-provider-examples"><span>Pruebe con</span>${['Kraken','Bitstamp','Coinbase'].map((name)=>`<button type="button" data-provider-example="${name}">${name}</button>`).join('')}</div><div class="kf-provider-result" data-provider-result aria-live="polite"><div class="kf-provider-empty"><span>01</span><div><strong>La marca no basta.</strong><p>El resultado separará la marca comercial de la entidad jurídica y mostrará qué servicio figura para España.</p></div></div></div><footer><span>Fuente: registro provisional MiCA de ESMA</span><a href="https://www.esma.europa.eu/esmas-activities/digital-finance-and-innovation/markets-crypto-assets-regulation-mica" target="_blank" rel="noopener noreferrer">Abrir registro oficial ↗</a></footer></form>`;
-  }
-
-  function productPathMarkup(){
-    const steps=[
-      ['01','Comprobar','Gratis y automático','Localiza entidad, autorización, servicio y territorio en el registro oficial.','/comprobar/','Abrir Provider Check'],
-      ['02','Entender','Resultado explicable','Distingue la marca de la entidad y muestra qué se ha probado, qué falta y dónde está la fuente.','/comprobar/#contrato-salida','Ver límites de la comprobación'],
-      ['03','Comprar informe','Evidence Brief','Amplía un caso concreto con contrato, condiciones, evidencias y revisión humana delimitada.','#evidence-brief','Ver alcance cerrado'],
-      ['04','Monitorizar','Después del Brief','Conserva el escenario y avisa si cambia una autorización, norma, coste o dependencia.','/contacto/?asunto=monitoring','Registrar interés']
+    const operations=[
+      ['operar','Operar o invertir con criptoactivos'],
+      ['tokenizar','Tokenizar un activo o producto'],
+      ['custodiar','Elegir custodia o proveedor'],
+      ['infraestructura','Seleccionar red o infraestructura Web3'],
+      ['mineria','Evaluar una operación minera']
     ];
-    return `<section class="kf-product-path" aria-labelledby="product-path-title"><div class="kf-container"><header><p class="kf-kicker">Una utilidad comprable</p><h2 id="product-path-title">Comprobar → entender → comprar informe → monitorizar.</h2><p>No hace falta recorrer toda la plataforma. Empiece por una pregunta concreta y amplíe solo si el resultado afecta su decisión.</p></header><ol>${steps.map(([number,title,state,copy,href,cta])=>`<li><span>${number}</span><div><small>${state}</small><h3>${title}</h3><p>${copy}</p></div><a href="${href}">${cta} <b>→</b></a></li>`).join('')}</ol></div></section>`;
-  }
-
-  function evidenceBriefMarkup(){
-    const contract=[
-      ['Entrada','Una marca o proveedor, entidad contractual si se conoce, un servicio MiCA, cliente en España y fecha prevista.'],
-      ['Perímetro','Una operación: utilizar un proveedor de criptoactivos desde España. Una entidad y un servicio por Brief.'],
-      ['Fuentes','Registro ESMA, autoridad nacional, condiciones del proveedor y documentación oficial de la entidad.'],
-      ['Automatización','Coincidencia de registros, historial de cambios, cobertura territorial y captura de evidencias.'],
-      ['Revisión humana','Correspondencia entre marca, entidad, servicio y documento contractual. No incluye dictamen jurídico.'],
-      ['Entrega','PDF versionado, conclusión por comprobación, anexo de fuentes, fecha de observación y cuestiones pendientes.'],
-      ['Plazo y precio','Se confirman por escrito antes del pago, una vez comprobada la entrada. No existe precio automático engañoso.'],
-      ['Responsabilidad','Información de evidencia general. Las conclusiones legales, fiscales o de idoneidad se marcan «REQUIERE CONFIRMACIÓN PROFESIONAL».']
-    ];
-    return `<section class="kf-evidence-brief" id="evidence-brief" aria-labelledby="evidence-brief-title"><div class="kf-container"><header><div><p class="kf-kicker">Producto económico · v1</p><h2 id="evidence-brief-title">Evidence Brief: usar un proveedor desde España.</h2></div><p>Una sola clase de operación, con entrada y salida cerradas. El informe amplía la comprobación gratuita; no promete resolver hechos que el registro no contiene.</p></header><div class="kf-brief-contract"><div class="kf-brief-contract-intro"><span>Kaufman Evidence Brief / ES-CASP-01</span><strong>De un nombre comercial a una cadena documental defendible.</strong><p>La comprobación gratuita responde si un registro existe. El Brief comprueba si ese registro corresponde a la entidad y al servicio que intervendrán en su operación.</p><a class="kf-button primary" href="/contacto/?asunto=evidence-brief&operacion=proveedor&jurisdiccion=ES">Solicitar alcance y precio →</a></div><dl>${contract.map(([term,definition],index)=>`<div><dt><span>${String(index+1).padStart(2,'0')}</span>${term}</dt><dd>${definition}</dd></div>`).join('')}</dl></div></div></section>`;
-  }
-
-  function monitoringMarkup(){
-    return `<section class="kf-monitoring-offer"><div class="kf-container"><div><p class="kf-kicker">Monitoring · fase siguiente</p><h2>El informe no termina cuando se entrega.</h2></div><div><p>El servicio de vigilancia se activará sobre un Brief real y conservará sus variables críticas: entidad, autorización, servicio, jurisdicción, coste y dependencia técnica. Solo se comercializará cuando el historial de Briefs demuestre qué cambios merecen una alerta.</p><a href="/contacto/?asunto=monitoring">Registrar interés sin compromiso →</a></div></div></section>`;
+    const jurisdictions=[['ES','España'],['UE','Unión Europea'],['US','Estados Unidos'],['GB','Reino Unido'],['AE','Emiratos Árabes Unidos'],['CH','Suiza'],['SG','Singapur'],['MX','México']];
+    return `<section class="kf-engine-hero"><div class="kf-container"><div class="kf-engine-grid"><div class="kf-engine-copy"><p class="kf-eyebrow">Kaufman Decision Brief</p><h1>Antes de operar, sepa <span>qué puede cambiar la decisión.</span></h1><p>Describa una operación blockchain. Kaufman ordena jurisdicción, costes, infraestructura, custodia y riesgos en una ruta de comprobación con fuentes.</p><div class="kf-engine-actions"><a class="kf-button primary" href="#decision-brief">Definir mi operación <span>→</span></a><a class="kf-text-link" href="#explorar">Ver cómo se construye</a></div><dl><div><dt>Una operación</dt><dd>alcance concreto</dd></div><div><dt>Una ruta</dt><dd>controles priorizados</dd></div><div><dt>Una entrega</dt><dd>evidencia y límites</dd></div></dl></div><form class="kf-decision-builder" id="decision-brief" data-decision-builder><header><span>Configurar decisión</span><strong data-engine-state><i></i> Fuentes conectadas</strong></header><div class="kf-decision-fields"><label>Operación<select data-decision-operation>${operations.map(([value,label])=>`<option value="${value}">${label}</option>`).join('')}</select></label><label>Jurisdicción<select data-decision-jurisdiction>${jurisdictions.map(([value,label])=>`<option value="${value}">${label}</option>`).join('')}</select></label></div><div class="kf-decision-output" aria-live="polite"><span>RUTA PROPUESTA</span><h2 data-decision-title>Operar o invertir desde España</h2><p data-decision-summary>Comprueba tratamiento fiscal, proveedor, coste total, custodia y condiciones de salida antes de ejecutar.</p><ol data-decision-checks><li>Hecho fiscal y obligación de información</li><li>Autorización del proveedor</li><li>Coste total y custodia</li></ol><div class="kf-decision-live" data-market-asset="bitcoin"><span>Referencia BTC/USD</span><strong class="kf-market-price">—</strong><small data-market-age>Esperando precio fresco</small></div></div><div class="kf-decision-actions"><a class="kf-button secondary" data-decision-public href="/fiscal/">Abrir ruta pública</a><a class="kf-button primary" data-decision-contact href="/contacto/?asunto=decision-brief&operacion=operar&jurisdiccion=ES">Solicitar Decision Brief →</a></div><small>La ruta pública orienta. El Brief contratado delimita la operación, fuentes, supuestos y comprobaciones pendientes.</small></form></div><div class="kf-engine-market">${marketBandMarkup()}</div></div></section>`;
   }
 
   function marketBandMarkup(){
@@ -328,31 +298,34 @@
     const observedLabel=observedAt&&!Number.isNaN(Date.parse(observedAt))?new Intl.DateTimeFormat('es-ES',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'UTC'}).format(new Date(observedAt)).replace('.','')+' UTC':'Esperando snapshot conectado';
     const metrics=ecosystemMetrics(territoryId,snapshot).map((item)=>`<div class="kf-eco-metric"><strong>${escapeHtml(item.value)}</strong><span>${escapeHtml(item.label)}</span><small>${escapeHtml(item.source)}</small></div>`).join('');
     const sublayers=territory.sublayers.map(([label,href],index)=>`<a href="${href}"><span>${String(index+1).padStart(2,'0')}</span><strong>${escapeHtml(label)}</strong><i aria-hidden="true">→</i></a>`).join('');
-    const briefHref=`/contacto/?asunto=evidence-brief&territorio=${encodeURIComponent(territoryId)}`;
+    const briefHref=`/contacto/?asunto=decision-brief&territorio=${encodeURIComponent(territoryId)}`;
     return `<div class="kf-eco-panel-head"><p>${escapeHtml(territory.index)} / ${escapeHtml(territory.label)}</p><span>${escapeHtml(observedLabel)}</span></div><h3>${escapeHtml(territory.headline)}</h3><p class="kf-eco-panel-copy">${escapeHtml(territory.description)}</p><div class="kf-eco-decision"><span>IMPLICACIÓN PARA LA DECISIÓN</span><strong>${escapeHtml(territory.decision)}</strong></div><div class="kf-eco-metrics">${metrics}</div><div class="kf-eco-layers"><span>Capas relacionadas</span><nav aria-label="Capas de ${escapeHtml(territory.label)}">${sublayers}</nav></div><div class="kf-eco-panel-actions"><a class="kf-eco-open" href="${territory.href}">${escapeHtml(territory.linkLabel)} <span>→</span></a><a class="kf-eco-brief" href="${briefHref}">${escapeHtml(territory.action)}</a></div>`;
   }
 
   function ecosystemMapMarkup(){
     const nodes=ECOSYSTEM_ORDER.map((id)=>{const territory=ECOSYSTEM_TERRITORIES[id];const active=id==='infraestructura';return `<button class="kf-eco-node${active?' active':''}" id="ecosystem-tab-${id}" type="button" role="tab" aria-selected="${active}" aria-controls="kaufman-ecosystem-panel" data-eco-territory="${id}" data-side="${territory.side}" style="--eco-x:${territory.x}%;--eco-y:${territory.y}%"><span class="kf-eco-node-ring"><i></i></span><strong>${escapeHtml(territory.label)}</strong><small>${territory.index}</small></button>`}).join('');
-    return `<section class="kf-section kf-ecosystem" id="explorar" data-ecosystem><div class="kf-container"><header class="kf-ecosystem-head"><div><p class="kf-kicker">Mapa Kaufman de Evidencia</p><h2>Qué puede cambiar una decisión.</h2></div><p>Cada territorio responde una pregunta operativa. Selecciona uno para ver su implicación, las métricas conectadas y la siguiente comprobación.</p></header><div class="kf-eco-shell"><div class="kf-eco-canvas" data-eco-current="infraestructura"><svg class="kf-eco-geometry" viewBox="0 0 960 600" aria-hidden="true"><path class="kf-eco-scaffold" d="M49 484 C77 211 272 44 548 62 C769 76 892 231 870 408 C850 541 711 581 576 520 C435 457 415 300 514 210 C592 139 713 167 747 253"/><path class="kf-eco-scaffold secondary" d="M94 518 C235 573 350 536 405 430 C457 331 425 208 335 150"/><path class="kf-eco-core-orbit" d="M331 318 C331 252 385 199 451 199 C517 199 570 252 570 318 C570 384 517 437 451 437 C385 437 331 384 331 318Z"/><path class="kf-eco-link" data-eco-link="mercado" d="M451 318 C369 273 285 197 197 131"/><path class="kf-eco-link" data-eco-link="regulacion" d="M451 318 C324 329 213 357 89 385"/><path class="kf-eco-link" data-eco-link="empresas" d="M451 318 C448 226 478 132 528 75"/><path class="kf-eco-link" data-eco-link="infraestructura" d="M451 318 C579 264 699 223 827 207"/><path class="kf-eco-link" data-eco-link="custodia" d="M451 318 C553 379 623 451 682 503"/><path class="kf-eco-link" data-eco-link="riesgo" d="M451 318 C397 416 342 485 283 539"/><path class="kf-eco-cross" d="M197 131 C334 88 456 84 528 75"/><path class="kf-eco-cross" d="M89 385 C243 393 338 421 283 539"/><path class="kf-eco-cross" d="M827 207 C776 332 745 425 682 503"/></svg><div class="kf-eco-center"><span>Evidence Brief</span><strong>K</strong><i></i></div><div class="kf-eco-node-list" role="tablist" aria-label="Territorios del ecosistema Kaufman">${nodes}</div><div class="kf-eco-signals" aria-live="polite"><span data-eco-signal="updated">Conectando fuentes…</span><span data-eco-signal="market">Precios · esperando</span><span data-eco-signal="regulation">Regulación · esperando</span><span data-eco-signal="fiscal">Fiscal · esperando</span></div></div><aside class="kf-eco-panel" id="kaufman-ecosystem-panel" role="tabpanel" aria-labelledby="ecosystem-tab-infraestructura" aria-live="polite" data-eco-panel>${ecosystemPanelMarkup('infraestructura',null)}</aside></div><p class="kf-eco-instruction"><span aria-hidden="true">↳</span> Selecciona un territorio para cambiar la ruta de comprobación.</p></div></section>`;
+    return `<section class="kf-section kf-ecosystem" id="explorar" data-ecosystem><div class="kf-container"><header class="kf-ecosystem-head"><div><p class="kf-kicker">Mapa Kaufman de Evidencia</p><h2>Qué puede cambiar una decisión.</h2></div><p>Cada territorio responde una pregunta operativa. Selecciona uno para ver su implicación, las métricas conectadas y la siguiente comprobación.</p></header><div class="kf-eco-shell"><div class="kf-eco-canvas" data-eco-current="infraestructura"><svg class="kf-eco-geometry" viewBox="0 0 960 600" aria-hidden="true"><path class="kf-eco-scaffold" d="M49 484 C77 211 272 44 548 62 C769 76 892 231 870 408 C850 541 711 581 576 520 C435 457 415 300 514 210 C592 139 713 167 747 253"/><path class="kf-eco-scaffold secondary" d="M94 518 C235 573 350 536 405 430 C457 331 425 208 335 150"/><path class="kf-eco-core-orbit" d="M331 318 C331 252 385 199 451 199 C517 199 570 252 570 318 C570 384 517 437 451 437 C385 437 331 384 331 318Z"/><path class="kf-eco-link" data-eco-link="mercado" d="M451 318 C369 273 285 197 197 131"/><path class="kf-eco-link" data-eco-link="regulacion" d="M451 318 C324 329 213 357 89 385"/><path class="kf-eco-link" data-eco-link="empresas" d="M451 318 C448 226 478 132 528 75"/><path class="kf-eco-link" data-eco-link="infraestructura" d="M451 318 C579 264 699 223 827 207"/><path class="kf-eco-link" data-eco-link="custodia" d="M451 318 C553 379 623 451 682 503"/><path class="kf-eco-link" data-eco-link="riesgo" d="M451 318 C397 416 342 485 283 539"/><path class="kf-eco-cross" d="M197 131 C334 88 456 84 528 75"/><path class="kf-eco-cross" d="M89 385 C243 393 338 421 283 539"/><path class="kf-eco-cross" d="M827 207 C776 332 745 425 682 503"/></svg><div class="kf-eco-center"><span>Decision Brief</span><strong>K</strong><i></i></div><div class="kf-eco-node-list" role="tablist" aria-label="Territorios del ecosistema Kaufman">${nodes}</div><div class="kf-eco-signals" aria-live="polite"><span data-eco-signal="updated">Conectando fuentes…</span><span data-eco-signal="market">Precios · esperando</span><span data-eco-signal="regulation">Regulación · esperando</span><span data-eco-signal="fiscal">Fiscal · esperando</span></div></div><aside class="kf-eco-panel" id="kaufman-ecosystem-panel" role="tabpanel" aria-labelledby="ecosystem-tab-infraestructura" aria-live="polite" data-eco-panel>${ecosystemPanelMarkup('infraestructura',null)}</aside></div><p class="kf-eco-instruction"><span aria-hidden="true">↳</span> Selecciona un territorio para cambiar la ruta de comprobación.</p></div></section>`;
   }
 
   function renderHome(){
     return `<main class="kf-main" id="main-content">
       ${homeHeroMarkup()}
-      ${productPathMarkup()}
-      ${evidenceBriefMarkup()}
+      ${ecosystemMapMarkup()}
       <section class="kf-section kf-intelligence-briefing"><div class="kf-container"><header><div><p class="kf-kicker">Briefing conectado</p><h2>Lo que ha cambiado y qué decisión puede afectar.</h2></div><p>Una lectura principal regulatoria y una columna operativa de minería. La fuente conserva fecha, alcance y método.</p></header><div class="kf-briefing-grid"><section class="kf-briefing-lead"><div class="kf-briefing-label"><span>Regulación mundial</span><a href="/regulacion/">Abrir radar →</a></div><div data-home-regulation><div class="kf-live-empty">Cargando actualidad regulatoria…</div></div></section><aside class="kf-briefing-rail"><section><div class="kf-briefing-label"><span>Minería y hardware</span><span><a href="/mineria/">Minería →</a> <a href="/hardware/">Hardware →</a></span></div><div data-home-mining><div class="kf-live-empty">Cargando actualidad minera…</div></div></section><div class="kf-briefing-metrics" data-home-mining-metrics><div class="kf-live-empty">Cargando referencia minera…</div></div></aside></div></div></section>
-      ${monitoringMarkup()}
+      ${directoryHubMarkup()}
     </main>`;
   }
 
-  function renderProviderCheck(){
-    return `<main class="kf-main" id="main-content"><section class="kf-provider-page-hero"><div class="kf-container"><div><p class="kf-kicker">Provider Check · gratuito</p><h1>Compruebe la entidad antes de confiar en la marca.</h1></div><p>Consulta el registro MiCA publicado por ESMA para localizar la entidad jurídica, los servicios declarados y la cobertura para España. No asigna una puntuación ni recomienda proveedores.</p></div></section><section class="kf-provider-page"><div class="kf-container">${providerCheckFormMarkup('page')}<aside class="kf-output-boundary" id="contrato-salida"><header><span>Contrato de salida · v1.0</span><strong>Qué puede afirmar Kaufman</strong></header><div><section><h2>Sí puede</h2><ul><li>Confirmar que una entidad aparece en un registro consultado.</li><li>Mostrar los servicios y territorios que constan en ese registro.</li><li>Enlazar la evidencia, su autoridad y su fecha.</li></ul></section><section><h2>No puede</h2><ul><li>Declarar que un proveedor es seguro o adecuado.</li><li>Suponer que una marca es la entidad de su contrato.</li><li>Convertir el registro en asesoramiento legal, fiscal o de inversión.</li></ul></section></div><p>Cuando la identidad, el servicio o el territorio no queden resueltos, el resultado se detiene en <strong>REQUIERE CONFIRMACIÓN PROFESIONAL</strong>.</p></aside></div></section>${evidenceBriefMarkup()}</main>`;
-  }
-
   function decisionCloseMarkup(page){
-    return `<section class="kf-decision-close" aria-labelledby="decision-close-title"><div class="kf-container"><div><p class="kf-kicker">Kaufman Evidence Brief / ES-CASP-01</p><h2 id="decision-close-title">Compruebe la entidad que prestará el servicio.</h2><p>El informe amplía el registro público con la entidad contractual, el servicio concreto y la cadena documental aplicable a un cliente en España.</p></div><ol><li><span>01</span>Marca y razón social</li><li><span>02</span>Servicio y cobertura España</li><li><span>03</span>Evidencia y cuestiones pendientes</li></ol><div class="kf-decision-close-action"><strong>Una operación, un proveedor, un servicio</strong><span>Entrada, fuentes, revisión, formato, plazo, precio y límites se confirman antes del pago.</span><a class="kf-button primary" href="/contacto/?asunto=evidence-brief&origen=${encodeURIComponent(page)}">Solicitar Evidence Brief →</a></div></div></section>`;
+    const context={
+      home:['De la evidencia a una decisión concreta.','Describe la operación. Kaufman devuelve alcance, controles prioritarios, fuentes y preguntas que aún necesitan confirmación.'],
+      mercados:['Antes de mover capital, delimita la operación.','Conecta estructura de mercado, vehículo tokenizado, liquidez, costes y jurisdicción en una sola lectura.'],
+      regulacion:['La norma importa cuando se aplica a una operación.','Sitúa actividad, territorio, proveedor y fecha para construir el perímetro que debe comprobarse.'],
+      tokenizacion:['Una emisión necesita más que una red.','Ordena activo, vehículo, jurisdicción, infraestructura, custodia y riesgos antes de elegir arquitectura.'],
+      herramientas:['Convierte el cálculo en una condición de decisión.','Kaufman documenta entradas, fuentes, sensibilidad del resultado y datos que siguen pendientes.'],
+      fiscal:['Lleva el escenario al siguiente nivel de comprobación.','Transforma el cálculo en una lista de hechos, fuentes, supuestos y puntos para revisión profesional.']
+    }[page]||['Convierte esta ficha en una decisión comprobable.','Incluye la entidad, el territorio y el objetivo; Kaufman conecta las evidencias relevantes y señala los huecos.'];
+    return `<section class="kf-decision-close" aria-labelledby="decision-close-title"><div class="kf-container"><div><p class="kf-kicker">Kaufman Decision Brief</p><h2 id="decision-close-title">${context[0]}</h2><p>${context[1]}</p></div><ol><li><span>01</span>Operación y jurisdicción</li><li><span>02</span>Mercado, coste e infraestructura</li><li><span>03</span>Regulación, custodia y riesgo</li></ol><div class="kf-decision-close-action"><strong>Entrega definida antes de empezar</strong><span>Alcance, formato, plazo y presupuesto se confirman por escrito.</span><a class="kf-button primary" href="/contacto/?asunto=decision-brief&origen=${encodeURIComponent(page)}">Solicitar Decision Brief →</a></div></div></section>`;
   }
 
   function dataNoteMarkup(hasVerified=false){
@@ -555,7 +528,7 @@
       {name:'BOE Datos Abiertos',scope:'Normativa española relacionada con blockchain',cadence:'Diaria',status:'auto',url:'https://www.boe.es/datosabiertos/api/api.php'},
       {name:'Federal Register API',scope:'SEC y CFTC · Estados Unidos',cadence:'Diaria',status:'auto',url:'https://www.federalregister.gov/developers/documentation/api/v1'},
       {name:'EUR-Lex · MiCA',scope:'Texto primario del Reglamento (UE) 2023/1114',cadence:'Monitor diario · revisión jurídica',status:'auto',url:'https://eur-lex.europa.eu/eli/reg/2023/1114/oj?locale=es'},
-      {name:'ESMA · registro provisional MiCA',scope:'Entidades CASP autorizadas, servicios, pasaporte y entidades no conformes',cadence:'Consulta diaria · publicación ESMA semanal',status:'auto',url:'https://www.esma.europa.eu/esmas-activities/digital-finance-and-innovation/markets-crypto-assets-regulation-mica'},
+      {name:'ESMA · MiCA artículo 59',scope:'Autorización de proveedores de servicios de criptoactivos',cadence:'Monitor diario · single rulebook',status:'auto',url:'https://www.esma.europa.eu/publications-and-data/interactive-single-rulebook/mica/article-59-authorisation'},
       {name:'CNMV · MiCA',scope:'Aplicación y periodo transitorio en España',cadence:'Monitor diario · guía oficial',status:'auto',url:'https://www.cnmv.es/Portal/mica/regulacion-criptoactivos?lang=es'},
       {name:'México · Ley Fintech',scope:'Texto vigente de la LRITF',cadence:'Monitor diario · texto consolidado',status:'auto',url:'https://www.diputados.gob.mx/LeyesBiblio/pdf/LRITF.pdf'},
       {name:'Banco de México · Circular 4/2019',scope:'Operaciones reguladas con activos virtuales',cadence:'Monitor diario · texto compilado',status:'auto',url:'https://www.banxico.org.mx/marco-normativo/normativa-emitida-por-el-banco-de-mexico/circular-4-2019/circular-4-2019.html'},
@@ -571,17 +544,7 @@
       {name:'IPFS · Filecoin · The Graph · ENS',scope:'Direccionamiento, persistencia, indexación e identidad Web3',cadence:'Referencias técnicas primarias',status:'verified',url:'https://ethereum.org/developers/docs/'},
       {name:'OWASP Smart Contract Top 10',scope:'Taxonomía de riesgos de contratos inteligentes',cadence:'Edición 2026',status:'verified',url:'https://scs.owasp.org/sctop10/'}
     ];
-    return `<main class="kf-main" id="main-content">${pageHero('Fuentes','Registro visible de proveedores, cobertura, cadencia y estado de cada integración.','Trazabilidad')}<section class="kf-section"><div class="kf-container"><div class="kf-source-register">${sources.map((source)=>`<div class="kf-source-row"><strong>${source.name}</strong><span>${source.scope}</span><span>${source.cadence}</span><div>${statusBadge(source.status)}${source.url?` <a href="${source.url}" target="_blank" rel="noopener noreferrer">Abrir ↗</a>`:''}</div></div>`).join('')}</div>${authorityMarkup()}</div></section></main>`;
-  }
-
-  function authorityMarkup(){
-    const rows=[
-      ['Responsable editorial','Kaufman Advisory Group LLC','Define producto, selección de fuentes, metodología y correcciones.'],
-      ['Versión pública','2026.08.24 · Provider Check v1','Cada resultado conserva la versión del contrato de salida y la fecha del snapshot.'],
-      ['Revisión humana','Solo en Evidence Brief contratado','El comprobador gratuito no se presenta como revisión legal ni fiscal.'],
-      ['Procedencia','Fuente primaria o dataset público identificado','Una integración automática no convierte una interpretación en hecho jurídico.']
-    ];
-    return `<section class="kf-authority" aria-labelledby="authority-title"><header><p class="kf-kicker">Autoridad y responsabilidad</p><h2 id="authority-title">Quién publica, qué revisa y qué corrige.</h2><p>La confianza no depende de un badge. Depende de poder atribuir la fuente, la transformación y el límite de cada salida.</p></header><dl>${rows.map(([term,value,note])=>`<div><dt>${term}</dt><dd><strong>${value}</strong><span>${note}</span></dd></div>`).join('')}</dl><div class="kf-corrections"><span>Registro de correcciones</span><p><strong>24 ago 2026</strong> · El comprobador MiCA separa desde su primera versión marca, entidad jurídica, servicio y cobertura territorial. Los resultados no localizados ya no se convierten en conclusiones negativas.</p><a href="/contacto/?asunto=correccion">Notificar una corrección →</a></div></section>`;
+    return `<main class="kf-main" id="main-content">${pageHero('Fuentes','Registro visible de proveedores, cobertura, cadencia y estado de cada integración.','Trazabilidad')}<section class="kf-section"><div class="kf-container"><div class="kf-source-register">${sources.map((source)=>`<div class="kf-source-row"><strong>${source.name}</strong><span>${source.scope}</span><span>${source.cadence}</span><div>${statusBadge(source.status)}${source.url?` <a href="${source.url}" target="_blank" rel="noopener noreferrer">Abrir ↗</a>`:''}</div></div>`).join('')}</div></div></section></main>`;
   }
 
   function renderLegal(kind){
@@ -645,26 +608,22 @@
   function renderContact(){
     const email='contact@kaufmanadvisory.io';
     const params=new URLSearchParams(location.search);
-    const requestType=params.get('asunto')||'';
-    const isEvidenceBrief=['decision-brief','evidence-brief'].includes(requestType);
-    const isMonitoring=requestType==='monitoring';
+    const isDecisionBrief=params.get('asunto')==='decision-brief';
     const operation=params.get('operacion')||params.get('territorio')||params.get('origen')||'';
     const jurisdiction=params.get('jurisdiccion')||'';
     const operationLabel={operar:'Operar o invertir',tokenizar:'Tokenizar un activo',custodiar:'Elegir custodia',infraestructura:'Infraestructura Web3',mineria:'Operación minera'}[operation]||operation;
     const jurisdictionLabel={ES:'España',UE:'Unión Europea',US:'Estados Unidos',GB:'Reino Unido',AE:'Emiratos Árabes Unidos',CH:'Suiza',SG:'Singapur',MX:'México'}[jurisdiction]||jurisdiction;
-    const entity=params.get('entidad')||'';
-    const context=[operation&&`Operación: ${operationLabel}`,jurisdiction&&`Jurisdicción: ${jurisdictionLabel}`,entity&&`Proveedor o entidad: ${entity}`].filter(Boolean).join(' · ');
+    const context=[operation&&`Operación: ${operationLabel}`,jurisdiction&&`Jurisdicción: ${jurisdictionLabel}`].filter(Boolean).join(' · ');
     const matters=[
-      ['Solicitar Kaufman Evidence Brief','Indica el proveedor, entidad si se conoce, servicio y fecha prevista. Confirmaremos alcance, entrega, plazo y precio antes del pago.','Solicitud · Kaufman Evidence Brief'],
+      ['Solicitar Kaufman Decision Brief','Indica la operación, jurisdicción, objetivo y fecha de decisión. Confirmaremos alcance, entrega, plazo y presupuesto antes de empezar.','Solicitud · Kaufman Decision Brief'],
       ['Corrección de un dato','Incluye la URL, el campo afectado y una fuente primaria de contraste.','Corrección de dato'],
       ['Fuentes e integraciones','Propón una API, registro o dataset público indicando licencia y frecuencia.','Fuente o integración'],
       ['Licencias y colaboración','Explica el caso de uso, la organización y la cobertura que necesitas.','Licencias y colaboración'],
       ['Privacidad o derechos','Indica el derecho que quieres ejercer y evita adjuntar información innecesaria.','Privacidad']
     ];
-    const subject=isEvidenceBrief?'Solicitud · Kaufman Evidence Brief':isMonitoring?'Interés · Kaufman Monitoring':'Contacto desde Kaufman';
-    const body=isEvidenceBrief?encodeURIComponent(`Hola Kaufman,\n\nQuiero solicitar alcance y precio para un Evidence Brief ES-CASP-01.\n${context}\n\nServicio que quiero utilizar:\nFecha prevista de la operación:\nEnlace a las condiciones o entidad contractual:\n`):isMonitoring?encodeURIComponent('Hola Kaufman,\n\nQuiero registrar interés en el servicio de Monitoring.\n\nCambio que necesito vigilar:\nProveedor o escenario actual:\n'):'';
-    const heroCopy=isEvidenceBrief?'Delimita una operación y recibe una propuesta cerrada de alcance para comprobar proveedor, entidad, servicio y cobertura.':isMonitoring?'Indica qué escenario necesita conservar y qué cambio podría obligarle a actuar.':'Un canal directo para solicitar un Evidence Brief, corregir datos, proponer fuentes o hablar de colaboración.';
-    return `<main class="kf-main" id="main-content">${pageHero('Contacto',heroCopy,'Kaufman / contacto','verified')}<section class="kf-section"><div class="kf-container"><div class="kf-contact"><section class="kf-contact-primary"><p class="kf-kicker">${isEvidenceBrief?'Solicitud de Evidence Brief':isMonitoring?'Interés en Monitoring':'Canal oficial'}</p><h2>${isEvidenceBrief?'Confirme la operación que necesita comprobar.':isMonitoring?'Díganos qué cambio no puede permitirse descubrir tarde.':'Escríbanos con contexto verificable.'}</h2><p>${isEvidenceBrief?'No pedimos datos sensibles. Antes del pago confirmamos entrada, fuentes, trabajo automático y humano, entrega, plazo, precio y límites.':isMonitoring?'El interés no activa un servicio ni genera un cobro. Monitoring solo se ofrecerá sobre variables nacidas de Briefs reales.':'Kaufman no utiliza un formulario intermedio sin backend. El mensaje sale desde tu proveedor de correo y conserva una dirección de respuesta comprobable.'}</p>${context?`<div class="kf-contact-context"><span>Contexto recibido</span><strong>${escapeHtml(context)}</strong></div>`:''}<div class="kf-contact-address"><div><span>Correo</span><a href="mailto:${email}">${email}</a></div><button class="kf-button small secondary" type="button" data-contact-copy data-copy-value="${email}">Copiar correo</button></div><span class="kf-contact-copy-status" data-contact-copy-status aria-live="polite"></span><a class="kf-button primary" href="mailto:${email}?subject=${encodeURIComponent(subject)}${body?`&body=${body}`:''}">${isEvidenceBrief?'Solicitar alcance y precio':isMonitoring?'Registrar interés':'Redactar correo'} →</a></section><aside class="kf-contact-security"><span>SEGURIDAD</span><h3>No envíes secretos ni fondos.</h3><ul><li>Nunca compartas seed phrases o claves privadas.</li><li>No envíes contraseñas, códigos de acceso ni archivos de wallet.</li><li>No adjuntes declaraciones fiscales completas ni documentos de identidad sin una solicitud legítima y un canal acordado.</li></ul><p>Kaufman no presta soporte por mensajes directos en redes sociales.</p></aside></div><div class="kf-contact-matters"><div class="kf-subsection-label">Motivo del contacto</div>${matters.map(([title,copy,matterSubject],index)=>`<article><span>${String(index+1).padStart(2,'0')}</span><div><h3>${title}</h3><p>${copy}</p></div><a href="mailto:${email}?subject=${encodeURIComponent(matterSubject)}">Escribir →</a></article>`).join('')}</div><div class="kf-contact-legal"><span>Responsable</span><strong>Kaufman Advisory Group LLC · Wyoming, Estados Unidos</strong><a href="/privacidad.html">Tratamiento de datos y derechos →</a></div></div></section></main>`;
+    const subject=isDecisionBrief?'Solicitud · Kaufman Decision Brief':'Contacto desde Kaufman';
+    const body=isDecisionBrief?encodeURIComponent(`Hola Kaufman,\n\nQuiero solicitar un Decision Brief.\n${context}\n\nObjetivo de la decisión:\nFecha límite:\nContexto adicional:\n`):'';
+    return `<main class="kf-main" id="main-content">${pageHero('Contacto',isDecisionBrief?'Delimita una operación y recibe una propuesta de alcance para convertir datos dispersos en una decisión comprobable.':'Un canal directo para solicitar un Decision Brief, corregir datos, proponer fuentes o hablar de colaboración.','Kaufman / contacto','verified')}<section class="kf-section"><div class="kf-container"><div class="kf-contact"><section class="kf-contact-primary"><p class="kf-kicker">${isDecisionBrief?'Solicitud de alcance':'Canal oficial'}</p><h2>${isDecisionBrief?'Cuéntanos qué decisión necesitas resolver.':'Escríbenos con contexto verificable.'}</h2><p>${isDecisionBrief?'No pedimos datos sensibles. Con la operación, jurisdicción, objetivo y fecha límite podemos confirmar qué fuentes y comprobaciones entran en la entrega.':'Kaufman no utiliza un formulario intermedio sin backend. El mensaje sale desde tu proveedor de correo y conserva una dirección de respuesta comprobable.'}</p>${context?`<div class="kf-contact-context"><span>Contexto recibido</span><strong>${escapeHtml(context)}</strong></div>`:''}<div class="kf-contact-address"><div><span>Correo</span><a href="mailto:${email}">${email}</a></div><button class="kf-button small secondary" type="button" data-contact-copy data-copy-value="${email}">Copiar correo</button></div><span class="kf-contact-copy-status" data-contact-copy-status aria-live="polite"></span><a class="kf-button primary" href="mailto:${email}?subject=${encodeURIComponent(subject)}${body?`&body=${body}`:''}">${isDecisionBrief?'Solicitar alcance y presupuesto':'Redactar correo'} →</a></section><aside class="kf-contact-security"><span>SEGURIDAD</span><h3>No envíes secretos ni fondos.</h3><ul><li>Nunca compartas seed phrases o claves privadas.</li><li>No envíes contraseñas, códigos de acceso ni archivos de wallet.</li><li>No adjuntes declaraciones fiscales completas ni documentos de identidad sin una solicitud legítima y un canal acordado.</li></ul><p>Kaufman no presta soporte por mensajes directos en redes sociales.</p></aside></div><div class="kf-contact-matters"><div class="kf-subsection-label">Motivo del contacto</div>${matters.map(([title,copy,matterSubject],index)=>`<article><span>${String(index+1).padStart(2,'0')}</span><div><h3>${title}</h3><p>${copy}</p></div><a href="mailto:${email}?subject=${encodeURIComponent(matterSubject)}">Escribir →</a></article>`).join('')}</div><div class="kf-contact-legal"><span>Responsable</span><strong>Kaufman Advisory Group LLC · Wyoming, Estados Unidos</strong><a href="/privacidad.html">Tratamiento de datos y derechos →</a></div></div></section></main>`;
   }
 
   function renderNotFound(title='Ruta no encontrada'){
@@ -677,7 +636,6 @@
 
   function renderPage(page){
     if(page==='home')return renderHome();
-    if(page==='comprobar')return renderProviderCheck();
     if(page==='mercados')return renderMarkets();
     if(page==='tokenizacion')return renderTokenization();
     if(page==='fiscal')return renderFiscal();
@@ -1630,7 +1588,6 @@
     renderWeb3Telemetry(snapshot.web3_telemetry);
     renderFiscalIntelligence(snapshot);
     renderRegulationIntelligence(snapshot);
-    refreshProviderChecks(snapshot.provider_registry);
     renderMarketContext(snapshot.market_context);
     applyHistoricalReturns(snapshot.historical_returns);
     applyGas(snapshot.auxiliary?.ethereum_gas);
@@ -1807,7 +1764,7 @@
   }
 
   async function connectMarketAntenna(){
-    if(!document.querySelector('[data-market-asset],[data-gas-price],[data-gas-base],[data-l2-projects],[data-tokenization-dashboard],[data-fiscal-dashboard],[data-regulation-dashboard],[data-wallet-release],[data-web3-telemetry],[data-exchange-fee-rows],[data-provider-grid],[data-provider-check]'))return;
+    if(!document.querySelector('[data-market-asset],[data-gas-price],[data-gas-base],[data-l2-projects],[data-tokenization-dashboard],[data-fiscal-dashboard],[data-regulation-dashboard],[data-wallet-release],[data-web3-telemetry],[data-exchange-fee-rows],[data-provider-grid]'))return;
     if(document.querySelector('[data-wallet-release],[data-web3-telemetry]')&&!document.querySelector('[data-market-asset],[data-gas-price],[data-gas-base],[data-l2-projects],[data-tokenization-dashboard],[data-fiscal-dashboard],[data-regulation-dashboard],[data-exchange-fee-rows],[data-provider-grid]')){
       await loadPlatformFallback();
       return;
@@ -1965,112 +1922,6 @@
     });
   }
 
-  function normalizeProviderText(value){
-    return String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/^https?:\/\//,'').replace(/^www\./,'').replace(/[^a-z0-9]+/g,' ').trim();
-  }
-
-  function providerSearchFields(record){
-    return [record.legal_name,record.commercial_name,record.lei,...(record.websites||[])].filter(Boolean).map((value)=>normalizeProviderText(value));
-  }
-
-  function providerMatchScore(record,query){
-    const clean=normalizeProviderText(query);
-    if(clean.length<3)return 0;
-    return Math.max(0,...providerSearchFields(record).map((field)=>field===clean?100:field.startsWith(`${clean} `)||clean.startsWith(`${field} `)?85:field.includes(clean)?65:0));
-  }
-
-  function providerDate(value){
-    if(!value||Number.isNaN(Date.parse(`${value}T00:00:00Z`)))return 'No consta';
-    return new Intl.DateTimeFormat('es-ES',{day:'2-digit',month:'short',year:'numeric',timeZone:'UTC'}).format(new Date(`${value}T00:00:00Z`)).replace('.','');
-  }
-
-  function safeExternalUrl(value){
-    try{
-      const raw=String(value||'').trim();
-      if(!raw||/^(none|null|n\/a|-)$/i.test(raw))return null;
-      const url=new URL(/^https?:\/\//i.test(raw)?raw:`https://${raw}`);
-      if(url.protocol!=='https:'||!url.hostname.includes('.'))return null;
-      return url.href;
-    }catch(error){return null}
-  }
-
-  function providerRecordMarkup(record,serviceCode,today){
-    const active=(!record.authorisation_date||record.authorisation_date<=today)&&(!record.authorisation_end_date||record.authorisation_end_date>=today);
-    const coversSpain=(record.jurisdictions||[]).includes('ES');
-    const serviceConfirmed=(record.service_codes||[]).includes(serviceCode);
-    const website=(record.websites||[]).map((value)=>[value,safeExternalUrl(value)]).find(([,url])=>url);
-    const authorizationLabel=record.authorisation_date&&record.authorisation_date>today
-      ?`Comienza el ${providerDate(record.authorisation_date)}`
-      :record.authorisation_end_date&&record.authorisation_end_date<today
-        ?`Finalizada el ${providerDate(record.authorisation_end_date)}`
-        :record.authorisation_end_date
-          ?`Vigente hasta ${providerDate(record.authorisation_end_date)}`
-          :'Sin fecha de finalización publicada';
-    const checks=[
-      ['Entidad jurídica',record.legal_name||'No consta',Boolean(record.legal_name)],
-      ['Autorización',authorizationLabel,active],
-      ['Cobertura España',coversSpain?'ES figura en el registro':'ES no figura para este registro',coversSpain],
-      ['Servicio solicitado',serviceConfirmed?(record.services||[])[(record.service_codes||[]).indexOf(serviceCode)]||'Figura en el registro':'No figura entre los servicios publicados',serviceConfirmed]
-    ];
-    return `<article class="kf-provider-record"><header><div><span>${escapeHtml(record.commercial_name||'Nombre comercial no publicado')}</span><h3>${escapeHtml(record.legal_name)}</h3></div><strong class="${active&&coversSpain&&serviceConfirmed?'positive':'caution'}">${active&&coversSpain&&serviceConfirmed?'COINCIDENCIA COMPLETA':'COMPROBACIÓN INCOMPLETA'}</strong></header><dl>${checks.map(([term,value,ok])=>`<div class="${ok?'ok':'pending'}"><dt>${term}</dt><dd>${escapeHtml(value)}</dd></div>`).join('')}</dl><footer><span>${escapeHtml(record.authority||'Autoridad no indicada')} · ${escapeHtml(record.home_state||'—')}</span><span>Autorización: ${providerDate(record.authorisation_date)}</span>${record.lei?`<span>LEI: ${escapeHtml(record.lei)}</span>`:''}${website?`<a href="${website[1]}" target="_blank" rel="noopener noreferrer">Web declarada ↗</a>`:''}</footer></article>`;
-  }
-
-  function evaluateProviderCheck(form,registry){
-    const output=form.querySelector('[data-provider-result]');
-    const query=form.querySelector('[data-provider-query]')?.value.trim()||'';
-    const serviceCode=form.querySelector('[data-provider-service]')?.value||'a';
-    if(!output)return;
-    if(!registry?.providers?.length){output.innerHTML='<div class="kf-provider-message error"><strong>El registro oficial no está disponible en este snapshot.</strong><p>No se conserva un resultado anterior como si fuera actual. Abra la fuente ESMA o vuelva a intentarlo más tarde.</p></div>';return}
-    if(query.length<3){output.innerHTML='<div class="kf-provider-message caution"><strong>Introduzca al menos tres caracteres.</strong><p>Utilice, si es posible, la razón social, el LEI o el dominio que figura en sus condiciones contractuales.</p></div>';return}
-    const providerMatches=(registry.providers||[]).map((record)=>({record,score:providerMatchScore(record,query)})).filter((item)=>item.score>0).sort((a,b)=>b.score-a.score);
-    const warningMatches=(registry.non_compliant_entities||[]).map((record)=>({record,score:providerMatchScore(record,query)})).filter((item)=>item.score>0).sort((a,b)=>b.score-a.score);
-    const strongest=providerMatches[0]?.score||0;
-    const matches=providerMatches.filter((item)=>item.score===strongest).slice(0,4).map((item)=>item.record);
-    const warnings=warningMatches.filter((item)=>item.score===(warningMatches[0]?.score||0)).slice(0,3).map((item)=>item.record);
-    const today=new Date().toISOString().slice(0,10);
-    if(warnings.length){
-      output.innerHTML=`<div class="kf-provider-verdict negative"><span>ALERTA EN REGISTRO PÚBLICO</span><h2>La búsqueda coincide con ${warnings.length===1?'una entidad':'varias entidades'} de la lista ESMA de no conformes.</h2><p>Esto no prueba por sí solo que la web o persona con la que trata sea la misma. Detenga la comprobación y contraste dominio, entidad y decisión oficial.</p></div>${warnings.map((record)=>`<article class="kf-provider-warning"><strong>${escapeHtml(record.commercial_name||record.legal_name||'Nombre no publicado')}</strong><span>${escapeHtml(record.authority||'Autoridad no indicada')} · decisión ${providerDate(record.decision_date)}</span><small>${escapeHtml((record.websites||[]).join(' · ')||'Dominio no publicado')}</small></article>`).join('')}<div class="kf-provider-next"><strong>REQUIERE CONFIRMACIÓN PROFESIONAL</strong><a href="${registry.source.non_compliant_url}" target="_blank" rel="noopener noreferrer">Abrir lista oficial de no conformes ↗</a></div>`;
-      return;
-    }
-    if(!matches.length){
-      output.innerHTML=`<div class="kf-provider-verdict unresolved"><span>NO LOCALIZADO</span><h2>No aparece una coincidencia suficiente en el perímetro consultado.</h2><p>No localizado no significa no autorizado. Pruebe la razón social exacta, el LEI o el dominio que aparece en las condiciones del servicio.</p></div><div class="kf-provider-next"><strong>IDENTIDAD JURÍDICA NO RESUELTA</strong><a href="${registry.source.register_url}" target="_blank" rel="noopener noreferrer">Comprobar directamente en ESMA ↗</a></div>`;
-      return;
-    }
-    const exactIdentity=matches.length===1&&strongest===100;
-    const complete=matches.filter((record)=>(!record.authorisation_date||record.authorisation_date<=today)&&(!record.authorisation_end_date||record.authorisation_end_date>=today)&&(record.jurisdictions||[]).includes('ES')&&(record.service_codes||[]).includes(serviceCode));
-    const verdict=complete.length===1&&exactIdentity?'REGISTRO LOCALIZADO':complete.length?'IDENTIDAD POR RESOLVER':'SERVICIO O COBERTURA NO CONFIRMADOS';
-    const verdictClass=complete.length===1&&exactIdentity?'positive':'caution';
-    output.innerHTML=`<div class="kf-provider-verdict ${verdictClass}"><span>${verdict}</span><h2>${complete.length===1&&exactIdentity?'La entidad, España y el servicio solicitado coinciden en el registro.':'Hay coincidencias, pero el resultado no permite cerrar por sí solo la entidad contractual y el servicio.'}</h2><p>${complete.length===1&&exactIdentity?'Compruebe ahora que esta es la misma razón social que figura en su contrato, cuenta o condiciones de uso.':'Revise cada registro y confirme qué entidad prestará realmente el servicio.'}</p></div><div class="kf-provider-records">${matches.map((record)=>providerRecordMarkup(record,serviceCode,today)).join('')}</div><div class="kf-provider-next"><strong>${complete.length===1&&exactIdentity?'SIGUIENTE PASO: CONTRASTAR EL CONTRATO':'REQUIERE CONFIRMACIÓN PROFESIONAL'}</strong><a href="/contacto/?asunto=evidence-brief&operacion=proveedor&jurisdiccion=ES&entidad=${encodeURIComponent(query)}">Ampliar a Evidence Brief →</a></div>`;
-    localizeRenderedLinks(output);
-  }
-
-  function refreshProviderChecks(registry=latestMarketSnapshot?.provider_registry){
-    document.querySelectorAll('[data-provider-check]').forEach((form)=>{
-      const meta=form.querySelector('[data-provider-registry-meta]');
-      if(meta)meta.textContent=registry?.data_quality?`${Number(registry.data_quality.active_records||0).toLocaleString('es-ES')} registros activos · snapshot ${ageLabel(ageMs(registry.generated_at))}`:'Registro oficial no disponible';
-      if(form.dataset.providerSubmitted==='true')evaluateProviderCheck(form,registry);
-    });
-  }
-
-  function initProviderChecks(){
-    document.querySelectorAll('[data-provider-check]').forEach((form)=>{
-      const input=form.querySelector('[data-provider-query]');
-      const service=form.querySelector('[data-provider-service]');
-      const submit=()=>{
-        form.dataset.providerSubmitted='true';
-        evaluateProviderCheck(form,latestMarketSnapshot?.provider_registry);
-        if(form.dataset.providerContext==='page'&&history.replaceState){const url=new URL(location.href);url.searchParams.set('q',input.value.trim());url.searchParams.set('servicio',service.value);history.replaceState(null,'',url)}
-      };
-      form.addEventListener('submit',(event)=>{event.preventDefault();submit()});
-      form.querySelectorAll('[data-provider-example]').forEach((button)=>button.addEventListener('click',()=>{input.value=button.dataset.providerExample;submit()}));
-      if(form.dataset.providerContext==='page'){
-        const params=new URLSearchParams(location.search),query=params.get('q'),requestedService=params.get('servicio');
-        if(query){input.value=query;if(PROVIDER_SERVICES.some(([code])=>code===requestedService))service.value=requestedService;form.dataset.providerSubmitted='true'}
-      }
-    });
-    refreshProviderChecks();
-  }
-
   function initDecisionBrief(){
     const form=document.querySelector('[data-decision-builder]');
     if(!form)return;
@@ -2091,7 +1942,7 @@
       form.querySelector('[data-decision-summary]').textContent=scenario.summary;
       form.querySelector('[data-decision-checks]').innerHTML=scenario.checks.map((item)=>`<li>${escapeHtml(item)}</li>`).join('');
       form.querySelector('[data-decision-public]').setAttribute('href',scenario.route);
-      form.querySelector('[data-decision-contact]').setAttribute('href',`/contacto/?asunto=evidence-brief&operacion=${encodeURIComponent(operation.value)}&jurisdiccion=${encodeURIComponent(jurisdiction.value)}`);
+      form.querySelector('[data-decision-contact]').setAttribute('href',`/contacto/?asunto=decision-brief&operacion=${encodeURIComponent(operation.value)}&jurisdiccion=${encodeURIComponent(jurisdiction.value)}`);
       localizeRenderedLinks(form);
     };
     operation.addEventListener('change',update);
@@ -2102,14 +1953,14 @@
 
   const page=new URLSearchParams(location.search).get('pagina')||document.body.dataset.page||'home';
   const app=document.getElementById('kaufman-app');
-  const commercialPages=['regulacion','exchanges','wallets'].includes(page);
+  const commercialPages=!['contacto','aviso','privacidad','cookies','terminos','retirado'].includes(page);
   const renderedPage=renderPage(page);
   const pageWithClose=commercialPages?renderedPage.replace('</main>',`${decisionCloseMarkup(page)}</main>`):renderedPage;
   app.innerHTML=`<div class="kf-shell">${headerMarkup(page)}${pageWithClose}${footerMarkup()}</div>${searchOverlayMarkup()}`;
   localizeRenderedLinks(app);
-  const pageTitle=page==='home'?'Kaufman | Comprobar proveedores blockchain':`${CATALOGS[page]?.label||({comprobar:'Comprobar proveedor',mercados:'Mercados',tokenizacion:'Tokenización',herramientas:'Herramientas',rentabilidades:'Rentabilidades',ficha:'Ficha',fichas:'Fichas',fuentes:'Fuentes',contacto:'Contacto',aviso:'Aviso legal',privacidad:'Política de privacidad',cookies:'Política de cookies',terminos:'Términos de uso'}[page]||'Kaufman')} | Kaufman`;
+  const pageTitle=page==='home'?'Kaufman | Inteligencia blockchain':`${CATALOGS[page]?.label||({mercados:'Mercados',tokenizacion:'Tokenización',herramientas:'Herramientas',rentabilidades:'Rentabilidades',ficha:'Ficha',fichas:'Fichas',fuentes:'Fuentes',contacto:'Contacto',aviso:'Aviso legal',privacidad:'Política de privacidad',cookies:'Política de cookies',terminos:'Términos de uso'}[page]||'Kaufman')} | Kaufman`;
   document.title=pageTitle;
-  initMenu();initSearch();initDirectoryFilters();initTokenizationFilters();initFiscalDashboard();initComparator();initFeedStars();initMiningCalculator();initJurisdictionTool();initCountryCostStack();initEcosystemMap();initDecisionBrief();initProviderChecks();initContact();initReveal();
+  initMenu();initSearch();initDirectoryFilters();initTokenizationFilters();initFiscalDashboard();initComparator();initFeedStars();initMiningCalculator();initJurisdictionTool();initCountryCostStack();initEcosystemMap();initDecisionBrief();initContact();initReveal();
   Promise.resolve(connectMarketAntenna()).finally(()=>{startMarketContextPolling();startGasEdgePolling()});
   loadRegulationFallback();
   if(document.querySelector('[data-market-asset]'))window.setInterval(refreshMarketDisplay,1000);

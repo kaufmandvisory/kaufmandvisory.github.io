@@ -2,10 +2,9 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const VERSION = 'kaufman-v35';
+const VERSION = 'kaufman-v32';
 const ROUTES = {
-  home: ['Kaufman · Comprobar proveedores blockchain', 'Comprueba una entidad y su servicio MiCA antes de enviar fondos. Amplía el resultado con un Evidence Brief y vigilancia de cambios.'],
-  comprobar: ['Comprobar proveedor MiCA', 'Consulta entidad jurídica, autorización, servicios y cobertura para España en el registro público de ESMA.'],
+  home: ['Kaufman · Inteligencia blockchain', 'Mercado, regulación, tokenización, infraestructura y riesgo bajo una misma capa de evidencia pública.'],
   mercados: ['Mercados y capital tokenizado', 'RWA, redes, stablecoins, flujos institucionales, gas y precios de referencia calculados desde mercados públicos.'],
   regulacion: ['Regulación blockchain', 'Normas, consultas, licencias y textos oficiales organizados por jurisdicción y estado jurídico.'],
   tokenizacion: ['Tokenización', 'Productos, entidades, redes y capital onchain con metodología, límites y fuentes públicas.'],
@@ -32,7 +31,6 @@ const ROUTES = {
 };
 
 const NAV = [
-  ['/comprobar/', 'Comprobar proveedor'],
   ['/mercados/', 'Mercados'],
   ['/regulacion/', 'Regulación'],
   ['/tokenizacion/', 'Tokenización'],
@@ -51,12 +49,7 @@ const fallback = (page) => {
   const contact = page === 'contacto'
     ? '<p><a class="kf-source-contact" href="mailto:contact@kaufmanadvisory.io">contact@kaufmanadvisory.io</a></p>'
     : '';
-  const product = page === 'home'
-    ? '<section><h2>Cuatro acciones</h2><ol><li><a href="/comprobar/">Comprobar proveedor</a>: consulta gratuita del registro MiCA.</li><li><a href="/comprobar/#contrato-salida">Entender el resultado</a>: evidencia, límites y cuestiones pendientes.</li><li><a href="/contacto/?asunto=evidence-brief">Comprar un Evidence Brief</a>: una entidad, un servicio y una operación desde España.</li><li><a href="/contacto/?asunto=monitoring">Monitorizar cambios</a>: interés en alertas vinculadas a un Brief real.</li></ol></section>'
-    : page === 'comprobar'
-      ? '<section><h2>Contrato de salida</h2><p>Kaufman puede confirmar que una entidad aparece en un registro consultado y mostrar servicios, territorios, autoridad y fecha. No declara que un proveedor sea seguro, adecuado o recomendable. La marca debe contrastarse con la entidad contractual.</p><p><a href="https://www.esma.europa.eu/esmas-activities/digital-finance-and-innovation/markets-crypto-assets-regulation-mica">Abrir registro oficial de ESMA</a></p></section>'
-      : '';
-  return `<div id="kaufman-app"><header class="kf-source-header"><a href="/" aria-label="Kaufman, inicio"><strong>KAUFMAN</strong><span>BLOCKCHAIN INTELLIGENCE</span></a></header><main class="kf-source-fallback" id="main-content"><p class="kf-source-kicker">KAUFMAN · FUENTE PÚBLICA</p><h1>${escapeHtml(title)}</h1><p>${escapeHtml(description)}</p>${product}${contact}<nav aria-label="Secciones principales">${NAV.map(([href, label]) => `<a href="${href}">${label}</a>`).join('')}</nav><p class="kf-source-status">El contenido esencial permanece disponible sin JavaScript. Las consultas automáticas se activan cuando el navegador carga la aplicación.</p><footer><p>Responsable editorial: Kaufman Advisory Group LLC · versión pública 2026.08.24 · contacto: contact@kaufmanadvisory.io.</p></footer></main></div>`;
+  return `<div id="kaufman-app"><header class="kf-source-header"><a href="/" aria-label="Kaufman, inicio"><strong>KAUFMAN</strong><span>BLOCKCHAIN INTELLIGENCE</span></a></header><main class="kf-source-fallback" id="main-content"><p class="kf-source-kicker">KAUFMAN · FUENTE PÚBLICA</p><h1>${escapeHtml(title)}</h1><p>${escapeHtml(description)}</p>${contact}<nav aria-label="Secciones principales">${NAV.map(([href, label]) => `<a href="${href}">${label}</a>`).join('')}</nav><p class="kf-source-status">El contenido esencial permanece disponible sin JavaScript. Los datos automáticos y comparadores se activan cuando el navegador carga la aplicación.</p></main></div>`;
 };
 
 const listHtml = async (directory) => {
@@ -87,7 +80,7 @@ const removeMeta = (html, key) => {
 const repairMalformedMeta = (html) => html.replace(/<meta\s+(<meta\b[^>]*>)\s+content="[^"]*">/gi, '$1');
 
 const hardenAppShell = (html, page) => {
-  let result = repairMalformedMeta(html).replaceAll(/kaufman-v\d+/g, VERSION).replace(/<meta name="theme-color" content="[^"]+">/i, '<meta name="theme-color" content="#f2eee5">');
+  let result = repairMalformedMeta(html).replaceAll(/kaufman-v\d+/g, VERSION).replace(/<meta name="theme-color" content="[^"]+">/i, '<meta name="theme-color" content="#f8f5f0">');
   result = removeMeta(result, /http-equiv="Content-Security-Policy"/i);
   result = result.replace(/<link\s+rel="icon"[^>]*>/gi, '').replace(/<\/head>/i, `<link rel="icon" href="/favicon.svg?v=${VERSION}" type="image/svg+xml"></head>`);
   result = upsertMeta(result, /name="referrer"/i, '<meta name="referrer" content="strict-origin-when-cross-origin">');
