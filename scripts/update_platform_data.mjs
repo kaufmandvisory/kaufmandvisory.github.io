@@ -12,6 +12,7 @@ import { buildIsharesIssuerObservation, reconcileEtfFlows } from '../server/etf-
 import { buildWalletIntelligence } from '../server/wallet-intelligence.js';
 import { buildWeb3Telemetry } from '../server/web3-telemetry.js';
 import { fetchDexPairForAsset, fetchOnchainSwapEvidence, verifyDexPair } from '../server/dexscreener.js';
+import { buildProviderRegistry, ESMA_PROVIDER_REGISTER_URL, ESMA_NON_COMPLIANT_URL } from '../server/provider-registry.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const receivedAt = new Date().toISOString();
@@ -42,6 +43,15 @@ async function fetchText(url, options = {}) {
   const response = await fetch(url, { ...options, headers: { ...headers, accept: 'text/html', ...(options.headers || {}) }, signal: AbortSignal.timeout(options.timeout || 25_000) });
   if (!response.ok) throw new Error(`${new URL(url).hostname} HTTP ${response.status}`);
   return response.text();
+}
+
+async function fetchTextWithMeta(url, options = {}) {
+  const response = await fetch(url, { ...options, headers: { ...headers, accept: 'text/csv,text/plain;q=0.9,*/*;q=0.1', ...(options.headers || {}) }, signal: AbortSignal.timeout(options.timeout || 25_000) });
+  if (!response.ok) throw new Error(`${new URL(url).hostname} HTTP ${response.status}`);
+  const bytes = await response.arrayBuffer();
+  let text = new TextDecoder('utf-8').decode(bytes);
+  if (text.includes('\uFFFD')) text = new TextDecoder('windows-1252').decode(bytes);
+  return { text, last_modified: response.headers.get('last-modified'), response_at: response.headers.get('date') || new Date().toUTCString() };
 }
 
 async function attempt(task, fallback = null) {
@@ -196,6 +206,19 @@ const regulationHealth = Object.fromEntries(await Promise.all(REGULATORY_SOURCES
 const regulationIntelligence = buildRegulationSnapshot(regulationHealth, receivedAt);
 validateRegulationSnapshot(regulationIntelligence);
 
+const providerRegistry = await attempt(async () => {
+  const [casps, nonCompliant] = await Promise.all([
+    fetchTextWithMeta(ESMA_PROVIDER_REGISTER_URL),
+    fetchTextWithMeta(ESMA_NON_COMPLIANT_URL)
+  ]);
+  return buildProviderRegistry({
+    caspsCsv: casps.text,
+    nonCompliantCsv: nonCompliant.text,
+    receivedAt,
+    sourceLastModified: casps.last_modified || casps.response_at
+  });
+}, previousPlatform?.provider_registry || null);
+
 const auxiliary = { ethereum_gas: null, ethereum_fees: null, etherscan_gas_oracle: null, exchange_fees: null };
 const ethereumFees = await attempt(async () => {
   const payload = await fetchJson('https://ethereum-rpc.publicnode.com', {
@@ -247,7 +270,7 @@ const onchainPools = (await Promise.all(onchainAssets.map(async (asset) => attem
     referencePriceUsd: referencePrices[asset.id]?.price || null,
     onchainEvidence
   });
-})))).filter(Boolean);
+})))).filter((pool) => pool && ['VERIFIED', 'SOURCE_CROSSCHECKED'].includes(pool.verification_status));
 
 const providers = {
   coinbase: { connection_status: coinbaseRows.some(([, row]) => row) ? 'SNAPSHOT' : 'DEGRADED', last_message_at: receivedAt, messages: coinbaseRows.filter(([, row]) => row).length },
@@ -268,6 +291,11 @@ const providers = {
   fiscal_registry: { connection_status: 'SNAPSHOT', last_message_at: fiscalIntelligence.generated_at },
   regulation_registry: { connection_status: 'SNAPSHOT', last_message_at: regulationIntelligence.generated_at }
 };
+providers.esma_provider_registry = {
+  connection_status: providerRegistry ? 'SNAPSHOT' : 'UNAVAILABLE',
+  last_message_at: providerRegistry?.generated_at || null,
+  records: providerRegistry?.data_quality?.provider_records || 0
+};
 providers.wallet_releases = { connection_status: walletIntelligence.coverage.observed_controls === walletIntelligence.coverage.expected_controls ? 'SNAPSHOT' : walletIntelligence.coverage.observed_controls ? 'DEGRADED' : 'UNAVAILABLE', last_message_at: walletIntelligence.generated_at, records: walletIntelligence.coverage.observed_controls };
 
 const snapshot = {
@@ -285,6 +313,7 @@ const snapshot = {
   l2_intelligence: l2Intelligence,
   fiscal_intelligence: fiscalIntelligence,
   regulation_intelligence: regulationIntelligence,
+  provider_registry: providerRegistry,
   wallet_intelligence: walletIntelligence,
   web3_telemetry: web3Telemetry,
   market_context: marketContext,
@@ -298,6 +327,7 @@ const snapshot = {
     l2_available: Boolean(l2Intelligence),
     fiscal_jurisdictions: fiscalIntelligence.jurisdictions.length,
     regulation_regimes: regulationIntelligence.regimes.length,
+    provider_registry_records: providerRegistry?.data_quality?.provider_records || 0,
     wallet_releases: walletIntelligence.products.length,
     wallet_controls_observed: walletIntelligence.coverage.observed_controls,
     web3_telemetry_profiles: web3Telemetry.coverage.observed,

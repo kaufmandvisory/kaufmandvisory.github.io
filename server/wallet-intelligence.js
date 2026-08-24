@@ -35,6 +35,20 @@ const cleanRelease = (payload) => payload && !payload.draft ? ({
   verification_status: 'OFFICIAL_RELEASE_OBSERVED'
 }) : null;
 
+const cleanReleaseHtml = (html, repository) => {
+  if (!html) return null;
+  const escaped = repository.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const tag = String(html).match(new RegExp(`https://github\\.com/${escaped}/releases/tag/([^"<]+)`, 'i'))?.[1];
+  const publishedAt = String(html).match(/<relative-time[^>]+datetime="([^"]+)"/i)?.[1] || null;
+  if (!tag) return null;
+  return {
+    version: decodeURIComponent(tag),
+    published_at: publishedAt,
+    source_url: `https://github.com/${repository}/releases/tag/${tag}`,
+    verification_status: 'OFFICIAL_RELEASE_OBSERVED'
+  };
+};
+
 const cleanAdvisory = (row) => ({
   id: row.ghsa_id,
   severity: String(row.severity || 'unknown').toUpperCase(),
@@ -61,13 +75,15 @@ async function optional(task) {
   try { return await task(); } catch { return null; }
 }
 
-export async function buildWalletIntelligence({ fetchJson, receivedAt = new Date().toISOString() }) {
+export async function buildWalletIntelligence({ fetchJson, fetchText, receivedAt = new Date().toISOString() }) {
   const products = await Promise.all(OFFICIAL_PRODUCTS.map(async (product) => {
     const [releasePayload, advisoryPayload, statusPayload] = await Promise.all([
       optional(() => fetchJson(product.release_url)),
       optional(() => fetchJson(product.advisories_url, { headers: { accept: 'application/vnd.github+json' } })),
       product.status_url ? optional(() => fetchJson(product.status_url)) : null
     ]);
+    const releaseHtml = !releasePayload && fetchText ? await optional(() => fetchText(`https://github.com/${product.repository}/releases/latest`)) : null;
+    const application = cleanRelease(releasePayload) || cleanReleaseHtml(releaseHtml, product.repository);
     const firmware = product.firmware_urls
       ? (await Promise.all(product.firmware_urls.map(async (entry) => latestFirmware(await optional(() => fetchJson(entry.url)), entry.model, entry.url)))).filter(Boolean)
       : [product.firmware];
@@ -76,7 +92,7 @@ export async function buildWalletIntelligence({ fetchJson, receivedAt = new Date
       id: product.id,
       name: product.name,
       repository: product.repository,
-      application: cleanRelease(releasePayload),
+      application,
       firmware,
       compatibility: { status: 'DOCUMENTED', channels: product.compatibility, source_url: releasePayload?.html_url || product.firmware?.source_url || product.release_url },
       advisories: { status: advisoryPayload ? 'PUBLIC_REGISTRY_OBSERVED' : 'UNAVAILABLE', open_or_published_count: advisories.filter((row) => row.status === 'PUBLISHED').length, items: advisories },
