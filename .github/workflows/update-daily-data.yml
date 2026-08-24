@@ -26,20 +26,24 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: "22"
-      - name: Build daily public-source snapshot
-        run: |
-          node scripts/update_regulation_data.mjs
-          python scripts/update_daily_data.py
-          node scripts/update_platform_data.mjs
-          node scripts/update_public_market_api.mjs
-          node scripts/validate_static_data.mjs
+          package-manager-cache: false
+      - name: Update official regulation sources
+        run: node scripts/update_regulation_data.mjs
+      - name: Update daily editorial signals
+        run: python scripts/update_daily_data.py
+      - name: Update platform intelligence
+        run: node scripts/update_platform_data.mjs
+      - name: Build public market fallbacks
+        run: node scripts/update_public_market_api.mjs
+      - name: Validate generated data contracts
+        run: node scripts/validate_static_data.mjs
       - name: Commit changed snapshot
         shell: bash
         run: |

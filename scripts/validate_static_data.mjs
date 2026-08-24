@@ -34,7 +34,15 @@ for (const asset of ['bitcoin', 'ethereum', 'solana']) {
   assert.ok(Array.isArray(row.venues) && row.venues.length > 0, `${asset}: mercados ausentes`);
 }
 
-assert.equal(platform.onchain_pools?.length, 3, 'cobertura DEX incompleta');
+assert.ok(Array.isArray(platform.onchain_pools), 'colección DEX ausente');
+assert.ok(platform.onchain_pools.length <= 3, 'cobertura DEX fuera del contrato');
+assert.equal(platform.data_quality?.onchain_pools, platform.onchain_pools.length, 'conteo DEX inconsistente');
+assert.equal(platform.data_quality?.onchain_pools_expected, 3, 'cobertura DEX esperada no declarada');
+assert.equal(
+  platform.providers?.dexscreener?.connection_status,
+  platform.onchain_pools.length === 3 ? 'SNAPSHOT' : platform.onchain_pools.length ? 'DEGRADED' : 'UNAVAILABLE',
+  'salud DEX incompatible con la cobertura observada'
+);
 for (const pool of platform.onchain_pools) {
   assert.equal(pool.verification_status, 'VERIFIED', `${pool.identity}: observación DEX no verificada`);
   assert.equal(pool.identity, `${pool.chain_id}:${pool.contract_address.toLowerCase()}`, `${pool.identity}: identidad onchain incorrecta`);

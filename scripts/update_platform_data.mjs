@@ -253,7 +253,13 @@ const providers = {
   coinbase: { connection_status: coinbaseRows.some(([, row]) => row) ? 'SNAPSHOT' : 'DEGRADED', last_message_at: receivedAt, messages: coinbaseRows.filter(([, row]) => row).length },
   kraken: { connection_status: Object.keys(kraken).length ? 'SNAPSHOT' : 'DEGRADED', last_message_at: receivedAt, messages: Object.keys(kraken).length },
   binance: { connection_status: 'UNAVAILABLE', last_message_at: null, last_error: 'No se utiliza en el snapshot estático; reservado para el WebSocket server-side.' },
-  dexscreener: { connection_status: onchainPools.length ? 'SNAPSHOT' : 'DEGRADED', last_message_at: receivedAt, messages: onchainPools.length },
+  dexscreener: {
+    connection_status: onchainPools.length === onchainAssets.length ? 'SNAPSHOT' : onchainPools.length ? 'DEGRADED' : 'UNAVAILABLE',
+    last_message_at: onchainPools.length ? receivedAt : null,
+    messages: onchainPools.length,
+    expected_records: onchainAssets.length,
+    last_error: onchainPools.length === onchainAssets.length ? null : `Cobertura DEX parcial: ${onchainPools.length}/${onchainAssets.length} pools verificados.`
+  },
   coingecko_metadata: { connection_status: Object.values(metadata).some((row) => row.verification_status === 'VERIFIED') ? 'SNAPSHOT' : 'DEGRADED', last_message_at: receivedAt },
   defillama_tokenization: { connection_status: tokenizationMarkets ? 'SNAPSHOT' : 'DEGRADED', last_message_at: tokenizationMarkets?.received_at || null, records: tokenizationMarkets?.coverage?.rwa_protocols || 0 },
   l2beat_projects: { connection_status: l2Intelligence ? 'SNAPSHOT' : 'DEGRADED', last_message_at: l2Intelligence?.received_at || null, records: l2Intelligence?.coverage?.projects || 0 },
@@ -287,6 +293,7 @@ const snapshot = {
     reference_assets: Object.keys(referencePrices).length,
     historical_assets: Object.keys(historicalReturns).length,
     onchain_pools: onchainPools.length,
+    onchain_pools_expected: onchainAssets.length,
     tokenization_available: Boolean(tokenizationMarkets),
     l2_available: Boolean(l2Intelligence),
     fiscal_jurisdictions: fiscalIntelligence.jurisdictions.length,
