@@ -1,8 +1,8 @@
 {
   "schema_version": "kaufman-security-audit-v1",
-  "generated_at": "2026-08-23T22:19:13.366Z",
+  "generated_at": "2026-08-24T17:10:45.838Z",
   "domain": "kaufmanadvisory.io",
-  "status": "EXTERNAL_ACTION_REQUIRED",
+  "status": "PASS",
   "hosting": {
     "server": "cloudflare",
     "addresses_v4": [
@@ -38,7 +38,7 @@
     "registrar": "One.com A/S",
     "registrar_iana_id": "1462",
     "expiration": "2027-04-13T09:40:29.18Z",
-    "dnssec_delegated": false,
+    "dnssec_delegated": true,
     "authoritative_url": "https://rdap.identitydigital.services/rdap/domain/kaufmanadvisory.io"
   },
   "certificate": {
@@ -187,8 +187,10 @@
     {
       "id": "DNS-02",
       "control": "DNSSEC",
-      "status": "MISSING",
-      "evidence": []
+      "status": "PASS",
+      "evidence": [
+        "2371 13 2 9457dea1eef6a996e767a59a8f1daacbd73475d01447d7000fd07d5a1faab265"
+      ]
     },
     {
       "id": "DNS-03",
@@ -198,32 +200,12 @@
         {
           "critical": 0,
           "type": "CAA",
-          "issue": "letsencrypt.org"
-        },
-        {
-          "critical": 0,
-          "type": "CAA",
-          "issue": "ssl.com"
-        },
-        {
-          "critical": 0,
-          "type": "CAA",
-          "issuewild": "letsencrypt.org"
-        },
-        {
-          "critical": 0,
-          "type": "CAA",
-          "issuewild": "pki.goog; cansignhttpexchanges=yes"
-        },
-        {
-          "critical": 0,
-          "type": "CAA",
           "issue": "digicert.com; cansignhttpexchanges=yes"
         },
         {
           "critical": 0,
           "type": "CAA",
-          "issue": "sectigo.com"
+          "issue": "letsencrypt.org"
         },
         {
           "critical": 0,
@@ -233,7 +215,7 @@
         {
           "critical": 0,
           "type": "CAA",
-          "issue": "pki.goog; cansignhttpexchanges=yes"
+          "issue": "sectigo.com"
         },
         {
           "critical": 0,
@@ -243,12 +225,32 @@
         {
           "critical": 0,
           "type": "CAA",
+          "issue": "pki.goog; cansignhttpexchanges=yes"
+        },
+        {
+          "critical": 0,
+          "type": "CAA",
           "issuewild": "digicert.com; cansignhttpexchanges=yes"
         },
         {
           "critical": 0,
           "type": "CAA",
+          "issuewild": "letsencrypt.org"
+        },
+        {
+          "critical": 0,
+          "type": "CAA",
+          "issue": "ssl.com"
+        },
+        {
+          "critical": 0,
+          "type": "CAA",
           "issuewild": "comodoca.com"
+        },
+        {
+          "critical": 0,
+          "type": "CAA",
+          "issuewild": "pki.goog; cansignhttpexchanges=yes"
         }
       ]
     },
@@ -263,7 +265,7 @@
         "registrar": "One.com A/S",
         "registrar_iana_id": "1462",
         "expiration": "2027-04-13T09:40:29.18Z",
-        "dnssec_delegated": false,
+        "dnssec_delegated": true,
         "authoritative_url": "https://rdap.identitydigital.services/rdap/domain/kaufmanadvisory.io"
       }
     },
@@ -289,7 +291,7 @@
       "evidence": "v=DMARC1; p=reject; pct=100; sp=reject; rua=mailto:contact@kaufmanadvisory.io"
     }
   ],
-  "unresolved_count": 1,
+  "unresolved_count": 0,
   "limitations": [
     "Los cambios de DNSSEC, CAA, IPv6 y correo requieren acceso administrativo a Cloudflare, registrador y Zoho.",
     "Core Web Vitals de campo requieren datos CrUX o analítica de usuarios reales; no se infieren desde una sola carga sintética."
