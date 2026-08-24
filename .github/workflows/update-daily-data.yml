@@ -4,6 +4,15 @@ on:
   schedule:
     - cron: "17 4 * * *"
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/update-daily-data.yml"
+      - "scripts/update_daily_data.py"
+      - "scripts/update_platform_data.mjs"
+      - "scripts/update_public_market_api.mjs"
+      - "scripts/update_regulation_data.mjs"
+      - "server/**"
 
 permissions:
   contents: write
