@@ -302,6 +302,11 @@
     return `<div class="kf-market-band"><div class="kf-container"><div class="kf-market-meta"><strong>Kaufman Reference Price</strong><span data-market-status aria-live="polite">Actualizando precios…</span></div><div class="kf-market-grid">${assets.map(([id,symbol,name])=>`<div class="kf-market-cell" data-market-asset="${id}"><img class="kf-coin-logo" src="${assetUrl(`/assets/logos/${id}.svg`)}" alt="Logo de ${name}"><div><div class="kf-market-name">${symbol}</div><div class="kf-market-pair">${name} / USD</div></div><div class="kf-market-value"><div class="kf-market-price">—</div><div class="kf-market-change na" data-market-age>Actualizando…</div><small class="kf-market-venues" data-market-venues>Mercados públicos server-side</small></div></div>`).join('')}</div></div></div>`;
   }
 
+  function priceMethodologyMarkup(){
+    const rows=[['bitcoin','BTC','Bitcoin'],['ethereum','ETH','Ethereum'],['solana','SOL','Solana']];
+    return `<section class="kf-section kf-price-methodology"><div class="kf-container"><div class="kf-section-head"><div><p class="kf-kicker">Metodología de mercado</p><h2 class="kf-title small">Cálculo del precio de referencia.</h2></div><p class="kf-intro">Fuentes elegibles, cadencia, conversión de stablecoins y controles aplicados antes de publicar un precio.</p></div><div class="kf-antenna-contract"><div><span>Publicación</span><strong>Cálculo automático · objetivo 5 min</strong></div><div><span>Agregación</span><strong>Mediana de mercados elegibles</strong></div><div><span>Stablecoins</span><strong>USDT y USDC convertidos, sin paridad asumida</strong></div><div><span>Entrega</span><strong>Backend Kaufman · navegador sin APIs externas</strong></div></div><div class="kf-data-table-wrap"><table class="kf-data-table kf-reference-table"><thead><tr><th>Activo</th><th class="number">Precio USD</th><th>Actualización</th><th>Fuentes utilizadas</th><th>Confianza</th><th class="number">Divergencia máx.</th></tr></thead><tbody>${rows.map(([id,symbol,name])=>`<tr data-market-asset="${id}"><td><strong>${symbol}</strong> · ${name}</td><td class="number kf-market-price">—</td><td class="kf-market-change na" data-market-age>No disponible</td><td data-market-venues>Sin fuentes frescas</td><td data-market-confidence>—</td><td class="number" data-market-divergence>—</td></tr>`).join('')}</tbody></table></div><div class="kf-method-strip"><strong>Kaufman Reference Price v1</strong><span data-market-methodology>Mediana server-side · objetivo 5 min · volumen mínimo · divergencia máxima 2,5 % · hora visible.</span></div></div></section>`;
+  }
+
   function directoryHubMarkup(){
     const totalProfiles=HOME_DIRECTORY_KEYS.reduce((total,key)=>total+(CATALOGS[key]?.items.length||0),0);
     const priorityKeys=['proyectos','wallets','riesgos'];
@@ -613,7 +618,7 @@
       {name:'IPFS · Filecoin · The Graph · ENS',scope:'Direccionamiento, persistencia, indexación e identidad Web3',cadence:'Referencias técnicas primarias',status:'verified',url:'https://ethereum.org/developers/docs/'},
       {name:'OWASP Smart Contract Top 10',scope:'Taxonomía de riesgos de contratos inteligentes',cadence:'Edición 2026',status:'verified',url:'https://scs.owasp.org/sctop10/'}
     ];
-    return `<main class="kf-main" id="main-content">${pageHero('Fuentes','Registro visible de proveedores, cobertura, cadencia y estado de cada integración.','Trazabilidad')}<section class="kf-section"><div class="kf-container"><div class="kf-source-register">${sources.map((source)=>`<div class="kf-source-row"><strong>${source.name}</strong><span>${source.scope}</span><span>${source.cadence}</span><div>${statusBadge(source.status)}${source.url?` <a href="${source.url}" target="_blank" rel="noopener noreferrer">Abrir ↗</a>`:''}</div></div>`).join('')}</div></div></section></main>`;
+    return `<main class="kf-main" id="main-content">${pageHero('Fuentes','Registro visible de proveedores, cobertura, cadencia y estado de cada integración.','Trazabilidad')}${priceMethodologyMarkup()}<section class="kf-section"><div class="kf-container"><div class="kf-source-register">${sources.map((source)=>`<div class="kf-source-row"><strong>${source.name}</strong><span>${source.scope}</span><span>${source.cadence}</span><div>${statusBadge(source.status)}${source.url?` <a href="${source.url}" target="_blank" rel="noopener noreferrer">Abrir ↗</a>`:''}</div></div>`).join('')}</div></div></section></main>`;
   }
 
   function renderLegal(kind){
@@ -2111,6 +2116,13 @@
     });
     metadataHead.remove();
     metadataGrid.remove();
+    const referenceTable=main.querySelector('.kf-reference-table');
+    const methodologyContainer=referenceTable?.closest('.kf-section')?.querySelector(':scope > .kf-container');
+    const contextHead=methodologyContainer?.querySelector(':scope > .kf-section-head:not(.kf-spaced-head)');
+    const contract=methodologyContainer?.querySelector(':scope > .kf-antenna-contract');
+    const referenceWrap=referenceTable?.closest('.kf-data-table-wrap');
+    const methodStrip=methodologyContainer?.querySelector(':scope > .kf-method-strip');
+    [contextHead,contract,referenceWrap,methodStrip].forEach((node)=>node?.remove());
     hero.insertAdjacentElement('afterend',priceBand);
   }
 
