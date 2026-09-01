@@ -1,21 +1,15 @@
 import { mkdir, writeFile } from 'node:fs/promises';
-import marketSnapshot from '../.netlify-functions/market-snapshot.mjs';
 import marketContext from '../.netlify-functions/market-context.mjs';
-import ethereumGas from '../.netlify-functions/ethereum-gas.mjs';
 
 const target = new URL('../api/market/', import.meta.url);
 await mkdir(target, { recursive: true });
 
 const endpoints = [
-  ['snapshot', marketSnapshot, 'https://kaufmanadvisory.io/api/market/snapshot'],
-  ['context', marketContext, 'https://kaufmanadvisory.io/api/market/context'],
-  ['gas', ethereumGas, 'https://kaufmanadvisory.io/api/market/gas']
+  ['context', marketContext, 'https://kaufmanadvisory.io/api/market/context']
 ];
 
 const liveEndpoints = {
-  snapshot: 'https://leafy-pudding-3f3427.netlify.app/api/market/snapshot',
-  context: 'https://leafy-pudding-3f3427.netlify.app/api/market/context',
-  gas: 'https://leafy-pudding-3f3427.netlify.app/api/market/gas'
+  context: '/api/market/context'
 };
 
 for (const [name, handler, url] of endpoints) {
@@ -50,10 +44,10 @@ const streamContract = {
   generated_at: new Date().toISOString(),
   status: 'AVAILABLE',
   transport: 'polling',
-  live_price_endpoint: 'https://leafy-pudding-3f3427.netlify.app/api/market/snapshot',
-  live_context_endpoint: 'https://leafy-pudding-3f3427.netlify.app/api/market/context',
-  live_gas_endpoint: 'https://leafy-pudding-3f3427.netlify.app/api/market/gas',
+  live_price_endpoint: '/api/market/snapshot',
+  live_context_endpoint: '/api/market/context',
+  live_gas_endpoint: '/api/market/gas',
   same_origin_fallbacks: ['/api/market/snapshot', '/api/market/context', '/api/market/gas'],
-  note: 'El dominio principal es estático y no anuncia SSE. El frontend consulta el edge server-side; las rutas same-origin son copias diarias y nunca un ticker vivo.'
+  note: 'El dominio principal publica precios y gas server-side cada cinco minutos y contexto de mercado diario. El frontend consulta únicamente rutas same-origin.'
 };
 await writeFile(new URL('stream', target), `${JSON.stringify(streamContract)}\n`, 'utf8');

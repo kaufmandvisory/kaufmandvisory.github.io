@@ -102,10 +102,9 @@
 
   const STATUS_LABELS = {verified:'VERIFICADO',sourcechecked:'FUENTE CONTRASTADA',unverified:'REVISIÓN NECESARIA',auto:'AUTOMÁTICO',offline:'NO DISPONIBLE'};
   const REGULATION_LEVEL_LABELS = {BINDING:'VINCULANTE',OFFICIAL_RULEBOOK:'REGLAMENTO OFICIAL',OFFICIAL_GUIDANCE:'GUÍA OFICIAL',PRIMARY_LAW:'LEY PRIMARIA'};
-  const ANTENNA_STREAM = 'https://leafy-pudding-3f3427.netlify.app/.netlify/functions/market-stream';
-  const MARKET_EDGE_ENDPOINT = 'https://leafy-pudding-3f3427.netlify.app/.netlify/functions/market-snapshot';
-  const MARKET_CONTEXT_ENDPOINT = 'https://leafy-pudding-3f3427.netlify.app/.netlify/functions/market-context';
-  const GAS_EDGE_ENDPOINT = 'https://leafy-pudding-3f3427.netlify.app/.netlify/functions/ethereum-gas';
+  const MARKET_EDGE_ENDPOINT = '/api/market/snapshot';
+  const MARKET_CONTEXT_ENDPOINT = '/api/market/context';
+  const GAS_EDGE_ENDPOINT = '/api/market/gas';
   const PRICE = new Intl.NumberFormat('es-ES',{style:'currency',currency:'USD',maximumFractionDigits:2});
   const SMALL_USD = new Intl.NumberFormat('es-ES',{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:4});
   const APP_SCRIPT = document.querySelector('script[src*="kaufman-app.js"]');
@@ -115,8 +114,6 @@
   const STATIC_HOST = /(^|\.)kaufmanadvisory\.io$|(^|\.)kaufmandvisory\.github\.io$/.test(location.hostname);
   let latestEthUsd = null;
   let latestMarketSnapshot = null;
-  let antennaStream = null;
-  let antennaConnected = false;
   let marketEdgeTimer = null;
   let marketEdgeRequest = null;
   let marketContextTimer = null;
@@ -338,7 +335,7 @@
 
   function gasPanelMarkup(){
     const tiers=[['safe','Lento','Percentil 10'],['standard','Estándar','Percentil 50'],['fast','Rápido','Percentil 90']];
-    return `<section class="kf-live-panel kf-fee-panel"><div class="kf-live-panel-head"><div><p class="kf-kicker">Comisiones EIP-1559 observadas</p><h2>Lo que cuesta Ethereum ahora.</h2></div><div class="kf-live-actions"><span data-gas-status aria-live="polite">Esperando bloque de Ethereum…</span></div></div><div class="kf-fee-context"><div><span>Base fee siguiente bloque</span><strong data-gas-base>—</strong><small>Gwei</small></div><div><span>Uso de gas mediano</span><strong data-gas-utilization>—</strong><small>20 bloques observados</small></div><div><span>Bloque</span><strong data-gas-block>—</strong><small data-gas-block-time>Timestamp pendiente</small></div></div><div class="kf-fee-tiers">${tiers.map(([key,label,note])=>`<article data-gas-tier="${key}"><span>${label}</span><strong data-gas-tier-gwei>—</strong><small>Gwei · ${note}</small><div><b data-gas-tier-cost>—</b><em>transferencia ETH · 21.000 gas</em></div></article>`).join('')}</div><div class="kf-fee-sources"><div><span>Fuente canónica</span><a href="https://ethereum.org/es/developers/docs/apis/json-rpc/#eth_feehistory" target="_blank" rel="noopener noreferrer">Ethereum eth_feeHistory ↗</a><small>Base fee + propinas observadas · consulta server-side cada minuto</small></div><div><span>Consulta pública</span><a href="https://etherscan.io/gastracker" target="_blank" rel="noopener noreferrer">Etherscan Gas Tracker ↗</a><small>Referencia visual externa; no interviene en el cálculo Kaufman</small></div></div></section>`;
+    return `<section class="kf-live-panel kf-fee-panel"><div class="kf-live-panel-head"><div><p class="kf-kicker">Comisiones EIP-1559 observadas</p><h2>Lo que cuesta Ethereum ahora.</h2></div><div class="kf-live-actions"><span data-gas-status aria-live="polite">Esperando bloque de Ethereum…</span></div></div><div class="kf-fee-context"><div><span>Base fee siguiente bloque</span><strong data-gas-base>—</strong><small>Gwei</small></div><div><span>Uso de gas mediano</span><strong data-gas-utilization>—</strong><small>20 bloques observados</small></div><div><span>Bloque</span><strong data-gas-block>—</strong><small data-gas-block-time>Timestamp pendiente</small></div></div><div class="kf-fee-tiers">${tiers.map(([key,label,note])=>`<article data-gas-tier="${key}"><span>${label}</span><strong data-gas-tier-gwei>—</strong><small>Gwei · ${note}</small><div><b data-gas-tier-cost>—</b><em>transferencia ETH · 21.000 gas</em></div></article>`).join('')}</div><div class="kf-fee-sources"><div><span>Fuente canónica</span><a href="https://ethereum.org/es/developers/docs/apis/json-rpc/#eth_feehistory" target="_blank" rel="noopener noreferrer">Ethereum eth_feeHistory ↗</a><small>Base fee + propinas observadas · actualización server-side con objetivo de cinco minutos</small></div><div><span>Consulta pública</span><a href="https://etherscan.io/gastracker" target="_blank" rel="noopener noreferrer">Etherscan Gas Tracker ↗</a><small>Referencia visual externa; no interviene en el cálculo Kaufman</small></div></div></section>`;
   }
 
   function exchangeFeesMarkup(){
@@ -414,7 +411,7 @@
       ['rwa_lending_tvl_usd','Financiación RWA','TVL en protocolos de préstamo RWA'],
       ['usd_stablecoin_value_usd','Rail monetario tokenizado','Stablecoins USD valoradas sin asumir paridad']
     ];
-    return `<main class="kf-main" id="main-content">${pageHero('Mercados','La infraestructura financiera que ya se está moviendo onchain: deuda pública, fondos, crédito, materias primas, acciones y redes de liquidación. El precio cripto es contexto, no el producto.','Capital tokenizado mundial','auto')}<section class="kf-section kf-rwa-market"><div class="kf-container"><div class="kf-rwa-lead"><div><p class="kf-kicker">Mercado que no aparece en un ticker</p><h2 class="kf-title">El nuevo mapa del capital.</h2></div><div><p>Medimos capital rastreado en productos RWA, su concentración y por qué redes circula. Las cifras llegan server-side desde adaptadores públicos; ninguna fila se completa a mano.</p><span class="kf-rwa-observed" data-tokenization-status>Conectando fuente pública…</span></div></div><div class="kf-rwa-kpis">${rwaKpis.map(([key,label,note],index)=>`<article class="kf-rwa-kpi"><span>0${index+1} · ${label}</span><strong data-token-kpi="${key}">—</strong><small>${note}</small></article>`).join('')}</div><div class="kf-rwa-ratios"><article><span>RWA / stablecoins USD</span><strong data-token-ratio="tracked_rwa_to_stablecoin_pct">—</strong><small>Escala del capital RWA frente al rail de liquidación</small></article><article><span>Concentración top 5</span><strong data-token-ratio="top_5_concentration_pct">—</strong><small>Cuánto controlan los cinco mayores productos</small></article><article><span>Capital multichain</span><strong data-token-ratio="multichain_tvl_share_pct">—</strong><small>TVL de productos desplegados en más de una red</small></article><article><span>Variación stablecoins 24 h</span><strong data-token-ratio="stablecoin_supply_change_24h_pct">—</strong><small>Cambio de circulación valorada, no del precio del token</small></article></div><div class="kf-rwa-layout"><section class="kf-rwa-panel"><div class="kf-rwa-panel-head"><div><p class="kf-kicker">Clases de activo</p><h3>Dónde entra el capital.</h3></div><small>No sumar: una iniciativa puede tener varias etiquetas</small></div><div class="kf-rwa-bars" data-token-segments><div class="kf-live-empty">Esperando clases de activo…</div></div></section><section class="kf-rwa-panel"><div class="kf-rwa-panel-head"><div><p class="kf-kicker">Infraestructura</p><h3>Por qué redes circula.</h3></div><small>Distribución de chainTvls del universo RWA</small></div><div class="kf-rwa-bars" data-token-networks><div class="kf-live-empty">Esperando redes…</div></div></section></div><div class="kf-section-head kf-rwa-subhead"><div><p class="kf-kicker">Concentración del mercado</p><h2 class="kf-title small">Los productos que ya pesan.</h2></div><p class="kf-intro">No ordenamos monedas: ordenamos vehículos y protocolos por capital onchain rastreado, con clase de activo, redes y adaptador auditable.</p></div><div class="kf-data-table-wrap"><table class="kf-data-table kf-rwa-leaders"><thead><tr><th>Producto / protocolo</th><th>Clase</th><th class="number">Capital onchain</th><th>Redes</th><th class="number">7 días</th><th>Evidencia</th></tr></thead><tbody data-token-leaders><tr><td colspan="6">Esperando universo RWA…</td></tr></tbody></table></div><div class="kf-rwa-settlement"><div><p class="kf-kicker">Rail de liquidación</p><h3>Dónde vive el dólar tokenizado.</h3><p>Distribución del valor circulante de stablecoins USD por red. Se multiplica oferta por precio observado: nunca se presupone automáticamente 1 USD.</p></div><div class="kf-rwa-bars compact" data-token-stablecoin-networks><div class="kf-live-empty">Esperando distribución…</div></div></div><div class="kf-rwa-method"><div><span>UNIVERSO</span><strong data-token-coverage>—</strong></div><div><span>MÉTODO</span><strong>TVL RWA elegible · etiquetas solapables · chainTvls por red</strong></div><div><span>FUENTE</span><a href="https://defillama.com/docs/api" target="_blank" rel="noopener noreferrer">DefiLlama Open API ↗</a></div><p data-token-methodology>Los endpoints no publican timestamp por fila. Kaufman registra la recepción y bloquea el panel si supera 24 horas.</p></div>${l2IntelligenceMarkup()}</div></section>${marketSignalsMarkup()}${marketBandMarkup()}<section class="kf-section"><div class="kf-container"><div class="kf-section-head"><div><p class="kf-kicker">Contexto de mercado</p><h2 class="kf-title small">Precio, fuentes y método.</h2></div><p class="kf-intro">La antena de BTC, ETH y SOL queda como capa auxiliar. Si no existe una observación fresca, Kaufman muestra “No disponible”.</p></div><div class="kf-antenna-contract"><div><span>Publicación</span><strong>Solo observaciones &lt; 5 s</strong></div><div><span>Agregación</span><strong>Mediana de mercados elegibles</strong></div><div><span>Stablecoins</span><strong>USDT y USDC convertidos, sin paridad asumida</strong></div><div><span>Entrega</span><strong>Backend Kaufman · navegador sin APIs externas</strong></div></div><div class="kf-data-table-wrap"><table class="kf-data-table kf-reference-table"><thead><tr><th>Activo</th><th class="number">Precio USD</th><th>Actualización</th><th>Fuentes utilizadas</th><th>Confianza</th><th class="number">Divergencia máx.</th></tr></thead><tbody>${rows.map(([id,symbol,name])=>`<tr data-market-asset="${id}"><td><strong>${symbol}</strong> · ${name}</td><td class="number kf-market-price">—</td><td class="kf-market-change na" data-market-age>No disponible</td><td data-market-venues>Sin fuentes frescas</td><td data-market-confidence>—</td><td class="number" data-market-divergence>—</td></tr>`).join('')}</tbody></table></div><div class="kf-method-strip"><strong>Kaufman Reference Price v1</strong><span data-market-methodology>Mediana · frescura &lt; 5 s · volumen mínimo · umbral de divergencia 2,5 % · conexión sana.</span></div><div class="kf-section-head kf-spaced-head"><div><p class="kf-kicker">Conversión estable</p><h2 class="kf-title small">USD, USDT y USDC no son sinónimos.</h2></div><p class="kf-intro">Las parejas de Binance y DEX solo entran cuando existe un tipo USDT/USD o USDC/USD fresco observado en otro mercado.</p></div><div class="kf-stable-grid" data-stablecoin-grid><div class="kf-live-empty">Esperando tipos de conversión…</div></div><div class="kf-section-head kf-spaced-head"><div><p class="kf-kicker">Fuentes de mercado</p><h2 class="kf-title small">Mercados utilizados en el precio.</h2></div><p class="kf-intro">Solo intervienen mercados frescos, con volumen suficiente y dentro del umbral de divergencia.</p></div><div class="kf-provider-grid" data-provider-grid><div class="kf-live-empty">Actualizando fuentes server-side…</div></div><div class="kf-section-head kf-spaced-head"><div><p class="kf-kicker">Mercados descentralizados</p><h2 class="kf-title small">Tokens identificados por red y contrato.</h2></div><p class="kf-intro">DEX Screener aporta pools públicos. Como su respuesta no incluye timestamp de la cotización, v1 los muestra y almacena, pero no los incorpora silenciosamente al precio de referencia.</p></div><div class="kf-data-table-wrap"><table class="kf-data-table kf-dex-table"><thead><tr><th>Token onchain</th><th>Pool</th><th class="number">Precio</th><th class="number">Volumen 24 h</th><th class="number">Liquidez</th><th>Estado</th></tr></thead><tbody data-dex-pools><tr><td colspan="6">Esperando DEX Screener…</td></tr></tbody></table></div><div class="kf-section-head kf-spaced-head"><div><p class="kf-kicker">Metadatos</p><h2 class="kf-title small">CoinGecko, fuera del ticker.</h2></div><p class="kf-intro">Solo IDs, imágenes, categorías, capitalización y oferta circulante. Cada registro exige un last_updated_at válido.</p></div><div class="kf-metadata-grid" data-market-metadata><div class="kf-live-empty">Metadatos en segundo plano…</div></div></div></section></main>`;
+    return `<main class="kf-main" id="main-content">${pageHero('Mercados','La infraestructura financiera que ya se está moviendo onchain: deuda pública, fondos, crédito, materias primas, acciones y redes de liquidación. El precio cripto es contexto, no el producto.','Capital tokenizado mundial','auto')}<section class="kf-section kf-rwa-market"><div class="kf-container"><div class="kf-rwa-lead"><div><p class="kf-kicker">Mercado que no aparece en un ticker</p><h2 class="kf-title">El nuevo mapa del capital.</h2></div><div><p>Medimos capital rastreado en productos RWA, su concentración y por qué redes circula. Las cifras llegan server-side desde adaptadores públicos; ninguna fila se completa a mano.</p><span class="kf-rwa-observed" data-tokenization-status>Conectando fuente pública…</span></div></div><div class="kf-rwa-kpis">${rwaKpis.map(([key,label,note],index)=>`<article class="kf-rwa-kpi"><span>0${index+1} · ${label}</span><strong data-token-kpi="${key}">—</strong><small>${note}</small></article>`).join('')}</div><div class="kf-rwa-ratios"><article><span>RWA / stablecoins USD</span><strong data-token-ratio="tracked_rwa_to_stablecoin_pct">—</strong><small>Escala del capital RWA frente al rail de liquidación</small></article><article><span>Concentración top 5</span><strong data-token-ratio="top_5_concentration_pct">—</strong><small>Cuánto controlan los cinco mayores productos</small></article><article><span>Capital multichain</span><strong data-token-ratio="multichain_tvl_share_pct">—</strong><small>TVL de productos desplegados en más de una red</small></article><article><span>Variación stablecoins 24 h</span><strong data-token-ratio="stablecoin_supply_change_24h_pct">—</strong><small>Cambio de circulación valorada, no del precio del token</small></article></div><div class="kf-rwa-layout"><section class="kf-rwa-panel"><div class="kf-rwa-panel-head"><div><p class="kf-kicker">Clases de activo</p><h3>Dónde entra el capital.</h3></div><small>No sumar: una iniciativa puede tener varias etiquetas</small></div><div class="kf-rwa-bars" data-token-segments><div class="kf-live-empty">Esperando clases de activo…</div></div></section><section class="kf-rwa-panel"><div class="kf-rwa-panel-head"><div><p class="kf-kicker">Infraestructura</p><h3>Por qué redes circula.</h3></div><small>Distribución de chainTvls del universo RWA</small></div><div class="kf-rwa-bars" data-token-networks><div class="kf-live-empty">Esperando redes…</div></div></section></div><div class="kf-section-head kf-rwa-subhead"><div><p class="kf-kicker">Concentración del mercado</p><h2 class="kf-title small">Los productos que ya pesan.</h2></div><p class="kf-intro">No ordenamos monedas: ordenamos vehículos y protocolos por capital onchain rastreado, con clase de activo, redes y adaptador auditable.</p></div><div class="kf-data-table-wrap"><table class="kf-data-table kf-rwa-leaders"><thead><tr><th>Producto / protocolo</th><th>Clase</th><th class="number">Capital onchain</th><th>Redes</th><th class="number">7 días</th><th>Evidencia</th></tr></thead><tbody data-token-leaders><tr><td colspan="6">Esperando universo RWA…</td></tr></tbody></table></div><div class="kf-rwa-settlement"><div><p class="kf-kicker">Rail de liquidación</p><h3>Dónde vive el dólar tokenizado.</h3><p>Distribución del valor circulante de stablecoins USD por red. Se multiplica oferta por precio observado: nunca se presupone automáticamente 1 USD.</p></div><div class="kf-rwa-bars compact" data-token-stablecoin-networks><div class="kf-live-empty">Esperando distribución…</div></div></div><div class="kf-rwa-method"><div><span>UNIVERSO</span><strong data-token-coverage>—</strong></div><div><span>MÉTODO</span><strong>TVL RWA elegible · etiquetas solapables · chainTvls por red</strong></div><div><span>FUENTE</span><a href="https://defillama.com/docs/api" target="_blank" rel="noopener noreferrer">DefiLlama Open API ↗</a></div><p data-token-methodology>Los endpoints no publican timestamp por fila. Kaufman registra la recepción y bloquea el panel si supera 24 horas.</p></div>${l2IntelligenceMarkup()}</div></section>${marketSignalsMarkup()}${marketBandMarkup()}<section class="kf-section"><div class="kf-container"><div class="kf-section-head"><div><p class="kf-kicker">Contexto de mercado</p><h2 class="kf-title small">Precio, fuentes y método.</h2></div><p class="kf-intro">La antena de BTC, ETH y SOL queda como capa auxiliar. Si la publicación automática supera quince minutos, Kaufman muestra “No disponible”.</p></div><div class="kf-antenna-contract"><div><span>Publicación</span><strong>Cálculo automático · objetivo 5 min</strong></div><div><span>Agregación</span><strong>Mediana de mercados elegibles</strong></div><div><span>Stablecoins</span><strong>USDT y USDC convertidos, sin paridad asumida</strong></div><div><span>Entrega</span><strong>Backend Kaufman · navegador sin APIs externas</strong></div></div><div class="kf-data-table-wrap"><table class="kf-data-table kf-reference-table"><thead><tr><th>Activo</th><th class="number">Precio USD</th><th>Actualización</th><th>Fuentes utilizadas</th><th>Confianza</th><th class="number">Divergencia máx.</th></tr></thead><tbody>${rows.map(([id,symbol,name])=>`<tr data-market-asset="${id}"><td><strong>${symbol}</strong> · ${name}</td><td class="number kf-market-price">—</td><td class="kf-market-change na" data-market-age>No disponible</td><td data-market-venues>Sin fuentes frescas</td><td data-market-confidence>—</td><td class="number" data-market-divergence>—</td></tr>`).join('')}</tbody></table></div><div class="kf-method-strip"><strong>Kaufman Reference Price v1</strong><span data-market-methodology>Mediana server-side · objetivo 5 min · volumen mínimo · divergencia máxima 2,5 % · hora visible.</span></div><div class="kf-section-head kf-spaced-head"><div><p class="kf-kicker">Conversión estable</p><h2 class="kf-title small">USD, USDT y USDC no son sinónimos.</h2></div><p class="kf-intro">Las parejas de Binance y DEX solo entran cuando existe un tipo USDT/USD o USDC/USD fresco observado en otro mercado.</p></div><div class="kf-stable-grid" data-stablecoin-grid><div class="kf-live-empty">Esperando tipos de conversión…</div></div><div class="kf-section-head kf-spaced-head"><div><p class="kf-kicker">Fuentes de mercado</p><h2 class="kf-title small">Mercados utilizados en el precio.</h2></div><p class="kf-intro">Solo intervienen mercados frescos, con volumen suficiente y dentro del umbral de divergencia.</p></div><div class="kf-provider-grid" data-provider-grid><div class="kf-live-empty">Actualizando fuentes server-side…</div></div><div class="kf-section-head kf-spaced-head"><div><p class="kf-kicker">Mercados descentralizados</p><h2 class="kf-title small">Tokens identificados por red y contrato.</h2></div><p class="kf-intro">DEX Screener aporta pools públicos. Kaufman verifica identidad, pool y última operación onchain antes de publicarlos; no los incorpora silenciosamente al precio de referencia.</p></div><div class="kf-data-table-wrap"><table class="kf-data-table kf-dex-table"><thead><tr><th>Token onchain</th><th>Pool</th><th class="number">Precio</th><th class="number">Volumen 24 h</th><th class="number">Liquidez</th><th>Estado</th></tr></thead><tbody data-dex-pools><tr><td colspan="6">Esperando DEX Screener…</td></tr></tbody></table></div><div class="kf-section-head kf-spaced-head"><div><p class="kf-kicker">Metadatos</p><h2 class="kf-title small">CoinGecko, fuera del ticker.</h2></div><p class="kf-intro">Solo IDs, imágenes, categorías, capitalización y oferta circulante. Cada registro exige un last_updated_at válido.</p></div><div class="kf-metadata-grid" data-market-metadata><div class="kf-live-empty">Metadatos en segundo plano…</div></div></div></section></main>`;
   }
 
   function renderTokenization(){
@@ -824,12 +821,15 @@
 
   function syncMiningReference(){
     const reference=latestMarketSnapshot?.reference_prices?.bitcoin;
-    const referenceFresh=reference?.price&&freshnessFromAge(ageMs(reference.provider_timestamp))==='FRESH';
+    const automated=latestMarketSnapshot?.delivery_mode==='AUTOMATED_5_MINUTE_SNAPSHOT';
+    const referenceAge=ageMs(reference?.received_at||reference?.provider_timestamp);
+    const maxAge=Number(latestMarketSnapshot?.price_max_age_ms||latestMarketSnapshot?.max_age_ms)||(automated?900000:5000);
+    const referenceFresh=reference?.price&&(automated?Number.isFinite(referenceAge)&&referenceAge<=maxAge:freshnessFromAge(referenceAge)==='FRESH');
     if(miningCalculatorData?.status==='auto'&&referenceFresh){
       const grossBtc=Number(miningCalculatorData.gross_btc_day),energy=Number(miningCalculatorData.energy_kwh_day),price=Number(reference.price);
       if(Number.isFinite(grossBtc)&&Number.isFinite(energy)&&energy>0&&Number.isFinite(price)){
         const grossUsd=grossBtc*price;
-        miningCalculatorData={...miningCalculatorData,btc_price_usd:price,gross_usd_day:grossUsd,break_even_usd_kwh:grossUsd/energy,price_source:'Kaufman Reference Price · tiempo real'};
+        miningCalculatorData={...miningCalculatorData,btc_price_usd:price,gross_usd_day:grossUsd,break_even_usd_kwh:grossUsd/energy,price_source:`Kaufman Reference Price · ${automated?'automático':'tiempo real'}`};
         document.querySelectorAll('[data-mining-gross]').forEach((node)=>node.textContent=PRICE.format(grossUsd));
         document.querySelectorAll('[data-mining-break-even]').forEach((node)=>node.textContent=`${SMALL_USD.format(grossUsd/energy)}/kWh`);
         document.querySelectorAll('[data-mining-price-source]').forEach((node)=>node.textContent=`Kaufman Reference Price · ${ageLabel(ageMs(reference.provider_timestamp))}`);
@@ -880,7 +880,11 @@
     if(!Number.isFinite(value))return 'Actualización no verificable';
     const seconds=Math.max(0,Math.floor(value/1000));
     if(seconds<2)return 'Actualizado ahora';
-    return `Actualizado hace ${seconds} ${seconds===1?'segundo':'segundos'}`;
+    if(seconds<60)return `Actualizado hace ${seconds} ${seconds===1?'segundo':'segundos'}`;
+    const minutes=Math.floor(seconds/60);
+    if(minutes<60)return `Actualizado hace ${minutes} ${minutes===1?'minuto':'minutos'}`;
+    const hours=Math.floor(minutes/60);
+    return `Actualizado hace ${hours} ${hours===1?'hora':'horas'}`;
   }
 
   function setFreshness(node,status){
@@ -890,27 +894,37 @@
 
   function refreshMarketDisplay(){
     const references=latestMarketSnapshot?.reference_prices||{};
-    const freshAssets=new Set();
-    const freshVenues=new Set();
+    const deliveryMode=latestMarketSnapshot?.price_delivery_mode||latestMarketSnapshot?.delivery_mode;
+    const automated=deliveryMode==='AUTOMATED_5_MINUTE_SNAPSHOT';
+    const refreshInterval=Number(latestMarketSnapshot?.price_refresh_interval_ms||latestMarketSnapshot?.refresh_interval_ms)||300000;
+    const maxAge=Number(latestMarketSnapshot?.price_max_age_ms||latestMarketSnapshot?.max_age_ms)||(automated?900000:5000);
+    const availableAssets=new Set();
+    const availableVenues=new Set();
     latestEthUsd=null;
     document.querySelectorAll('[data-market-asset]').forEach((element)=>{
       const reference=references[element.dataset.marketAsset];
       const referenceTimestamp=reference?.received_at||reference?.provider_timestamp;
       const currentAge=referenceTimestamp?ageMs(referenceTimestamp):null;
       const status=reference?.price?freshnessFromAge(currentAge):'UNAVAILABLE';
-      const publishable=status==='FRESH'&&Number.isFinite(Number(reference?.price));
-      if(publishable){freshAssets.add(element.dataset.marketAsset);(reference.venues||[]).forEach((venue)=>freshVenues.add(venue))}
+      const publishable=Number.isFinite(Number(reference?.price))&&(automated?Number.isFinite(currentAge)&&currentAge<=maxAge:status==='FRESH');
+      const displayStatus=automated&&publishable?(currentAge<=refreshInterval*2?'FRESH':'STALE'):status;
+      if(publishable){availableAssets.add(element.dataset.marketAsset);(reference.venues||[]).forEach((venue)=>availableVenues.add(venue))}
       if(publishable&&element.dataset.marketAsset==='ethereum')latestEthUsd=Number(reference.price);
       const price=element.querySelector('.kf-market-price'),age=element.querySelector('[data-market-age]'),venues=element.querySelector('[data-market-venues]');
       if(price)price.textContent=publishable?PRICE.format(reference.price):'No disponible';
-      if(age){age.textContent=publishable?ageLabel(currentAge):referenceTimestamp?'Actualizando precio…':'Sin precio observado';setFreshness(age,status)}
-      if(venues)venues.textContent=publishable?(reference.venues||[]).join(' · '):'Esperando mercados frescos';
+      if(age){age.textContent=publishable?ageLabel(currentAge):referenceTimestamp?'Última observación fuera de plazo':'Sin precio observado';setFreshness(age,displayStatus)}
+      if(venues)venues.textContent=publishable?(reference.venues||[]).join(' · '):'Esperando la siguiente actualización automática';
       const confidence=element.querySelector('[data-market-confidence]');
       if(confidence){const confidenceLabel={HIGH:'ALTA',MEDIUM:'MEDIA',LOW:'BAJA'}[reference?.confidence]||reference?.confidence;const verificationLabel={VERIFIED:'VERIFICADO',SINGLE_SOURCE:'UNA FUENTE'}[reference?.verification_status]||reference?.verification_status;confidence.textContent=publishable?`${confidenceLabel} · ${verificationLabel}`:'—'}
       const divergence=element.querySelector('[data-market-divergence]');
       if(divergence)divergence.textContent=publishable&&Number.isFinite(reference.metrics?.max_divergence_pct)?`${reference.metrics.max_divergence_pct.toFixed(3)} %`:'—';
     });
-    const marketStatus=freshAssets.size===3?`Precios en tiempo real · ${freshVenues.size} mercados`:freshAssets.size?`${freshAssets.size}/3 precios en tiempo real`:'Actualizando precios…';
+    const snapshotAge=ageMs(latestMarketSnapshot?.price_generated_at||latestMarketSnapshot?.generated_at);
+    const marketStatus=automated
+      ? availableAssets.size===3
+        ? `Precios automáticos · objetivo 5 min · ${ageLabel(snapshotAge)}`
+        : availableAssets.size?`${availableAssets.size}/3 precios automáticos disponibles`:'Esperando la siguiente actualización automática'
+      : availableAssets.size===3?`Precios en tiempo real · ${availableVenues.size} mercados`:availableAssets.size?`${availableAssets.size}/3 precios en tiempo real`:'Actualizando precios…';
     document.querySelectorAll('[data-market-status]').forEach((node)=>node.textContent=marketStatus);
     updateGasCost();
   }
@@ -938,6 +952,7 @@
   function applyEthereumFees(item,oracle,liveCadenceMs=null){
     const receivedAge=ageMs(item?.received_at);
     const staticSnapshot=latestMarketSnapshot?.delivery_mode==='STATIC_SNAPSHOT';
+    const cadenceMinutes=Number.isFinite(Number(liveCadenceMs))?Math.max(1,Math.round(Number(liveCadenceMs)/60000)):null;
     const maxAge=Number.isFinite(Number(liveCadenceMs))?Math.max(180000,Number(liveCadenceMs)*3):staticSnapshot?Number(latestMarketSnapshot?.thresholds?.snapshot_max_age_ms||93600000):960000;
     const valid=item?.verification_status==='CHAIN_OBSERVED'&&Number.isFinite(receivedAge)&&receivedAge<=maxAge&&Number.isFinite(Number(item?.base_fee_gwei));
     const setText=(selector,value)=>document.querySelectorAll(selector).forEach((node)=>node.textContent=value);
@@ -953,7 +968,7 @@
       if(label)label.textContent=publishable?gas.toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:3}):'No disponible';
       if(publishable)card.dataset.gasGwei=String(gas);else delete card.dataset.gasGwei;
     });
-    setText('[data-gas-status]',valid?`${staticSnapshot&&!liveCadenceMs?'Snapshot público Ethereum':'Ethereum directo'} · ${ageLabel(receivedAge)}${liveCadenceMs?' · actualización automática cada minuto':staticSnapshot?' · respaldo diario':' · actualización cada 15 min'}`:'Comisiones no disponibles: no existe una observación dentro del umbral');
+    setText('[data-gas-status]',valid?`${staticSnapshot&&!liveCadenceMs?'Snapshot público Ethereum':'Ethereum directo'} · ${ageLabel(receivedAge)}${cadenceMinutes?` · actualización automática cada ${cadenceMinutes} ${cadenceMinutes===1?'minuto':'minutos'}`:staticSnapshot?' · respaldo diario':' · actualización cada 15 min'}`:'Comisiones no disponibles: no existe una observación dentro del umbral');
     updateGasCost();
   }
 
@@ -1014,15 +1029,18 @@
     if(!root)return;
     const snapshot=latestMarketSnapshot?.delivery_mode==='STATIC_SNAPSHOT';
     const edge=latestMarketSnapshot?.delivery_mode==='LIVE_EDGE';
-    const names={coinbase:snapshot?'Coinbase · copia fechada':edge?'Coinbase · mercado público':'Coinbase WebSocket',kraken:snapshot?'Kraken · copia fechada':edge?'Kraken · mercado público':'Kraken WebSocket v2',binance:edge?'Binance · mercado público':'Binance WebSocket',dexscreener:'DEX Screener',coingecko_metadata:'CoinGecko · solo metadatos',defillama_tokenization:'DefiLlama · tokenización',l2beat_projects:'L2BEAT · proyectos L2',ethereum_rpc:'Ethereum RPC',kraken_fees:'Kraken · comisiones'};
+    const automated=latestMarketSnapshot?.delivery_mode==='AUTOMATED_5_MINUTE_SNAPSHOT';
+    const names={coinbase:snapshot?'Coinbase · copia fechada':edge||automated?'Coinbase · mercado público':'Coinbase WebSocket',kraken:snapshot?'Kraken · copia fechada':edge||automated?'Kraken · mercado público':'Kraken WebSocket v2',binance:edge||automated?'Binance · mercado público':'Binance WebSocket',dexscreener:'DEX Screener',coingecko_metadata:'CoinGecko · solo metadatos',defillama_tokenization:'DefiLlama · tokenización',l2beat_projects:'L2BEAT · proyectos L2',ethereum_rpc:'Ethereum RPC',kraken_fees:'Kraken · comisiones'};
     const keys=['coinbase','kraken','binance','dexscreener','coingecko_metadata','defillama_tokenization','l2beat_projects','ethereum_rpc'];
-    root.innerHTML=keys.map((key)=>{const item=providers[key]||{},status=item.connection_status||'UNAVAILABLE';const publicStatus=['LIVE','CONNECTED','SNAPSHOT'].includes(status)?'ACTIVA':status==='DEGRADED'?'DEGRADADA':'NO DISPONIBLE';return `<article class="kf-provider-card"><div><span>${escapeHtml(names[key])}</span><i class="kf-health-dot ${status.toLowerCase()}"></i></div><strong>${publicStatus}</strong><small>${item.last_message_at?ageLabel(ageMs(item.last_message_at)):'Sin observación reciente'}</small><dl><div><dt>Observaciones</dt><dd>${Number(item.messages||item.records||0).toLocaleString('es-ES')}</dd></div><div><dt>Entrega</dt><dd>${edge&&['coinbase','kraken','binance'].includes(key)?'≤ 5 s':snapshot?'Fechada':'Server-side'}</dd></div></dl></article>`}).join('');
+    root.innerHTML=keys.map((key)=>{const item=providers[key]||{},status=item.connection_status||'UNAVAILABLE';const publicStatus=['LIVE','CONNECTED','SNAPSHOT'].includes(status)?'ACTIVA':status==='DEGRADED'?'DEGRADADA':'NO DISPONIBLE';return `<article class="kf-provider-card"><div><span>${escapeHtml(names[key])}</span><i class="kf-health-dot ${status.toLowerCase()}"></i></div><strong>${publicStatus}</strong><small>${item.last_message_at?ageLabel(ageMs(item.last_message_at)):'Sin observación reciente'}</small><dl><div><dt>Observaciones</dt><dd>${Number(item.messages||item.records||0).toLocaleString('es-ES')}</dd></div><div><dt>Entrega</dt><dd>${edge&&['coinbase','kraken','binance'].includes(key)?'≤ 5 s':automated&&['coinbase','kraken','binance'].includes(key)?'Objetivo 5 min':snapshot?'Fechada':'Server-side'}</dd></div></dl></article>`}).join('');
   }
 
   function renderStablecoins(stablecoins={}){
     const root=document.querySelector('[data-stablecoin-grid]');
     if(!root)return;
-    root.innerHTML=['USDT','USDC'].map((currency)=>{const item=stablecoins[currency],itemAge=ageMs(item?.received_at||item?.provider_timestamp),valid=item?.price&&freshnessFromAge(itemAge)==='FRESH';return `<article class="kf-stable-card"><span>${currency} / USD</span><strong>${valid?Number(item.price).toFixed(6):'No disponible'}</strong><small>${item?.received_at||item?.provider_timestamp?ageLabel(itemAge):'Sin tipo observado'} · ${valid?item.venues.join(' · '):'no se normalizan parejas '+currency}</small></article>`}).join('');
+    const automated=latestMarketSnapshot?.delivery_mode==='AUTOMATED_5_MINUTE_SNAPSHOT';
+    const maxAge=Number(latestMarketSnapshot?.price_max_age_ms||latestMarketSnapshot?.max_age_ms)||(automated?900000:5000);
+    root.innerHTML=['USDT','USDC'].map((currency)=>{const item=stablecoins[currency],itemAge=ageMs(item?.received_at||item?.provider_timestamp),valid=item?.price&&(automated?Number.isFinite(itemAge)&&itemAge<=maxAge:freshnessFromAge(itemAge)==='FRESH');return `<article class="kf-stable-card"><span>${currency} / USD</span><strong>${valid?Number(item.price).toFixed(6):'No disponible'}</strong><small>${item?.received_at||item?.provider_timestamp?ageLabel(itemAge):'Sin tipo observado'} · ${valid?item.venues.join(' · '):'no se normalizan parejas '+currency}</small></article>`}).join('');
   }
 
   function renderDexPools(pools=[]){
@@ -1611,6 +1629,10 @@
       schema_version:snapshot.schema_version,
       delivery_mode:snapshot.delivery_mode,
       generated_at:snapshot.generated_at,
+      price_delivery_mode:snapshot.delivery_mode,
+      price_generated_at:snapshot.generated_at,
+      price_refresh_interval_ms:Number(snapshot.refresh_interval_ms)||3000,
+      price_max_age_ms:Number(snapshot.thresholds?.fresh_ms)||5000,
       processing_ms:snapshot.processing_ms,
       status:snapshot.status,
       reference_prices:snapshot.reference_prices,
@@ -1618,7 +1640,6 @@
       providers:{...(latestMarketSnapshot?.providers||{}),...providers},
       thresholds:{...(latestMarketSnapshot?.thresholds||{}),...(snapshot.thresholds||{})}
     };
-    antennaConnected=true;
     refreshMarketDisplay();
     renderProviders(latestMarketSnapshot.providers);
     renderStablecoins(latestMarketSnapshot.stablecoin_fx);
@@ -1629,16 +1650,50 @@
     return true;
   }
 
+  function applyAutomatedMarketSnapshot(snapshot){
+    if(!snapshot||snapshot.delivery_mode!=='AUTOMATED_5_MINUTE_SNAPSHOT'||!snapshot.reference_prices)return false;
+    const snapshotAge=ageMs(snapshot.generated_at);
+    const maxAge=Number(snapshot.max_age_ms)||900000;
+    if(!Number.isFinite(snapshotAge)||snapshotAge>maxAge)return false;
+    const providers=Object.fromEntries(Object.entries(snapshot.providers||{}).map(([name,provider])=>{
+      const contradictory=['LIVE','CONNECTED'].includes(provider?.connection_status)&&Boolean(provider?.last_error);
+      return [name,contradictory?{...provider,connection_status:'DEGRADED'}:provider];
+    }));
+    latestMarketSnapshot={
+      ...(latestMarketSnapshot||{}),
+      schema_version:snapshot.schema_version,
+      delivery_mode:snapshot.delivery_mode,
+      generated_at:snapshot.generated_at,
+      price_delivery_mode:snapshot.delivery_mode,
+      price_generated_at:snapshot.generated_at,
+      price_refresh_interval_ms:Number(snapshot.refresh_interval_ms)||300000,
+      price_max_age_ms:maxAge,
+      processing_ms:snapshot.processing_ms,
+      status:snapshot.status,
+      reference_prices:snapshot.reference_prices,
+      stablecoin_fx:snapshot.stablecoin_fx||{},
+      providers:{...(latestMarketSnapshot?.providers||{}),...providers},
+      thresholds:{...(latestMarketSnapshot?.thresholds||{}),...(snapshot.thresholds||{})}
+    };
+    refreshMarketDisplay();
+    renderProviders(latestMarketSnapshot.providers);
+    renderStablecoins(latestMarketSnapshot.stablecoin_fx);
+    renderEcosystemMap(latestMarketSnapshot);
+    const method=latestMarketSnapshot.reference_prices?.bitcoin?.methodology;
+    document.querySelectorAll('[data-market-methodology]').forEach((node)=>node.textContent=method?`Mediana de mercados aptos · cálculo server-side automático · objetivo 5 min · volumen mínimo ${Number(method.minimum_volume_usd_24h).toLocaleString('es-ES')} USD · divergencia ≤ ${method.divergence_threshold_pct} %.`:'Metodología pendiente');
+    syncMiningReference();
+    return true;
+  }
+
   async function pollMarketEdge(){
-    if(marketEdgeRequest||document.hidden)return;
+    if(marketEdgeRequest||(document.hidden&&latestMarketSnapshot?.price_delivery_mode))return;
     marketEdgeRequest=(async()=>{
       try{
-        const response=await fetch(MARKET_EDGE_ENDPOINT,{headers:{Accept:'application/json'}});
+        const response=await fetch(pollingUrl(MARKET_EDGE_ENDPOINT,60000),{headers:{Accept:'application/json'},cache:'no-store'});
         if(!response.ok)throw new Error(`HTTP ${response.status}`);
         const snapshot=await response.json();
-        if(!applyLiveMarketSnapshot(snapshot))throw new Error('Respuesta de mercado no válida');
+        if(!applyLiveMarketSnapshot(snapshot)&&!applyAutomatedMarketSnapshot(snapshot))throw new Error('Respuesta de mercado no válida o fuera de plazo');
       }catch(error){
-        antennaConnected=false;
         refreshMarketDisplay();
       }finally{marketEdgeRequest=null}
     })();
@@ -1648,7 +1703,7 @@
   function startMarketEdgePolling(){
     if(marketEdgeTimer)return;
     pollMarketEdge();
-    marketEdgeTimer=window.setInterval(pollMarketEdge,3000);
+    marketEdgeTimer=window.setInterval(pollMarketEdge,60000);
   }
 
   async function pollMarketContext(){
@@ -1658,7 +1713,7 @@
         const response=await fetch(pollingUrl(MARKET_CONTEXT_ENDPOINT,300000),{headers:{Accept:'application/json'},cache:'no-store'});
         if(!response.ok)throw new Error(`HTTP ${response.status}`);
         const context=await response.json();
-        if(context?.delivery_mode!=='LIVE_EDGE_CONTEXT')throw new Error('Respuesta de contexto no válida');
+        if(!['LIVE_EDGE_CONTEXT','STATIC_DAILY_FALLBACK'].includes(context?.delivery_mode))throw new Error('Respuesta de contexto no válida');
         const fallbackEtf=latestMarketSnapshot?.market_context?.etf_flows;
         const liveEtf=context.etf_flows;
         const etfFlows=liveEtf?{
@@ -1682,7 +1737,7 @@
   function startMarketContextPolling(){
     if(marketContextTimer||!document.querySelector('[data-market-context]'))return;
     pollMarketContext();
-    marketContextTimer=window.setInterval(pollMarketContext,60000);
+    marketContextTimer=window.setInterval(pollMarketContext,300000);
   }
 
   async function pollGasEdge(){
@@ -1769,23 +1824,11 @@
       await loadPlatformFallback();
       return;
     }
-    antennaStream?.close();
     if(marketEdgeTimer){window.clearInterval(marketEdgeTimer);marketEdgeTimer=null}
-    antennaConnected=false;
     await loadPlatformFallback();
-    if(FILE_ROOT||!('EventSource' in window)){
-      document.querySelectorAll('[data-market-status]').forEach((node)=>node.textContent='Actualizando precios…');
-      refreshMarketDisplay();
-      await loadPlatformFallback();
-      startMarketEdgePolling();
-      return;
-    }
-    antennaStream=new EventSource(ANTENNA_STREAM);
-    antennaStream.addEventListener('snapshot',(event)=>{
-      try{if(!applyLiveMarketSnapshot(JSON.parse(event.data)))throw new Error('Snapshot SSE no válido')}catch(error){antennaConnected=false;refreshMarketDisplay()}
-    });
-    antennaStream.onopen=()=>{antennaConnected=true;refreshMarketDisplay()};
-    antennaStream.onerror=()=>{antennaConnected=false;refreshMarketDisplay();window.setTimeout(()=>{if(!antennaConnected)pollMarketEdge()},1250)};
+    document.querySelectorAll('[data-market-status]').forEach((node)=>node.textContent='Comprobando actualización automática…');
+    refreshMarketDisplay();
+    startMarketEdgePolling();
   }
 
   function safeExternalUrl(value){

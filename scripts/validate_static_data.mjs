@@ -105,11 +105,13 @@ for (const item of [...daily.home_regulation, ...daily.mining_news]) {
 }
 
 assert.doesNotMatch(JSON.stringify(platform), /"status":"demo"|DEMO · dato no conectado/i);
-for (const name of ['snapshot', 'context', 'gas']) {
-  assert.equal(staticMarketApi[name].delivery_mode, 'STATIC_DAILY_FALLBACK', `${name}: el respaldo estático se anuncia como tiempo real`);
-  assert.equal(staticMarketApi[name].status, 'SNAPSHOT_ONLY', `${name}: estado estático ambiguo`);
-  assert.match(staticMarketApi[name].live_endpoint || '', /^https:\/\//, `${name}: endpoint vivo ausente`);
+for (const name of ['snapshot', 'gas']) {
+  assert.equal(staticMarketApi[name].delivery_mode, 'AUTOMATED_5_MINUTE_SNAPSHOT', `${name}: automatización de cinco minutos ausente`);
+  assert.equal(staticMarketApi[name].refresh_interval_ms, 5 * 60_000, `${name}: cadencia automática incorrecta`);
+  assert.equal(staticMarketApi[name].max_age_ms, 15 * 60_000, `${name}: umbral de caducidad ausente`);
 }
+assert.equal(staticMarketApi.context.delivery_mode, 'STATIC_DAILY_FALLBACK', 'context: el respaldo estático se anuncia como tiempo real');
+assert.equal(staticMarketApi.context.status, 'SNAPSHOT_ONLY', 'context: estado estático ambiguo');
 assert.equal(staticMarketApi.stream.delivery_mode, 'STATIC_POLLING', 'stream: contrato de transporte inválido');
 assert.ok(staticMarketApi.stream.same_origin_fallbacks?.length === 3, 'stream: respaldos same-origin incompletos');
 

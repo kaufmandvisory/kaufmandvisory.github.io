@@ -1,0 +1,46 @@
+name: Update Kaufman reference prices
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/update-market-prices.yml"
+      - "scripts/update_market_price_snapshot.mjs"
+      - "scripts/validate_automated_market_snapshot.mjs"
+      - ".netlify-functions/market-snapshot.mjs"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: kaufman-data-writes
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          package-manager-cache: false
+      - name: Calculate server-side reference prices
+        run: node scripts/update_market_price_snapshot.mjs
+      - name: Validate freshness and price contract
+        run: node scripts/validate_automated_market_snapshot.mjs
+      - name: Publish changed snapshot
+        shell: bash
+        run: |
+          if git diff --quiet -- api/market/snapshot api/market/gas; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add api/market/snapshot api/market/gas
+          git commit -m "data: update automatic reference prices"
+          git push

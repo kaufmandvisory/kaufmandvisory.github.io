@@ -147,7 +147,10 @@ class MarketAntenna {
     this.stablecoins = computed.stablecoins;
     return {
       schema_version: 'kaufman-market-antenna-v1',
+      delivery_mode: 'LIVE_SSE_WEBSOCKET',
       generated_at: new Date().toISOString(),
+      refresh_interval_ms: this.config.snapshotIntervalMs,
+      status: Object.values(this.references).filter((row) => Number.isFinite(row?.price)).length === 3 ? 'LIVE' : 'DEGRADED',
       reference_prices: this.references,
       stablecoin_fx: this.stablecoins,
       providers: this.providerHealth,

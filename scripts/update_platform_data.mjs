@@ -247,7 +247,7 @@ const onchainPools = (await Promise.all(onchainAssets.map(async (asset) => attem
     referencePriceUsd: referencePrices[asset.id]?.price || null,
     onchainEvidence
   });
-})))).filter(Boolean);
+})))).filter((pool) => pool?.verification_status === 'VERIFIED');
 
 const providers = {
   coinbase: { connection_status: coinbaseRows.some(([, row]) => row) ? 'SNAPSHOT' : 'DEGRADED', last_message_at: receivedAt, messages: coinbaseRows.filter(([, row]) => row).length },

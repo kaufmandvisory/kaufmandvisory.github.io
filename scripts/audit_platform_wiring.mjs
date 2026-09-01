@@ -5,15 +5,16 @@ async function assignedJson(file, prefix) {
   return JSON.parse(raw.slice(prefix.length).replace(/;\s*$/, ''));
 }
 
-const [platform, daily, edge, streamEdge, gasEdge, contextEdge, app, newsBuilder] = await Promise.all([
+const [platform, daily, edge, gasEdge, contextEdge, app, newsBuilder, automaticUpdate, automaticWorkflow] = await Promise.all([
   assignedJson('../assets/platform-data.js', 'window.KAUFMAN_PLATFORM_DATA = '),
   assignedJson('../assets/daily-data.js', 'window.KAUFMAN_DAILY_DATA = '),
   readFile(new URL('../.netlify-functions/market-snapshot.mjs', import.meta.url), 'utf8'),
-  readFile(new URL('../.netlify-functions/market-stream.mjs', import.meta.url), 'utf8'),
   readFile(new URL('../.netlify-functions/ethereum-gas.mjs', import.meta.url), 'utf8'),
   readFile(new URL('../.netlify-functions/market-context.mjs', import.meta.url), 'utf8'),
   readFile(new URL('../assets/kaufman-app.js', import.meta.url), 'utf8'),
-  readFile(new URL('./update_daily_data.py', import.meta.url), 'utf8')
+  readFile(new URL('./update_daily_data.py', import.meta.url), 'utf8'),
+  readFile(new URL('./update_market_price_snapshot.mjs', import.meta.url), 'utf8'),
+  readFile(new URL('../.github/workflows/update-market-prices.yml', import.meta.url), 'utf8')
 ]);
 
 const fiscalFacts = platform.fiscal_intelligence.jurisdictions.flatMap((jurisdiction) =>
@@ -23,8 +24,8 @@ const unresolvedFiscal = fiscalFacts.filter((fact) => fact.status === 'NOT_DETER
 const web3Catalog = app.slice(app.indexOf("proyectos:{label:'Proyectos'"), app.indexOf("mineria:{label:'Minería'"));
 const web3Profiles = (web3Catalog.match(/\{id:'/g) || []).length;
 const web3AutomaticProfiles = (web3Catalog.match(/status:'auto'/g) || []).length;
-const edgeUsesPersistentWebSocket = /MarketStreamSession/.test(streamEdge) && /createCoinbaseConnector/.test(await readFile(new URL('../server/market-stream-session.js', import.meta.url), 'utf8'));
-const edgeFetchCalls = (edge.match(/fetch\(/g) || []).length;
+const automaticPricePublication = /AUTOMATED_5_MINUTE_SNAPSHOT/.test(automaticUpdate) && /cron: "\*\/5/.test(automaticWorkflow);
+const frontendUsesSameOrigin = /MARKET_EDGE_ENDPOINT = '\/api\/market\/snapshot'/.test(app) && !/leafy-pudding/.test(app);
 const newsRows = [...(daily.home_regulation || []), ...(daily.mining_news || [])];
 const journalisticRows = newsRows.filter((row) => row.verification_status === 'SOURCE_METADATA_VERIFIED');
 const primaryMonitorRows = newsRows.filter((row) => row.verification_status === 'OFFICIAL_SOURCE_MONITORED');
@@ -33,9 +34,9 @@ const calculatedRows = newsRows.filter((row) => row.verification_status === 'CAL
 const findings = [
   {
     id: 'A01', severity: 'RESOLVED', area: 'Mercados',
-    finding: 'Transporte server-side WebSocket → SSE implantado.',
-    evidence: `Tres conectores WebSocket=${edgeUsesPersistentWebSocket}; SSE con heartbeat y renovación silenciosa; REST queda como respaldo (${edgeFetchCalls} fetch).`,
-    remediation: 'Vigilar SLO de conexión y migrar a proceso 24/7 cuando exista infraestructura persistente autorizada.'
+    finding: 'Publicación automática server-side independiente del proveedor agotado.',
+    evidence: `Job cada cinco minutos=${automaticPricePublication}; frontend same-origin=${frontendUsesSameOrigin}; tres mercados agregados=${Object.keys(platform.reference_prices||{}).length}.`,
+    remediation: 'Vigilar el SLO de actualización y migrar a un proceso persistente solo cuando exista infraestructura autorizada; no anunciar tiempo real mientras la entrega sea discreta.'
   },
   {
     id: 'A02', severity: platform.market_context.etf_flows?.reconciliation?.status === 'RECONCILED' ? 'RESOLVED' : 'CONTROL_READY', area: 'ETF',

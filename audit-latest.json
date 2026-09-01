@@ -1,22 +1,22 @@
 {
   "status": "AUDITED_WITH_CONTROLS",
-  "generated_at": "2026-08-24T17:18:15.727Z",
-  "evidence_snapshot_at": "2026-08-23T04:51:43.377Z",
+  "generated_at": "2026-09-01T14:40:10.508Z",
+  "evidence_snapshot_at": "2026-09-01T14:31:51.687Z",
   "findings": [
     {
       "id": "A01",
       "severity": "RESOLVED",
       "area": "Mercados",
-      "finding": "Transporte server-side WebSocket → SSE implantado.",
-      "evidence": "Tres conectores WebSocket=true; SSE con heartbeat y renovación silenciosa; REST queda como respaldo (1 fetch).",
-      "remediation": "Vigilar SLO de conexión y migrar a proceso 24/7 cuando exista infraestructura persistente autorizada."
+      "finding": "Publicación automática server-side independiente del proveedor agotado.",
+      "evidence": "Job cada cinco minutos=true; frontend same-origin=true; tres mercados agregados=3.",
+      "remediation": "Vigilar el SLO de actualización y migrar a un proceso persistente solo cuando exista infraestructura autorizada; no anunciar tiempo real mientras la entrega sea discreta."
     },
     {
       "id": "A02",
       "severity": "CONTROL_READY",
       "area": "ETF",
       "finding": "El agregado ETF se contrasta con participaciones publicadas por el emisor; la primera observación crea la base y no finge reconciliación.",
-      "evidence": "Estado=BASELINE_ESTABLISHED; observaciones de emisor=2; contexto automático=true.",
+      "evidence": "Estado=CONFLICT; observaciones de emisor=2; contexto automático=true.",
       "remediation": "Conservar una observación de una sesión posterior para activar la comparación direccional y bloquear cualquier conflicto."
     },
     {

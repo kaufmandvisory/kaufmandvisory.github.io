@@ -1,4 +1,4 @@
-name: Monitor Kaufman live market edge
+name: Monitor Kaufman automatic market publication
 
 on:
   schedule:
@@ -20,12 +20,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Verify live edge contracts and freshness
+      - name: Verify public automatic contracts and freshness
         env:
-          EDGE_ROOT: https://leafy-pudding-3f3427.netlify.app/api/market
+          EDGE_ROOT: https://kaufmanadvisory.io/api/market
         run: |
           node --input-type=module <<'EOF'
-          const endpoints = ['snapshot', 'context', 'gas'];
+          const endpoints = ['snapshot', 'gas'];
           for (const endpoint of endpoints) {
             const response = await fetch(`${process.env.EDGE_ROOT}/${endpoint}`, {
               headers: { Accept: 'application/json', 'User-Agent': 'Kaufman-edge-monitor/1.0' },
@@ -34,15 +34,16 @@ jobs:
             if (!response.ok) throw new Error(`${endpoint}: HTTP ${response.status}`);
             const payload = await response.json();
             const age = Date.now() - Date.parse(payload.generated_at);
-            if (!Number.isFinite(age) || age > 90_000) throw new Error(`${endpoint}: snapshot obsoleto (${age} ms)`);
+            if (payload.delivery_mode !== 'AUTOMATED_5_MINUTE_SNAPSHOT') throw new Error(`${endpoint}: modo automático ausente`);
+            if (!Number.isFinite(age) || age > 20 * 60_000) throw new Error(`${endpoint}: snapshot obsoleto (${age} ms)`);
             if (endpoint === 'snapshot') {
               for (const asset of ['bitcoin', 'ethereum', 'solana']) {
                 const row = payload.reference_prices?.[asset];
-                if (!Number.isFinite(row?.price) || row.price <= 0 || row.age_ms >= 5_000) {
-                  throw new Error(`${endpoint}: ${asset} no está fresco`);
+                if (!Number.isFinite(row?.price) || row.price <= 0 || !row.received_at) {
+                  throw new Error(`${endpoint}: ${asset} no es publicable`);
                 }
               }
             }
-            console.log(`${endpoint}: ${payload.status} · ${age} ms`);
+            console.log(`${endpoint}: ${payload.status} · ${Math.round(age / 1000)} s`);
           }
           EOF
