@@ -106,7 +106,7 @@
   const MARKET_CONTEXT_ENDPOINT = '/api/market/context';
   const GAS_EDGE_ENDPOINT = '/api/market/gas';
   const MARKET_CONTINUITY_MAX_AGE_MS = 6 * 60 * 60 * 1000;
-  const PRICE = new Intl.NumberFormat('es-ES',{style:'currency',currency:'USD',maximumFractionDigits:2});
+  const PRICE = new Intl.NumberFormat('es-ES',{style:'currency',currency:'USD',maximumFractionDigits:2,useGrouping:true});
   const SMALL_USD = new Intl.NumberFormat('es-ES',{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:4});
   const APP_SCRIPT = document.querySelector('script[src*="kaufman-app.js"]');
   const APP_CACHE_VERSION = APP_SCRIPT ? new URL(APP_SCRIPT.src).searchParams.get('v') || 'dev' : 'dev';
