@@ -461,6 +461,49 @@
     return `${new Intl.NumberFormat('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2}).format(Number(value)/1000)} billones US$`;
   }
 
+  const BANK_DIGITAL_FACTS={
+    'jpmorgan-chase':{
+      'Escala publicada':'>3 billones US$ de volumen acumulado y >7.000 M US$ de volumen medio diario en Kinexys',
+      'Rail y disponibilidad':'Blockchain Deposit Accounts, pagos programables, FX onchain y activos tokenizados · operación 24/7/365'
+    },
+    'hsbc':{
+      'Productos y rails':'HSBC Orion · oro tokenizado · custodia de valores tokenizados · depósitos tokenizados HKD/USD',
+      'Última señal publicada':'20 ago 2026 · primera transacción de depósitos tokenizados mediante el ledger blockchain de Swift; servicio ampliado a EE. UU. en abril de 2026'
+    },
+    'credit-agricole':{
+      'Autorización':'CACEIS Bank autorizada bajo MiCA para custodia, administración, transferencia y recepción/transmisión de órdenes',
+      'Cobertura regulatoria':'Pasaporte europeo para prestar esos servicios en países de la Unión Europea'
+    },
+    'mufg':{
+      'Infraestructura':'Progmat · emisión y gestión de security tokens, utility tokens y stablecoins',
+      'Estado de la evidencia':'Arquitectura documentada por MUFG; disponibilidad depende del producto, entidad y jurisdicción'
+    },
+    'citigroup':{
+      'Infraestructura':'CIDAP · emisión, transferencia, custodia y programación en redes públicas y privadas',
+      'Estado operativo':'Token Services for Cash 24/7 entre sucursales participantes; Token Services for Trade continúa identificado como piloto'
+    },
+    'banco-santander':{
+      'Operación observada':'Bono de 20 M US$ emitido en Ethereum público, con efectivo y cupones también tokenizados',
+      'Alcance':'Operación institucional de 2019; no prueba una oferta minorista actual'
+    },
+    'societe-generale':{
+      'Productos y redes':'EUR y USD CoinVertible · bonos digitales · productos estructurados sobre Ethereum y Tezos',
+      'Última señal publicada':'Mayo de 2026 · expansión de CoinVertible a Canton y participación en liquidación europea de valores tokenizados'
+    },
+    'goldman-sachs':{
+      'Infraestructura':'GS DAP · infraestructura DLT para mercados de capitales digitales y múltiples clases de activo',
+      'Estado corporativo':'Plan de separación como compañía independiente anunciado en 2024, sujeto a aprobaciones regulatorias'
+    },
+    'deutsche-bank':{
+      'Arquitectura':'Project DAMA 2 · Ethereum público, L2 institucional con privacidad ZK y distribución multichain mediante Axelar',
+      'Estado':'Blueprint y MVP no comercial; no debe mostrarse como servicio de producción disponible'
+    },
+    'ubs':{
+      'Producción observada':'Flujo end-to-end de fondo tokenizado ejecutado en producción en 2025; uMINT fue lanzado sobre Ethereum en 2024',
+      'Instrumentos':'Fondos, bonos, warrants, notas estructuradas y repos tokenizados'
+    }
+  };
+
   function itemSources(item){
     const redirects={
       'https://www.hsbc.com/who-we-are/our-businesses-and-customers/hsbc-orion':'https://www.hsbc.com/who-we-are/hsbc-and-digital/hsbc-and-digital-assets-and-currencies',
@@ -503,7 +546,34 @@
       fields['Custodia de criptoactivos']='No verificada como servicio público';
       fields['Acceso']='Sin alcance digital publicado';
     }
-    return fields;
+    return {...fields,...(BANK_DIGITAL_FACTS[item.id]||{})};
+  }
+
+  function bankIntelligenceMarkup(banks){
+    const totalAssets=banks.reduce((sum,item)=>sum+Number(item.bank.assets||0),0);
+    const sourced=banks.filter((item)=>(item.sources||[]).length>1);
+    const topFourAssets=banks.slice(0,4).reduce((sum,item)=>sum+Number(item.bank.assets||0),0);
+    const regions=['Asia-Pacífico','Europa','América'].map((region)=>{
+      const subset=banks.filter((item)=>item.bank.region===region);
+      const assets=subset.reduce((sum,item)=>sum+Number(item.bank.assets||0),0);
+      return {region,count:subset.length,assets,share:assets/totalAssets*100};
+    });
+    const percent=(value)=>new Intl.NumberFormat('es-ES',{minimumFractionDigits:1,maximumFractionDigits:1}).format(value);
+    const regionBars=regions.map((item)=>`<i style="--bank-share:${item.share}%" title="${escapeHtml(item.region)}: ${percent(item.share)} %"></i>`).join('');
+    const regionRows=regions.map((item)=>`<li><span>${escapeHtml(item.region)}</span><strong>${percent(item.share)} %</strong><small>${item.count} bancos · ${bankAssetsCompact(item.assets)}</small></li>`).join('');
+    const signals=[
+      ['J.P. Morgan · Kinexys','>3 billones US$ procesados','>7.000 M US$ de media diaria · infraestructura 24/7/365','https://www.jpmorgan.com/onyx'],
+      ['HSBC · depósitos tokenizados','Expansión a EE. UU. en 2026','20 ago 2026 · primera operación mediante el ledger blockchain de Swift','https://www.hsbc.com/who-we-are/hsbc-and-digital/hsbc-and-digital-assets-and-currencies'],
+      ['CACEIS · MiCA','Custodia con pasaporte UE','Custodia, órdenes y transferencias autorizadas desde 30 jun 2025','https://www.caceis.com/press-releases/caceis-bank-obtains-mica-authorisation'],
+      ['UBS Tokenize','Fondo tokenizado en producción','Flujo completo de suscripción y reembolso publicado en 2025','https://www.ubs.com/global/en/investment-bank/tokenize.html']
+    ];
+    const signalCards=signals.map(([name,value,note,url])=>`<article><span>${escapeHtml(name)}</span><strong>${escapeHtml(value)}</strong><small>${escapeHtml(note)}</small><a href="${url}" target="_blank" rel="noopener noreferrer">Fuente ↗</a></article>`).join('');
+    return `<section class="kf-bank-intelligence" aria-labelledby="bank-registry-title">
+      <header><div><p class="kf-kicker">Lectura blockchain del Top 25</p><h2 id="bank-registry-title">Qué está desplegado y qué sigue sin evidencia.</h2></div><a href="https://www.spglobal.com/market-intelligence/en/news-insights/research/2026/04/the-worlds-largest-banks-by-assets-2026" target="_blank" rel="noopener noreferrer">Ranking y metodología S&amp;P Global ↗</a></header>
+      <div class="kf-bank-kpis"><article><strong>${bankAssetsCompact(totalAssets)}</strong><span>activos agregados</span><small>Suma del Top 25 · corte 31 dic 2025</small></article><article><strong>${sourced.length} / ${banks.length}</strong><span>producto o infraestructura con fuente primaria</span><small>No se cuenta el contexto e-CNY sin atribución individual</small></article><article><strong>${percent(topFourAssets/totalAssets*100)} %</strong><span>del balance en los cuatro mayores bancos chinos</span><small>Concentración dentro de esta muestra</small></article><article><strong>${banks.length-sourced.length} / ${banks.length}</strong><span>sin producto concreto vinculado</span><small>Hueco documental, no ausencia demostrada</small></article></div>
+      <div class="kf-bank-analysis"><section><header><strong>Activos por región</strong><span>Cuota dentro de ${bankAssetsCompact(totalAssets)}</span></header><div class="kf-bank-region-bar" aria-hidden="true">${regionBars}</div><ul>${regionRows}</ul></section><section><header><strong>Infraestructura bancaria identificada</strong><span>Productos con fuente corporativa; categorías no excluyentes</span></header><dl><div><dt>Dinero y pagos</dt><dd>Kinexys · HSBC Tokenised Deposits · Citi Token Services</dd></div><div><dt>Valores y fondos</dt><dd>HSBC Orion · Progmat · Santander · SG-FORGE · GS DAP · DAMA 2 · UBS Tokenize</dd></div><div><dt>Custodia y servicing</dt><dd>CACEIS · Citi CIDAP · SG-FORGE · DAMA 2 · UBS Tokenize</dd></div></dl></section></div>
+      <div class="kf-bank-signals"><header><strong>Datos que cambian la lectura</strong><span>Últimos hechos cuantificables o con cambio de estado hallados en fuentes corporativas</span></header><div>${signalCards}</div></div>
+    </section>`;
   }
 
   function bankRegistryMarkup(){
@@ -518,7 +588,7 @@
       const activityClass=['Cobertura pendiente','Sin atribución individual'].includes(bank.activityLevel)?' pending':'';
       return `<details class="kf-bank-row" data-bank-record data-bank-region="${escapeHtml(bank.region)}" data-bank-search="${escapeHtml(search)}"><summary><span class="kf-bank-rank">${String(bank.rank).padStart(2,'0')}</span><span class="kf-bank-name"><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(bank.country)} · ${escapeHtml(item.subtitle.split('·').slice(1).join('·').trim()||'grupo bancario')}</small></span><span class="kf-bank-assets"><strong>${bankAssetsCompact(bank.assets)}</strong><small>activos totales</small></span><span class="kf-bank-activity${activityClass}"><strong>${escapeHtml(bank.activity)}</strong><small>${escapeHtml(bank.activityLevel)}</small></span><span class="kf-bank-access"><strong>${escapeHtml(bank.access)}</strong><small>${escapeHtml(bank.custody)}</small></span><span class="kf-bank-open"><b>Abrir</b><i aria-hidden="true"></i></span></summary><div class="kf-bank-detail"><dl>${facts}</dl><aside><span>Fuentes de la ficha</span>${sourceLinks}<a class="kf-bank-profile-link" href="${profileUrl('bancos',item.id)}">Abrir ficha completa →</a></aside></div></details>`;
     }).join('');
-    return `<section class="kf-bank-registry" aria-labelledby="bank-registry-title"><div class="kf-bank-registry-head"><div><p class="kf-kicker">Clasificación mundial · activos totales</p><h2 id="bank-registry-title">25 grupos bancarios, una comparación homogénea.</h2></div><p>Escala bancaria y actividad blockchain son datos distintos. El puesto procede del ranking mundial S&P Global 2026; cada iniciativa digital exige una fuente corporativa identificable.</p></div><div class="kf-bank-method"><div><span>Corte principal</span><strong>31 dic 2025</strong></div><div><span>Unidad</span><strong>Activos consolidados en US$</strong></div><div><span>Criterio</span><strong>Activos totales declarados</strong></div><div><span>Cobertura</span><strong>25 de 100 entidades</strong></div><a href="https://www.spglobal.com/market-intelligence/en/news-insights/research/2026/04/the-worlds-largest-banks-by-assets-2026" target="_blank" rel="noopener noreferrer">Metodología S&P Global ↗</a></div><div class="kf-bank-tools"><label><span>Buscar banco, país o iniciativa</span><input type="search" data-bank-search placeholder="Ej. Santander, Japón, tokenización…"></label><label><span>Región</span><select data-bank-region><option value="all">Todas</option>${regions.map((region)=>`<option value="${escapeHtml(region)}">${escapeHtml(region)}</option>`).join('')}</select></label><span class="kf-bank-count" data-bank-count>${banks.length} bancos</span></div><div class="kf-bank-columns" aria-hidden="true"><span>Puesto</span><span>Banco y sede</span><span>Activos</span><span>Actividad blockchain</span><span>Acceso y custodia</span><span>Ficha</span></div><div class="kf-bank-list">${rows}<p class="kf-bank-empty" data-bank-empty hidden>No hay bancos que coincidan con el filtro.</p></div><p class="kf-bank-caveat"><strong>Lectura correcta:</strong> el tamaño no mide solvencia, rentabilidad ni calidad. «Sin producto vinculado» significa que Kaufman no adjunta una fuente primaria específica en este corte; no demuestra que el banco carezca de actividad interna.</p></section>`;
+    return `${bankIntelligenceMarkup(banks)}<section class="kf-bank-registry" aria-label="Comparador de los 25 mayores bancos"><div class="kf-bank-tools"><label><span>Buscar banco, país o iniciativa</span><input type="search" data-bank-search placeholder="Ej. Santander, Japón, tokenización…"></label><label><span>Región</span><select data-bank-region><option value="all">Todas</option>${regions.map((region)=>`<option value="${escapeHtml(region)}">${escapeHtml(region)}</option>`).join('')}</select></label><span class="kf-bank-count" data-bank-count>${banks.length} bancos</span></div><div class="kf-bank-columns" aria-hidden="true"><span>Puesto</span><span>Banco y sede</span><span>Activos</span><span>Actividad blockchain</span><span>Acceso y custodia</span><span>Ficha</span></div><div class="kf-bank-list">${rows}<p class="kf-bank-empty" data-bank-empty hidden>No hay bancos que coincidan con el filtro.</p></div><p class="kf-bank-caveat"><strong>Lectura correcta:</strong> el tamaño no mide solvencia, rentabilidad ni calidad. «Sin producto vinculado» significa que Kaufman no adjunta una fuente primaria específica en este corte; no demuestra que el banco carezca de actividad interna.</p></section>`;
   }
 
   function walletIntelligenceMarkup(){
@@ -560,7 +630,7 @@
     const catalog=CATALOGS[type];
     if(!catalog)return renderNotFound();
     const hasVerified=catalog.items.some((item)=>item.status==='verified');
-    if(type==='bancos')return `<main class="kf-main" id="main-content">${pageHero(catalog.label,catalog.description,'Ranking mundial · 2026','verified')}<section class="kf-section"><div class="kf-container">${bankRegistryMarkup()}</div></section></main>`;
+    if(type==='bancos')return `<main class="kf-main" id="main-content"><header class="kf-bank-page-head"><div class="kf-container"><div><p class="kf-kicker">Banca global · tokenización</p><h1>Bancos</h1></div><p>Top 25 mundial por activos y productos blockchain contrastados: dinero programable, valores tokenizados, custodia e infraestructura de liquidación.</p></div></header><section class="kf-section kf-bank-data-section"><div class="kf-container">${bankRegistryMarkup()}</div></section></main>`;
     const connected=type==='exchanges'?exchangeFeesMarkup():type==='regulacion'?regulationRadarMarkup():'';
     const special=type==='wallets'?walletIntelligenceMarkup():type==='proyectos'?web3ArchitectureMarkup():type==='riesgos'?decentralizationRiskMarkup():'';
     const availableStates=[...new Set(catalog.items.map((item)=>item.status))];
