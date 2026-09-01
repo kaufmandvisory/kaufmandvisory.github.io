@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node server/index.js",
     "test": "node --test server/*.test.js",
-    "validate": "node scripts/validate_market_antenna.mjs && node scripts/validate_static_data.mjs && node scripts/validate_public_surface.mjs",
+    "validate": "node scripts/validate_market_antenna.mjs && node scripts/validate_static_data.mjs && node scripts/validate_bank_intelligence.mjs && node scripts/validate_public_surface.mjs",
     "audit": "node scripts/audit_platform_wiring.mjs",
     "audit:security": "node scripts/audit_security_posture.mjs",
     "harden:html": "node scripts/harden_public_html.mjs"

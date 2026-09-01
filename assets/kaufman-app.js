@@ -111,6 +111,26 @@
       {id:'gobernanza-web3',name:'Gobernanza y llaves administrativas',subtitle:'Upgrades, pausas, módulos y umbrales',status:'verified',source:{name:'Safe Docs',url:'https://docs.safe.global/advanced/smart-account-concepts',type:'Documentación técnica primaria'},fields:{'Indicadores':'Propietarios, umbral, timelock, módulos, guards y poder de upgrade','Uso':'Separar marca descentralizada de control operativo real','Evidencia':'Contratos, configuración y procesos publicados','Mitigación':'Umbrales, demoras, límites y monitorización onchain'}}
     ]}
   };
+  const BANK_INTELLIGENCE=window.KAUFMAN_BANK_INTELLIGENCE||null;
+  if(BANK_INTELLIGENCE?.banks?.length===25){
+    const weeklyBanks=new Map(BANK_INTELLIGENCE.banks.map((bank)=>[bank.id,bank]));
+    const assetNumber=new Intl.NumberFormat('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2});
+    CATALOGS.bancos.items=CATALOGS.bancos.items.map((item)=>{
+      const observed=weeklyBanks.get(item.id);
+      if(!observed)return item;
+      return {
+        ...item,
+        bank:{...item.bank,rank:observed.rank,assets:observed.assets_usd_billions},
+        fields:{
+          ...(item.fields||{}),
+          'Puesto mundial':String(observed.rank),
+          'Activos totales':`${assetNumber.format(observed.assets_usd_billions)} mil millones US$`,
+          'Edición del ranking':`${BANK_INTELLIGENCE.ranking.edition} · S&P Global`,
+          'Actualización del ranking':'Revisión automática semanal; solo se publica una tabla completa y validada'
+        }
+      };
+    });
+  }
   const HOME_DIRECTORY_KEYS = ['empresas','bancos','exchanges','wallets','proyectos','mineria','hardware','riesgos'];
   const ECOSYSTEM_ORDER = ['mercado','regulacion','empresas','infraestructura','custodia','riesgo'];
   const ECOSYSTEM_TERRITORIES = {
@@ -546,6 +566,11 @@
       fields['Custodia de criptoactivos']='No verificada como servicio público';
       fields['Acceso']='Sin alcance digital publicado';
     }
+    const source=BANK_INTELLIGENCE?.official_sources?.find((entry)=>entry.bank_id===item.id);
+    if(source){
+      fields['Última comprobación automática']=new Intl.DateTimeFormat('es-ES',{dateStyle:'medium',timeZone:'Europe/Madrid'}).format(new Date(source.checked_at));
+      fields['Estado técnico de la fuente']=source.connection_status==='CONNECTED'?'Fuente corporativa accesible':'Fuente temporalmente no accesible; se conserva el último hecho validado';
+    }
     return {...fields,...(BANK_DIGITAL_FACTS[item.id]||{})};
   }
 
@@ -568,9 +593,14 @@
       ['UBS Tokenize','Fondo tokenizado en producción','Flujo completo de suscripción y reembolso publicado en 2025','https://www.ubs.com/global/en/investment-bank/tokenize.html']
     ];
     const signalCards=signals.map(([name,value,note,url])=>`<article><span>${escapeHtml(name)}</span><strong>${escapeHtml(value)}</strong><small>${escapeHtml(note)}</small><a href="${url}" target="_blank" rel="noopener noreferrer">Fuente ↗</a></article>`).join('');
+    const generated=BANK_INTELLIGENCE?.generated_at?new Intl.DateTimeFormat('es-ES',{dateStyle:'medium',timeStyle:'short',timeZone:'Europe/Madrid'}).format(new Date(BANK_INTELLIGENCE.generated_at)):'pendiente';
+    const edition=BANK_INTELLIGENCE?.ranking?.edition||'edición vigente';
+    const connected=BANK_INTELLIGENCE?.data_quality?.connected_official_sources;
+    const sourceTotal=BANK_INTELLIGENCE?.data_quality?.official_source_count;
+    const changed=BANK_INTELLIGENCE?.data_quality?.changed_official_sources||0;
     return `<section class="kf-bank-intelligence" aria-labelledby="bank-registry-title">
-      <header><div><p class="kf-kicker">Lectura blockchain del Top 25</p><h2 id="bank-registry-title">Qué está desplegado y qué sigue sin evidencia.</h2></div><a href="https://www.spglobal.com/market-intelligence/en/news-insights/research/2026/04/the-worlds-largest-banks-by-assets-2026" target="_blank" rel="noopener noreferrer">Ranking y metodología S&amp;P Global ↗</a></header>
-      <div class="kf-bank-kpis"><article><strong>${bankAssetsCompact(totalAssets)}</strong><span>activos agregados</span><small>Suma del Top 25 · corte 31 dic 2025</small></article><article><strong>${sourced.length} / ${banks.length}</strong><span>producto o infraestructura con fuente primaria</span><small>No se cuenta el contexto e-CNY sin atribución individual</small></article><article><strong>${percent(topFourAssets/totalAssets*100)} %</strong><span>del balance en los cuatro mayores bancos chinos</span><small>Concentración dentro de esta muestra</small></article><article><strong>${banks.length-sourced.length} / ${banks.length}</strong><span>sin producto concreto vinculado</span><small>Hueco documental, no ausencia demostrada</small></article></div>
+      <header><div><p class="kf-kicker">Datos bancarios conectados</p><h2 id="bank-registry-title">Escala y actividad blockchain del Top 25.</h2><small>Actualización semanal automática · ${escapeHtml(edition)} · comprobado ${escapeHtml(generated)}${Number.isFinite(connected)?` · ${connected}/${sourceTotal} fuentes corporativas accesibles`:''}${changed?` · ${changed} cambios de fuente detectados`:''}</small></div><a href="${escapeHtml(BANK_INTELLIGENCE?.ranking?.url||'https://www.spglobal.com/market-intelligence/en/news-insights/research/2026/04/the-worlds-largest-banks-by-assets-2026')}" target="_blank" rel="noopener noreferrer">Ranking y metodología S&amp;P Global ↗</a></header>
+      <div class="kf-bank-kpis"><article><strong>${bankAssetsCompact(totalAssets)}</strong><span>activos agregados</span><small>Suma del Top 25 · ${escapeHtml(edition)}</small></article><article><strong>${sourced.length} / ${banks.length}</strong><span>producto o infraestructura con fuente primaria</span><small>No se cuenta el contexto e-CNY sin atribución individual</small></article><article><strong>${percent(topFourAssets/totalAssets*100)} %</strong><span>del balance en los cuatro mayores bancos chinos</span><small>Concentración dentro de esta muestra</small></article><article><strong>${banks.length-sourced.length} / ${banks.length}</strong><span>sin producto concreto vinculado</span><small>Hueco documental, no ausencia demostrada</small></article></div>
       <div class="kf-bank-analysis"><section><header><strong>Activos por región</strong><span>Cuota dentro de ${bankAssetsCompact(totalAssets)}</span></header><div class="kf-bank-region-bar" aria-hidden="true">${regionBars}</div><ul>${regionRows}</ul></section><section><header><strong>Infraestructura bancaria identificada</strong><span>Productos con fuente corporativa; categorías no excluyentes</span></header><dl><div><dt>Dinero y pagos</dt><dd>Kinexys · HSBC Tokenised Deposits · Citi Token Services</dd></div><div><dt>Valores y fondos</dt><dd>HSBC Orion · Progmat · Santander · SG-FORGE · GS DAP · DAMA 2 · UBS Tokenize</dd></div><div><dt>Custodia y servicing</dt><dd>CACEIS · Citi CIDAP · SG-FORGE · DAMA 2 · UBS Tokenize</dd></div></dl></section></div>
       <div class="kf-bank-signals"><header><strong>Datos que cambian la lectura</strong><span>Últimos hechos cuantificables o con cambio de estado hallados en fuentes corporativas</span></header><div>${signalCards}</div></div>
     </section>`;

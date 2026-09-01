@@ -2,7 +2,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const VERSION = 'kaufman-v48';
+const VERSION = 'kaufman-v49';
 const ROUTES = {
   home: ['Kaufman · Inteligencia blockchain', 'Mercado, regulación, tokenización, infraestructura y riesgo bajo una misma capa de evidencia pública.'],
   mercados: ['Mercados y capital tokenizado', 'RWA, redes, stablecoins, flujos institucionales, gas y precios de referencia calculados desde mercados públicos.'],
@@ -88,6 +88,8 @@ const hardenAppShell = (html, page) => {
   result = upsertMeta(result, /name="application-name"/i, '<meta name="application-name" content="Kaufman">');
   const robots = ['404', 'retirado'].includes(page) ? 'noindex,nofollow' : 'index,follow,max-image-preview:large,max-snippet:-1';
   result = upsertMeta(result, /name="robots"/i, `<meta name="robots" content="${robots}">`);
+  result = result.replace(/<script\s+src="\/assets\/bank-intelligence\.js[^>]*><\/script>/gi, '');
+  result = result.replace(/(<script\s+src="(?:\/)?assets\/kaufman-app\.js[^>]*><\/script>)/i, `<script src="/assets/bank-intelligence.js?v=${VERSION}" defer></script>$1`);
   result = result.replace(/<div id="kaufman-app">[\s\S]*?<\/div>(?=<\/body>)/i, fallback(page));
   return result;
 };
