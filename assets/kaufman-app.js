@@ -52,7 +52,7 @@
     ]},
     exchanges:{label:'Exchanges',description:'Plataformas contrastadas con registros regulatorios, tarifas públicas y metodología de coste total.',items:[
       {id:'coinbase',name:'Coinbase',subtitle:'Exchange centralizado',status:'verified',source:{name:'Coinbase · licencias europeas',url:'https://www.coinbase.com/en-de/legal/licenses/europe',type:'Divulgación regulatoria del proveedor'},fields:{'Cobertura':'Europa · verificar entidad contratante','Autorización':'Comprobar servicios y pasaporte en ESMA','Precio':'Coinbase REST/WebSocket entra en Kaufman Reference Price','Riesgo':'Custodia y contraparte centralizada'}},
-      {id:'kraken',name:'Kraken',subtitle:'Exchange centralizado',status:'auto',source:{name:'Kraken AssetPairs API',url:'https://docs.kraken.com/api/docs/rest-api/get-tradable-asset-pairs',type:'API y documentación oficial'},fields:{'Mercado de referencia':'BTC/USD · ETH/USD · SOL/USD','Comisiones':'Primer tramo maker/taker conectado diariamente','Precio':'Kraken entra en la mediana Kaufman','Riesgo':'Verificar entidad, licencia y servicios por país'}},
+      {id:'kraken',name:'Kraken',subtitle:'Exchange centralizado',status:'auto',source:{name:'Kraken AssetPairs API',url:'https://docs.kraken.com/api/docs/rest-api/get-tradable-asset-pairs',type:'API y documentación oficial'},fields:{'Mercado de referencia':'BTC/USD · ETH/USD','Comisiones':'Primer tramo maker/taker conectado diariamente','Precio':'Kraken entra en la mediana Kaufman','Riesgo':'Verificar entidad, licencia y servicios por país'}},
       {id:'bitstamp',name:'Bitstamp',subtitle:'Exchange centralizado',status:'verified',source:{name:'ESMA MiCA Register',url:'https://www.esma.europa.eu/publications-and-data/interactive-single-rulebook/mica',type:'Registro regulatorio europeo'},fields:{'Autorización UE':'Consultar entidad y servicios en registro MiCA','Precio':'No forma parte de Kaufman Reference Price v1','Comisiones':'Requiere tarifa aplicable al cliente y volumen','Riesgo':'Custodia y contraparte centralizada'}}
     ]},
     wallets:{label:'Wallets',description:'Autocustodia, custodia delegada y cuentas programables separadas por control de claves, exposición y recuperación.',items:[
@@ -173,7 +173,7 @@
     ['Dónde vive el dólar tokenizado.','Valor circulante de stablecoins USD por red.'],
     ['USD, USDT y USDC no son sinónimos.','Tipos de conversión USD, USDT y USDC.'],
     ['CoinGecko, fuera del ticker.','Metadatos de CoinGecko.'],
-    ['La antena de BTC, ETH y SOL queda como capa auxiliar.','Los precios de BTC, ETH y SOL se publican como contexto de mercado.'],
+    ['La antena de BTC y ETH queda como capa auxiliar.','Los precios de BTC y ETH se publican como contexto de mercado.'],
     ['El impuesto empieza antes de la cifra.','Reglas fiscales por jurisdicción y operación.'],
     ['Describe la operación. Kaufman calcula el impacto incremental.','Cálculo fiscal incremental por operación.'],
     ['Cambios que sí importan','Cambios fiscales con fuente oficial'],
@@ -299,12 +299,12 @@
   }
 
   function marketBandMarkup(){
-    const assets=[['bitcoin','BTC','Bitcoin'],['ethereum','ETH','Ethereum'],['solana','SOL','Solana']];
+    const assets=[['bitcoin','BTC','Bitcoin'],['ethereum','ETH','Ethereum']];
     return `<div class="kf-market-band"><div class="kf-container"><div class="kf-market-meta"><strong>Kaufman Reference Price</strong><span data-market-status aria-live="polite">Actualizando precios…</span></div><div class="kf-market-grid">${assets.map(([id,symbol,name])=>`<div class="kf-market-cell" data-market-asset="${id}"><img class="kf-coin-logo" src="${assetUrl(`/assets/logos/${id}.svg`)}" alt="Logo de ${name}"><div><div class="kf-market-name">${symbol}</div><div class="kf-market-pair">${name} / USD</div></div><div class="kf-market-value"><div class="kf-market-price">—</div></div></div>`).join('')}</div></div></div>`;
   }
 
   function priceMethodologyMarkup(){
-    const rows=[['bitcoin','BTC','Bitcoin'],['ethereum','ETH','Ethereum'],['solana','SOL','Solana']];
+    const rows=[['bitcoin','BTC','Bitcoin'],['ethereum','ETH','Ethereum']];
     return `<section class="kf-section kf-price-methodology"><div class="kf-container"><div class="kf-section-head"><div><p class="kf-kicker">Metodología de mercado</p><h2 class="kf-title small">Cálculo del precio de referencia.</h2></div><p class="kf-intro">Fuentes elegibles, cadencia, conversión de stablecoins y controles aplicados antes de publicar un precio.</p></div><div class="kf-antenna-contract"><div><span>Publicación</span><strong>Cálculo automático · objetivo 5 min</strong></div><div><span>Agregación</span><strong>Mediana de mercados elegibles</strong></div><div><span>Stablecoins</span><strong>USDT y USDC convertidos, sin paridad asumida</strong></div><div><span>Entrega</span><strong>Backend Kaufman · navegador sin APIs externas</strong></div></div><div class="kf-data-table-wrap"><table class="kf-data-table kf-reference-table"><thead><tr><th>Activo</th><th class="number">Precio USD</th><th>Actualización</th><th>Fuentes utilizadas</th><th>Confianza</th><th class="number">Divergencia máx.</th></tr></thead><tbody>${rows.map(([id,symbol,name])=>`<tr data-market-asset="${id}"><td><strong>${symbol}</strong> · ${name}</td><td class="number kf-market-price">—</td><td class="kf-market-change na" data-market-age>No disponible</td><td data-market-venues>Sin fuentes frescas</td><td data-market-confidence>—</td><td class="number" data-market-divergence>—</td></tr>`).join('')}</tbody></table></div><div class="kf-method-strip"><strong>Kaufman Reference Price v1</strong><span data-market-methodology>Mediana server-side · objetivo 5 min · volumen mínimo · divergencia máxima 2,5 % · hora visible.</span></div></div></section>`;
   }
 
@@ -479,7 +479,7 @@
   }
 
   function renderMarkets(){
-    const rows=[['bitcoin','BTC','Bitcoin'],['ethereum','ETH','Ethereum'],['solana','SOL','Solana']];
+    const rows=[['bitcoin','BTC','Bitcoin'],['ethereum','ETH','Ethereum']];
     const rwaKpis=[
       ['tracked_rwa_tvl_usd','Capital RWA onchain','Protocolos de activos reales, sin stablecoins'],
       ['treasury_bills_tvl_usd','Deuda soberana tokenizada','Exposición etiquetada como Treasury Bills'],
@@ -550,7 +550,7 @@
   }
 
   function renderReturns(){
-    return `<main class="kf-main" id="main-content">${pageHero('Rentabilidades','Rendimientos observados en mercados públicos para 7, 30 y 365 días. Son contexto histórico, no predicciones.','Datos históricos','auto')}${marketBandMarkup()}<section class="kf-section"><div class="kf-container"><div class="kf-section-head"><div><p class="kf-kicker">Horizontes conectados</p><h2 class="kf-title small">El periodo cambia la lectura.</h2></div><p class="kf-intro">Los cierres diarios proceden de Kraken OHLC. La referencia actual conserva la mediana de mercados elegibles y se identifica por separado.</p></div><div class="kf-data-table-wrap"><table class="kf-data-table"><thead><tr><th>Activo</th><th class="number">7 días</th><th class="number">30 días</th><th class="number">1 año</th><th>Observación</th></tr></thead><tbody>${[['bitcoin','BTC'],['ethereum','ETH'],['solana','SOL']].map(([id,symbol])=>`<tr data-return-asset="${id}"><td><strong>${symbol}</strong></td><td class="number" data-return-period="7d">—</td><td class="number" data-return-period="30d">—</td><td class="number" data-return-period="365d">—</td><td data-return-status>Cargando histórico…</td></tr>`).join('')}</tbody></table></div><div class="kf-data-note"><span>${statusBadge('auto')}</span><div><strong>Serie diaria auditable</strong><p>Cambio porcentual entre cierres diarios. No incluye comisiones, impuestos, slippage ni rendimiento de staking.</p></div><a href="https://docs.kraken.com/api/docs/rest-api/get-ohlc-data" target="_blank" rel="noopener noreferrer">Kraken OHLC ↗</a></div></div></section></main>`;
+    return `<main class="kf-main" id="main-content">${pageHero('Rentabilidades','Rendimientos observados en mercados públicos para 7, 30 y 365 días. Son contexto histórico, no predicciones.','Datos históricos','auto')}${marketBandMarkup()}<section class="kf-section"><div class="kf-container"><div class="kf-section-head"><div><p class="kf-kicker">Horizontes conectados</p><h2 class="kf-title small">El periodo cambia la lectura.</h2></div><p class="kf-intro">Los cierres diarios proceden de Kraken OHLC. La referencia actual conserva la mediana de mercados elegibles y se identifica por separado.</p></div><div class="kf-data-table-wrap"><table class="kf-data-table"><thead><tr><th>Activo</th><th class="number">7 días</th><th class="number">30 días</th><th class="number">1 año</th><th>Observación</th></tr></thead><tbody>${[['bitcoin','BTC'],['ethereum','ETH']].map(([id,symbol])=>`<tr data-return-asset="${id}"><td><strong>${symbol}</strong></td><td class="number" data-return-period="7d">—</td><td class="number" data-return-period="30d">—</td><td class="number" data-return-period="365d">—</td><td data-return-status>Cargando histórico…</td></tr>`).join('')}</tbody></table></div><div class="kf-data-note"><span>${statusBadge('auto')}</span><div><strong>Serie diaria auditable</strong><p>Cambio porcentual entre cierres diarios. No incluye comisiones, impuestos, slippage ni rendimiento de staking.</p></div><a href="https://docs.kraken.com/api/docs/rest-api/get-ohlc-data" target="_blank" rel="noopener noreferrer">Kraken OHLC ↗</a></div></div></section></main>`;
   }
 
   function compareFields(type){
@@ -588,8 +588,8 @@
 
   function renderSources(){
     const sources=[
-      {name:'Coinbase Exchange',scope:'Mercado BTC, ETH y SOL para la mediana Kaufman',cadence:'Captura server-side automática · objetivo 5 minutos',status:'auto',url:'https://docs.cdp.coinbase.com/exchange/reference/exchangerestapi_getproductticker'},
-      {name:'Kraken Spot',scope:'Mercado BTC, ETH y SOL para la mediana Kaufman',cadence:'Captura server-side automática · objetivo 5 minutos',status:'auto',url:'https://docs.kraken.com/api/docs/rest-api/get-ticker-information'},
+      {name:'Coinbase Exchange',scope:'Mercado BTC y ETH para la mediana Kaufman',cadence:'Captura server-side automática · objetivo 5 minutos',status:'auto',url:'https://docs.cdp.coinbase.com/exchange/reference/exchangerestapi_getproductticker'},
+      {name:'Kraken Spot',scope:'Mercado BTC y ETH para la mediana Kaufman',cadence:'Captura server-side automática · objetivo 5 minutos',status:'auto',url:'https://docs.kraken.com/api/docs/rest-api/get-ticker-information'},
       {name:'Binance Spot',scope:'Mercado adicional y pares de conversión de stablecoins',cadence:'Conector WebSocket server-side disponible; no usado si la publicación estática no puede mantener conexión',status:'auto',url:'https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams'},
       {name:'DEX Screener API',scope:'Pools por chainId + contractAddress',cadence:'Snapshot público diario',status:'auto',url:'https://docs.dexscreener.com/api/reference'},
       {name:'DefiLlama Open API',scope:'TVL RWA, clases de activo, redes, stablecoins y adaptadores auditables',cadence:'Snapshot público diario',status:'auto',url:'https://defillama.com/docs/api'},
@@ -977,9 +977,11 @@
     const refreshInterval=Number(latestMarketSnapshot?.price_refresh_interval_ms||latestMarketSnapshot?.refresh_interval_ms)||300000;
     const maxAge=Number(latestMarketSnapshot?.price_max_age_ms||latestMarketSnapshot?.max_age_ms)||(automated?900000:5000);
     const targetAge=Number(latestMarketSnapshot?.price_target_age_ms||latestMarketSnapshot?.max_age_ms)||(automated?900000:5000);
+    const marketAssetNodes=[...document.querySelectorAll('[data-market-asset]')];
+    const expectedAssets=new Set(marketAssetNodes.map((element)=>element.dataset.marketAsset));
     const availableAssets=new Set();
     latestEthUsd=null;
-    document.querySelectorAll('[data-market-asset]').forEach((element)=>{
+    marketAssetNodes.forEach((element)=>{
       const reference=references[element.dataset.marketAsset];
       const referenceTimestamp=reference?.received_at||reference?.provider_timestamp;
       const currentAge=referenceTimestamp?ageMs(referenceTimestamp):null;
@@ -1000,12 +1002,12 @@
     const snapshotAge=ageMs(latestMarketSnapshot?.price_generated_at||latestMarketSnapshot?.generated_at);
     const delayedAutomatic=automated&&Number.isFinite(snapshotAge)&&snapshotAge>targetAge;
     const marketStatus=automated
-      ? availableAssets.size===3
+      ? availableAssets.size===expectedAssets.size
         ? delayedAutomatic
           ? `Última referencia verificada · ${ageLabel(snapshotAge)}`
           : `Precios automáticos · objetivo 5 min · ${ageLabel(snapshotAge)}`
-        : availableAssets.size?`${availableAssets.size}/3 precios automáticos disponibles`:'Esperando la siguiente actualización automática'
-      : availableAssets.size===3?`Precios en tiempo real · ${ageLabel(snapshotAge)}`:availableAssets.size?`${availableAssets.size}/3 precios en tiempo real`:'Actualizando precios…';
+        : availableAssets.size?`${availableAssets.size}/${expectedAssets.size} precios automáticos disponibles`:'Esperando la siguiente actualización automática'
+      : availableAssets.size===expectedAssets.size?`Precios en tiempo real · ${ageLabel(snapshotAge)}`:availableAssets.size?`${availableAssets.size}/${expectedAssets.size} precios en tiempo real`:'Actualizando precios…';
     document.querySelectorAll('[data-market-status]').forEach((node)=>node.textContent=marketStatus);
     updateGasCost();
   }
@@ -1165,7 +1167,7 @@
 
   function renderMetadata(metadata={}){
     const compact=new Intl.NumberFormat('es-ES',{notation:'compact',maximumFractionDigits:2});
-    const ids=['bitcoin','ethereum','solana'];
+    const ids=['bitcoin','ethereum'];
     const card=(id)=>{const item=metadata[id],valid=item?.verification_status==='VERIFIED';return `<article class="kf-metadata-card"><img src="${assetUrl(`/assets/logos/${id}.svg`)}" alt="Logo de ${escapeHtml(item?.name||id)}"><div><span>${escapeHtml(item?.name||id)}</span><strong>${valid&&Number.isFinite(Number(item.market_cap_usd))?`${compact.format(item.market_cap_usd)} USD`:'No disponible'}</strong><small>Capitalización · ${valid&&Number.isFinite(Number(item.circulating_supply))?`${compact.format(item.circulating_supply)} en circulación`:'oferta no disponible'}</small></div></article>`};
     const slots=[...document.querySelectorAll('[data-market-metadata-slot]')];
     if(slots.length){slots.forEach((slot)=>{slot.innerHTML=card(slot.dataset.marketMetadataSlot)});return}
@@ -2112,7 +2114,7 @@
     const metadataGrid=main?.querySelector('[data-market-metadata]');
     const metadataHead=metadataGrid?.previousElementSibling;
     const priceCells=[...(priceBand?.querySelectorAll('.kf-market-cell')||[])];
-    if(!hero||!priceBand||!metadataGrid||!metadataHead||priceCells.length!==3)return;
+    if(!hero||!priceBand||!metadataGrid||!metadataHead||priceCells.length!==2)return;
     priceCells.forEach((cell)=>{
       const slot=document.createElement('div');
       slot.className='kf-market-metadata-slot';
