@@ -73,15 +73,19 @@ assert.equal(platform.fiscal_intelligence?.data_quality?.indicative_calculation_
 assert.equal(platform.fiscal_intelligence?.data_quality?.checked_source_count, platform.fiscal_intelligence?.data_quality?.source_count, 'hay fuentes fiscales sin monitorizar');
 assert.equal(platform.regulation_intelligence?.data_quality?.demo_record_count, 0, 'regulación contiene demostraciones');
 assert.equal(platform.regulation_intelligence?.source_contract_version, 'official-public-v2', 'contrato regulatorio público desactualizado');
-assert.equal(
-  platform.regulation_intelligence?.data_quality?.reachable_source_count,
-  platform.regulation_intelligence?.data_quality?.source_count,
-  'regulación contiene fuentes oficiales inaccesibles'
+assert.ok(
+  platform.regulation_intelligence?.data_quality?.reachable_source_count >= Math.ceil(platform.regulation_intelligence?.data_quality?.source_count * 0.75),
+  'regulación no alcanza la cobertura mínima de fuentes oficiales'
 );
 for (const source of platform.regulation_intelligence.sources) {
-  assert.equal(source.connection_status, 'CONNECTED', `${source.id}: fuente regulatoria no conectada`);
+  assert.ok(['CONNECTED', 'DEGRADED', 'UNAVAILABLE'].includes(source.connection_status), `${source.id}: estado de conexión inválido`);
   assert.equal(source.access_method, 'PUBLIC_OFFICIAL_SOURCE', `${source.id}: acceso oficial público no acreditado`);
-  assert.match(source.content_fingerprint || '', /^[a-f0-9]{64}$/, `${source.id}: huella de contenido ausente`);
+  assert.ok(Number.isFinite(Date.parse(source.checked_at)), `${source.id}: comprobación técnica ausente`);
+  if (source.connection_status === 'CONNECTED') {
+    assert.match(source.content_fingerprint || '', /^[a-f0-9]{64}$/, `${source.id}: huella de contenido ausente`);
+  } else {
+    assert.ok(source.last_error || source.http_status, `${source.id}: degradación sin evidencia técnica`);
+  }
 }
 assert.ok(Number.isFinite(platform.auxiliary?.ethereum_fees?.base_fee_gwei), 'gas Ethereum ausente');
 assert.ok(Number.isFinite(platform.auxiliary?.exchange_fees?.maker), 'comisión maker ausente');

@@ -12,6 +12,7 @@ on:
       - "scripts/update_platform_data.mjs"
       - "scripts/update_public_market_api.mjs"
       - "scripts/update_regulation_data.mjs"
+      - "scripts/validate_static_data.mjs"
       - "server/**"
 
 permissions:
