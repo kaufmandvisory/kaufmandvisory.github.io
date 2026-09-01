@@ -1155,11 +1155,13 @@
   }
 
   function renderMetadata(metadata={}){
-    const root=document.querySelector('[data-market-metadata]');
-    if(!root)return;
     const compact=new Intl.NumberFormat('es-ES',{notation:'compact',maximumFractionDigits:2});
     const ids=['bitcoin','ethereum','solana'];
-    root.innerHTML=ids.map((id)=>{const item=metadata[id],valid=item?.verification_status==='VERIFIED',categories=(item?.categories||[]).slice(0,3).map(escapeHtml).join(' · ');return `<article class="kf-metadata-card"><img src="${assetUrl(`/assets/logos/${id}.svg`)}" alt="Logo de ${escapeHtml(item?.name||id)}"><div><span>${escapeHtml(item?.name||id)}</span><strong>${valid&&Number.isFinite(Number(item.market_cap_usd))?`${compact.format(item.market_cap_usd)} USD`:'No disponible'}</strong><small>Capitalización · ${valid&&Number.isFinite(Number(item.circulating_supply))?`${compact.format(item.circulating_supply)} en circulación`:'oferta no disponible'}</small><p>${valid?(categories||`Metadatos validados · ${ageLabel(ageMs(item.last_updated_at))}`):escapeHtml(item?.exclusion_reason||'Metadato sin timestamp válido')}</p></div></article>`}).join('');
+    const card=(id)=>{const item=metadata[id],valid=item?.verification_status==='VERIFIED',categories=(item?.categories||[]).slice(0,3).map(escapeHtml).join(' · ');return `<article class="kf-metadata-card"><img src="${assetUrl(`/assets/logos/${id}.svg`)}" alt="Logo de ${escapeHtml(item?.name||id)}"><div><span>${escapeHtml(item?.name||id)}</span><strong>${valid&&Number.isFinite(Number(item.market_cap_usd))?`${compact.format(item.market_cap_usd)} USD`:'No disponible'}</strong><small>Capitalización · ${valid&&Number.isFinite(Number(item.circulating_supply))?`${compact.format(item.circulating_supply)} en circulación`:'oferta no disponible'}</small><p>${valid?(categories||`Metadatos validados · ${ageLabel(ageMs(item.last_updated_at))}`):escapeHtml(item?.exclusion_reason||'Metadato sin timestamp válido')}</p></div></article>`};
+    const slots=[...document.querySelectorAll('[data-market-metadata-slot]')];
+    if(slots.length){slots.forEach((slot)=>{slot.innerHTML=card(slot.dataset.marketMetadataSlot)});return}
+    const root=document.querySelector('[data-market-metadata]');
+    if(root)root.innerHTML=ids.map(card).join('');
   }
 
   function tokenizedUsd(value){
@@ -2098,15 +2100,18 @@
     const priceBand=main?.querySelector('.kf-market-band');
     const metadataGrid=main?.querySelector('[data-market-metadata]');
     const metadataHead=metadataGrid?.previousElementSibling;
-    if(!hero||!priceBand||!metadataGrid||!metadataHead)return;
-    const metadataSection=document.createElement('section');
-    const container=document.createElement('div');
-    metadataSection.className='kf-section kf-market-metadata-top';
-    container.className='kf-container';
-    container.append(metadataHead,metadataGrid);
-    metadataSection.append(container);
+    const priceCells=[...(priceBand?.querySelectorAll('.kf-market-cell')||[])];
+    if(!hero||!priceBand||!metadataGrid||!metadataHead||priceCells.length!==3)return;
+    priceCells.forEach((cell)=>{
+      const slot=document.createElement('div');
+      slot.className='kf-market-metadata-slot';
+      slot.dataset.marketMetadataSlot=cell.dataset.marketAsset;
+      slot.innerHTML='<div class="kf-live-empty">Cargando capitalización y oferta…</div>';
+      cell.append(slot);
+    });
+    metadataHead.remove();
+    metadataGrid.remove();
     hero.insertAdjacentElement('afterend',priceBand);
-    priceBand.insertAdjacentElement('afterend',metadataSection);
   }
 
   const page=new URLSearchParams(location.search).get('pagina')||document.body.dataset.page||'home';

@@ -1124,9 +1124,13 @@ button,input,select,textarea{font-family:var(--kf-sans)}
   .kf-etf-chart[data-range="90"] .kf-etf-day{min-width:9px}
 }
 
-.kf-market-metadata-top{padding:56px 0 64px;border-bottom:1px solid var(--kf-line)}
-.kf-market-metadata-top .kf-spaced-head{margin-top:0}
+.kf-market-band .kf-market-cell{align-content:start}
+.kf-market-metadata-slot{grid-column:1/-1;margin-top:18px;padding-top:16px;border-top:1px solid var(--kf-line)}
+.kf-market-metadata-slot .kf-metadata-card{display:block;min-height:0;padding:0;border:0;border-radius:0;background:transparent}
+.kf-market-metadata-slot .kf-metadata-card img,.kf-market-metadata-slot .kf-metadata-card span{display:none}
+.kf-market-metadata-slot .kf-metadata-card strong{margin-top:0;font-size:17px}
+.kf-market-metadata-slot .kf-metadata-card small,.kf-market-metadata-slot .kf-metadata-card p{font-size:11px}
 
 @media (max-width:767px){
-  .kf-market-metadata-top{padding:40px 0 48px}
+  .kf-market-metadata-slot{margin-top:14px;padding:14px 0 4px 55px}
 }
