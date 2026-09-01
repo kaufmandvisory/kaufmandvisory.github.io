@@ -1123,3 +1123,10 @@ button,input,select,textarea{font-family:var(--kf-sans)}
   .kf-etf-chart[data-range="30"] .kf-etf-day{min-width:20px}
   .kf-etf-chart[data-range="90"] .kf-etf-day{min-width:9px}
 }
+
+.kf-market-metadata-top{padding:56px 0 64px;border-bottom:1px solid var(--kf-line)}
+.kf-market-metadata-top .kf-spaced-head{margin-top:0}
+
+@media (max-width:767px){
+  .kf-market-metadata-top{padding:40px 0 48px}
+}

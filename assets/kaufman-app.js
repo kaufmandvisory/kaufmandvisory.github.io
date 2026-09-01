@@ -2091,12 +2091,31 @@
     update();
   }
 
+  function arrangeMarketsTop(){
+    if(page!=='mercados')return;
+    const main=document.querySelector('#main-content');
+    const hero=main?.querySelector('.kf-page-hero');
+    const priceBand=main?.querySelector('.kf-market-band');
+    const metadataGrid=main?.querySelector('[data-market-metadata]');
+    const metadataHead=metadataGrid?.previousElementSibling;
+    if(!hero||!priceBand||!metadataGrid||!metadataHead)return;
+    const metadataSection=document.createElement('section');
+    const container=document.createElement('div');
+    metadataSection.className='kf-section kf-market-metadata-top';
+    container.className='kf-container';
+    container.append(metadataHead,metadataGrid);
+    metadataSection.append(container);
+    hero.insertAdjacentElement('afterend',priceBand);
+    priceBand.insertAdjacentElement('afterend',metadataSection);
+  }
+
   const page=new URLSearchParams(location.search).get('pagina')||document.body.dataset.page||'home';
   const app=document.getElementById('kaufman-app');
   const commercialPages=!['contacto','aviso','privacidad','cookies','terminos','retirado'].includes(page);
   const renderedPage=plainLanguage(renderPage(page));
   const pageWithClose=plainLanguage(commercialPages?renderedPage.replace('</main>',`${decisionCloseMarkup(page)}</main>`):renderedPage);
   app.innerHTML=`<div class="kf-shell">${headerMarkup(page)}${pageWithClose}${footerMarkup()}</div>${searchOverlayMarkup()}`;
+  arrangeMarketsTop();
   localizeRenderedLinks(app);
   const pageTitle=page==='home'?'Kaufman | Inteligencia blockchain':`${CATALOGS[page]?.label||({mercados:'Mercados',tokenizacion:'Tokenización',herramientas:'Herramientas',rentabilidades:'Rentabilidades',ficha:'Ficha',fichas:'Fichas',fuentes:'Fuentes',contacto:'Contacto',aviso:'Aviso legal',privacidad:'Política de privacidad',cookies:'Política de cookies',terminos:'Términos de uso'}[page]||'Kaufman')} | Kaufman`;
   document.title=pageTitle;
