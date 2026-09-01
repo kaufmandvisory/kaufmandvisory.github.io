@@ -20,8 +20,8 @@ for (const relative of shells) {
     referrer: /name="referrer" content="strict-origin-when-cross-origin"/.test(html),
     robots: /name="robots"/.test(html),
     title: /<h1>[^<]{3,}<\/h1>/.test(html),
-    current_assets: /kaufman-v36/.test(html),
-    favicon: /<link rel="icon" href="\/favicon\.svg\?v=kaufman-v36" type="image\/svg\+xml">/.test(html),
+    current_assets: /kaufman-v39/.test(html),
+    favicon: /<link rel="icon" href="\/favicon\.svg\?v=kaufman-v39" type="image\/svg\+xml">/.test(html),
     valid_meta_markup: !/<meta\s+<meta/i.test(html),
     no_leaked_meta_attributes: !/<\/head>\s*<body[^>]*>\s*content="/i.test(html)
   };

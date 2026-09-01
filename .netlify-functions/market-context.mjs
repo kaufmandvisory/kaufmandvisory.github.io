@@ -1,4 +1,4 @@
-import { buildDominanceSnapshot, buildOpenInterestSnapshot, buildDvolSnapshot, buildEtfFlowSnapshot } from '../server/market-context.js';
+import { buildDominanceSnapshot, buildOpenInterestSnapshot, buildDvolSnapshot, buildEtfFlowSnapshot, buildEtfHistoricalSnapshot } from '../server/market-context.js';
 import { buildIsharesIssuerObservation, reconcileEtfFlows } from '../server/etf-flows.js';
 
 const TIMEOUT_MS = 9_000;
@@ -33,11 +33,30 @@ const fetchEtfFlows = async (receivedAt) => {
     { asset: 'bitcoin', ticker: 'IBIT', url: 'https://www.ishares.com/us/products/333011/ishares-bitcoin-trust-etf' },
     { asset: 'ethereum', ticker: 'ETHA', url: 'https://www.ishares.com/us/products/337614/isharesethereum-trust-etf' }
   ];
-  const [aggregateHtml, ...issuerHtml] = await Promise.all([
+  const [historyPayload, aggregateHtml, ...issuerHtml] = await Promise.all([
+    fetchJson('https://bykaranteli.com/api/v1/public/datasets/etf-flows.json'),
     fetchText('https://coinflows.org/'),
     ...sources.map((source) => fetchText(source.url))
   ]);
-  const aggregate = buildEtfFlowSnapshot(aggregateHtml, receivedAt);
+  const aggregate = buildEtfHistoricalSnapshot(historyPayload, receivedAt);
+  const monthly = buildEtfFlowSnapshot(aggregateHtml, receivedAt);
+  aggregate.aggregate_checks = Object.fromEntries(['bitcoin', 'ethereum'].map((asset) => {
+    const primary = aggregate.assets?.[asset];
+    const secondary = monthly.assets?.[asset];
+    const sameDate = primary?.latest_date && primary.latest_date === secondary?.latest_date;
+    const denominator = Math.max(1, Math.abs(Number(primary?.latest_net_flow_usd || 0)));
+    const divergence = sameDate && Number.isFinite(Number(secondary?.latest_net_flow_usd)) ? Math.round(Math.abs(Number(primary.latest_net_flow_usd) - Number(secondary.latest_net_flow_usd)) / denominator * 100_000) / 1000 : null;
+    return [asset, {
+      source: monthly.source,
+      source_url: monthly.source_url,
+      latest_date: secondary?.latest_date || null,
+      latest_net_flow_usd: Number.isFinite(Number(secondary?.latest_net_flow_usd)) ? Number(secondary.latest_net_flow_usd) : null,
+      same_session: Boolean(sameDate),
+      divergence_pct: divergence,
+      included: Number.isFinite(divergence) && divergence <= 10,
+      exclusion_reason: Number.isFinite(divergence) && divergence > 10 ? 'Desviación superior al 10 % frente al histórico principal' : null
+    }];
+  }));
   const observations = sources.map((source, index) => buildIsharesIssuerObservation({ ...source, html: issuerHtml[index], receivedAt }));
   return reconcileEtfFlows(aggregate, observations, receivedAt);
 };

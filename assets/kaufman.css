@@ -1106,3 +1106,20 @@ button,input,select,textarea{font-family:var(--kf-sans)}
   .kf-directory-head h2,.kf-home-fiscal h2,.kf-decision-close h2{font-size:clamp(38px,10vw,46px);line-height:1.02}
   .kf-nav{background:var(--kf-paper-raised)}
 }
+
+.kf-period-selector{display:flex;gap:3px;width:max-content;margin-top:18px;padding:3px;border:1px solid var(--kf-line);border-radius:8px;background:#f1f0eb}
+.kf-period-selector button{min-width:76px;padding:8px 12px;border:0;border-radius:5px;background:transparent;color:var(--kf-muted);font:800 12px/1 var(--kf-sans);cursor:pointer}
+.kf-period-selector button:hover,.kf-period-selector button:focus-visible{color:var(--kf-ink)}
+.kf-period-selector button.active{background:var(--kf-ink);color:var(--kf-white)}
+.kf-etf-signal .kf-etf-latest{margin-top:14px}
+.kf-etf-chart[data-range="7"] .kf-etf-day{min-width:54px}
+.kf-etf-chart[data-range="30"] .kf-etf-day{min-width:26px}
+.kf-etf-chart[data-range="90"] .kf-etf-day{min-width:10px}
+.kf-etf-day:not(.labelled) small{visibility:hidden}
+
+@media (max-width:767px){
+  .kf-period-selector{width:100%}
+  .kf-period-selector button{flex:1;min-width:0}
+  .kf-etf-chart[data-range="30"] .kf-etf-day{min-width:20px}
+  .kf-etf-chart[data-range="90"] .kf-etf-day{min-width:9px}
+}

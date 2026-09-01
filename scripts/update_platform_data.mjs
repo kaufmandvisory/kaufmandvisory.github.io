@@ -7,7 +7,7 @@ import { SOURCE_REGISTRY, buildFiscalSnapshot, checkFiscalSource, validateFiscal
 import { REGULATORY_SOURCES, buildRegulationSnapshot, checkRegulatorySource, validateRegulationSnapshot } from '../server/regulation.js';
 import { buildEthereumFeeSnapshot } from '../server/auxiliary.js';
 import { buildExchangeFeeRegistry } from '../server/exchange-fees.js';
-import { buildDominanceSnapshot, buildOpenInterestSnapshot, buildDvolSnapshot, buildEtfFlowSnapshot } from '../server/market-context.js';
+import { buildDominanceSnapshot, buildOpenInterestSnapshot, buildDvolSnapshot, buildEtfFlowSnapshot, buildEtfHistoricalSnapshot } from '../server/market-context.js';
 import { buildIsharesIssuerObservation, reconcileEtfFlows } from '../server/etf-flows.js';
 import { buildWalletIntelligence } from '../server/wallet-intelligence.js';
 import { buildWeb3Telemetry } from '../server/web3-telemetry.js';
@@ -140,19 +140,40 @@ async function historicalReturn(asset) {
     const previous = Number(row?.[4]);
     return Number.isFinite(current) && Number.isFinite(previous) && previous > 0 ? round((current / previous - 1) * 100, 3) : null;
   };
-  return { asset_id: asset.id, observed_at: receivedAt, source: 'Kraken OHLC diario', source_url: 'https://docs.kraken.com/api/docs/rest-api/get-ohlc-data', change_7d_pct: change(7), change_30d_pct: change(30), change_365d_pct: change(365) };
+  return { asset_id: asset.id, observed_at: receivedAt, source: 'Kraken OHLC diario', source_url: 'https://docs.kraken.com/api/docs/rest-api/get-ohlc-data', change_7d_pct: change(7), change_30d_pct: change(30), change_90d_pct: change(90) };
 }
 const historicalReturns = Object.fromEntries((await Promise.all(assets.map(async (asset) => [asset.id, await attempt(() => historicalReturn(asset))]))).filter(([, value]) => value));
 
 const dvolEnd = Date.now();
 const dvolStart = dvolEnd - 6 * 60 * 60_000;
 const dvolUrl = (asset) => `https://www.deribit.com/api/v2/public/get_volatility_index_data?currency=${asset}&start_timestamp=${dvolStart}&end_timestamp=${dvolEnd}&resolution=60`;
-const [dominance, openInterest, impliedVolatility, aggregateEtfFlows] = await Promise.all([
+const [dominance, openInterest, impliedVolatility, historicalEtfFlows, monthlyEtfFlows] = await Promise.all([
   attempt(async () => buildDominanceSnapshot(await fetchJson('https://api.coingecko.com/api/v3/global'), receivedAt)),
   attempt(async () => buildOpenInterestSnapshot(await fetchJson('https://api.llama.fi/overview/open-interest?excludeTotalDataChart=false&excludeTotalDataChartBreakdown=true'), receivedAt)),
   attempt(async () => buildDvolSnapshot({ BTC: await fetchJson(dvolUrl('BTC')), ETH: await fetchJson(dvolUrl('ETH')) }, receivedAt)),
+  attempt(async () => buildEtfHistoricalSnapshot(await fetchJson('https://bykaranteli.com/api/v1/public/datasets/etf-flows.json'), receivedAt)),
   attempt(async () => buildEtfFlowSnapshot(await fetchText('https://coinflows.org/'), receivedAt))
 ]);
+const aggregateEtfFlows = historicalEtfFlows || monthlyEtfFlows;
+if (historicalEtfFlows && monthlyEtfFlows) {
+  aggregateEtfFlows.aggregate_checks = Object.fromEntries(['bitcoin', 'ethereum'].map((asset) => {
+    const primary = historicalEtfFlows.assets?.[asset];
+    const secondary = monthlyEtfFlows.assets?.[asset];
+    const sameDate = primary?.latest_date && primary.latest_date === secondary?.latest_date;
+    const denominator = Math.max(1, Math.abs(Number(primary?.latest_net_flow_usd || 0)));
+    const divergence = sameDate && Number.isFinite(Number(secondary?.latest_net_flow_usd)) ? round(Math.abs(Number(primary.latest_net_flow_usd) - Number(secondary.latest_net_flow_usd)) / denominator * 100, 3) : null;
+    return [asset, {
+      source: monthlyEtfFlows.source,
+      source_url: monthlyEtfFlows.source_url,
+      latest_date: secondary?.latest_date || null,
+      latest_net_flow_usd: Number.isFinite(Number(secondary?.latest_net_flow_usd)) ? Number(secondary.latest_net_flow_usd) : null,
+      same_session: Boolean(sameDate),
+      divergence_pct: divergence,
+      included: Number.isFinite(divergence) && divergence <= 10,
+      exclusion_reason: Number.isFinite(divergence) && divergence > 10 ? 'Desviación superior al 10 % frente al histórico principal' : null
+    }];
+  }));
+}
 
 const issuerEtfSources = [
   { asset: 'bitcoin', ticker: 'IBIT', url: 'https://www.ishares.com/us/products/333011/ishares-bitcoin-trust-etf' },

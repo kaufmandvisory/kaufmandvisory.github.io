@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { buildDominanceSnapshot, buildOpenInterestSnapshot, buildDvolSnapshot, buildEtfFlowSnapshot } from './market-context.js';
+import { buildDominanceSnapshot, buildOpenInterestSnapshot, buildDvolSnapshot, buildEtfFlowSnapshot, buildEtfHistoricalSnapshot } from './market-context.js';
 
 test('builds dominance without using CoinGecko as a ticker', () => {
   const result = buildDominanceSnapshot({ data: { market_cap_percentage: { btc: 58.1, eth: 9.9 }, total_market_cap: { usd: 2_000_000 }, updated_at: 1783936800 } }, '2026-07-13T12:00:00.000Z');
@@ -32,4 +32,19 @@ test('parses ETF flows and removes an empty current-day placeholder', () => {
   assert.equal(result.assets.bitcoin.latest_date, '2026-07-10');
   assert.equal(result.assets.bitcoin.latest_net_flow_usd, 80);
   assert.equal(result.assets.ethereum.latest_net_flow_usd, -5);
+});
+
+test('builds 7, 30 and 90 calendar-day ETF histories', () => {
+  const rows = [];
+  for (let day = 1; day <= 100; day += 1) {
+    const date = new Date(Date.UTC(2026, 0, day)).toISOString().slice(0, 10);
+    rows.push({ date, asset: 'BTC', net_inflow_usd: day, net_assets_usd: 1000 });
+    rows.push({ date, asset: 'ETH', net_inflow_usd: -day, net_assets_usd: 500 });
+  }
+  const result = buildEtfHistoricalSnapshot({ rows }, '2026-04-10T12:00:00.000Z');
+  assert.equal(result.assets.bitcoin.series.length, 90);
+  assert.equal(result.assets.bitcoin.period_session_count['7d'], 7);
+  assert.equal(result.assets.bitcoin.period_session_count['30d'], 30);
+  assert.equal(result.assets.bitcoin.period_session_count['90d'], 90);
+  assert.equal(result.assets.ethereum.latest_net_flow_usd, -100);
 });

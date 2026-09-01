@@ -1,7 +1,7 @@
 {
   "status": "AUDITED_WITH_CONTROLS",
-  "generated_at": "2026-09-01T14:40:10.508Z",
-  "evidence_snapshot_at": "2026-09-01T14:31:51.687Z",
+  "generated_at": "2026-09-01T15:09:52.843Z",
+  "evidence_snapshot_at": "2026-09-01T15:03:00.091Z",
   "findings": [
     {
       "id": "A01",
@@ -16,7 +16,7 @@
       "severity": "CONTROL_READY",
       "area": "ETF",
       "finding": "El agregado ETF se contrasta con participaciones publicadas por el emisor; la primera observación crea la base y no finge reconciliación.",
-      "evidence": "Estado=CONFLICT; observaciones de emisor=2; contexto automático=true.",
+      "evidence": "Estado=BASELINE_ESTABLISHED; observaciones de emisor=2; contexto automático=true.",
       "remediation": "Conservar una observación de una sesión posterior para activar la comparación direccional y bloquear cualquier conflicto."
     },
     {

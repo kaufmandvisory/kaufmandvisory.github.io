@@ -134,3 +134,59 @@ export function buildEtfFlowSnapshot(html, receivedAt = new Date().toISOString()
     methodology: 'Flujo neto diario agregado de ETF spot estadounidenses publicado por CoinFlows. Kaufman conserva el signo y la fecha de mercado, excluye la fila vacía del día en curso y no lo interpreta como flujo mundial.'
   };
 }
+
+const ETF_ASSET_IDS = { BTC: 'bitcoin', ETH: 'ethereum' };
+
+const periodStart = (date, days) => {
+  const value = new Date(`${date}T12:00:00Z`);
+  value.setUTCDate(value.getUTCDate() - (days - 1));
+  return value.toISOString().slice(0, 10);
+};
+
+export function buildEtfHistoricalSnapshot(payload, receivedAt = new Date().toISOString()) {
+  const input = Array.isArray(payload?.rows) ? payload.rows : [];
+  const assets = {};
+  for (const [symbol, asset] of Object.entries(ETF_ASSET_IDS)) {
+    const allRows = input
+      .filter((row) => String(row?.asset || '').toUpperCase() === symbol)
+      .map((row) => ({
+        date: String(row?.date || ''),
+        net_flow_usd: asNumber(row?.net_inflow_usd),
+        net_assets_usd: asNumber(row?.net_assets_usd),
+        cumulative_inflow_usd: asNumber(row?.cumulative_inflow_usd),
+        value_traded_usd: asNumber(row?.value_traded_usd)
+      }))
+      .filter((row) => /^\d{4}-\d{2}-\d{2}$/.test(row.date) && Number.isFinite(row.net_flow_usd))
+      .sort((a, b) => a.date.localeCompare(b.date));
+    if (!allRows.length) continue;
+    const latest = allRows.at(-1);
+    const cutoff90 = periodStart(latest.date, 90);
+    const series = allRows.filter((row) => row.date >= cutoff90);
+    const periodNet = {};
+    const sessionCounts = {};
+    for (const days of [7, 30, 90]) {
+      const cutoff = periodStart(latest.date, days);
+      const rows = series.filter((row) => row.date >= cutoff);
+      periodNet[`${days}d`] = round(rows.reduce((sum, row) => sum + row.net_flow_usd, 0), 2);
+      sessionCounts[`${days}d`] = rows.length;
+    }
+    assets[asset] = {
+      latest_date: latest.date,
+      latest_net_flow_usd: round(latest.net_flow_usd, 2),
+      seven_session_net_flow_usd: periodNet['7d'],
+      period_net_flow_usd: periodNet,
+      period_session_count: sessionCounts,
+      series
+    };
+  }
+  if (!assets.bitcoin && !assets.ethereum) throw new Error('ETF historical dataset unavailable');
+  return {
+    assets,
+    received_at: receivedAt,
+    source: 'ByKaranteli public ETF history',
+    source_url: 'https://bykaranteli.com/data',
+    upstream_source: 'SoSoValue public US spot ETF series',
+    verification_status: Object.keys(assets).length === 2 ? 'AGGREGATOR_OBSERVED' : 'DEGRADED',
+    methodology: 'Flujo neto diario finalizado de ETF spot estadounidenses, agregado por activo y conservado durante los últimos 90 días naturales. La fuente secundaria declara SoSoValue como origen; Kaufman contrasta la sesión más reciente con CoinFlows y observaciones del emisor cuando están disponibles.'
+  };
+}
