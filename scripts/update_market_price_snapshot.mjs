@@ -31,6 +31,7 @@ payload.delivery_mode = 'AUTOMATED_5_MINUTE_SNAPSHOT';
 payload.status = payload.status === 'UNAVAILABLE' ? 'UNAVAILABLE' : 'AUTOMATED';
 payload.refresh_interval_ms = 5 * 60_000;
 payload.max_age_ms = 15 * 60_000;
+payload.continuity_max_age_ms = 6 * 60 * 60_000;
 payload.snapshot_warning = 'Precio de referencia calculado automáticamente en servidor. Objetivo de actualización: cinco minutos; la hora de observación siempre se muestra.';
 
 await writeFile(temporaryTarget, `${JSON.stringify(payload)}\n`, 'utf8');

@@ -7,6 +7,7 @@ const age = Date.now() - Date.parse(snapshot.generated_at);
 assert.equal(snapshot.delivery_mode, 'AUTOMATED_5_MINUTE_SNAPSHOT');
 assert.equal(snapshot.refresh_interval_ms, 5 * 60_000);
 assert.equal(snapshot.max_age_ms, 15 * 60_000);
+assert.equal(snapshot.continuity_max_age_ms, 6 * 60 * 60_000);
 assert.ok(Number.isFinite(age) && age >= 0 && age <= 15 * 60_000, `snapshot automático obsoleto: ${age} ms`);
 
 for (const asset of ['bitcoin', 'ethereum', 'solana']) {

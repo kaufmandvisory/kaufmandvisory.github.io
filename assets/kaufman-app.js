@@ -105,6 +105,7 @@
   const MARKET_EDGE_ENDPOINT = '/api/market/snapshot';
   const MARKET_CONTEXT_ENDPOINT = '/api/market/context';
   const GAS_EDGE_ENDPOINT = '/api/market/gas';
+  const MARKET_CONTINUITY_MAX_AGE_MS = 6 * 60 * 60 * 1000;
   const PRICE = new Intl.NumberFormat('es-ES',{style:'currency',currency:'USD',maximumFractionDigits:2});
   const SMALL_USD = new Intl.NumberFormat('es-ES',{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:4});
   const APP_SCRIPT = document.querySelector('script[src*="kaufman-app.js"]');
@@ -299,7 +300,7 @@
 
   function marketBandMarkup(){
     const assets=[['bitcoin','BTC','Bitcoin'],['ethereum','ETH','Ethereum'],['solana','SOL','Solana']];
-    return `<div class="kf-market-band"><div class="kf-container"><div class="kf-market-meta"><strong>Kaufman Reference Price</strong><span data-market-status aria-live="polite">Actualizando precios…</span></div><div class="kf-market-grid">${assets.map(([id,symbol,name])=>`<div class="kf-market-cell" data-market-asset="${id}"><img class="kf-coin-logo" src="${assetUrl(`/assets/logos/${id}.svg`)}" alt="Logo de ${name}"><div><div class="kf-market-name">${symbol}</div><div class="kf-market-pair">${name} / USD</div></div><div class="kf-market-value"><div class="kf-market-price">—</div><div class="kf-market-change na" data-market-age>Actualizando…</div><small class="kf-market-venues" data-market-venues>Mercados públicos server-side</small></div></div>`).join('')}</div></div></div>`;
+    return `<div class="kf-market-band"><div class="kf-container"><div class="kf-market-meta"><strong>Kaufman Reference Price</strong><span data-market-status aria-live="polite">Actualizando precios…</span></div><div class="kf-market-grid">${assets.map(([id,symbol,name])=>`<div class="kf-market-cell" data-market-asset="${id}"><img class="kf-coin-logo" src="${assetUrl(`/assets/logos/${id}.svg`)}" alt="Logo de ${name}"><div><div class="kf-market-name">${symbol}</div><div class="kf-market-pair">${name} / USD</div></div><div class="kf-market-value"><div class="kf-market-price">—</div></div></div>`).join('')}</div></div></div>`;
   }
 
   function priceMethodologyMarkup(){
@@ -975,8 +976,8 @@
     const automated=deliveryMode==='AUTOMATED_5_MINUTE_SNAPSHOT';
     const refreshInterval=Number(latestMarketSnapshot?.price_refresh_interval_ms||latestMarketSnapshot?.refresh_interval_ms)||300000;
     const maxAge=Number(latestMarketSnapshot?.price_max_age_ms||latestMarketSnapshot?.max_age_ms)||(automated?900000:5000);
+    const targetAge=Number(latestMarketSnapshot?.price_target_age_ms||latestMarketSnapshot?.max_age_ms)||(automated?900000:5000);
     const availableAssets=new Set();
-    const availableVenues=new Set();
     latestEthUsd=null;
     document.querySelectorAll('[data-market-asset]').forEach((element)=>{
       const reference=references[element.dataset.marketAsset];
@@ -985,7 +986,7 @@
       const status=reference?.price?freshnessFromAge(currentAge):'UNAVAILABLE';
       const publishable=Number.isFinite(Number(reference?.price))&&(automated?Number.isFinite(currentAge)&&currentAge<=maxAge:status==='FRESH');
       const displayStatus=automated&&publishable?(currentAge<=refreshInterval*2?'FRESH':'STALE'):status;
-      if(publishable){availableAssets.add(element.dataset.marketAsset);(reference.venues||[]).forEach((venue)=>availableVenues.add(venue))}
+      if(publishable)availableAssets.add(element.dataset.marketAsset);
       if(publishable&&element.dataset.marketAsset==='ethereum')latestEthUsd=Number(reference.price);
       const price=element.querySelector('.kf-market-price'),age=element.querySelector('[data-market-age]'),venues=element.querySelector('[data-market-venues]');
       if(price)price.textContent=publishable?PRICE.format(reference.price):'No disponible';
@@ -997,11 +998,14 @@
       if(divergence)divergence.textContent=publishable&&Number.isFinite(reference.metrics?.max_divergence_pct)?`${reference.metrics.max_divergence_pct.toFixed(3)} %`:'—';
     });
     const snapshotAge=ageMs(latestMarketSnapshot?.price_generated_at||latestMarketSnapshot?.generated_at);
+    const delayedAutomatic=automated&&Number.isFinite(snapshotAge)&&snapshotAge>targetAge;
     const marketStatus=automated
       ? availableAssets.size===3
-        ? `Precios automáticos · objetivo 5 min · ${ageLabel(snapshotAge)}`
+        ? delayedAutomatic
+          ? `Última referencia verificada · ${ageLabel(snapshotAge)}`
+          : `Precios automáticos · objetivo 5 min · ${ageLabel(snapshotAge)}`
         : availableAssets.size?`${availableAssets.size}/3 precios automáticos disponibles`:'Esperando la siguiente actualización automática'
-      : availableAssets.size===3?`Precios en tiempo real · ${availableVenues.size} mercados`:availableAssets.size?`${availableAssets.size}/3 precios en tiempo real`:'Actualizando precios…';
+      : availableAssets.size===3?`Precios en tiempo real · ${ageLabel(snapshotAge)}`:availableAssets.size?`${availableAssets.size}/3 precios en tiempo real`:'Actualizando precios…';
     document.querySelectorAll('[data-market-status]').forEach((node)=>node.textContent=marketStatus);
     updateGasCost();
   }
@@ -1162,7 +1166,7 @@
   function renderMetadata(metadata={}){
     const compact=new Intl.NumberFormat('es-ES',{notation:'compact',maximumFractionDigits:2});
     const ids=['bitcoin','ethereum','solana'];
-    const card=(id)=>{const item=metadata[id],valid=item?.verification_status==='VERIFIED',categories=(item?.categories||[]).slice(0,3).map(escapeHtml).join(' · ');return `<article class="kf-metadata-card"><img src="${assetUrl(`/assets/logos/${id}.svg`)}" alt="Logo de ${escapeHtml(item?.name||id)}"><div><span>${escapeHtml(item?.name||id)}</span><strong>${valid&&Number.isFinite(Number(item.market_cap_usd))?`${compact.format(item.market_cap_usd)} USD`:'No disponible'}</strong><small>Capitalización · ${valid&&Number.isFinite(Number(item.circulating_supply))?`${compact.format(item.circulating_supply)} en circulación`:'oferta no disponible'}</small><p>${valid?(categories||`Metadatos validados · ${ageLabel(ageMs(item.last_updated_at))}`):escapeHtml(item?.exclusion_reason||'Metadato sin timestamp válido')}</p></div></article>`};
+    const card=(id)=>{const item=metadata[id],valid=item?.verification_status==='VERIFIED';return `<article class="kf-metadata-card"><img src="${assetUrl(`/assets/logos/${id}.svg`)}" alt="Logo de ${escapeHtml(item?.name||id)}"><div><span>${escapeHtml(item?.name||id)}</span><strong>${valid&&Number.isFinite(Number(item.market_cap_usd))?`${compact.format(item.market_cap_usd)} USD`:'No disponible'}</strong><small>Capitalización · ${valid&&Number.isFinite(Number(item.circulating_supply))?`${compact.format(item.circulating_supply)} en circulación`:'oferta no disponible'}</small></div></article>`};
     const slots=[...document.querySelectorAll('[data-market-metadata-slot]')];
     if(slots.length){slots.forEach((slot)=>{slot.innerHTML=card(slot.dataset.marketMetadataSlot)});return}
     const root=document.querySelector('[data-market-metadata]');
@@ -1758,7 +1762,8 @@
     if(!snapshot||snapshot.delivery_mode!=='AUTOMATED_5_MINUTE_SNAPSHOT'||!snapshot.reference_prices)return false;
     const snapshotAge=ageMs(snapshot.generated_at);
     const maxAge=Number(snapshot.max_age_ms)||900000;
-    if(!Number.isFinite(snapshotAge)||snapshotAge>maxAge)return false;
+    const continuityMaxAge=Number(snapshot.continuity_max_age_ms)||MARKET_CONTINUITY_MAX_AGE_MS;
+    if(!Number.isFinite(snapshotAge)||snapshotAge>continuityMaxAge)return false;
     const providers=Object.fromEntries(Object.entries(snapshot.providers||{}).map(([name,provider])=>{
       const contradictory=['LIVE','CONNECTED'].includes(provider?.connection_status)&&Boolean(provider?.last_error);
       return [name,contradictory?{...provider,connection_status:'DEGRADED'}:provider];
@@ -1771,7 +1776,8 @@
       price_delivery_mode:snapshot.delivery_mode,
       price_generated_at:snapshot.generated_at,
       price_refresh_interval_ms:Number(snapshot.refresh_interval_ms)||300000,
-      price_max_age_ms:maxAge,
+      price_target_age_ms:maxAge,
+      price_max_age_ms:continuityMaxAge,
       processing_ms:snapshot.processing_ms,
       status:snapshot.status,
       reference_prices:snapshot.reference_prices,
