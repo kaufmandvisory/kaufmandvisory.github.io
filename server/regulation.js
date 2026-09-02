@@ -104,6 +104,91 @@ export const REGULATORY_SOURCES = Object.freeze([
     id: 'us_genius_act', jurisdiction: 'estados-unidos', authority: 'U.S. Government Publishing Office',
     title: 'GENIUS Act · Public Law 119-27', url: 'https://www.govinfo.gov/content/pkg/PLAW-119publ27/pdf/PLAW-119publ27.pdf',
     source_type: 'PRIMARY_LAW', binding_level: 'PRIMARY_LAW'
+  },
+  {
+    id: 'br_bcb_res_520', jurisdiction: 'brasil', authority: 'Banco Central do Brasil',
+    title: 'Resolução BCB 520/2025 · sociedades prestadoras de serviços de ativos virtuais', url: 'https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?numero=520&tipo=Resolu%C3%A7%C3%A3o+BCB',
+    source_type: 'CONSOLIDATED_REGULATION', binding_level: 'BINDING'
+  },
+  {
+    id: 'ar_cnv_psav', jurisdiction: 'argentina', authority: 'Comisión Nacional de Valores',
+    title: 'Registro de Proveedores de Servicios de Activos Virtuales', url: 'https://www.argentina.gob.ar/cnv/registro-de-proveedores-de-servicios-de-activos-virtuales',
+    source_type: 'OFFICIAL_REGISTER', binding_level: 'OFFICIAL_REGISTER'
+  },
+  {
+    id: 'sv_cnad_register', jurisdiction: 'el-salvador', authority: 'Comisión Nacional de Activos Digitales',
+    title: 'Reglamento de Proveedores de Servicios de Activos Digitales', url: 'https://cnad.gob.sv/wp-content/uploads/2024/04/Reglamento-de-Proveedores-de-Servicios-de-Activos-Digitales-2023.08.11-ESP.pdf',
+    source_type: 'CONSOLIDATED_REGULATION', binding_level: 'BINDING'
+  },
+  {
+    id: 'cl_cmf_fintech', jurisdiction: 'chile', authority: 'Comisión para el Mercado Financiero',
+    title: 'Registro de Prestadores de Servicios Financieros · Ley Fintec', url: 'https://www.cmfchile.cl/portal/principal/623/w4-article-82800.html',
+    source_type: 'OFFICIAL_REGISTRATION_GUIDANCE', binding_level: 'OFFICIAL_GUIDANCE'
+  },
+  {
+    id: 'co_sfc_virtual_assets', jurisdiction: 'colombia', authority: 'Superintendencia Financiera de Colombia',
+    title: 'Hub de activos virtuales · perímetro regulatorio vigente', url: 'https://www.superfinanciera.gov.co/publicaciones/10103299/innovasfcelhub-10103299/',
+    source_type: 'OFFICIAL_GUIDANCE', binding_level: 'OFFICIAL_GUIDANCE'
+  },
+  {
+    id: 'uy_bcu_psav', jurisdiction: 'uruguay', authority: 'Banco Central del Uruguay',
+    title: 'Solicitud de autorización y registro de proveedores de servicios de activos virtuales', url: 'https://www.gub.uy/tramites/solicitud-autorizacion-registro-proveedores-servicios-activos-virtuales',
+    source_type: 'OFFICIAL_REGISTRATION_GUIDANCE', binding_level: 'OFFICIAL_GUIDANCE'
+  },
+  {
+    id: 'pe_sbs_psav_aml', jurisdiction: 'peru', authority: 'Superintendencia de Banca, Seguros y AFP',
+    title: 'Resolución SBS 02648-2024 · prevención LA/FT para PSAV', url: 'https://www.sbs.gob.pe/noticia/detallenoticia/idnoticia/3754',
+    source_type: 'OFFICIAL_REGULATION_NOTICE', binding_level: 'BINDING'
+  },
+  {
+    id: 'sg_mas_dpt_directory', jurisdiction: 'singapur', authority: 'Monetary Authority of Singapore',
+    title: 'Directorio de instituciones con servicio Digital Payment Token', url: 'https://eservices.mas.gov.sg/fid/institution?activity=Digital+Payment+Token+Service',
+    source_type: 'OFFICIAL_REGISTER', binding_level: 'OFFICIAL_REGISTER'
+  },
+  {
+    id: 'kr_fsc_virtual_asset_act', jurisdiction: 'corea-del-sur', authority: 'Financial Services Commission',
+    title: 'Virtual Asset User Protection Act · entrada en vigor y obligaciones', url: 'https://www.fsc.go.kr/eng/pr010101/82683',
+    source_type: 'OFFICIAL_REGULATION_NOTICE', binding_level: 'BINDING'
+  },
+  {
+    id: 'th_sec_digital_assets', jurisdiction: 'tailandia', authority: 'Securities and Exchange Commission Thailand',
+    title: 'Resumen del Royal Decree on Digital Asset Businesses', url: 'https://www.sec.or.th/EN/Documents/ActandRoyalEnactment/LawReform/summary-decree-digitalasset2561.pdf',
+    source_type: 'OFFICIAL_LEGISLATION_SUMMARY', binding_level: 'OFFICIAL_GUIDANCE'
+  },
+  {
+    id: 'th_sec_digital_assets_2025', jurisdiction: 'tailandia', authority: 'Securities and Exchange Commission Thailand',
+    title: 'Emergency Decree on Digital Asset Businesses · modificación 2025', url: 'https://sec.or.th/EN/Documents/ActandRoyalEnactment/RoyalEnactment/enactment-digitalasset2025.pdf',
+    source_type: 'PRIMARY_LAW_AMENDMENT', binding_level: 'PRIMARY_LAW'
+  },
+  {
+    id: 'id_ojk_digital_assets', jurisdiction: 'indonesia', authority: 'Otoritas Jasa Keuangan',
+    title: 'OJK Regulation 27/2024 · digital financial asset and crypto asset trading', url: 'https://iru.ojk.go.id/iru/BE/uploads/regulation/files/file_444fdb9e-8b49-4e13-80e7-47c0330160f3-17042025155234.pdf',
+    source_type: 'OFFICIAL_REGULATION', binding_level: 'BINDING'
+  },
+  {
+    id: 'my_sc_digital_assets', jurisdiction: 'malasia', authority: 'Securities Commission Malaysia',
+    title: 'Digital Assets · emisión, negociación y custodia', url: 'https://www.sc.com.my/digital-assets',
+    source_type: 'OFFICIAL_REGULATORY_PORTAL', binding_level: 'OFFICIAL_GUIDANCE'
+  },
+  {
+    id: 'ph_bsp_circular_1108', jurisdiction: 'filipinas', authority: 'Bangko Sentral ng Pilipinas',
+    title: 'Circular 1108 · Guidelines for Virtual Asset Service Providers', url: 'https://www.bsp.gov.ph/Regulations/Issuances/2021/1108.pdf',
+    source_type: 'CONSOLIDATED_REGULATION', binding_level: 'BINDING'
+  },
+  {
+    id: 'kz_afsa_datf', jurisdiction: 'kazajistan-aifc', authority: 'Astana Financial Services Authority',
+    title: 'Operating a Digital Asset Trading Facility', url: 'https://afsa.aifc.kz/regulated-activities/operating-a-digital-asset-trading-facility/',
+    source_type: 'OFFICIAL_LICENSING_GUIDANCE', binding_level: 'OFFICIAL_GUIDANCE'
+  },
+  {
+    id: 'pa_sbp_imf_vasp', jurisdiction: 'panama', authority: 'Superintendencia de Bancos de Panamá · FMI',
+    title: 'Evaluación técnica del marco AV/PSAV de Panamá', url: 'https://www.superbancos.gob.pa/documentos/evaluaciones_fmi/TN-AML-FT-SPN-Panama-FSAP.pdf',
+    source_type: 'OFFICIAL_HOSTED_TECHNICAL_ASSESSMENT', binding_level: 'OFFICIAL_ASSESSMENT'
+  },
+  {
+    id: 'cr_sugef_risk_2025', jurisdiction: 'costa-rica', authority: 'SUGEF',
+    title: 'Evaluación sectorial de riesgos 2025 · ausencia de regulación PSAV', url: 'https://www.sugef.fi.cr/informacion_relevante/presentaciones%20sbr/Informe%20Final%20ESR-SF%20version%20publica-2025.pdf',
+    source_type: 'OFFICIAL_RISK_ASSESSMENT', binding_level: 'OFFICIAL_ASSESSMENT'
   }
 ]);
 
@@ -227,6 +312,278 @@ export const REGULATORY_REGIMES = Object.freeze([
     practical_effect: 'La emisión queda reservada a categorías de emisor permitidas y sujeta a respaldo y divulgación; el régimen federal y estatal se distribuye según el caso.',
     limitation: 'No es una licencia federal general para exchanges, tokens de inversión, DeFi ni cualquier criptoactivo; debe verificarse la actividad y normativa sectorial concurrente.',
     source_ids: ['us_genius_act'], source_verified_at: '2026-08-22', legal_reviewed_at: null
+  },
+  {
+    id: 'brazil-vasp', code: 'BR', name: 'Sociedades VASP · Brasil', jurisdiction: 'Brasil',
+    legal_status: 'SOURCE_GROUNDED', review_status: 'PENDING_LEGAL_SIGNOFF', state: 'IN_FORCE', authority: 'Banco Central do Brasil',
+    effective: 'Resolução BCB 520 publicada 10 nov 2025; calendario y transición según la norma',
+    scope: 'Constitución, autorización y funcionamiento de sociedades que prestan servicios de activos virtuales bajo competencia del BCB.',
+    practical_effect: 'La entidad y cada modalidad de servicio deben encajar en la autorización del BCB; no basta con afirmar que se opera como empresa tecnológica.',
+    limitation: 'Valores mobiliarios y actividades de inversión pueden quedar bajo la CVM; la norma no convierte cualquier token en activo autorizado.',
+    source_ids: ['br_bcb_res_520'], source_verified_at: '2026-09-02', legal_reviewed_at: null,
+    framework_type: 'Autorización prudencial de proveedores de activos virtuales',
+    market_access: 'Autorización del BCB y estructura societaria admitida para la actividad declarada.',
+    applies_to: ['Empresas que intermedian, custodian o transfieren activos virtuales en el perímetro del BCB', 'Entidades financieras que incorporan servicios de activos virtuales'],
+    does_not_apply_to: ['Activos calificados como valores mobiliarios bajo competencia de la CVM', 'Software sin control ni intermediación sobre activos del cliente'],
+    regulated_activities: ['Intermediación', 'Custodia', 'Transferencias', 'Servicios vinculados'],
+    core_obligations: ['Autorización y gobierno societario', 'Gestión de riesgos, controles internos y segregación', 'Prevención de blanqueo y trazabilidad operativa'],
+    verification_steps: ['Buscar la razón social en los registros del BCB', 'Comprobar servicios autorizados y fecha efectiva', 'Verificar si el activo o producto activa también competencia de la CVM'],
+    activity_tags: ['custody', 'exchange', 'brokerage', 'transfer', 'payments']
+  },
+  {
+    id: 'argentina-psav', code: 'AR', name: 'PSAV · Argentina', jurisdiction: 'Argentina',
+    legal_status: 'SOURCE_GROUNDED', review_status: 'PENDING_LEGAL_SIGNOFF', state: 'IN_FORCE', authority: 'Comisión Nacional de Valores',
+    effective: 'Registro operativo; altas por TAD desde 26 may 2025 y normativa consolidada vigente',
+    scope: 'Personas humanas y jurídicas alcanzadas por las categorías de proveedor de servicios de activos virtuales previstas por la CNV.',
+    practical_effect: 'El proveedor alcanzado debe inscribirse antes de operar y cumplir las condiciones de su categoría; la ficha del registro permite verificar identidad y estado.',
+    limitation: 'La inscripción PSAV no equivale a aprobación de los activos ofrecidos ni sustituye autorizaciones de mercado de capitales u otras normas aplicables.',
+    source_ids: ['ar_cnv_psav'], source_verified_at: '2026-09-02', legal_reviewed_at: null,
+    framework_type: 'Registro y supervisión de proveedores de activos virtuales',
+    market_access: 'Inscripción previa en el registro PSAV de la CNV según actividad y umbrales aplicables.',
+    applies_to: ['Proveedores residentes o constituidos en Argentina alcanzados por las actividades PSAV', 'Operadores que custodian, intercambian o transfieren activos virtuales por cuenta de terceros'],
+    does_not_apply_to: ['Autocustodia y operaciones estrictamente por cuenta propia sin servicio a terceros', 'Una autorización automática para emitir valores negociables tokenizados'],
+    regulated_activities: ['Exchange', 'Transferencias', 'Custodia', 'Servicios financieros vinculados'],
+    core_obligations: ['Registro y actualización de datos', 'Controles AML/CFT y conocimiento del cliente', 'Seguridad de la información, auditoría y evidencia de reservas cuando corresponda'],
+    verification_steps: ['Consultar proveedor y categoría en el registro CNV', 'Comprobar estado, denominación legal y alcance operativo', 'Separar la actividad PSAV de una oferta pública o valor negociable'],
+    activity_tags: ['custody', 'exchange', 'brokerage', 'transfer']
+  },
+  {
+    id: 'el-salvador-psad', code: 'SV', name: 'PSAD · El Salvador', jurisdiction: 'El Salvador',
+    legal_status: 'SOURCE_GROUNDED', review_status: 'PENDING_LEGAL_SIGNOFF', state: 'IN_FORCE', authority: 'Comisión Nacional de Activos Digitales',
+    effective: 'Ley de Emisión de Activos Digitales y registro CNAD en vigor',
+    scope: 'Emisores, ofertas públicas y proveedores de servicios de activos digitales incluidos en la ley y normativa CNAD.',
+    practical_effect: 'El operador o emisor debe identificarse en el registro público correspondiente y acreditar autorización para la actividad concreta.',
+    limitation: 'El tratamiento de Bitcoin como moneda de curso legal y los servicios bajo competencia del BCR tienen reglas distintas; no deben mezclarse ambos registros.',
+    source_ids: ['sv_cnad_register'], source_verified_at: '2026-09-02', legal_reviewed_at: null,
+    framework_type: 'Registro de servicios y emisión de activos digitales',
+    market_access: 'Registro o autorización CNAD según se preste un servicio o se estructure una emisión pública.',
+    applies_to: ['Proveedores de servicios de activos digitales', 'Emisores y certificadores de ofertas públicas de activos digitales'],
+    does_not_apply_to: ['Toda actividad con Bitcoin por el mero uso del activo', 'Productos financieros que permanezcan bajo otra autoridad sectorial'],
+    regulated_activities: ['Emisión', 'Exchange', 'Custodia', 'Transferencias', 'Estructuración de ofertas'],
+    core_obligations: ['Registro e identificación del responsable', 'Documentación de oferta y divulgaciones cuando corresponda', 'Controles AML/CFT y custodia conforme al servicio'],
+    verification_steps: ['Consultar el registro público CNAD', 'Distinguir PSAD, emisor y certificador', 'Abrir la resolución o licencia y confirmar el servicio autorizado'],
+    activity_tags: ['issuer', 'custody', 'exchange', 'transfer']
+  },
+  {
+    id: 'chile-fintech-tokenized', code: 'CL', name: 'Ley Fintec · Chile', jurisdiction: 'Chile',
+    legal_status: 'SOURCE_GROUNDED', review_status: 'PENDING_LEGAL_SIGNOFF', state: 'IN_FORCE', authority: 'Comisión para el Mercado Financiero',
+    effective: 'Ley 21.521 y normativa CMF de registro y autorización en vigor',
+    scope: 'Servicios regulados por la Ley Fintec, incluidos los relativos a instrumentos financieros tokenizados cuando entren en sus categorías.',
+    practical_effect: 'Figurar en el Registro de Prestadores de Servicios Financieros no basta: debe comprobarse además la autorización del servicio regulado.',
+    limitation: 'No existe por esta vía una licencia general para cualquier criptoactivo; primero debe confirmarse que el activo o servicio entra en el perímetro financiero.',
+    source_ids: ['cl_cmf_fintech'], source_verified_at: '2026-09-02', legal_reviewed_at: null,
+    framework_type: 'Registro y autorización de servicios financieros tecnológicos',
+    market_access: 'Inscripción RPSF y autorización específica CMF para cada servicio alcanzado.',
+    applies_to: ['Plataformas de financiación colectiva y sistemas alternativos de transacción', 'Intermediación, custodia o asesoría de instrumentos financieros cubiertos'],
+    does_not_apply_to: ['Cualquier token por el solo hecho de usar blockchain', 'Registro sin autorización posterior para iniciar el servicio'],
+    regulated_activities: ['Intermediación', 'Custodia de instrumentos', 'Asesoría', 'Sistemas de transacción'],
+    core_obligations: ['Registro, autorización y capacidad operacional', 'Gobierno, información y gestión de riesgos', 'Segregación y custodia según el servicio'],
+    verification_steps: ['Clasificar el token como instrumento financiero o no', 'Consultar registro y autorización CMF por separado', 'Comprobar la actividad exacta y eventuales condiciones'],
+    activity_tags: ['issuer', 'custody', 'exchange', 'brokerage', 'advice']
+  },
+  {
+    id: 'colombia-no-general-license', code: 'CO', name: 'Perímetro de activos virtuales · Colombia', jurisdiction: 'Colombia',
+    legal_status: 'SOURCE_GROUNDED', review_status: 'PENDING_LEGAL_SIGNOFF', state: 'NO_GENERAL_REGIME', authority: 'Superintendencia Financiera de Colombia',
+    effective: 'Posición pública vigente de la SFC; sin licencia general de activos virtuales emitida por la SFC',
+    scope: 'Delimita qué puede y qué no puede concluirse de la supervisión financiera colombiana sobre negocios con activos virtuales.',
+    practical_effect: 'Un proveedor no puede presentarse como autorizado por la SFC para activos virtuales si no existe una autorización sectorial concreta que lo sustente.',
+    limitation: 'La ausencia de licencia general no elimina obligaciones societarias, tributarias, de consumo, AML/CFT o de captación y valores.',
+    source_ids: ['co_sfc_virtual_assets'], source_verified_at: '2026-09-02', legal_reviewed_at: null,
+    framework_type: 'Perímetro sin autorización general VASP de la SFC',
+    market_access: 'No hay una licencia VASP general de la SFC; cada actividad debe contrastarse con normas financieras y comerciales existentes.',
+    applies_to: ['Empresas que comercializan servicios con activos virtuales en Colombia', 'Entidades vigiladas que evalúan exposición o alianzas con proveedores'],
+    does_not_apply_to: ['Una autorización implícita por estar constituido como sociedad', 'Captación, valores o servicios financieros reservados sin licencia sectorial'],
+    regulated_activities: ['Promoción', 'Pagos', 'Captación o valores cuando concurran sus elementos'],
+    core_obligations: ['No inducir a error sobre supervisión o respaldo estatal', 'Analizar normas AML/CFT, consumidor y tributación', 'Separar fondos del público de una actividad no autorizada'],
+    verification_steps: ['Comprobar cualquier afirmación de licencia en el registro de la autoridad citada', 'Clasificar si existe captación, valor o servicio financiero reservado', 'Identificar la entidad legal y la jurisdicción contractual real'],
+    activity_tags: ['marketing', 'payments', 'banking']
+  },
+  {
+    id: 'uruguay-psav', code: 'UY', name: 'PSAV · Uruguay', jurisdiction: 'Uruguay',
+    legal_status: 'SOURCE_GROUNDED', review_status: 'PENDING_LEGAL_SIGNOFF', state: 'IN_FORCE', authority: 'Banco Central del Uruguay',
+    effective: 'Circular 2507 publicada en julio de 2026',
+    scope: 'Intercambio, transferencia, custodia y determinados servicios financieros relacionados con activos virtuales.',
+    practical_effect: 'La actividad PSAV alcanzada requiere autorización previa del BCU y cumplimiento de las reglas aplicables a su categoría.',
+    limitation: 'El software o la infraestructura sin control ni intermediación pueden quedar fuera; cada modelo debe revisarse por funciones reales.',
+    source_ids: ['uy_bcu_psav'], source_verified_at: '2026-09-02', legal_reviewed_at: null,
+    framework_type: 'Autorización previa de proveedores de activos virtuales',
+    market_access: 'Autorización del BCU antes de prestar las actividades PSAV incluidas.',
+    applies_to: ['Intercambio fiat/activo virtual y activo virtual/activo virtual', 'Transferencia, custodia, administración y servicios financieros de emisores'],
+    does_not_apply_to: ['Proveedor puramente tecnológico sin control sobre activos ni ejecución', 'Una aprobación general de los activos listados por el proveedor'],
+    regulated_activities: ['Exchange', 'Custodia', 'Transferencias', 'Servicios financieros vinculados'],
+    core_obligations: ['Autorización y gobierno', 'Controles AML/CFT y trazabilidad', 'Custodia y gestión de riesgos operacionales'],
+    verification_steps: ['Buscar entidad y categoría en el BCU', 'Comprobar fecha de autorización y actividades', 'Revisar si el servicio controla claves, fondos u órdenes'],
+    activity_tags: ['custody', 'exchange', 'brokerage', 'transfer']
+  },
+  {
+    id: 'peru-psav-aml', code: 'PE', name: 'PSAV · Perú', jurisdiction: 'Perú',
+    legal_status: 'SOURCE_GROUNDED', review_status: 'PENDING_LEGAL_SIGNOFF', state: 'IN_FORCE', authority: 'SBS · Unidad de Inteligencia Financiera',
+    effective: 'Resolución SBS 02648-2024 en vigor',
+    scope: 'Prevención del lavado de activos y financiación del terrorismo para proveedores de servicios de activos virtuales sujetos a la UIF.',
+    practical_effect: 'El PSAV alcanzado debe implantar un sistema AML/CFT, conservar operaciones y reportar; esto no equivale a una licencia integral de mercado.',
+    limitation: 'La supervisión AML/CFT no valida solvencia, reservas, custodia, activo ofrecido ni protección del cliente.',
+    source_ids: ['pe_sbs_psav_aml'], source_verified_at: '2026-09-02', legal_reviewed_at: null,
+    framework_type: 'Supervisión AML/CFT de proveedores de activos virtuales',
+    market_access: 'Sujeción y registro conforme al régimen UIF/SBS; no constituye autorización prudencial general.',
+    applies_to: ['Proveedores que intercambian, transfieren o custodian activos virtuales', 'Servicios financieros vinculados con oferta o venta de activos virtuales'],
+    does_not_apply_to: ['Una licencia de solvencia o conducta de mercado', 'Autocustodia sin prestación de servicio a terceros'],
+    regulated_activities: ['Exchange', 'Transferencias', 'Custodia', 'Servicios financieros vinculados'],
+    core_obligations: ['KYC y debida diligencia', 'Oficial de cumplimiento y evaluación de riesgos', 'Registro de operaciones y reportes de operaciones sospechosas'],
+    verification_steps: ['Comprobar identificación y condición del proveedor', 'Solicitar política AML/CFT y responsable', 'No presentar la supervisión UIF como aprobación comercial'],
+    activity_tags: ['custody', 'exchange', 'transfer']
+  },
+  {
+    id: 'singapore-dpt', code: 'SG', name: 'Digital Payment Tokens · Singapur', jurisdiction: 'Singapur',
+    legal_status: 'SOURCE_GROUNDED', review_status: 'PENDING_LEGAL_SIGNOFF', state: 'IN_FORCE', authority: 'Monetary Authority of Singapore',
+    effective: 'Payment Services Act vigente; directorio oficial consultable por actividad DPT',
+    scope: 'Prestación profesional de servicios con digital payment tokens dentro del perímetro territorial y funcional de la PSA.',
+    practical_effect: 'Debe comprobarse una licencia Standard o Major Payment Institution y que incluya expresamente Digital Payment Token Service.',
+    limitation: 'La licencia de pagos no autoriza por sí sola valores tokenizados, gestión de inversiones ni cualquier servicio desde el extranjero.',
+    source_ids: ['sg_mas_dpt_directory'], source_verified_at: '2026-09-02', legal_reviewed_at: null,
+    framework_type: 'Licencia de servicios de pago para digital payment tokens',
+    market_access: 'Licencia MAS con la actividad DPT incluida en el alcance público.',
+    applies_to: ['Exchanges y brokers de DPT', 'Custodios y facilitadores de transferencia cuando entren en la definición legal'],
+    does_not_apply_to: ['Una autorización de mercados de capitales', 'Una entidad cuyo registro no incluya Digital Payment Token Service'],
+    regulated_activities: ['Exchange', 'Custodia', 'Transferencias', 'Pagos'],
+    core_obligations: ['AML/CFT y travel rule aplicable', 'Salvaguarda y conducta según licencia', 'Riesgo tecnológico y continuidad operativa'],
+    verification_steps: ['Buscar la entidad en el Financial Institutions Directory', 'Abrir la ficha y confirmar DPT Service', 'Comprobar licencia, estado y demás actividades autorizadas'],
+    activity_tags: ['custody', 'exchange', 'brokerage', 'transfer', 'payments']
+  },
+  {
+    id: 'south-korea-vasp', code: 'KR', name: 'VASP y protección del usuario · Corea del Sur', jurisdiction: 'Corea del Sur',
+    legal_status: 'SOURCE_GROUNDED', review_status: 'PENDING_LEGAL_SIGNOFF', state: 'IN_FORCE', authority: 'KoFIU · Financial Services Commission',
+    effective: 'Virtual Asset User Protection Act en vigor desde 19 jul 2024',
+    scope: 'VASP registrados y protección de depósitos y activos virtuales de usuarios, vigilancia de operaciones y supervisión.',
+    practical_effect: 'El proveedor debe superar el registro KoFIU y cumplir separación de depósitos, custodia y controles de mercado; una app accesible no prueba registro.',
+    limitation: 'La ley de protección del usuario no clasifica todos los tokens como productos financieros ni sustituye la normativa de valores.',
+    source_ids: ['kr_fsc_virtual_asset_act'], source_verified_at: '2026-09-02', legal_reviewed_at: null,
+    framework_type: 'Registro VASP y protección patrimonial del usuario',
+    market_access: 'Registro ante KoFIU, con requisitos adicionales para servicios vinculados a cuentas bancarias reales.',
+    applies_to: ['Exchanges, brokers, custodios y otros VASP definidos', 'Operadores que mantienen depósitos o activos virtuales de usuarios'],
+    does_not_apply_to: ['Una aprobación de cada token negociado', 'Servicios que sean valores sin revisar la legislación financiera'],
+    regulated_activities: ['Exchange', 'Custodia', 'Transferencias'],
+    core_obligations: ['Separación de depósitos bancarios', 'Custodia mayoritaria fuera de línea y cobertura frente a incidentes', 'Vigilancia de operaciones anómalas y conservación de registros'],
+    verification_steps: ['Comprobar registro KoFIU y denominación legal', 'Verificar banco asociado cuando el servicio lo requiera', 'Revisar custodia, seguro o reservas y política de listado'],
+    activity_tags: ['custody', 'exchange', 'brokerage', 'transfer']
+  },
+  {
+    id: 'thailand-digital-assets', code: 'TH', name: 'Digital Asset Business · Tailandia', jurisdiction: 'Tailandia',
+    legal_status: 'SOURCE_GROUNDED', review_status: 'PENDING_LEGAL_SIGNOFF', state: 'IN_FORCE', authority: 'SEC Thailand · Ministry of Finance',
+    effective: 'Emergency Decree de 2018 y modificaciones vigentes',
+    scope: 'Exchanges, brokers, dealers, gestores de fondos y otros negocios de activos digitales definidos por la normativa.',
+    practical_effect: 'La actividad alcanzada necesita licencia; también debe revisarse si un operador extranjero dirige activamente servicios al mercado tailandés.',
+    limitation: 'La licencia de una categoría no habilita las demás y no elimina restricciones específicas de tokens, pagos o publicidad.',
+    source_ids: ['th_sec_digital_assets', 'th_sec_digital_assets_2025'], source_verified_at: '2026-09-02', legal_reviewed_at: null,
+    framework_type: 'Licencias por categoría de negocio de activos digitales',
+    market_access: 'Licencia por actividad bajo supervisión SEC y decisión ministerial conforme al régimen.',
+    applies_to: ['Exchanges, brokers y dealers de activos digitales', 'Gestores o asesores cuando su actividad esté incluida', 'Operadores extranjeros que dirigen servicios al país en los supuestos legales'],
+    does_not_apply_to: ['Una licencia única para todas las categorías', 'Venta o promoción de cualquier token sin revisar su aprobación'],
+    regulated_activities: ['Exchange', 'Brokerage', 'Dealer', 'Gestión', 'Asesoramiento'],
+    core_obligations: ['Capital y gobierno según categoría', 'Custodia, ciberseguridad y continuidad', 'AML/CFT, conducta y reglas de listado'],
+    verification_steps: ['Consultar lista SEC por categoría', 'Comprobar razón social y servicios exactos', 'Revisar admisibilidad del token y reglas de publicidad'],
+    activity_tags: ['issuer', 'custody', 'exchange', 'brokerage', 'marketing', 'advice']
+  },
+  {
+    id: 'indonesia-ojk-crypto', code: 'ID', name: 'Activos financieros digitales · Indonesia', jurisdiction: 'Indonesia',
+    legal_status: 'SOURCE_GROUNDED', review_status: 'PENDING_LEGAL_SIGNOFF', state: 'IN_FORCE', authority: 'Otoritas Jasa Keuangan',
+    effective: 'Supervisión transferida a OJK el 10 ene 2025; POJK 27/2024 y su modificación vigentes',
+    scope: 'Negociación y organización del mercado de activos financieros digitales, incluidos criptoactivos, bajo el perímetro OJK.',
+    practical_effect: 'La entidad debe figurar en la estructura autorizada por OJK para su función; exchange, broker y custodia no son categorías intercambiables.',
+    limitation: 'La autorización de infraestructura o intermediario no garantiza el activo ni cubre actividades bancarias o de pagos separadas.',
+    source_ids: ['id_ojk_digital_assets'], source_verified_at: '2026-09-02', legal_reviewed_at: null,
+    framework_type: 'Licencias de mercado para activos financieros digitales',
+    market_access: 'Licencia OJK específica para la función desempeñada dentro del ecosistema regulado.',
+    applies_to: ['Bolsas e infraestructura de mercado', 'Traders/intermediarios y custodios de criptoactivos', 'Operadores de servicios incluidos por OJK'],
+    does_not_apply_to: ['Una licencia transversal de banca o pagos', 'Un respaldo público a los activos admitidos'],
+    regulated_activities: ['Mercado', 'Brokerage', 'Custodia', 'Compensación y liquidación'],
+    core_obligations: ['Licencia, capital y gobierno', 'Protección de activos y seguridad tecnológica', 'Integridad de mercado, AML/CFT y reporte'],
+    verification_steps: ['Consultar licencia OJK y función exacta', 'Verificar entidad legal y dominio oficial', 'Comprobar el activo y canal admitidos por el operador'],
+    activity_tags: ['custody', 'exchange', 'brokerage', 'transfer']
+  },
+  {
+    id: 'malaysia-digital-assets', code: 'MY', name: 'Digital Assets · Malasia', jurisdiction: 'Malasia',
+    legal_status: 'SOURCE_GROUNDED', review_status: 'PENDING_LEGAL_SIGNOFF', state: 'IN_FORCE', authority: 'Securities Commission Malaysia',
+    effective: 'Guidelines on Recognized Markets y marcos de digital assets vigentes',
+    scope: 'Operadores de exchanges de activos digitales, custodios, IEO y actividades de mercado de capitales relacionadas.',
+    practical_effect: 'Debe verificarse la categoría pública: RMO-DAX para exchange, DAC para custodia e IEO operator para emisión; una no sustituye a otra.',
+    limitation: 'La regulación SC no implica que todo token sea aprobado ni resuelve usos de pago bajo otras autoridades.',
+    source_ids: ['my_sc_digital_assets'], source_verified_at: '2026-09-02', legal_reviewed_at: null,
+    framework_type: 'Reconocimiento y registro por función de mercado digital',
+    market_access: 'Registro o reconocimiento SC en la categoría que corresponda al servicio.',
+    applies_to: ['Digital asset exchanges', 'Digital asset custodians', 'Operadores IEO y emisores en el perímetro regulado'],
+    does_not_apply_to: ['Una autorización general para todos los servicios', 'Un respaldo económico del token listado o emitido'],
+    regulated_activities: ['Exchange', 'Custodia', 'Emisión y captación'],
+    core_obligations: ['Gobierno, capital y gestión de riesgos', 'Custodia y seguridad tecnológica', 'Admisión de activos, conducta y AML/CFT'],
+    verification_steps: ['Consultar el listado oficial de la categoría', 'Comprobar entidad, dominio y fecha de registro', 'Separar exchange, custodio y operador de emisión'],
+    activity_tags: ['issuer', 'custody', 'exchange', 'brokerage']
+  },
+  {
+    id: 'philippines-vasp', code: 'PH', name: 'VASP · Filipinas', jurisdiction: 'Filipinas',
+    legal_status: 'SOURCE_GROUNDED', review_status: 'PENDING_LEGAL_SIGNOFF', state: 'IN_FORCE', authority: 'Bangko Sentral ng Pilipinas',
+    effective: 'Circular 1108 vigente para VASP bajo supervisión BSP',
+    scope: 'Proveedores que facilitan intercambio o transferencia de activos virtuales como servicio financiero dentro del perímetro BSP.',
+    practical_effect: 'El operador alcanzado debe contar con la autorización o registro BSP aplicable y cumplir controles equivalentes a servicios monetarios.',
+    limitation: 'No toda aplicación, autocustodia o emisión de token es un VASP BSP; valores y ofertas pueden activar competencia de la SEC.',
+    source_ids: ['ph_bsp_circular_1108'], source_verified_at: '2026-09-02', legal_reviewed_at: null,
+    framework_type: 'Licencia y supervisión de servicios monetarios con activos virtuales',
+    market_access: 'Autorización BSP para la actividad VASP cubierta, con alcance verificable.',
+    applies_to: ['Intercambio entre activo virtual y fiat', 'Transferencia y facilitación de activos virtuales en los supuestos de la circular'],
+    does_not_apply_to: ['Software de autocustodia sin intermediación', 'Valores digitales y ofertas públicas bajo otro perímetro'],
+    regulated_activities: ['Exchange', 'Transferencias', 'Custodia asociada al servicio'],
+    core_obligations: ['Gobierno y controles de riesgo', 'AML/CFT, KYC y travel rule', 'Ciberseguridad, protección al consumidor y reporte'],
+    verification_steps: ['Consultar la lista BSP de entidades supervisadas', 'Comprobar la autorización de VASP y nombre comercial', 'Revisar si interviene además la SEC'],
+    activity_tags: ['custody', 'exchange', 'transfer', 'payments']
+  },
+  {
+    id: 'kazakhstan-aifc-datf', code: 'KZ', name: 'Digital Asset Trading Facility · AIFC', jurisdiction: 'Kazajistán · AIFC',
+    legal_status: 'SOURCE_GROUNDED', review_status: 'PENDING_LEGAL_SIGNOFF', state: 'IN_FORCE', authority: 'Astana Financial Services Authority',
+    effective: 'Marco AIFC de Digital Asset Service Providers vigente',
+    scope: 'Operación de centros de negociación y servicios regulados de activos digitales dentro o desde el AIFC.',
+    practical_effect: 'Una plataforma que opera desde el AIFC necesita licencia AFSA para la actividad exacta y debe aparecer en su registro público.',
+    limitation: 'El régimen AIFC no debe extrapolarse automáticamente al resto de Kazajistán ni a minería, pagos o banca fuera de su perímetro.',
+    source_ids: ['kz_afsa_datf'], source_verified_at: '2026-09-02', legal_reviewed_at: null,
+    framework_type: 'Licencia DASP en centro financiero internacional',
+    market_access: 'Autorización AFSA para operar un Digital Asset Trading Facility u otro servicio DASP.',
+    applies_to: ['Operadores de instalaciones de negociación de activos digitales', 'Intermediarios y custodios cuando solicitan su permiso correspondiente'],
+    does_not_apply_to: ['Actividad fuera del AIFC por el solo hecho de tener licencia dentro', 'Minería de Bitcoin o consumo eléctrico'],
+    regulated_activities: ['Exchange', 'Brokerage', 'Custodia', 'Trading facility'],
+    core_obligations: ['Autorización, capital y gobierno', 'Reglas de mercado, admisión y vigilancia', 'Custodia, ciberseguridad y AML/CFT'],
+    verification_steps: ['Buscar la entidad en el registro AFSA', 'Comprobar permisos y restricciones de la licencia', 'Confirmar que la contratación y prestación se realizan dentro del perímetro permitido'],
+    activity_tags: ['custody', 'exchange', 'brokerage', 'transfer']
+  },
+  {
+    id: 'panama-no-general-vasp', code: 'PA', name: 'Perímetro AV/PSAV · Panamá', jurisdiction: 'Panamá',
+    legal_status: 'SOURCE_GROUNDED', review_status: 'PENDING_LEGAL_SIGNOFF', state: 'NO_GENERAL_REGIME', authority: 'Superintendencia de Bancos de Panamá · autoridades sectoriales',
+    effective: 'Evaluación oficial alojada por la SBP: sin marco AV/PSAV integral vigente en el corte publicado',
+    scope: 'Delimita la ausencia de autorización uniforme para actividades de activos virtuales y los controles sectoriales que sí pueden concurrir.',
+    practical_effect: 'Una sociedad, banco corresponsal o proveedor extranjero no debe presentarse como VASP autorizado en Panamá sin una licencia sectorial concreta y verificable.',
+    limitation: 'La ausencia de régimen integral no exime de AML/CFT, banca, valores, pagos, consumo, fiscalidad ni diligencia reforzada del banco receptor.',
+    source_ids: ['pa_sbp_imf_vasp'], source_verified_at: '2026-09-02', legal_reviewed_at: null,
+    framework_type: 'Perímetro sin licencia VASP general',
+    market_access: 'No existe una autorización VASP uniforme; la actividad debe contrastarse con banca, valores, pagos y AML/CFT.',
+    applies_to: ['Proveedores que ofrecen exchange, transferencia o custodia a clientes vinculados con Panamá', 'Bancos y sujetos obligados que reciben fondos procedentes de activos virtuales'],
+    does_not_apply_to: ['Una aprobación implícita por constituir una sociedad panameña', 'Una exención de debida diligencia bancaria o de normativa de valores'],
+    regulated_activities: ['Banca o pagos si concurren sus elementos', 'Valores u oferta pública cuando corresponda', 'Controles AML/CFT'],
+    core_obligations: ['Identificación del cliente y origen de fondos', 'No inducir a error sobre licencia o supervisión', 'Análisis sectorial de la actividad y contraparte extranjera'],
+    verification_steps: ['Pedir la licencia exacta y autoridad que supuestamente la emitió', 'Comprobar si existe captación, custodia, pago o valor', 'Validar proveedor extranjero y trazabilidad bancaria'],
+    activity_tags: ['custody', 'exchange', 'transfer', 'marketing', 'payments', 'banking']
+  },
+  {
+    id: 'costa-rica-no-general-vasp', code: 'CR', name: 'Perímetro cripto · Costa Rica', jurisdiction: 'Costa Rica',
+    legal_status: 'SOURCE_GROUNDED', review_status: 'PENDING_LEGAL_SIGNOFF', state: 'NO_GENERAL_REGIME', authority: 'Banco Central de Costa Rica · SUGEF',
+    effective: 'Evaluación sectorial SUGEF 2025 identifica ausencia de regulación sobre proveedores de servicios y activos virtuales',
+    scope: 'Límites de la supervisión financiera y riesgos operativos en ausencia de una licencia PSAV integral.',
+    practical_effect: 'La disponibilidad de un servicio no significa que el proveedor esté supervisado, que el activo sea dinero de curso legal ni que exista protección frente a pérdidas.',
+    limitation: 'Deben revisarse por separado pagos, intermediación financiera, captación, AML/CFT, consumo, fiscalidad y cualquier instrumento financiero.',
+    source_ids: ['cr_sugef_risk_2025'], source_verified_at: '2026-09-02', legal_reviewed_at: null,
+    framework_type: 'Ausencia de licencia VASP general',
+    market_access: 'No hay licencia PSAV integral; la legalidad depende de la actividad y de normas sectoriales concurrentes.',
+    applies_to: ['Proveedores que ofrecen servicios cripto desde o hacia Costa Rica', 'Usuarios y entidades financieras que asumen exposición o reciben fondos relacionados'],
+    does_not_apply_to: ['Reconocimiento como moneda de curso legal', 'Supervisión prudencial automática del exchange o custodio', 'Garantía de recuperación frente a pérdidas'],
+    regulated_activities: ['Pagos o remesas cuando entren en su normativa', 'Captación e intermediación financiera', 'Controles AML/CFT'],
+    core_obligations: ['No afirmar supervisión inexistente', 'Debida diligencia y origen de fondos según contraparte', 'Cumplir normas sectoriales activadas por la operación'],
+    verification_steps: ['Comprobar entidad legal, domicilio y regulador real', 'Separar uso del activo de prestación de un servicio financiero', 'Verificar custodia, contrato y vías de reclamación'],
+    activity_tags: ['custody', 'exchange', 'transfer', 'marketing', 'payments', 'banking']
   }
 ]);
 
@@ -621,14 +978,17 @@ export async function checkRegulatorySource(source, fetchImpl = fetch) {
   let lastStatus = null;
   for (let attempt = 0; attempt < 3; attempt += 1) {
     try {
+      const headers = {
+        accept: 'text/html,application/xhtml+xml,application/pdf,application/json;q=0.9,*/*;q=0.8',
+        'user-agent': attempt === 0
+          ? 'Mozilla/5.0 (compatible; KaufmanRegulationMonitor/1.1; +https://kaufmanadvisory.io)'
+          : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/138.0 Safari/537.36'
+      };
+      if (attempt < 2) headers.range = 'bytes=0-65535';
       const response = await fetchImpl(source.url, {
         method: 'GET',
         redirect: 'follow',
-        headers: {
-          accept: 'text/html,application/xhtml+xml,application/pdf,application/json;q=0.9,*/*;q=0.8',
-          range: 'bytes=0-65535',
-          'user-agent': 'Mozilla/5.0 (compatible; KaufmanRegulationMonitor/1.1; +https://kaufmanadvisory.io)'
-        },
+        headers,
         signal: AbortSignal.timeout(12_000)
       });
       lastStatus = response.status;

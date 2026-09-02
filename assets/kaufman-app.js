@@ -154,6 +154,7 @@
   let regulationFallbackPromise = null;
   let platformFallbackPromise = null;
   let regulationDataset = null;
+  let regulationRowsExpanded = false;
   let ecosystemPinned = 'infraestructura';
 
   function statusBadge(status){return `<span class="kf-status ${status}">${STATUS_LABELS[status]||status}</span>`}
@@ -421,7 +422,6 @@
     const context={
       home:['De la evidencia a una decisión concreta.','Describe la operación. Kaufman devuelve alcance, controles prioritarios, fuentes y preguntas que aún necesitan confirmación.'],
       mercados:['Antes de mover capital, delimita la operación.','Conecta estructura de mercado, vehículo tokenizado, liquidez, costes y jurisdicción en una sola lectura.'],
-      regulacion:['La norma importa cuando se aplica a una operación.','Sitúa actividad, territorio, proveedor y fecha para construir el perímetro que debe comprobarse.'],
       tokenizacion:['Una emisión necesita más que una red.','Ordena activo, vehículo, jurisdicción, infraestructura, custodia y riesgos antes de elegir arquitectura.'],
       fiscal:['Comprobación fiscal de los datos introducidos.','Lista de hechos, fuentes, supuestos y puntos para revisión profesional.']
     }[page]||['Convierte esta ficha en una decisión comprobable.','Incluye la entidad, el territorio y el objetivo; Kaufman conecta las evidencias relevantes y señala los huecos.'];
@@ -448,8 +448,8 @@
   function renderRegulationV2(){
     const activities=[['all','Todas las actividades'],['issuer','Emisión'],['stablecoin','Stablecoins'],['custody','Custodia'],['exchange','Exchange'],['brokerage','Órdenes e intermediación'],['transfer','Transferencias'],['marketing','Promoción'],['payments','Pagos']];
     return `<main class="kf-main kf-regulation-page" id="main-content" data-regulation-dashboard>
-      <header class="kf-reg-hero"><div class="kf-container"><div class="kf-breadcrumbs"><a href="/">Inicio</a><span>/</span><span>Regulación</span></div><div class="kf-reg-hero-grid"><div><p class="kf-kicker">10 marcos · fuentes oficiales</p><h1>Regulación</h1><p class="kf-reg-hero-deck">Compara qué actividad necesita autorización, a quién afecta y qué queda fuera en cada país o territorio.</p><span class="kf-reg-live" data-regulation-status aria-live="polite">Conectando fuentes oficiales…</span></div><div class="kf-reg-flow" aria-label="Actividades que pueden activar obligaciones regulatorias"><p>La actividad determina el perímetro</p><div><span><i>01</i><strong>Emitir</strong></span><span><i>02</i><strong>Custodiar</strong></span><span><i>03</i><strong>Intercambiar</strong></span><span><i>04</i><strong>Promocionar</strong></span></div><small>Una misma operación puede activar más de una licencia.</small></div></div><div class="kf-reg-facts"><div><span>Marcos comparados</span><strong data-reg-kpi="regime_count">—</strong></div><div><span>Países y territorios</span><strong data-reg-kpi="jurisdiction_count">—</strong></div><div><span>Fuentes oficiales accesibles</span><strong data-reg-reachable>—</strong></div><div><span>Revisión jurídica firmada</span><strong data-reg-signed>—</strong></div></div></div></header>
-      <section class="kf-section kf-reg-registry" id="comparar-regulacion"><div class="kf-container"><div class="kf-reg-section-head"><div><p class="kf-kicker">Matriz regulatoria</p><h2>Qué exige cada marco y a quién.</h2></div><p>Lee primero el acceso al mercado. Abre una fila para revisar obligaciones, exclusiones y controles concretos del proveedor.</p></div><div class="kf-reg-tools"><label><span>Buscar país, marco o autoridad</span><input type="search" data-regulation-search placeholder="Ej. España, custodia, FCA"></label><label><span>Actividad</span><select data-regulation-activity>${activities.map(([value,label])=>`<option value="${value}">${label}</option>`).join('')}</select></label><strong data-regulation-count>—</strong></div><div class="kf-reg-table" data-regulation-table><div class="kf-reg-table-head"><span>País / marco</span><span>A quién afecta</span><span>Acceso al mercado</span><span>Actividad</span><span>Detalle</span></div><div data-regulation-regimes><div class="kf-live-empty">Cargando marcos regulatorios…</div></div></div></div></section>
+      <header class="kf-reg-hero"><div class="kf-container"><div class="kf-breadcrumbs"><a href="/">Inicio</a><span>/</span><span>Regulación</span></div><div class="kf-reg-hero-grid"><div><p class="kf-kicker">Jurisdicciones · fuentes oficiales</p><h1>Regulación</h1><p class="kf-reg-hero-deck">Compara qué actividad necesita autorización, a quién afecta y qué queda fuera en cada país o territorio.</p><span class="kf-reg-live" data-regulation-status aria-live="polite">Conectando fuentes oficiales…</span></div><div class="kf-reg-flow" aria-label="Actividades que pueden activar obligaciones regulatorias"><p>La actividad determina el perímetro</p><div><span><i>01</i><strong>Emitir</strong></span><span><i>02</i><strong>Custodiar</strong></span><span><i>03</i><strong>Intercambiar</strong></span><span><i>04</i><strong>Promocionar</strong></span></div><small>Una misma operación puede activar más de una licencia.</small></div></div><div class="kf-reg-facts"><div><span>Marcos comparados</span><strong data-reg-kpi="regime_count">—</strong></div><div><span>Países y territorios</span><strong data-reg-kpi="jurisdiction_count">—</strong></div><div><span>Fuentes oficiales accesibles</span><strong data-reg-reachable>—</strong></div><div><span>Revisión jurídica firmada</span><strong data-reg-signed>—</strong></div></div></div></header>
+      <section class="kf-section kf-reg-registry" id="comparar-regulacion"><div class="kf-container"><div class="kf-reg-section-head"><div><p class="kf-kicker">Matriz regulatoria</p><h2>Qué exige cada marco y a quién.</h2></div><p>Lee primero el acceso al mercado. Abre una fila para revisar obligaciones, exclusiones y controles concretos del proveedor.</p></div><div class="kf-reg-tools"><label><span>Buscar país, marco o autoridad</span><input type="search" data-regulation-search placeholder="Ej. Brasil, custodia, MAS"></label><label><span>Actividad</span><select data-regulation-activity>${activities.map(([value,label])=>`<option value="${value}">${label}</option>`).join('')}</select></label><strong data-regulation-count>—</strong></div><div class="kf-reg-table" data-regulation-table><div class="kf-reg-table-head"><span>País / marco</span><span>A quién afecta</span><span>Acceso al mercado</span><span>Actividad</span><span>Detalle</span></div><div data-regulation-regimes><div class="kf-live-empty">Cargando marcos regulatorios…</div></div></div><button class="kf-list-expand" type="button" data-regulation-expand aria-expanded="false">Ver todas las jurisdicciones</button></div></section>
       <section class="kf-section kf-reg-compare" id="comparador-regulatorio"><div class="kf-container"><div class="kf-reg-section-head"><div><p class="kf-kicker">Comparación directa</p><h2>Dos marcos, la misma operación.</h2></div><p>No asigna una puntuación ni declara un país “mejor”. Expone diferencias de autorización, alcance, obligaciones y exclusiones.</p></div><div class="kf-reg-compare-controls"><label>Primer marco<select data-regulation-compare="left"></select></label><label>Segundo marco<select data-regulation-compare="right"></select></label></div><div class="kf-reg-compare-grid" data-regulation-comparison><div class="kf-live-empty">Cargando comparación…</div></div></div></section>
       <section class="kf-section kf-reg-calendar" id="fechas-regulatorias"><div class="kf-container"><div class="kf-reg-section-head"><div><p class="kf-kicker">Fechas operativas</p><h2>Qué cambió y desde cuándo.</h2></div><p>Solo se muestran fechas que modifican una autorización, transición o texto aplicable.</p></div><div class="kf-reg-events" data-regulation-events><div class="kf-live-empty">Cargando fechas verificadas…</div></div></div></section>
       <section class="kf-section kf-reg-evidence" id="fuentes-regulatorias"><div class="kf-container"><details><summary><span>Fuentes y estado de revisión</span><strong data-reg-source-summary>Comprobando…</strong></summary><div class="kf-reg-source-list" data-regulation-sources><div class="kf-live-empty">Comprobando fuentes oficiales…</div></div></details><p class="kf-reg-method" data-regulation-methodology>La accesibilidad de una fuente no equivale a revisión jurídica.</p></div></section>
@@ -744,7 +744,7 @@
       +'<section class="kf-section kf-mining-economics" id="economia-minera"><div class="kf-container"><div class="kf-mining-section-head"><div><p class="kf-kicker">Flota y coste total</p><h2>Calcula los costes de tu operación minera.</h2></div><p>Introduce flota, coste eléctrico, hosting, PUE, disponibilidad, curtailment, pool, mantenimiento, financiación y CAPEX. Las cifras se recalculan con el último precio de BTC y los datos de red disponibles.</p></div>'+miningWorkbenchMarkup()+'</div></section>'
       +'<section class="kf-section kf-mining-equipment" id="equipos-mineros"><div class="kf-container"><div class="kf-mining-section-head"><div><p class="kf-kicker">Hardware SHA-256 · tres fabricantes</p><h2>Compara la frontera técnica.</h2></div><p>Valores nominales de fabricante y economía recalculada con el mismo snapshot. Tolerancias, temperatura, tensión y lote pueden cambiar el resultado real.</p></div><div class="kf-table-scroll"><table class="kf-mining-table kf-mining-hardware-table"><thead><tr><th>Fabricante / equipo</th><th>Refrigeración</th><th class="number">Hashrate</th><th class="number">Potencia</th><th class="number">Eficiencia</th><th>Condiciones</th><th class="number">Ingreso / día</th><th class="number">Equilibrio</th><th>Fuente</th></tr></thead><tbody data-mining-hardware-table><tr><td colspan="9">Cargando equipos y economía…</td></tr></tbody></table></div><p class="kf-mining-table-note">La comparación utiliza exclusivamente la economía de Bitcoin. No mezcla BCH, BSV ni rentabilidades de otros algoritmos.</p></div></section>'
       +'<section class="kf-section kf-mining-pools-section" id="pools-mineros"><div class="kf-container"><div class="kf-mining-section-head"><div><p class="kf-kicker">Bloques observados y condiciones de pago</p><h2>Cuota no equivale a rendimiento neto.</h2></div><p>La distribución muestra bloques atribuidos durante siete días. La tabla económica separa método de recompensa, comisión, mínimo y frecuencia cuando existe una fuente pública.</p></div><div class="kf-mining-pool-layout"><section data-mining-pool-chart><div class="kf-live-empty">Cargando distribución…</div></section><section class="kf-mining-pool-table" data-mining-pool-table><div class="kf-live-empty">Cargando condiciones…</div></section></div></div></section>'
-      +'<section class="kf-section kf-mining-countries" id="paises-mineros"><div class="kf-container"><div class="kf-mining-section-head"><div><p class="kf-kicker">Pantalla de coste eléctrico oficial</p><h2>Compara la tarifa; después valida el emplazamiento.</h2></div><p>Es un benchmark semestral no doméstico de Eurostat, no un ranking mundial de países mineros ni una oferta de hosting o PPA.</p></div><div class="kf-mining-country-context" data-mining-country-context><span>Conectando Eurostat y BCE…</span></div><div class="kf-mining-country-tools"><label>Buscar país<input type="search" data-mining-country-search placeholder="Ej. Finlandia"></label><label>Resultado del S21 XP<select data-mining-country-profit><option value="all">Todos</option><option value="positive">Solo margen positivo</option><option value="negative">Solo margen negativo</option></select></label><span data-mining-country-count>—</span></div><div class="kf-table-scroll"><table class="kf-mining-country-table"><thead><tr><th>País</th><th>Periodo</th><th class="number">EUR/kWh</th><th class="number">US$/kWh</th><th class="number">S21 XP / día</th><th>Comprobación pendiente</th></tr></thead><tbody data-mining-countries><tr><td colspan="6">Esperando comparación internacional…</td></tr></tbody></table></div><div class="kf-mining-country-caveat"><strong>No decide una localización</strong><span>Antes de contratar deben comprobarse PPA o tarifa de hosting, MW disponibles, firmeza y curtailment, conexión, permisos, fiscalidad, importación, clima, telecomunicaciones y contraparte.</span></div></div></section>'
+      +'<section class="kf-section kf-mining-countries" id="paises-mineros"><div class="kf-container"><div class="kf-mining-section-head"><div><p class="kf-kicker">Coste eléctrico oficial · 37 países</p><h2>Tarifa industrial y resultado diario.</h2></div><p>Benchmark semestral no doméstico de Eurostat. Permite comparar el mismo S21 XP; no sustituye una oferta de hosting o PPA.</p></div><div class="kf-mining-country-context" data-mining-country-context><span>Conectando Eurostat y BCE…</span></div><div class="kf-mining-country-tools"><label>Buscar país<input type="search" data-mining-country-search placeholder="Ej. Finlandia"></label><label>Resultado del S21 XP<select data-mining-country-profit><option value="all">Todos</option><option value="positive">Solo margen positivo</option><option value="negative">Solo margen negativo</option></select></label><span data-mining-country-count>—</span></div><div class="kf-table-scroll"><table class="kf-mining-country-table"><thead><tr><th>País</th><th>Periodo</th><th class="number">EUR/kWh</th><th class="number">US$/kWh</th><th class="number">S21 XP / día</th><th>Comprobación pendiente</th></tr></thead><tbody data-mining-countries><tr><td colspan="6">Esperando comparación internacional…</td></tr></tbody></table></div><button class="kf-list-expand kf-list-expand-on-dark" type="button" data-mining-country-expand aria-expanded="false">Ver los 37 países</button><div class="kf-mining-country-caveat"><strong>No decide una localización</strong><span>Antes de contratar deben comprobarse PPA o tarifa de hosting, MW disponibles, firmeza y curtailment, conexión, permisos, fiscalidad, importación, clima, telecomunicaciones y contraparte.</span></div></div></section>'
       +'<section class="kf-section kf-mining-method-section"><div class="kf-container"><details class="kf-mining-method-full"><summary>Metodología, frecuencia y límites</summary><div><p><strong>Precio:</strong> Kaufman Reference Price, objetivo 5 minutos. Recalcula ingresos cuando recibe una referencia BTC/USD más reciente.</p><p><strong>Red y pools:</strong> mempool.space, objetivo 30 minutos mediante una automatización independiente. Recompensa media de 144 bloques y pools de 7 días.</p><p><strong>Hardware:</strong> especificaciones primarias de BITMAIN, MicroBT y Canaan. Los valores son nominales; prevalece la ficha del lote comprado.</p><p><strong>Referencia inicial de energía:</strong> 0,0555 US$/kWh, equivalente a la mediana all-in de 55,5 US$/MWh publicada en el Cambridge Digital Mining Industry Report 2025. Es un benchmark editable, no una oferta ni la tarifa de un país. <a href="https://www.jbs.cam.ac.uk/faculty-research/centres/alternative-finance/publications/cambridge-digital-mining-industry-report/" target="_blank" rel="noopener noreferrer">Abrir fuente ↗</a></p><p><strong>Electricidad internacional:</strong> Eurostat nrg_pc_205, banda no doméstica de 500–1.999 MWh/año con impuestos y gravámenes; conversión BCE. La fuente es semestral aunque se compruebe automáticamente.</p></div></details></div></section>'
     +'</main>';
   }
@@ -1135,6 +1135,7 @@
 
   let miningCalculatorData=null;
   let miningChartRange=30;
+  let miningCountriesExpanded=false;
 
   function miningEquipment(metrics,selected){
     return (metrics?.hardware_comparison||[]).find((row)=>row.id===selected)||metrics?.hardware_comparison?.[0]||metrics?.hardware||null;
@@ -1384,22 +1385,30 @@
     if(!body)return;
     if(screen?.status!=='auto'||!Array.isArray(screen.all_observations)){
       body.innerHTML='<tr><td colspan="6">La fuente internacional no está disponible.</td></tr>';
+      const expand=document.querySelector('[data-mining-country-expand]');if(expand)expand.hidden=true;
       return;
     }
     const search=(document.querySelector('[data-mining-country-search]')?.value||'').trim().toLocaleLowerCase('es');
     const profitFilter=document.querySelector('[data-mining-country-profit]')?.value||'all';
     const reference=(metrics.hardware_comparison||[]).find((row)=>row.id==='s21-xp')||metrics.hardware;
-    const rows=screen.all_observations.map((row)=>{
+    const matches=screen.all_observations.map((row)=>{
       const gross=Number(reference?.gross_usd_day),cost=Number(reference?.energy_kwh_day)*Number(row.electricity_usd_kwh),profit=gross-cost;
       return {...row,modeledProfit:profit};
     }).filter((row)=>{
-      const matches=!search||String(row.country).toLocaleLowerCase('es').includes(search);
+      const matchesSearch=!search||String(row.country).toLocaleLowerCase('es').includes(search);
       const profitMatches=profitFilter==='all'||(profitFilter==='positive'?row.modeledProfit>=0:row.modeledProfit<0);
-      return matches&&profitMatches;
+      return matchesSearch&&profitMatches;
     });
+    const rows=!search&&profitFilter==='all'&&!miningCountriesExpanded?matches.slice(0,5):matches;
     body.innerHTML=rows.map((row)=>'<tr><td><strong>'+escapeHtml(row.country)+'</strong></td><td>'+escapeHtml(row.period||screen.source_period)+'</td><td class="number">'+Number(row.electricity_eur_kwh).toLocaleString('es-ES',{minimumFractionDigits:4,maximumFractionDigits:4})+'</td><td class="number">'+Number(row.electricity_usd_kwh).toLocaleString('es-ES',{minimumFractionDigits:4,maximumFractionDigits:4})+'</td><td class="number '+(row.modeledProfit>=0?'positive':'negative')+'">'+PRICE.format(row.modeledProfit)+'</td><td>'+escapeHtml(row.check)+'</td></tr>').join('')||'<tr><td colspan="6">No hay países que coincidan con el filtro.</td></tr>';
     const count=document.querySelector('[data-mining-country-count]');
-    if(count)count.textContent=rows.length.toLocaleString('es-ES')+' de '+screen.all_observations.length.toLocaleString('es-ES')+' países';
+    if(count)count.textContent=rows.length.toLocaleString('es-ES')+' visibles de '+screen.all_observations.length.toLocaleString('es-ES')+' países';
+    const expand=document.querySelector('[data-mining-country-expand]');
+    if(expand){
+      expand.hidden=Boolean(search)||profitFilter!=='all';
+      expand.setAttribute('aria-expanded',String(miningCountriesExpanded));
+      expand.textContent=miningCountriesExpanded?'Ver solo 5 países':`Ver los ${screen.all_observations.length.toLocaleString('es-ES')} países`;
+    }
   }
 
   function renderMiningAlerts(){
@@ -1563,6 +1572,7 @@
     document.querySelectorAll('[data-mining-range]').forEach((button)=>button.addEventListener('click',()=>{miningChartRange=Number(button.dataset.miningRange)||30;renderMiningDashboard(miningCalculatorData)}));
     document.querySelector('[data-mining-country-search]')?.addEventListener('input',renderMiningCountries);
     document.querySelector('[data-mining-country-profit]')?.addEventListener('change',renderMiningCountries);
+    document.querySelector('[data-mining-country-expand]')?.addEventListener('click',()=>{miningCountriesExpanded=!miningCountriesExpanded;renderMiningCountries()});
   }
 
   function initJurisdictionTool(){
@@ -2220,10 +2230,10 @@
   }
 
   const REGULATION_ACTIVITY_LABELS={issuer:'Emisión',stablecoin:'Stablecoins',custody:'Custodia',exchange:'Exchange',brokerage:'Órdenes',transfer:'Transferencias',marketing:'Promoción',payments:'Pagos',advice:'Asesoramiento',banking:'Banca',lending:'Préstamo'};
-  const REGULATION_SEARCH_ALIASES={'mica-union-europea':'MiCA ESMA EBA CASP','mica-espana-2026':'MiCA CNMV Banco de España CASP','mexico-activos-virtuales':'CNBV Banxico LRITF ITF','emiratos-payment-tokens':'CBUAE payment token','dubai-vara':'VARA VASP','uk-cryptoassets':'FCA MLR FSMA','hong-kong-vatp':'SFC AMLO VATP','japan-crypto-exchange':'FSA PSA','australia-vasp':'AUSTRAC AML CTF VASP','us-payment-stablecoins':'GENIUS Act payment stablecoin'};
+  const REGULATION_SEARCH_ALIASES={'mica-union-europea':'MiCA ESMA EBA CASP','mica-espana-2026':'MiCA CNMV Banco de España CASP','mexico-activos-virtuales':'CNBV Banxico LRITF ITF','emiratos-payment-tokens':'CBUAE payment token','dubai-vara':'VARA VASP','uk-cryptoassets':'FCA MLR FSMA','hong-kong-vatp':'SFC AMLO VATP','japan-crypto-exchange':'FSA PSA','australia-vasp':'AUSTRAC AML CTF VASP','us-payment-stablecoins':'GENIUS Act payment stablecoin','brazil-vasp':'Brasil Brazil BCB VASP','argentina-psav':'Argentina CNV PSAV','el-salvador-psad':'El Salvador CNAD PSAD','chile-fintech-tokenized':'Chile CMF Fintech tokenizacion','colombia-no-general-license':'Colombia SFC cripto','uruguay-psav':'Uruguay BCU PSAV','peru-psav-aml':'Peru SBS UIF PSAV','singapore-dpt':'Singapore Singapur MAS DPT','south-korea-vasp':'Corea Korea KoFIU FSC VASP','thailand-digital-assets':'Tailandia Thailand SEC','indonesia-ojk-crypto':'Indonesia OJK','malaysia-digital-assets':'Malasia Malaysia SC','philippines-vasp':'Filipinas Philippines BSP','kazakhstan-aifc-datf':'Kazajistan Kazakhstan AIFC AFSA','panama-no-general-vasp':'Panama SBP VASP Centroamerica','costa-rica-no-general-vasp':'Costa Rica BCCR SUGEF VASP Centroamerica'};
 
   function regulationStateLabel(state){
-    return {TRANSITION_ENDED:'TRANSICIÓN FINALIZADA',ENACTED:'PROMULGADA',IN_FORCE_AND_TRANSITION:'EN VIGOR · CAMBIO PROGRAMADO',IN_FORCE:'EN VIGOR'}[state]||String(state||'ESTADO NO PUBLICADO').replaceAll('_',' ');
+    return {TRANSITION_ENDED:'TRANSICIÓN FINALIZADA',ENACTED:'PROMULGADA',IN_FORCE_AND_TRANSITION:'EN VIGOR · CAMBIO PROGRAMADO',IN_FORCE:'EN VIGOR',NO_GENERAL_REGIME:'SIN LICENCIA GENERAL'}[state]||String(state||'ESTADO NO PUBLICADO').replaceAll('_',' ');
   }
 
   function regulationList(items){
@@ -2248,12 +2258,20 @@
     const search=document.querySelector('[data-regulation-search]')?.value.normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLowerCase()||'';
     const activity=document.querySelector('[data-regulation-activity]')?.value||'all';
     const sourcesById=new Map(regulationDataset.sources.map((source)=>[source.id,source]));
-    const rows=regulationDataset.regimes.filter((regime)=>{
+    const matches=regulationDataset.regimes.filter((regime)=>{
       const haystack=[regime.name,regime.jurisdiction,regime.authority,regime.framework_type,regime.market_access,REGULATION_SEARCH_ALIASES[regime.id],...(regime.applies_to||[]),...(regime.regulated_activities||[])].join(' ').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
       return (!search||haystack.includes(search))&&(activity==='all'||(regime.activity_tags||[]).includes(activity));
     });
+    const featured=['mica-union-europea','us-payment-stablecoins','singapore-dpt','hong-kong-vatp','brazil-vasp'];
+    const rows=!search&&activity==='all'&&!regulationRowsExpanded?featured.map((id)=>matches.find((row)=>row.id===id)).filter(Boolean).slice(0,5):matches;
     root.innerHTML=rows.length?rows.map((regime)=>regulationRowMarkup(regime,sourcesById)).join(''):'<div class="kf-reg-no-results">No hay un marco que coincida con esos filtros.</div>';
-    const count=document.querySelector('[data-regulation-count]');if(count)count.textContent=`${rows.length} de ${regulationDataset.regimes.length} marcos`;
+    const count=document.querySelector('[data-regulation-count]');if(count)count.textContent=`${rows.length} visibles de ${regulationDataset.regimes.length} marcos`;
+    const expand=document.querySelector('[data-regulation-expand]');
+    if(expand){
+      expand.hidden=Boolean(search)||activity!=='all';
+      expand.setAttribute('aria-expanded',String(regulationRowsExpanded));
+      expand.textContent=regulationRowsExpanded?'Ver solo 5 jurisdicciones':`Ver las ${regulationDataset.regimes.length} jurisdicciones`;
+    }
   }
 
   function drawRegulationComparison(){
@@ -2289,6 +2307,7 @@
     });
     dashboard.querySelector('[data-regulation-search]')?.addEventListener('input',drawRegulationRows);
     dashboard.querySelector('[data-regulation-activity]')?.addEventListener('change',drawRegulationRows);
+    dashboard.querySelector('[data-regulation-expand]')?.addEventListener('click',()=>{regulationRowsExpanded=!regulationRowsExpanded;drawRegulationRows()});
     dashboard.querySelectorAll('[data-regulation-compare]').forEach((select)=>select.addEventListener('change',drawRegulationComparison));
   }
 
@@ -2819,7 +2838,7 @@
 
   const page=new URLSearchParams(location.search).get('pagina')||document.body.dataset.page||'home';
   const app=document.getElementById('kaufman-app');
-  const commercialPages=!['contacto','aviso','privacidad','cookies','terminos','retirado'].includes(page);
+  const commercialPages=!['regulacion','contacto','aviso','privacidad','cookies','terminos','retirado'].includes(page);
   const renderedPage=plainLanguage(renderPage(page));
   const pageWithClose=plainLanguage(commercialPages?renderedPage.replace('</main>',`${decisionCloseMarkup(page)}</main>`):renderedPage);
   app.innerHTML=`<div class="kf-shell">${headerMarkup(page)}${pageWithClose}${footerMarkup()}</div>${searchOverlayMarkup()}`;

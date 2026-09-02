@@ -2,7 +2,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const VERSION = 'kaufman-v62';
+const VERSION = 'kaufman-v64';
 const shells = [
   'index.html', 'mercados/index.html', 'regulacion/index.html', 'tokenizacion/index.html',
   'fiscal/index.html', 'empresas/index.html', 'bancos/index.html',
@@ -39,7 +39,7 @@ for (const rule of ['/blog/', '/files/']) if (!robots.includes(`Disallow: ${rule
 
 const appScript = await fs.readFile(path.join(ROOT, 'assets/kaufman-app.js'), 'utf8');
 const appStyles = await fs.readFile(path.join(ROOT, 'assets/kaufman.css'), 'utf8');
-for (const marker of ['kf-mining-hero-frame', 'data-mining-hero-observed', 'ASIC · SHA-256']) {
+for (const marker of ['kf-mining-hero-frame', 'data-mining-hero-observed', 'ASIC · SHA-256', 'data-mining-country-expand']) {
   if (!appScript.includes(marker)) failures.push(`mineria: falta ${marker}`);
 }
 for (const rejectedCopy of ['Modela la operación', 'Resultado modelado', 'no una promesa', 'Escenario guardado']) {
@@ -50,11 +50,24 @@ if (!miningHero || miningHero.size < 100_000) failures.push('mineria: imagen her
 for (const marker of ['kf-fiscal-editorial', '/assets/images/fiscal-review-v1.jpg', 'Introduce los datos de tu operación.']) {
   if (!appScript.includes(marker)) failures.push(`fiscal: falta ${marker}`);
 }
-for (const marker of ['data-regulation-table', 'data-regulation-detail', 'data-regulation-comparison', 'A quién afecta', 'Qué no cubre']) {
+for (const marker of ['data-regulation-table', 'data-regulation-detail', 'data-regulation-comparison', 'data-regulation-expand', 'A quién afecta', 'Qué no cubre']) {
   if (!appScript.includes(marker)) failures.push(`regulacion: falta ${marker}`);
 }
 for (const rejectedRegulationPattern of ['Construyendo fichas regulatorias', 'Mapa de regímenes']) {
   if (appScript.includes(rejectedRegulationPattern)) failures.push(`regulacion: reaparece interfaz retirada: ${rejectedRegulationPattern}`);
+}
+if (!appScript.includes("['regulacion','contacto','aviso','privacidad','cookies','terminos','retirado']")) {
+  failures.push('regulacion: el cierre comercial vuelve a estar habilitado');
+}
+for (const token of [
+  '--kf-type-display:', '--kf-type-page-title:', '--kf-type-section-title:',
+  '--kf-type-section-compact:', '--kf-type-component-title:', '--kf-type-page-deck:',
+  '--kf-type-section-deck:', '--kf-type-body:', '--kf-type-meta:', '--kf-type-label:'
+]) {
+  if (!appStyles.includes(token)) failures.push(`tipografia: falta el token ${token}`);
+}
+for (const selector of ['.kf-reg-hero h1', '.kf-mining-page .kf-mining-hero-copy h1', '.kf-bank-page-head h1', '.kf-reg-section-head h2']) {
+  if (!appStyles.includes(selector)) failures.push(`tipografia: falta el contrato para ${selector}`);
 }
 for (const retiredFiscalFeature of ['kf-fiscal-globe-section', 'data-fiscal-earth', 'Pausar rotación', 'NASA/GSFC']) {
   if (appScript.includes(retiredFiscalFeature) || appStyles.includes(retiredFiscalFeature)) failures.push(`fiscal: permanece el globo retirado: ${retiredFiscalFeature}`);

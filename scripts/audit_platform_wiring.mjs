@@ -70,9 +70,9 @@ const findings = [
   },
   {
     id: 'A07', severity: 'IMPROVED', area: 'Regulación',
-    finding: 'Cobertura prioritaria ampliada a diez regímenes globales; todavía no es exhaustiva.',
+    finding: 'Cobertura regulatoria ampliada a hubs globales y jurisdicciones relevantes de Latinoamérica y Asia; no pretende ser exhaustiva.',
     evidence: `${platform.regulation_intelligence.data_quality.regime_count} regímenes y ${platform.regulation_intelligence.data_quality.jurisdiction_count} jurisdicciones.`,
-    remediation: 'Priorizar G20 y hubs de activos digitales con texto primario, fecha efectiva, transición y registro de proveedores.'
+    remediation: 'Mantener texto primario, fecha efectiva, transición y registro de proveedores; ampliar por demanda operativa verificable.'
   },
   {
     id: 'A08', severity: 'CONTROL_READY', area: 'Regulación',

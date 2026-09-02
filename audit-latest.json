@@ -1,7 +1,7 @@
 {
   "status": "AUDITED_WITH_CONTROLS",
-  "generated_at": "2026-09-02T09:24:25.510Z",
-  "evidence_snapshot_at": "2026-09-02T08:49:35.299Z",
+  "generated_at": "2026-09-02T12:54:51.914Z",
+  "evidence_snapshot_at": "2026-09-02T12:54:38.717Z",
   "findings": [
     {
       "id": "A01",
@@ -55,16 +55,16 @@
       "id": "A07",
       "severity": "IMPROVED",
       "area": "Regulación",
-      "finding": "Cobertura prioritaria ampliada a diez regímenes globales; todavía no es exhaustiva.",
-      "evidence": "10 regímenes y 10 jurisdicciones.",
-      "remediation": "Priorizar G20 y hubs de activos digitales con texto primario, fecha efectiva, transición y registro de proveedores."
+      "finding": "Cobertura regulatoria ampliada a hubs globales y jurisdicciones relevantes de Latinoamérica y Asia; no pretende ser exhaustiva.",
+      "evidence": "26 regímenes y 26 jurisdicciones.",
+      "remediation": "Mantener texto primario, fecha efectiva, transición y registro de proveedores; ampliar por demanda operativa verificable."
     },
     {
       "id": "A08",
       "severity": "CONTROL_READY",
       "area": "Regulación",
       "finding": "Flujo de firma jurídica implantado; la aprobación humana autorizada sigue pendiente.",
-      "evidence": "10 regímenes; firmas jurídicas válidas=0; pendientes=10.",
+      "evidence": "26 regímenes; firmas jurídicas válidas=0; pendientes=26.",
       "remediation": "Un revisor jurídico autorizado debe firmar las fichas; el sistema ya valida identidad de clave, huellas, cadena y manipulación."
     },
     {
