@@ -121,14 +121,15 @@
       };
     });
   }
-  const HOME_DIRECTORY_KEYS = ['empresas','bancos','exchanges','wallets','proyectos','mineria','hardware'];
-  const ECOSYSTEM_ORDER = ['mercado','regulacion','empresas','infraestructura','custodia'];
+  const HOME_DIRECTORY_KEYS = ['bancos','exchanges','wallets','proyectos','mineria','hardware'];
+  const ECOSYSTEM_ORDER = ['mercado','regulacion','tokenizacion','custodia','mineria','fiscal'];
   const ECOSYSTEM_TERRITORIES = {
-    mercado:{index:'01',label:'Mercado',x:21,y:22,side:'left',headline:'Precio, liquidez y capital tokenizado.',description:'Precios de referencia, productos tokenizados, exchanges y efectos fiscales de la operación seleccionada.',decision:'Tamaño de mercado, liquidez disponible y coste estimado de la operación.',action:'Consultar mercado y costes',href:'/mercados/',linkLabel:'Abrir datos de mercado',sublayers:[['Precios','/mercados/'],['RWA','/tokenizacion/'],['Exchanges','/exchanges/'],['Minería','/mineria/#economia-minera'],['Fiscalidad','/fiscal/']]},
-    regulacion:{index:'02',label:'Regulación',x:10,y:63,side:'left',headline:'Normativa por jurisdicción y autoridad.',description:'Fuentes oficiales, autoridades competentes, actividades reguladas y fechas efectivas.',decision:'Autorizaciones y obligaciones aplicables a la operación seleccionada.',action:'Consultar regulación',href:'/regulacion/',linkLabel:'Abrir regulación',sublayers:[['Marcos vigentes','/regulacion/'],['Fiscalidad','/fiscal/'],['Bancos','/bancos/']]},
-    empresas:{index:'03',label:'Empresas',x:54,y:13,side:'top',headline:'Empresas e iniciativas verificables.',description:'Compañías, bancos y productos tokenizados vinculados a fuentes corporativas o registros públicos.',decision:'Entidad responsable, actividad declarada y alcance documentado de cada iniciativa.',action:'Consultar entidades',href:'/empresas/',linkLabel:'Abrir empresas',sublayers:[['Empresas','/empresas/'],['Bancos','/bancos/'],['RWA','/tokenizacion/'],['Proyectos','/proyectos/']]},
-    infraestructura:{index:'04',label:'Infraestructura',x:86,y:35,side:'right',headline:'Redes, minería, hardware y dependencias.',description:'Redes L2, proyectos, equipos mineros, costes técnicos y dependencias operativas.',decision:'Dependencias técnicas que afectan disponibilidad, coste y capacidad de retirada.',action:'Consultar infraestructura',href:'/mercados/',linkLabel:'Abrir infraestructura',sublayers:[['L2','/mercados/'],['Minería','/mineria/'],['Hardware','/hardware/'],['Proyectos','/proyectos/']]},
-    custodia:{index:'05',label:'Custodia',x:70,y:82,side:'right',headline:'Control de claves, contraparte y recuperación.',description:'Wallets, exchanges y bancos comparados por control de claves, entidad responsable y recuperación.',decision:'Control de claves, procedimiento de recuperación y exposición a contraparte.',action:'Consultar custodia',href:'/wallets/',linkLabel:'Abrir custodia',sublayers:[['Wallets','/wallets/'],['Exchanges','/exchanges/'],['Bancos','/bancos/']]}
+    mercado:{index:'01',label:'Mercados',summary:'Precios, flujos, costes y liquidez',headline:'Precios, flujos y costes de mercado.',description:'Referencias de BTC y ETH, flujos institucionales, derivados, gas y liquidez con fuente y método identificados.',decision:'¿Qué está cambiando en precio, liquidez y coste antes de mover capital?',href:'/mercados/',linkLabel:'Abrir Mercados',sublayers:[['Precios','/mercados/'],['Exchanges','/exchanges/'],['Gas y L2','/mercados/#comisiones-ethereum']]},
+    regulacion:{index:'02',label:'Regulación',summary:'País, actividad, autoridad y obligación',headline:'Obligaciones por actividad y jurisdicción.',description:'Marcos comparados por país, actividad cubierta, autoridad competente, vigencia y fuente oficial.',decision:'¿La actividad exige autorización y qué obligaciones debe cumplir?',href:'/regulacion/',linkLabel:'Abrir Regulación',sublayers:[['Comparativa','/regulacion/'],['Bancos','/bancos/'],['Fiscalidad','/fiscal/']]},
+    tokenizacion:{index:'03',label:'Tokenización',summary:'Producto, emisor, red y capital',headline:'Capital tokenizado con producto, red y emisor.',description:'Productos RWA, deuda tokenizada, stablecoins, redes y concentración del capital onchain.',decision:'¿Qué activo existe, quién lo emite, en qué red opera y cuánto capital concentra?',href:'/tokenizacion/',linkLabel:'Abrir Tokenización',sublayers:[['Productos RWA','/tokenizacion/'],['Proyectos','/proyectos/'],['Bancos','/bancos/']]},
+    custodia:{index:'04',label:'Custodia',summary:'Claves, recuperación y contraparte',headline:'Control de claves y exposición a contraparte.',description:'Wallets, exchanges y bancos comparados por control, aislamiento, recuperación y dependencia de una entidad.',decision:'¿Quién controla la clave, cómo se recupera el acceso y qué contraparte interviene?',href:'/wallets/',linkLabel:'Abrir Wallets',sublayers:[['Wallets','/wallets/'],['Exchanges','/exchanges/'],['Bancos','/bancos/']]},
+    mineria:{index:'05',label:'Minería',summary:'Red, energía, ASIC y margen',headline:'Coste eléctrico, producción y margen minero.',description:'Hashprice, hashrate, dificultad, comisiones, equipos ASIC y tarifas eléctricas comparables.',decision:'¿Qué coste energético y qué equipo permiten operar con margen?',href:'/mineria/',linkLabel:'Abrir Minería',sublayers:[['Red Bitcoin','/mineria/#red-minera'],['Países','/mineria/#paises-mineros'],['Hardware','/hardware/']]},
+    fiscal:{index:'06',label:'Fiscal',summary:'Hecho, base, residencia y fuente',headline:'Tratamiento fiscal por operación y residencia.',description:'Hechos fiscales blockchain comparados por jurisdicción, tipo de operación, base y nivel de certeza.',decision:'¿Qué hecho activa tributación y qué datos faltan para calcularla?',href:'/fiscal/',linkLabel:'Abrir Fiscal',sublayers:[['Calculadora','/fiscal/'],['Regulación','/regulacion/'],['Fuentes','/fuentes/']]}
   };
 
   const STATUS_LABELS = {verified:'VERIFICADO',sourcechecked:'FUENTE CONTRASTADA',unverified:'REVISIÓN NECESARIA',auto:'AUTOMÁTICO',offline:'NO DISPONIBLE'};
@@ -156,7 +157,7 @@
   let platformFallbackPromise = null;
   let regulationDataset = null;
   let regulationRowsExpanded = false;
-  let ecosystemPinned = 'infraestructura';
+  let ecosystemPinned = 'mercado';
 
   function statusBadge(status){return `<span class="kf-status ${status}">${STATUS_LABELS[status]||status}</span>`}
   function brandMarkMarkup(){return `<svg class="kf-brand-mark" viewBox="0 0 64 44" aria-hidden="true" focusable="false"><path d="M13 7v30M13 22h17M30 22 50 7M30 22l20 15"/><path class="kf-brand-mark-route" d="M13 7 30 22 50 37"/><rect x="25" y="17" width="10" height="10" rx="2" transform="rotate(45 30 22)"/><circle cx="13" cy="7" r="2.5"/><circle cx="13" cy="37" r="2.5"/><circle cx="50" cy="7" r="2.5"/><circle cx="50" cy="37" r="2.5"/></svg>`}
@@ -353,13 +354,12 @@
       const catalog=CATALOGS[key],route=findRoute(key);
       return `<a class="kf-directory-index-row" href="${route.path}"><span>${String(index+4).padStart(2,'0')}</span><strong>${escapeHtml(catalog.label)}</strong><small>${escapeHtml(catalog.description)}</small><b>${catalog.items.length} registros</b><i>→</i></a>`;
     }).join('');
-    return `<section class="kf-section kf-home-directories" id="directorios" data-home-directories><div class="kf-container"><header class="kf-directory-head"><div><p class="kf-kicker">Directorios de datos</p><h2>Entidades, proveedores e infraestructura.</h2></div><div><strong>${HOME_DIRECTORY_KEYS.length}</strong><span>directorios · ${totalProfiles} registros conectados</span><p>Los tres directorios principales se muestran primero. Los demás aparecen en el índice inferior.</p></div></header><div class="kf-directory-priority">${priority}</div><div class="kf-directory-index"><div class="kf-directory-index-head"><span>Índice de secciones</span></div>${indexRows}</div></div></section>`;
+    return `<section class="kf-section kf-home-directories" id="directorios" data-home-directories><div class="kf-container"><header class="kf-directory-head"><div><p class="kf-kicker">Directorios de datos</p><h2>Bancos, proveedores e infraestructura.</h2></div><div><strong>${HOME_DIRECTORY_KEYS.length}</strong><span>directorios · ${totalProfiles} registros conectados</span><p>Los tres directorios principales se muestran primero. Los demás aparecen en el índice inferior.</p></div></header><div class="kf-directory-priority">${priority}</div><div class="kf-directory-index"><div class="kf-directory-index-head"><span>Índice de secciones</span></div>${indexRows}</div></div></section>`;
   }
 
   function ecosystemMetrics(territoryId,snapshot){
     const referencePrices=Object.values(snapshot?.reference_prices||{});
     const tokenization=snapshot?.tokenization_markets||{};
-    const l2=snapshot?.l2_intelligence||{};
     const fiscal=snapshot?.fiscal_intelligence||{};
     const regulation=snapshot?.regulation_intelligence||{};
     const connectedProviders=Object.values(snapshot?.providers||{}).filter((provider)=>['LIVE','CONNECTED','SNAPSHOT'].includes(provider?.connection_status)).length;
@@ -375,35 +375,39 @@
       metric(regulation?.data_quality?.source_count??'—','fuentes regulatorias','Comprobación server-side'),
       metric(regulation?.events?.length??'—','cambios y fechas operativas','Registro jurídico Kaufman')
     ];
-    if(territoryId==='empresas')return [
-      metric(countItems(['empresas','bancos']),'entidades con ficha navegable','Fuentes corporativas y registros'),
-      metric(tokenization?.leaders?.length??'—','productos RWA líderes observados','DefiLlama Open API'),
-      metric(tokenization?.coverage?.networks??'—','redes con capital tokenizado','Distribución chainTvls')
-    ];
-    if(territoryId==='infraestructura')return [
-      metric(l2?.coverage?.curated_projects??'—','proyectos L2 explicados','L2BEAT · muestra editorial'),
-      metric(l2?.coverage?.projects??'—','proyectos L2 observados','L2BEAT API pública'),
-      metric(Number.isFinite(Number(snapshot?.auxiliary?.ethereum_gas?.gas_gwei))?`${Number(snapshot.auxiliary.ethereum_gas.gas_gwei).toLocaleString('es-ES',{maximumFractionDigits:3})} Gwei`:'—','gas Ethereum observado','eth_feeHistory')
+    if(territoryId==='tokenizacion')return [
+      metric(tokenization?.coverage?.rwa_protocols??'—','protocolos RWA rastreados','DefiLlama Open API'),
+      metric(tokenization?.coverage?.networks??'—','redes con capital tokenizado','Distribución chainTvls'),
+      metric(tokenizedUsd(tokenization?.kpis?.tracked_rwa_tvl_usd),'capital RWA onchain','Snapshot público conectado')
     ];
     if(territoryId==='custodia')return [
       metric(countItems(['wallets','exchanges','bancos']),'proveedores y herramientas comparables','Fichas Kaufman con fuente'),
-      metric(connectedProviders||'—','fuentes de datos activas','Observación server-side'),
-      metric(new Set(referencePrices.flatMap((item)=>item?.venues||[])).size||'—','mercados usados en referencias','Venues elegibles')
+      metric(countItems(['wallets']),'wallets comparadas','Documentación de fabricante'),
+      metric(countItems(['bancos']),'grupos bancarios comparados','Fuentes corporativas y registros')
+    ];
+    if(territoryId==='mineria')return [
+      metric(countItems(['hardware']),'equipos ASIC comparables','Especificaciones del fabricante'),
+      metric(referencePrices.find((item)=>item?.asset_id==='bitcoin')?.price?PRICE.format(referencePrices.find((item)=>item?.asset_id==='bitcoin').price):'—','referencia BTC/USD','Kaufman Reference Price'),
+      metric(connectedProviders||'—','fuentes automáticas conectadas','Observación server-side')
+    ];
+    if(territoryId==='fiscal')return [
+      metric(fiscal?.data_quality?.jurisdiction_count??'—','jurisdicciones fiscales','Fuentes oficiales'),
+      metric(fiscal?.data_quality?.source_count??'—','fuentes fiscales','Registro fiscal Kaufman'),
+      metric(fiscal?.events?.length??'—','hechos fiscales comparables','Matriz por operación')
     ];
     return [];
   }
 
   function ecosystemPanelMarkup(territoryId,snapshot=latestMarketSnapshot){
-    const territory=ECOSYSTEM_TERRITORIES[territoryId]||ECOSYSTEM_TERRITORIES.infraestructura;
+    const territory=ECOSYSTEM_TERRITORIES[territoryId]||ECOSYSTEM_TERRITORIES.mercado;
     const metrics=ecosystemMetrics(territoryId,snapshot).map((item)=>`<div class="kf-eco-metric"><strong>${escapeHtml(item.value)}</strong><span>${escapeHtml(item.label)}</span><small>${escapeHtml(item.source)}</small></div>`).join('');
     const sublayers=territory.sublayers.map(([label,href],index)=>`<a href="${href}"><span>${String(index+1).padStart(2,'0')}</span><strong>${escapeHtml(label)}</strong><i aria-hidden="true">→</i></a>`).join('');
-    const briefHref=`/contacto/?asunto=decision-brief&territorio=${encodeURIComponent(territoryId)}`;
-    return `<div class="kf-eco-panel-head"><p>${escapeHtml(territory.index)} / ${escapeHtml(territory.label)}</p></div><h3>${escapeHtml(territory.headline)}</h3><p class="kf-eco-panel-copy">${escapeHtml(territory.description)}</p><div class="kf-eco-decision"><span>DATOS APLICABLES</span><strong>${escapeHtml(territory.decision)}</strong></div><div class="kf-eco-metrics">${metrics}</div><div class="kf-eco-layers"><span>Áreas relacionadas</span><nav aria-label="Áreas de ${escapeHtml(territory.label)}">${sublayers}</nav></div><div class="kf-eco-panel-actions"><a class="kf-eco-open" href="${territory.href}">${escapeHtml(territory.linkLabel)} <span>→</span></a><a class="kf-eco-brief" href="${briefHref}">${escapeHtml(territory.action)}</a></div>`;
+    return `<div class="kf-eco-panel-head"><p>${escapeHtml(territory.index)} / ${escapeHtml(territory.label)}</p><span>FUENTES Y MÉTODO EN CADA DATO</span></div><h3>${escapeHtml(territory.headline)}</h3><p class="kf-eco-panel-copy">${escapeHtml(territory.description)}</p><div class="kf-eco-decision"><span>PREGUNTA QUE RESPONDE</span><strong>${escapeHtml(territory.decision)}</strong></div><div class="kf-eco-metrics">${metrics}</div><div class="kf-eco-layers"><span>Accesos relacionados</span><nav aria-label="Áreas de ${escapeHtml(territory.label)}">${sublayers}</nav></div><div class="kf-eco-panel-actions"><a class="kf-eco-open" href="${territory.href}">${escapeHtml(territory.linkLabel)} <span>→</span></a></div>`;
   }
 
   function ecosystemMapMarkup(){
-    const nodes=ECOSYSTEM_ORDER.map((id)=>{const territory=ECOSYSTEM_TERRITORIES[id];const active=id==='infraestructura';return `<button class="kf-eco-node${active?' active':''}" id="ecosystem-tab-${id}" type="button" role="tab" aria-selected="${active}" aria-controls="kaufman-ecosystem-panel" data-eco-territory="${id}" data-side="${territory.side}" style="--eco-x:${territory.x}%;--eco-y:${territory.y}%"><span class="kf-eco-node-ring"><i></i></span><strong>${escapeHtml(territory.label)}</strong><small>${territory.index}</small></button>`}).join('');
-    return `<section class="kf-section kf-ecosystem" id="explorar" data-ecosystem><div class="kf-container"><header class="kf-ecosystem-head"><div><p class="kf-kicker">Datos conectados</p><h2>Mercado, regulación, empresas, infraestructura y custodia.</h2></div><p>Selecciona un área para consultar métricas, fuentes y datos relacionados.</p></header><div class="kf-eco-shell"><div class="kf-eco-canvas" data-eco-current="infraestructura"><svg class="kf-eco-geometry" viewBox="0 0 960 600" aria-hidden="true"><path class="kf-eco-scaffold" d="M49 484 C77 211 272 44 548 62 C769 76 892 231 870 408 C850 541 711 581 576 520 C435 457 415 300 514 210 C592 139 713 167 747 253"/><path class="kf-eco-scaffold secondary" d="M94 518 C235 573 350 536 405 430 C457 331 425 208 335 150"/><path class="kf-eco-core-orbit" d="M331 318 C331 252 385 199 451 199 C517 199 570 252 570 318 C570 384 517 437 451 437 C385 437 331 384 331 318Z"/><path class="kf-eco-link" data-eco-link="mercado" d="M451 318 C369 273 285 197 197 131"/><path class="kf-eco-link" data-eco-link="regulacion" d="M451 318 C324 329 213 357 89 385"/><path class="kf-eco-link" data-eco-link="empresas" d="M451 318 C448 226 478 132 528 75"/><path class="kf-eco-link" data-eco-link="infraestructura" d="M451 318 C579 264 699 223 827 207"/><path class="kf-eco-link" data-eco-link="custodia" d="M451 318 C553 379 623 451 682 503"/><path class="kf-eco-link" data-eco-link="riesgo" d="M451 318 C397 416 342 485 283 539"/><path class="kf-eco-cross" d="M197 131 C334 88 456 84 528 75"/><path class="kf-eco-cross" d="M89 385 C243 393 338 421 283 539"/><path class="kf-eco-cross" d="M827 207 C776 332 745 425 682 503"/></svg><div class="kf-eco-center"><span>Datos</span><strong>K</strong><i></i></div><div class="kf-eco-node-list" role="tablist" aria-label="Áreas de datos Kaufman">${nodes}</div><div class="kf-eco-signals" aria-live="polite"><span data-eco-signal="market">Precios · comprobando</span><span data-eco-signal="regulation">Regulación · comprobando</span><span data-eco-signal="fiscal">Fiscal · comprobando</span></div></div><aside class="kf-eco-panel" id="kaufman-ecosystem-panel" role="tabpanel" aria-labelledby="ecosystem-tab-infraestructura" aria-live="polite" data-eco-panel>${ecosystemPanelMarkup('infraestructura',null)}</aside></div><p class="kf-eco-instruction"><span aria-hidden="true">↳</span> Selecciona un área para consultar sus datos y fuentes.</p></div></section>`;
+    const nodes=ECOSYSTEM_ORDER.map((id)=>{const territory=ECOSYSTEM_TERRITORIES[id];const active=id==='mercado';return `<button class="kf-eco-node${active?' active':''}" id="ecosystem-tab-${id}" type="button" role="tab" aria-selected="${active}" aria-controls="kaufman-ecosystem-panel" data-eco-territory="${id}"><span class="kf-eco-node-index">${territory.index}</span><span class="kf-eco-node-copy"><strong>${escapeHtml(territory.label)}</strong><small>${escapeHtml(territory.summary)}</small></span><i aria-hidden="true">→</i></button>`}).join('');
+    return `<section class="kf-section kf-ecosystem" id="explorar" data-ecosystem><div class="kf-container"><header class="kf-ecosystem-head"><div><p class="kf-kicker">Acceso por área</p><h2>Consulta los datos por la pregunta que necesitas resolver.</h2></div><p>Cada área muestra su alcance, el dato principal y la fuente antes de abrir la página completa.</p></header><div class="kf-eco-shell"><div class="kf-eco-canvas" data-eco-current="mercado"><div class="kf-eco-index-head" aria-hidden="true"><span>Área</span><span>Datos disponibles</span></div><div class="kf-eco-node-list" role="tablist" aria-label="Áreas de datos Kaufman">${nodes}</div></div><aside class="kf-eco-panel" id="kaufman-ecosystem-panel" role="tabpanel" aria-labelledby="ecosystem-tab-mercado" aria-live="polite" data-eco-panel>${ecosystemPanelMarkup('mercado',null)}</aside></div></div></section>`;
   }
 
   function renderHome(){
