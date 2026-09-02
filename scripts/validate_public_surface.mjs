@@ -2,7 +2,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const VERSION = 'kaufman-v83';
+const VERSION = 'kaufman-v84';
 const shells = [
   'index.html', 'mercados/index.html', 'regulacion/index.html', 'tokenizacion/index.html',
   'fiscal/index.html', 'empresas/index.html', 'bancos/index.html',
@@ -87,7 +87,7 @@ for (const marker of ['fiscalHeroMarkup', 'kf-fiscal-hero-frame', '/assets/image
 const fiscalSurface = sliceFunction('fiscalHeroMarkup', 'compareFields');
 if (fiscalSurface.indexOf('data-fiscal-changes') > fiscalSurface.indexOf('id="fiscal-calculator"')) failures.push('fiscal: los cambios oficiales deben preceder al cálculo');
 if (appScript.includes("new Date(signal.date+")) failures.push('fiscal: el render vuelve a usar una fecha fiscal sin semántica oficial');
-for (const rejectedFiscalCopy of ['Caso A', 'Contraste', 'Caso B', 'kf-fiscal-editorial', 'kf-fiscal-kpis', 'kf-fiscal-quality', 'kf-fiscal-source-register', 'kf-fiscal-method', 'data-fiscal-methodology', 'Cobertura y fuentes', 'Qué está verificado y qué no.', 'Compara el tratamiento de una operación blockchain según jurisdicción, residencia y perfil fiscal.', 'Jurisdicción × operación × perfil', 'Documentación fiscal', 'Operación · fecha · coste · residencia', 'Antes de calcular.', 'Qué datos determinan el tratamiento fiscal.', 'Vender, permutar, recibir recompensas']) {
+for (const rejectedFiscalCopy of ['Caso A', 'Contraste', 'Caso B', 'kf-fiscal-editorial', 'kf-fiscal-kpis', 'kf-fiscal-quality', 'kf-fiscal-source-register', 'kf-fiscal-method', 'data-fiscal-methodology', 'Cobertura y fuentes', 'Qué está verificado y qué no.', 'Compara el tratamiento de una operación blockchain según jurisdicción, residencia y perfil fiscal.', 'Jurisdicción × operación × perfil', 'Documentación fiscal', 'Operación · fecha · coste · residencia', 'Antes de calcular.', 'Qué datos determinan el tratamiento fiscal.', 'Vender, permutar, recibir recompensas', 'La fecha indica entrada en vigor, inicio de aplicación o firma según la fuente oficial.', 'No se usa la fecha interna de detección.']) {
   if (fiscalSurface.includes(rejectedFiscalCopy)) failures.push(`fiscal: reaparece contenido retirado: ${rejectedFiscalCopy}`);
 }
 for (const marker of ['data-regulation-table', 'data-regulation-detail', 'data-regulation-comparison', 'data-regulation-expand', 'REGULATION_REFERENCE_IDS', 'Actividades cubiertas', 'A quién afecta', 'Qué no cubre']) {
