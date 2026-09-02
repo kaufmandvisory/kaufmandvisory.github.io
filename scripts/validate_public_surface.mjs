@@ -2,7 +2,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const VERSION = 'kaufman-v71';
+const VERSION = 'kaufman-v72';
 const shells = [
   'index.html', 'mercados/index.html', 'regulacion/index.html', 'tokenizacion/index.html',
   'fiscal/index.html', 'empresas/index.html', 'bancos/index.html',
@@ -55,7 +55,7 @@ for (const rejectedHomeCopy of ['Decision Brief', 'RUTA PROPUESTA', 'Explorar te
   if (publicHomeCopy.includes(rejectedHomeCopy)) failures.push(`home: reaparece texto retirado ${rejectedHomeCopy}`);
 }
 if (!appScript.includes("if(page==='mineria'||page==='home')return '';")) failures.push('home: reaparece el cierre comercial');
-if (!appScript.includes("const commercialPages=!['home','regulacion'")) failures.push('home: vuelve a admitir el cierre comercial');
+if (!appScript.includes("const commercialPages=!['home','regulacion','wallets'")) failures.push('home o wallets: vuelve a admitir el cierre comercial');
 if (!appScript.includes("page==='home'?'Kaufman Reference Price'")) failures.push('home: la fuente minera vuelve a mostrar la edad del precio');
 if (!appScript.includes("main?.querySelector('.kf-rwa-market .kf-rwa-kpis')?.remove();") || !appScript.includes("main?.querySelector('.kf-rwa-market .kf-rwa-ratios')?.remove();")) failures.push('mercados: reaparece el resumen RWA duplicado');
 if (!appStyles.includes('.kf-feed-item.no-time')) failures.push('home: las referencias sin fecha pierden su composición');
@@ -76,9 +76,28 @@ for (const marker of ['data-regulation-table', 'data-regulation-detail', 'data-r
 for (const rejectedRegulationPattern of ['Construyendo fichas regulatorias', 'Mapa de regímenes']) {
   if (appScript.includes(rejectedRegulationPattern)) failures.push(`regulacion: reaparece interfaz retirada: ${rejectedRegulationPattern}`);
 }
-if (!appScript.includes("['home','regulacion','contacto','aviso','privacidad','cookies','terminos','retirado']")) {
+if (!appScript.includes("['home','regulacion','wallets','contacto','aviso','privacidad','cookies','terminos','retirado']")) {
   failures.push('regulacion: el cierre comercial vuelve a estar habilitado');
 }
+
+for (const marker of [
+  'walletHeroMarkup', '/assets/images/wallet-security-v1.jpg', 'NGRAVE ZERO',
+  'SO con CC EAL7, según NGRAVE', 'Tres opciones, cinco diferencias.',
+  'kf-wallet-matrix', 'https://ngrave.io/en/page/backup/zero/'
+]) {
+  if (!appScript.includes(marker)) failures.push(`wallets: falta ${marker}`);
+}
+for (const marker of ['data-token-product-expand', 'rows.slice(0,5)', 'Mostrar solo 5', 'aria-expanded']) {
+  if (!appScript.includes(marker)) failures.push(`tokenizacion: falta ${marker}`);
+}
+for (const marker of ['.kf-wallet-hero', '.kf-wallet-matrix', '.kf-token-product-more']) {
+  if (!appStyles.includes(marker)) failures.push(`interfaz: falta ${marker}`);
+}
+for (const rejectedWalletCopy of ['Fría y caliente no bastan para decidir.', 'Modelos de custodia y control de claves.']) {
+  if (appScript.includes(rejectedWalletCopy)) failures.push(`wallets: reaparece texto retirado: ${rejectedWalletCopy}`);
+}
+const walletPhoto = await fs.stat(path.join(ROOT, 'assets/images/wallet-security-v1.jpg')).catch(() => null);
+if (!walletPhoto || walletPhoto.size < 100_000) failures.push('wallets: fotografía editorial ausente o incompleta');
 for (const token of [
   '--kf-type-display:', '--kf-type-page-title:', '--kf-type-section-title:',
   '--kf-type-section-compact:', '--kf-type-component-title:', '--kf-type-page-deck:',

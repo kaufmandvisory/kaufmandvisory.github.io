@@ -2,7 +2,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const VERSION = 'kaufman-v71';
+const VERSION = 'kaufman-v72';
 const ROUTES = {
   home: ['Kaufman · Inteligencia blockchain', 'Mercado, regulación, tokenización, infraestructura y riesgo bajo una misma capa de evidencia pública.'],
   mercados: ['Mercados y capital tokenizado', 'RWA, redes, stablecoins, flujos institucionales, gas y precios de referencia calculados desde mercados públicos.'],
@@ -12,7 +12,7 @@ const ROUTES = {
   empresas: ['Empresas', 'Actividad corporativa, exposición blockchain e iniciativas comprobables.'],
   bancos: ['Bancos', 'Custodia, pagos, tokenización y servicios bancarios documentados.'],
   exchanges: ['Exchanges', 'Mercados, comisiones, custodia, contraparte y disponibilidad por proveedor.'],
-  wallets: ['Wallets', 'Custodia fría y caliente, firmware, compatibilidad, recuperación y avisos públicos.'],
+  wallets: ['Wallets', 'Comparativa de dispositivos de firma, aislamiento, confirmación y recuperación con fuentes oficiales.'],
   proyectos: ['Proyectos e infraestructura Web3', 'Dependencias de cadena, contratos, oráculos, almacenamiento, indexación y gobierno.'],
   mineria: ['Minería de Bitcoin', 'Hashprice, hashrate, dificultad, comisiones, pools, ASIC, rentabilidad y coste eléctrico internacional con cálculos reproducibles.'],
   hardware: ['Hardware', 'Equipos de minería, potencia, eficiencia y requisitos operativos desde especificaciones oficiales.'],
