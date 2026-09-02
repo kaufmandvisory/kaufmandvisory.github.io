@@ -1009,18 +1009,20 @@
     const jurisdictionLabel={ES:'España',UE:'Unión Europea',US:'Estados Unidos',GB:'Reino Unido',AE:'Emiratos Árabes Unidos',CH:'Suiza',SG:'Singapur',MX:'México'}[jurisdiction]||jurisdiction;
     const fiscalTopicLabel={importe:'Cálculo fiscal de una operación',jurisdiccion:'Comparación fiscal entre jurisdicciones',empresa:'Fiscalidad de empresa y tesorería',reporting:'Obligaciones de información y proveedores',evidencia:'Coste, titularidad y origen de fondos'}[fiscalTopic]||fiscalTopic;
     const context=[operation&&`Operación: ${operationLabel}`,jurisdiction&&`Jurisdicción: ${jurisdictionLabel}`,fiscalTopic&&`Consulta fiscal: ${fiscalTopicLabel}`].filter(Boolean).join(' · ');
-    const matters=[
-      ['Solicitar Kaufman Decision Brief','Indica la operación, jurisdicción, objetivo y fecha de decisión. Confirmaremos alcance, entrega, plazo y presupuesto antes de empezar.','Solicitud · Kaufman Decision Brief'],
-      ['Corrección de un dato','Incluye la URL, el campo afectado y una fuente primaria de contraste.','Corrección de dato'],
-      ['Fuentes e integraciones','Propón una API, registro o dataset público indicando licencia y frecuencia.','Fuente o integración'],
-      ['Licencias y colaboración','Explica el caso de uso, la organización y la cobertura que necesitas.','Licencias y colaboración'],
-      ['Privacidad o derechos','Indica el derecho que quieres ejercer y evita adjuntar información innecesaria.','Privacidad']
+    const selectedReason=isFiscalService?'fiscal':isDecisionBrief?'analysis':'general';
+    const requestTitle=isFiscalService?'Plantea tu consulta fiscal.':isDecisionBrief?'Solicita un análisis por operación.':'Indica qué necesitas.';
+    const requestCopy=isFiscalService?'Incluye la operación, los países implicados y la fecha prevista.':isDecisionBrief?'Incluye la operación, la jurisdicción y la fecha en la que necesitas decidir.':'Selecciona el motivo y resume la consulta en un solo mensaje.';
+    const defaultMessage=context?`Quiero revisar: ${context}`:'';
+    const reasons=[
+      ['general','Consulta general'],
+      ['fiscal','Fiscalidad blockchain'],
+      ['analysis','Análisis por operación'],
+      ['correction','Corrección de un dato'],
+      ['sources','Fuentes e integraciones'],
+      ['licensing','Licencias y colaboración'],
+      ['privacy','Privacidad y derechos']
     ];
-    const subject=isFiscalService?'Consulta · Fiscalidad blockchain':isDecisionBrief?'Solicitud · Kaufman Decision Brief':'Contacto desde Kaufman';
-    const body=isFiscalService?encodeURIComponent(`Hola Kaufman,\n\nQuiero plantear un caso de fiscalidad blockchain.\n${context}\n\nPaís de residencia fiscal:\nOperación o actividad:\nFecha prevista:\nPregunta principal:\n`):isDecisionBrief?encodeURIComponent(`Hola Kaufman,\n\nQuiero solicitar un Decision Brief.\n${context}\n\nObjetivo de la decisión:\nFecha límite:\nContexto adicional:\n`):'';
-    const contactTitle=isFiscalService?'Plantea tu caso fiscal.':isDecisionBrief?'Cuéntanos qué decisión necesitas resolver.':'Escríbenos con contexto verificable.';
-    const contactCopy=isFiscalService?'Indica país de residencia fiscal, operación, fecha y pregunta principal. No envíes declaraciones, documentos de identidad ni datos sensibles en este primer mensaje.':isDecisionBrief?'No pedimos datos sensibles. Con la operación, jurisdicción, objetivo y fecha límite podemos confirmar qué fuentes y comprobaciones entran en la entrega.':'Kaufman no utiliza un formulario intermedio sin backend. El mensaje sale desde tu proveedor de correo y conserva una dirección de respuesta comprobable.';
-    return `<main class="kf-main" id="main-content">${pageHero('Contacto',isFiscalService?'Canal para solicitar una revisión de fiscalidad blockchain por operación, residencia o empresa.':isDecisionBrief?'Delimita una operación y recibe una propuesta de alcance para convertir datos dispersos en una decisión comprobable.':'Un canal directo para solicitar un Decision Brief, corregir datos, proponer fuentes o hablar de colaboración.','Kaufman / contacto','verified')}<section class="kf-section"><div class="kf-container"><div class="kf-contact"><section class="kf-contact-primary"><p class="kf-kicker">${isFiscalService?'Servicio fiscal blockchain':isDecisionBrief?'Solicitud de alcance':'Canal oficial'}</p><h2>${contactTitle}</h2><p>${contactCopy}</p>${context?`<div class="kf-contact-context"><span>Contexto recibido</span><strong>${escapeHtml(context)}</strong></div>`:''}<div class="kf-contact-address"><div><span>Correo</span><a href="mailto:${email}">${email}</a></div><button class="kf-button small secondary" type="button" data-contact-copy data-copy-value="${email}">Copiar correo</button></div><span class="kf-contact-copy-status" data-contact-copy-status aria-live="polite"></span><a class="kf-button primary" href="mailto:${email}?subject=${encodeURIComponent(subject)}${body?`&body=${body}`:''}">${isFiscalService?'Plantear caso fiscal':isDecisionBrief?'Solicitar alcance y presupuesto':'Redactar correo'} →</a></section><aside class="kf-contact-security"><span>SEGURIDAD</span><h3>No envíes secretos ni fondos.</h3><ul><li>Nunca compartas seed phrases o claves privadas.</li><li>No envíes contraseñas, códigos de acceso ni archivos de wallet.</li><li>No adjuntes declaraciones fiscales completas ni documentos de identidad sin una solicitud legítima y un canal acordado.</li></ul><p>Kaufman no presta soporte por mensajes directos en redes sociales.</p></aside></div><div class="kf-contact-matters"><div class="kf-subsection-label">Motivo del contacto</div>${matters.map(([title,copy,matterSubject],index)=>`<article><span>${String(index+1).padStart(2,'0')}</span><div><h3>${title}</h3><p>${copy}</p></div><a href="mailto:${email}?subject=${encodeURIComponent(matterSubject)}">Escribir →</a></article>`).join('')}</div><div class="kf-contact-legal"><span>Responsable</span><strong>Kaufman Advisory Group LLC · Wyoming, Estados Unidos</strong><a href="/privacidad.html">Tratamiento de datos y derechos →</a></div></div></section></main>`;
+    return `<main class="kf-main" id="main-content"><header class="kf-contact-hero"><div class="kf-container"><div class="kf-breadcrumbs"><a href="/">Inicio</a><span>/</span><span>Contacto</span></div><div class="kf-contact-hero-grid"><div><p class="kf-kicker">Kaufman Advisory</p><h1>Contacto.</h1><p>Selecciona el motivo, añade los datos necesarios y prepara el correo.</p></div><div class="kf-contact-address"><div><span>Correo</span><a href="mailto:${email}">${email}</a></div><button class="kf-button small secondary" type="button" data-contact-copy data-copy-value="${email}">Copiar</button><span class="kf-contact-copy-status" data-contact-copy-status aria-live="polite"></span></div></div></div></header><section class="kf-section kf-contact-page"><div class="kf-container">${context?`<div class="kf-contact-context"><span>Consulta seleccionada</span><strong>${escapeHtml(context)}</strong></div>`:''}<div class="kf-contact-layout"><section class="kf-contact-request"><header><p class="kf-kicker">Solicitud</p><h2>${requestTitle}</h2><p>${requestCopy}</p></header><form class="kf-contact-form" data-contact-form data-contact-email="${email}"><div class="kf-contact-field"><label for="contact-reason">Motivo</label><select id="contact-reason" data-contact-reason>${reasons.map(([value,label])=>`<option value="${value}"${value===selectedReason?' selected':''}>${label}</option>`).join('')}</select></div><div class="kf-contact-field"><label for="contact-jurisdiction">País o jurisdicción</label><input id="contact-jurisdiction" data-contact-jurisdiction value="${escapeHtml(jurisdictionLabel||'')}" placeholder="Ej. España y Portugal"></div><div class="kf-contact-field wide"><label for="contact-message">Qué necesitas resolver</label><textarea id="contact-message" data-contact-message rows="6" required placeholder="Describe la operación, el problema y la respuesta que necesitas.">${escapeHtml(defaultMessage)}</textarea></div><div class="kf-contact-field"><label for="contact-deadline">Fecha límite <span>opcional</span></label><input id="contact-deadline" data-contact-deadline type="date"></div><div class="kf-contact-form-action"><button class="kf-button primary" type="submit">Preparar correo →</button><small>Se abrirá tu aplicación de correo. También puedes escribir directamente a la dirección indicada arriba.</small></div></form></section><aside class="kf-contact-guide"><div><p class="kf-kicker">Para revisar la consulta</p><ol><li><span>01</span><strong>Operación o actividad</strong></li><li><span>02</span><strong>Países y residencia fiscal</strong></li><li><span>03</span><strong>Importes y fechas relevantes</strong></li><li><span>04</span><strong>Pregunta que necesitas resolver</strong></li></ol></div><div class="kf-contact-security"><span>SEGURIDAD</span><h3>No envíes claves ni fondos.</h3><ul><li>Seed phrases, claves privadas o contraseñas.</li><li>Archivos de wallet o códigos de acceso.</li><li>Declaraciones completas o documentos de identidad en el primer mensaje.</li></ul></div></aside></div></div></section></main>`;
   }
 
   function renderNotFound(title='Ruta no encontrada'){
@@ -2800,18 +2802,29 @@
 
   function initContact(){
     const button=document.querySelector('[data-contact-copy]');
-    if(!button)return;
     const status=document.querySelector('[data-contact-copy-status]');
-    button.addEventListener('click',async()=>{
-      const value=button.dataset.copyValue||'';
-      let copied=false;
-      try{await navigator.clipboard.writeText(value);copied=true}catch(error){}
-      if(!copied){
-        const address=document.querySelector('.kf-contact-address a');
-        if(address){const range=document.createRange();range.selectNodeContents(address);const selection=window.getSelection();selection.removeAllRanges();selection.addRange(range)}
-      }
-      if(status)status.textContent=copied?'Correo copiado.':'Correo seleccionado. Pulsa Ctrl+C para copiarlo.';
-      if(copied){button.textContent='Copiado';window.setTimeout(()=>{button.textContent='Copiar correo';if(status)status.textContent=''},2200)}
+    if(button)button.addEventListener('click',async()=>{
+        const value=button.dataset.copyValue||'';
+        let copied=false;
+        try{await navigator.clipboard.writeText(value);copied=true}catch(error){}
+        if(!copied){
+          const address=document.querySelector('.kf-contact-address a');
+          if(address){const range=document.createRange();range.selectNodeContents(address);const selection=window.getSelection();selection.removeAllRanges();selection.addRange(range)}
+        }
+        if(status)status.textContent=copied?'Correo copiado.':'Correo seleccionado. Pulsa Ctrl+C para copiarlo.';
+        if(copied){button.textContent='Copiado';window.setTimeout(()=>{button.textContent='Copiar';if(status)status.textContent=''},2200)}
+      });
+    const form=document.querySelector('[data-contact-form]');
+    if(!form)return;
+    form.addEventListener('submit',(event)=>{
+      event.preventDefault();
+      const subjects={general:'Consulta desde Kaufman',fiscal:'Consulta · Fiscalidad blockchain',analysis:'Solicitud · Análisis por operación',correction:'Corrección de dato',sources:'Fuente o integración',licensing:'Licencias y colaboración',privacy:'Privacidad y derechos'};
+      const reason=form.querySelector('[data-contact-reason]')?.value||'general';
+      const jurisdiction=form.querySelector('[data-contact-jurisdiction]')?.value.trim()||'';
+      const message=form.querySelector('[data-contact-message]')?.value.trim()||'';
+      const deadline=form.querySelector('[data-contact-deadline]')?.value||'';
+      const lines=['Hola Kaufman,','',message,jurisdiction?`País o jurisdicción: ${jurisdiction}`:'',deadline?`Fecha límite: ${deadline}`:''].filter((line,index)=>line||index<2);
+      location.href=`mailto:${form.dataset.contactEmail}?subject=${encodeURIComponent(subjects[reason]||subjects.general)}&body=${encodeURIComponent(lines.join('\n'))}`;
     });
   }
 

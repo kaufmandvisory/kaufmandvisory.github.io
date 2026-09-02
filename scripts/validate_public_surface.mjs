@@ -2,7 +2,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const VERSION = 'kaufman-v85';
+const VERSION = 'kaufman-v86';
 const shells = [
   'index.html', 'mercados/index.html', 'regulacion/index.html', 'tokenizacion/index.html',
   'fiscal/index.html', 'empresas/index.html', 'bancos/index.html',
@@ -89,6 +89,13 @@ if (/href="#fiscal-(?:calculator|comparison)"/.test(fiscalSurface)) failures.pus
 if (appScript.includes("new Date(signal.date+")) failures.push('fiscal: el render vuelve a usar una fecha fiscal sin semántica oficial');
 for (const rejectedFiscalCopy of ['Caso A', 'Contraste', 'Caso B', 'kf-fiscal-editorial', 'kf-fiscal-kpis', 'kf-fiscal-quality', 'kf-fiscal-source-register', 'kf-fiscal-method', 'data-fiscal-methodology', 'Cobertura y fuentes', 'Qué está verificado y qué no.', 'Compara el tratamiento de una operación blockchain según jurisdicción, residencia y perfil fiscal.', 'Jurisdicción × operación × perfil', 'Documentación fiscal', 'Operación · fecha · coste · residencia', 'Antes de calcular.', 'Qué datos determinan el tratamiento fiscal.', 'Vender, permutar, recibir recompensas', 'La fecha indica entrada en vigor, inicio de aplicación o firma según la fuente oficial.', 'No se usa la fecha interna de detección.', 'id="fiscal-calculator"', 'data-fiscal-scenario-form', 'id="fiscal-comparison"', 'data-fiscal-comparison']) {
   if (fiscalSurface.includes(rejectedFiscalCopy)) failures.push(`fiscal: reaparece contenido retirado: ${rejectedFiscalCopy}`);
+}
+const contactSurface = sliceFunction('renderContact', 'renderNotFound');
+for (const marker of ['kf-contact-hero', 'data-contact-form', 'data-contact-reason', 'data-contact-jurisdiction', 'data-contact-message', 'data-contact-deadline', 'Preparar correo', 'No envíes claves ni fondos.']) {
+  if (!contactSurface.includes(marker)) failures.push(`contacto: falta ${marker}`);
+}
+for (const rejectedContactCopy of ['Motivo del contacto', 'Solicitar Kaufman Decision Brief', 'kf-contact-matters', 'kf-contact-legal', '>Responsable<', 'Tratamiento de datos y derechos']) {
+  if (contactSurface.includes(rejectedContactCopy)) failures.push(`contacto: reaparece contenido retirado: ${rejectedContactCopy}`);
 }
 for (const marker of ['data-regulation-table', 'data-regulation-detail', 'data-regulation-comparison', 'data-regulation-expand', 'REGULATION_REFERENCE_IDS', 'Actividades cubiertas', 'A quién afecta', 'Qué no cubre']) {
   if (!appScript.includes(marker)) failures.push(`regulacion: falta ${marker}`);
