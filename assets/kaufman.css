@@ -928,6 +928,96 @@ body{font-size:16px;line-height:1.6}
   .kf-section-head{grid-template-columns:1fr;gap:18px}.kf-title,.kf-title.small{font-size:40px}.kf-market-signal-layout,.kf-fee-context,.kf-fee-tiers,.kf-fee-sources{grid-template-columns:1fr}.kf-etf-latest{grid-template-columns:1fr}.kf-etf-latest>div+div{padding-left:0;border-top:1px solid var(--kf-line);border-left:0}
 }
 
+/* Mining decision workbench */
+.kf-mining-hero-copy h1{font-size:clamp(60px,6vw,90px);line-height:.88}
+.kf-mining-freshness{display:grid;grid-template-columns:repeat(4,1fr);margin-bottom:30px;border-top:1px solid var(--kf-line);border-bottom:1px solid var(--kf-line)}
+.kf-mining-freshness>div{min-width:0;padding:13px 18px;border-right:1px solid var(--kf-line)}
+.kf-mining-freshness>div:first-child{padding-left:0}.kf-mining-freshness>div:last-child{border-right:0}
+.kf-mining-freshness span{display:block;color:var(--kf-muted);font:600 9px/1.25 var(--kf-mono);letter-spacing:.07em;text-transform:uppercase}
+.kf-mining-freshness strong{display:block;margin-top:7px;font-size:12px;font-variant-numeric:tabular-nums}
+
+.kf-mining-workbench{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(360px,.55fr);border:1px solid var(--kf-ink);background:var(--kf-paper-raised)}
+.kf-mining-allin-controls{display:grid;grid-template-columns:repeat(3,1fr);min-width:0}
+.kf-mining-control-group{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-content:start;gap:16px;padding:25px;border-right:1px solid var(--kf-line)}
+.kf-mining-control-group header{display:flex;grid-column:1/-1;align-items:center;gap:10px;padding-bottom:13px;border-bottom:1px solid var(--kf-line)}
+.kf-mining-control-group header span{color:var(--kf-signal);font:600 10px/1 var(--kf-mono)}.kf-mining-control-group header strong{font-size:14px}
+.kf-mining-control-group .wide{grid-column:1/-1}.kf-mining-control-group .kf-field{min-width:0;margin:0}
+.kf-mining-control-group .kf-field label{font-size:10px;line-height:1.35}.kf-mining-control-group .kf-field input,.kf-mining-control-group .kf-field select{width:100%}
+.kf-mining-control-group .kf-field small{display:block;margin-top:6px;color:var(--kf-muted);font-size:10px;line-height:1.35}
+.kf-mining-control-group .kf-calc-source{grid-column:1/-1;margin-top:8px;padding:13px 0 0;border:0;border-top:1px solid var(--kf-line);font-size:10px;line-height:1.4}
+.kf-mining-allin-output{padding:26px;background:var(--kf-ink);color:#f7f3eb}
+.kf-mining-allin-output>header{display:flex;justify-content:space-between;gap:20px;padding-bottom:15px;border-bottom:1px solid rgba(255,255,255,.2)}
+.kf-mining-allin-output>header span{color:#aeb9b7;font:600 9px/1.2 var(--kf-mono);letter-spacing:.07em;text-transform:uppercase}
+.kf-mining-allin-output>header strong{text-align:right;font-size:12px}
+.kf-mining-output-grid{display:grid;grid-template-columns:1fr 1fr}
+.kf-mining-output-grid>div{display:flex;min-height:91px;flex-direction:column;justify-content:space-between;padding:15px 14px;border-right:1px solid rgba(255,255,255,.14);border-bottom:1px solid rgba(255,255,255,.14)}
+.kf-mining-output-grid>div:nth-child(2n){border-right:0}.kf-mining-output-grid>div.primary{background:var(--kf-signal)}
+.kf-mining-output-grid span{color:#aeb9b7;font-size:10px;line-height:1.3}.kf-mining-output-grid .primary span{color:#fff}
+.kf-mining-output-grid strong{font-size:17px;line-height:1.15;font-variant-numeric:tabular-nums}
+.kf-mining-allin-output>p{margin:17px 0 0;color:#aeb9b7;font-size:10px;line-height:1.5}
+
+.kf-mining-scenario-panel{margin-top:28px;padding-top:25px;border-top:1px solid var(--kf-ink)}
+.kf-mining-scenario-panel>header,.kf-mining-alerts>header{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}
+.kf-mining-scenario-panel>header span,.kf-mining-alerts>header span{display:block;color:var(--kf-muted);font:600 10px/1.3 var(--kf-mono);letter-spacing:.06em;text-transform:uppercase}
+.kf-mining-scenario-panel>header strong,.kf-mining-alerts>header strong{display:block;margin-top:6px;font-size:18px}
+.kf-mining-scenario-panel>header small,.kf-mining-alerts>header small{max-width:480px;color:var(--kf-muted);font-size:11px;line-height:1.5;text-align:right}
+.kf-mining-scenario-matrix{display:grid;grid-template-columns:1.15fr repeat(3,1fr);margin-top:18px;border-top:1px solid var(--kf-line-dark);border-left:1px solid var(--kf-line-dark)}
+.kf-mining-scenario-matrix>div{display:flex;min-height:76px;flex-direction:column;align-items:center;justify-content:center;padding:13px;border-right:1px solid var(--kf-line-dark);border-bottom:1px solid var(--kf-line-dark);text-align:center}
+.kf-mining-scenario-matrix>div strong{font-size:16px;font-variant-numeric:tabular-nums}.kf-mining-scenario-matrix>div span{margin-top:4px;color:var(--kf-muted);font-size:9px;text-transform:uppercase}
+.kf-mining-scenario-matrix .axis{min-height:45px;background:#e3ddd2;color:var(--kf-muted);font:600 10px/1.3 var(--kf-mono);letter-spacing:.05em;text-transform:uppercase}
+.kf-mining-scenario-matrix .positive{background:#edf5f0}.kf-mining-scenario-matrix .negative{background:#faebe7}
+
+.kf-mining-actions{display:grid;grid-template-columns:minmax(220px,.55fr) minmax(0,1fr);gap:22px;align-items:center;margin-top:26px;padding:20px 0;border-top:1px solid var(--kf-line);border-bottom:1px solid var(--kf-line)}
+.kf-mining-actions>div span{display:block;color:var(--kf-muted);font:600 9px/1.2 var(--kf-mono);letter-spacing:.08em;text-transform:uppercase}.kf-mining-actions>div strong{display:block;margin-top:5px;font-size:14px}
+.kf-mining-actions nav{display:flex;justify-content:flex-end;gap:9px}.kf-mining-actions button,.kf-mining-alert-controls button{min-height:40px;padding:0 15px;border:1px solid var(--kf-ink);background:transparent;color:var(--kf-ink);cursor:pointer;font:700 11px/1 var(--kf-sans)}
+.kf-mining-actions button:first-child,.kf-mining-alert-controls button{background:var(--kf-ink);color:#fff}
+.kf-mining-actions small{grid-column:1/-1;color:var(--kf-muted);font-size:10px;text-align:right}
+.kf-mining-alerts{margin-top:30px;padding:24px;border:1px solid var(--kf-line-dark);background:var(--kf-paper-raised)}
+.kf-mining-alert-controls{display:grid;grid-template-columns:repeat(3,1fr) auto;gap:12px;align-items:end;margin-top:20px}
+.kf-mining-alert-controls label{color:var(--kf-muted);font-size:10px}.kf-mining-alert-controls input{display:block;width:100%;height:40px;margin-top:6px;padding:0 10px;border:1px solid var(--kf-line-dark);background:transparent;font:600 12px/1 var(--kf-sans)}
+.kf-mining-alert-results{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}.kf-mining-alert-results>span{display:flex;align-items:center;gap:6px;padding:8px 10px;border:1px solid var(--kf-line);font-size:10px}.kf-mining-alert-results i{width:6px;height:6px;border-radius:50%}.kf-mining-alert-results .ok i{background:#2a9d78}.kf-mining-alert-results .breach{border-color:#cf5c43;color:#a43f2c}.kf-mining-alert-results .breach i{background:#cf5c43}
+
+.kf-mining-hardware-table td:first-child span,.kf-mining-hardware-table td:first-child strong,.kf-mining-hardware-table td:nth-child(6) strong,.kf-mining-hardware-table td:nth-child(6) small{display:block}
+.kf-mining-hardware-table td:first-child span{margin-bottom:5px;color:var(--kf-muted);font:600 9px/1 var(--kf-mono);letter-spacing:.05em;text-transform:uppercase}
+.kf-mining-hardware-table td:nth-child(6){min-width:190px}.kf-mining-hardware-table td:nth-child(6) small{margin-top:5px;color:var(--kf-muted);font-size:10px;line-height:1.4}
+
+.kf-pool-terms{margin-top:20px!important}.kf-pool-terms>article{display:block!important;padding:15px 0!important;border-top:1px solid var(--kf-line)}
+.kf-pool-terms>article>div{display:flex;justify-content:space-between;gap:14px}.kf-pool-terms>article>div span{color:var(--kf-muted);font-size:11px}
+.kf-pool-terms dl{margin:12px 0 9px}.kf-pool-terms dl>div{display:grid;grid-template-columns:70px 1fr;gap:10px;padding:5px 0;border:0}.kf-pool-terms dd{text-align:right;font-size:10px}
+.kf-pool-terms a{color:var(--kf-signal);font-size:10px;font-weight:700}
+
+.kf-mining-country-tools{display:grid;grid-template-columns:1fr 260px auto;gap:14px;align-items:end;padding:20px 0}
+.kf-mining-country-tools label{color:#adb9b8;font-size:10px}.kf-mining-country-tools input,.kf-mining-country-tools select{display:block;width:100%;height:41px;margin-top:7px;padding:0 12px;border:1px solid #607073;background:#13292c;color:#fff;font:600 12px/1 var(--kf-sans)}
+.kf-mining-country-tools>span{padding-bottom:12px;color:#f7f3eb;font-size:11px;text-align:right}
+.kf-mining-country-table{width:100%;min-width:1080px;border-collapse:collapse;border-top:1px solid #607073;border-bottom:1px solid #607073}
+.kf-mining-country-table th{padding:13px 12px;border-bottom:1px solid #607073;color:#adb9b8;font:600 9px/1.3 var(--kf-mono);letter-spacing:.06em;text-align:left;text-transform:uppercase}
+.kf-mining-country-table td{padding:15px 12px;border-bottom:1px solid #42575a;color:#d9e0dd;font-size:11px;line-height:1.45}.kf-mining-country-table tr:last-child td{border-bottom:0}
+.kf-mining-country-table .number{text-align:right;font-variant-numeric:tabular-nums}.kf-mining-country-table .positive{color:#74d9b1}.kf-mining-country-table .negative{color:#ff9a82}
+.kf-mining-country-table th:first-child,.kf-mining-country-table td:first-child{padding-left:0}.kf-mining-country-table th:last-child,.kf-mining-country-table td:last-child{padding-right:0}
+.kf-mining-country-table td:last-child{max-width:430px}
+
+@media(max-width:1180px){
+  .kf-mining-allin-controls{grid-template-columns:1fr 1fr}.kf-mining-control-group:last-child{grid-column:1/-1;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--kf-line)}
+  .kf-mining-alert-controls{grid-template-columns:1fr 1fr}.kf-mining-alert-controls button{min-height:42px}
+}
+@media(max-width:880px){
+  .kf-mining-freshness{grid-template-columns:1fr 1fr}.kf-mining-freshness>div:nth-child(2){border-right:0}.kf-mining-freshness>div:nth-child(-n+2){border-bottom:1px solid var(--kf-line)}
+  .kf-mining-workbench{grid-template-columns:1fr}.kf-mining-allin-output{border-top:1px solid var(--kf-ink)}
+  .kf-mining-actions{grid-template-columns:1fr}.kf-mining-actions nav{justify-content:flex-start}.kf-mining-actions small{grid-column:auto;text-align:left}
+  .kf-mining-country-tools{grid-template-columns:1fr 1fr}.kf-mining-country-tools>span{grid-column:1/-1;padding:0;text-align:left}
+}
+@media(max-width:600px){
+  .kf-mining-hero-copy h1{font-size:55px;line-height:.91}
+  .kf-mining-allin-controls{grid-template-columns:1fr}.kf-mining-control-group,.kf-mining-control-group:last-child{grid-column:auto;grid-template-columns:1fr;padding:20px;border-right:0;border-bottom:1px solid var(--kf-line)}
+  .kf-mining-control-group .wide,.kf-mining-control-group header,.kf-mining-control-group .kf-calc-source{grid-column:auto}
+  .kf-mining-output-grid>div{min-height:80px;padding:13px 10px}.kf-mining-output-grid strong{font-size:14px}
+  .kf-mining-scenario-panel>header,.kf-mining-alerts>header{display:grid}.kf-mining-scenario-panel>header small,.kf-mining-alerts>header small{text-align:left}
+  .kf-mining-scenario-matrix{grid-template-columns:88px repeat(3,minmax(75px,1fr));overflow-x:auto}.kf-mining-scenario-matrix>div{min-height:67px;padding:8px}.kf-mining-scenario-matrix>div strong{font-size:12px}.kf-mining-scenario-matrix .axis{font-size:8px}
+  .kf-mining-actions nav{display:grid;grid-template-columns:1fr}.kf-mining-actions button{width:100%}
+  .kf-mining-alert-controls,.kf-mining-country-tools{grid-template-columns:1fr}
+  .kf-mining-country-tools>span{grid-column:auto}
+}
+
 @media (min-width:768px) and (max-width:1199px){.kf-briefing-grid{grid-template-columns:1fr 1fr}.kf-briefing-grid>.kf-briefing-metrics{grid-column:1/-1;margin:38px 0 0;padding:20px 0 0;border-top:1px solid var(--kf-ink);border-left:0}.kf-briefing-metrics .kf-mining-kpis{grid-template-columns:repeat(3,1fr)}.kf-briefing-metrics .kf-mining-kpis>div{display:block;border-right:1px solid #3b3d49;border-bottom:0}.kf-briefing-metrics .kf-mining-kpis>div:last-child{border-right:0}.kf-briefing-metrics .kf-mining-kpis strong{margin-top:12px}}
 @media (max-width:767px){.kf-editorial-feed{grid-template-columns:1fr}.kf-feed-item.secondary,.kf-feed-item.secondary+.kf-feed-item.secondary{padding:18px 0;border-left:0;border-top:1px solid var(--kf-line)}.kf-feed-item.secondary .kf-feed-star{right:0}.kf-briefing-grid>section:last-child .kf-mining-layout{grid-template-columns:1fr}.kf-briefing-grid>section:last-child .kf-mining-kpis{grid-template-columns:1fr}.kf-briefing-grid>.kf-briefing-metrics{margin:35px 0 0;padding:18px 0 0;border-top:1px solid var(--kf-ink);border-left:0}.kf-briefing-metrics .kf-mining-metrics{height:auto}}
 
@@ -1254,3 +1344,7 @@ button,input,select,textarea{font-family:var(--kf-sans)}
 @media(max-width:1350px){.kf-bank-columns{display:none}.kf-bank-row>summary{grid-template-columns:minmax(220px,1.2fr) minmax(180px,1fr) minmax(180px,1fr) minmax(180px,1fr);grid-template-areas:'identity legal service open' 'identity custody settlement risk';row-gap:16px}.kf-bank-identity{grid-area:identity}.kf-bank-legal{grid-area:legal}.kf-bank-service{grid-area:service}.kf-bank-custody{grid-area:custody}.kf-bank-settlement{grid-area:settlement}.kf-bank-risk{grid-area:risk}.kf-bank-open{grid-area:open;align-self:start}.kf-bank-row>summary>span:not(.kf-bank-identity):not(.kf-bank-open)::before{color:var(--kf-muted);font:600 8px/1.2 var(--kf-mono);letter-spacing:.08em;text-transform:uppercase}.kf-bank-legal::before{content:'Entidad y autorización'}.kf-bank-service::before{content:'Servicio real'}.kf-bank-custody::before{content:'Custodia'}.kf-bank-settlement::before{content:'Liquidación y redes'}.kf-bank-risk::before{content:'Riesgo y coste'}.kf-bank-detail{padding-inline:32px}}
 @media(max-width:1100px){.kf-bank-kpis{grid-template-columns:repeat(2,1fr)}.kf-bank-kpis article:nth-child(2){border-right:0}.kf-bank-kpis article:nth-child(-n+2){border-bottom:1px solid var(--kf-line)}.kf-bank-signals>div{grid-template-columns:repeat(2,1fr)}.kf-bank-signals article:nth-child(2){border-right:0}.kf-bank-signals article:nth-child(-n+2){border-bottom:1px solid var(--kf-line)}.kf-bank-row>summary{grid-template-columns:minmax(210px,1.15fr) minmax(180px,1fr) 24px;grid-template-areas:'identity service open' 'legal custody .' 'settlement risk .'}}
 @media(max-width:767px){.kf-bank-page-head>.kf-container{grid-template-columns:1fr;gap:14px;padding:24px 0 20px}.kf-bank-page-head h1{font-size:44px}.kf-bank-page-head>.kf-container>p{font-size:13px}.kf-bank-data-section{padding:20px 0 52px}.kf-bank-intelligence>header{display:block}.kf-bank-intelligence>header h2{font-size:27px}.kf-bank-intelligence>header>a{display:inline-block;margin-top:15px}.kf-bank-kpis{grid-template-columns:1fr 1fr}.kf-bank-kpis article{min-height:128px;padding:16px 13px}.kf-bank-kpis article:nth-child(odd){padding-left:0}.kf-bank-kpis strong{font-size:26px}.kf-bank-analysis{grid-template-columns:1fr}.kf-bank-analysis>section{padding:20px 0}.kf-bank-analysis>section+section{padding-left:0;border-top:1px solid var(--kf-line);border-left:0}.kf-bank-analysis header,.kf-bank-signals>header{display:grid;gap:5px}.kf-bank-analysis ul{grid-template-columns:1fr}.kf-bank-analysis li{grid-template-columns:1fr auto;align-items:baseline}.kf-bank-analysis li small{grid-column:1/3}.kf-bank-analysis dl>div{grid-template-columns:1fr;gap:5px}.kf-bank-signals>div{grid-template-columns:1fr}.kf-bank-signals article{min-height:0;padding:16px 0;border-right:0}.kf-bank-signals article:nth-child(-n+3){border-bottom:1px solid var(--kf-line)}.kf-bank-tools{grid-template-columns:1fr;padding:24px 0 18px}.kf-bank-count{padding:0}.kf-bank-columns{display:none}.kf-bank-row>summary{grid-template-columns:1fr auto;gap:10px;min-height:0;padding:18px 0}.kf-bank-identity{grid-column:1}.kf-bank-service{grid-column:1;grid-row:2;margin-left:44px;margin-top:7px}.kf-bank-legal,.kf-bank-custody,.kf-bank-settlement,.kf-bank-risk{display:none}.kf-bank-open{grid-column:2;grid-row:1/3}.kf-bank-detail{grid-template-columns:1fr;gap:25px;padding:4px 0 28px}.kf-bank-detail dl{grid-template-columns:1fr}.kf-bank-detail dl>div:nth-child(n){padding:14px 0;border-right:0}.kf-bank-caveat{font-size:11px}}
+
+/* Mining v2 final cascade: the decision workbench owns the hero scale. */
+.kf-mining-page .kf-mining-hero-copy h1{font-size:clamp(60px,6vw,90px);line-height:.88}
+@media(max-width:600px){.kf-mining-page .kf-mining-hero-copy h1{font-size:55px;line-height:.91}}

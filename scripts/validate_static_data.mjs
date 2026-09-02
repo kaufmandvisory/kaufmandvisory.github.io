@@ -103,12 +103,15 @@ assert.ok(Number.isFinite(mining.hashprice_usd_ph_day) && mining.hashprice_usd_p
 assert.ok(Number.isFinite(mining.next_difficulty_change_pct), 'estimación de dificultad ausente');
 assert.ok(Number.isFinite(mining.fee_share_pct) && mining.fee_share_pct >= 0, 'cuota de comisiones ausente');
 assert.ok(Array.isArray(mining.hashrate_history) && mining.hashrate_history.length >= 60, 'serie minera inferior a 60 observaciones');
-assert.equal(mining.hardware_comparison?.length, 3, 'comparativa ASIC incompleta');
-assert.ok(mining.hardware_comparison.every((row) => row.source_url?.startsWith('https://support.bitmain.com/')), 'hardware sin fuente oficial');
+assert.ok(mining.hardware_comparison?.length >= 6, 'comparativa ASIC inferior a seis modelos');
+assert.ok(new Set(mining.hardware_comparison.map((row) => row.manufacturer)).size >= 3, 'comparativa ASIC inferior a tres fabricantes');
+assert.ok(mining.hardware_comparison.every((row) => /^https:\/\//.test(row.source_url || '') && row.spec_basis), 'hardware sin fuente o base de especificación');
 assert.ok(mining.pools?.length >= 5 && mining.pool_blocks > 0, 'distribución de pools incompleta');
 assert.ok(Number.isFinite(mining.pool_top_2_share_pct) && Number.isFinite(mining.pool_hhi), 'concentración de pools ausente');
+assert.ok(mining.pool_terms?.length >= 3 && mining.pool_terms.every((row) => /^https:\/\//.test(row.source_url || '')), 'condiciones de pools sin fuente');
 assert.equal(mining.country_screen?.status, 'auto', 'comparación eléctrica internacional no disponible');
 assert.equal(mining.country_screen?.top_three?.length, 3, 'top 3 de coste eléctrico incompleto');
+assert.ok(mining.country_screen?.all_observations?.length >= 20, 'pantalla eléctrica internacional insuficiente');
 assert.ok(mining.country_screen.top_three.every((row) => Number.isFinite(row.electricity_eur_kwh) && Number.isFinite(row.modeled_net_usd_day)), 'escenario internacional incompleto');
 assert.match(mining.country_screen?.source_period || '', /^\d{4}-S[12]$/, 'periodo Eurostat inválido');
 for (const item of [...daily.home_regulation, ...daily.mining_news]) {

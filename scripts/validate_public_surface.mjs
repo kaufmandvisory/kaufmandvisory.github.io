@@ -2,12 +2,12 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const VERSION = 'kaufman-v53';
+const VERSION = 'kaufman-v55';
 const shells = [
   'index.html', 'mercados/index.html', 'regulacion/index.html', 'tokenizacion/index.html',
-  'herramientas/index.html', 'fiscal/index.html', 'empresas/index.html', 'bancos/index.html',
+  'fiscal/index.html', 'empresas/index.html', 'bancos/index.html',
   'exchanges/index.html', 'wallets/index.html', 'proyectos/index.html', 'mineria/index.html',
-  'hardware/index.html', 'rentabilidades/index.html',
+  'hardware/index.html',
   'fuentes/index.html', 'contacto/index.html', 'aviso-legal.html', 'privacidad.html',
   'politica-cookies.html', 'terminos.html', '404.html', 'checkout.html', 'intake.html'
 ];
@@ -43,6 +43,13 @@ for (const marker of ['kf-mining-hero-frame', 'data-mining-hero-observed', 'ASIC
 }
 const miningHero = await fs.stat(path.join(ROOT, 'assets/images/mining-operations-hero-v1.jpg')).catch(() => null);
 if (!miningHero || miningHero.size < 100_000) failures.push('mineria: imagen hero ausente o incompleta');
+for (const retiredPath of ['herramientas/index.html', 'rentabilidades/index.html']) {
+  const present = await fs.stat(path.join(ROOT, retiredPath)).then(() => true).catch(() => false);
+  if (present) failures.push(`${retiredPath}: la página retirada todavía existe`);
+}
+for (const retiredRoute of ['/herramientas/', '/rentabilidades/']) {
+  if (appScript.includes(retiredRoute)) failures.push(`aplicación: conserva enlace a ${retiredRoute}`);
+}
 
 const faviconIco = await fs.readFile(path.join(ROOT, 'favicon.ico'));
 const validIcoHeader = faviconIco.length > 22

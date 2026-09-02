@@ -2,13 +2,12 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const VERSION = 'kaufman-v53';
+const VERSION = 'kaufman-v55';
 const ROUTES = {
   home: ['Kaufman · Inteligencia blockchain', 'Mercado, regulación, tokenización, infraestructura y riesgo bajo una misma capa de evidencia pública.'],
   mercados: ['Mercados y capital tokenizado', 'RWA, redes, stablecoins, flujos institucionales, gas y precios de referencia calculados desde mercados públicos.'],
   regulacion: ['Regulación blockchain', 'Normas, consultas, licencias y textos oficiales organizados por jurisdicción y estado jurídico.'],
   tokenizacion: ['Tokenización', 'Productos, entidades, redes y capital onchain con metodología, límites y fuentes públicas.'],
-  herramientas: ['Herramientas', 'Cálculo minero, costes de red y cruces fiscales con datos conectados y supuestos visibles.'],
   fiscal: ['Fiscal', 'Comparador de hechos fiscales por jurisdicción con fuentes oficiales y resultados bloqueados cuando faltan datos.'],
   empresas: ['Empresas', 'Actividad corporativa, exposición blockchain e iniciativas comprobables.'],
   bancos: ['Bancos', 'Custodia, pagos, tokenización y servicios bancarios documentados.'],
@@ -17,7 +16,6 @@ const ROUTES = {
   proyectos: ['Proyectos e infraestructura Web3', 'Dependencias de cadena, contratos, oráculos, almacenamiento, indexación y gobierno.'],
   mineria: ['Minería de Bitcoin', 'Hashprice, hashrate, dificultad, comisiones, pools, ASIC, rentabilidad y coste eléctrico internacional con cálculos reproducibles.'],
   hardware: ['Hardware', 'Equipos de minería, potencia, eficiencia y requisitos operativos desde especificaciones oficiales.'],
-  rentabilidades: ['Rentabilidades', 'Retornos históricos observados y costes, sin convertirlos en predicciones.'],
   fuentes: ['Fuentes', 'Registro público de conectores, documentación, periodicidad y alcance de cada observación.'],
   contacto: ['Contacto', 'Consultas, correcciones de datos y solicitudes sobre privacidad: contact@kaufmanadvisory.io.'],
   aviso: ['Aviso legal', 'Kaufman Advisory Group LLC publica información general sobre blockchain. No ejecuta operaciones ni presta asesoramiento personalizado.'],
@@ -32,7 +30,7 @@ const NAV = [
   ['/mercados/', 'Mercados'],
   ['/regulacion/', 'Regulación'],
   ['/tokenizacion/', 'Tokenización'],
-  ['/herramientas/', 'Herramientas'],
+  ['/mineria/', 'Minería'],
   ['/fiscal/', 'Fiscal']
 ];
 

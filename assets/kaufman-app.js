@@ -5,7 +5,6 @@
     {key:'mercados',label:'Mercados',path:'/mercados/',code:'DATA',description:'Precios, variaciones, gas y métricas conectadas.',tone:'auto'},
     {key:'regulacion',label:'Regulación',path:'/regulacion/',code:'LAW',description:'Leyes, consultas y guías por estado jurídico.',tone:'verified'},
     {key:'tokenizacion',label:'Tokenización',path:'/tokenizacion/',code:'RWA',description:'Entidades, iniciativas, redes y madurez verificable.',tone:'auto'},
-    {key:'herramientas',label:'Herramientas',path:'/herramientas/',code:'TOOLS',description:'Cálculo minero, cruce fiscal y alertas de disponibilidad.',tone:'auto'},
     {key:'empresas',label:'Empresas',path:'/empresas/',code:'CORP',description:'Actividad, exposición y proyectos blockchain.',tone:'auto'},
     {key:'bancos',label:'Bancos',path:'/bancos/',code:'BANK',description:'Custodia, pagos, tokenización y acceso.',tone:'verified'},
     {key:'exchanges',label:'Exchanges',path:'/exchanges/',code:'CEX',description:'Jurisdicción, licencias, comisiones y custodia.',tone:'auto'},
@@ -13,7 +12,6 @@
     {key:'proyectos',label:'Proyectos',path:'/proyectos/',code:'BUILD',description:'Redes, protocolos, actividad y gobernanza.',tone:'auto'},
     {key:'mineria',label:'Minería',path:'/mineria/',code:'POW',description:'Red, dificultad, energía y economía minera.',tone:'auto'},
     {key:'hardware',label:'Hardware',path:'/hardware/',code:'ASIC',description:'Equipos, eficiencia, algoritmos y disponibilidad.',tone:'verified'},
-    {key:'rentabilidades',label:'Rentabilidades',path:'/rentabilidades/',code:'RETURN',description:'Rendimiento observado por periodo, sin predicciones.',tone:'auto'},
     {key:'fiscal',label:'Fiscal',path:'/fiscal/',code:'TAX',description:'Hechos fiscales blockchain comparados por jurisdicción, evento y nivel de certeza.',tone:'auto'}
   ];
 
@@ -125,10 +123,10 @@
   const HOME_DIRECTORY_KEYS = ['empresas','bancos','exchanges','wallets','proyectos','mineria','hardware'];
   const ECOSYSTEM_ORDER = ['mercado','regulacion','empresas','infraestructura','custodia'];
   const ECOSYSTEM_TERRITORIES = {
-    mercado:{index:'01',label:'Mercado',x:21,y:22,side:'left',headline:'Capital, precio y liquidez en contexto.',description:'Une el precio de referencia, la tokenización, los mercados centralizados y el efecto fiscal de cada operación.',decision:'Determina si el tamaño, la liquidez y el coste hacen viable la operación ahora.',action:'Cuantificar mercado y coste',href:'/mercados/',linkLabel:'Abrir inteligencia de mercado',sublayers:[['Precios','/mercados/'],['RWA','/tokenizacion/'],['Exchanges','/exchanges/'],['Rentabilidad','/rentabilidades/'],['Fiscalidad','/fiscal/']]},
+    mercado:{index:'01',label:'Mercado',x:21,y:22,side:'left',headline:'Capital, precio y liquidez en contexto.',description:'Une el precio de referencia, la tokenización, los mercados centralizados y el efecto fiscal de cada operación.',decision:'Determina si el tamaño, la liquidez y el coste hacen viable la operación ahora.',action:'Cuantificar mercado y coste',href:'/mercados/',linkLabel:'Abrir inteligencia de mercado',sublayers:[['Precios','/mercados/'],['RWA','/tokenizacion/'],['Exchanges','/exchanges/'],['Minería','/mineria/#economia-minera'],['Fiscalidad','/fiscal/']]},
     regulacion:{index:'02',label:'Regulación',x:10,y:63,side:'left',headline:'La norma situada en su territorio.',description:'Relaciona fuentes primarias, fechas efectivas, autoridades y efectos prácticos sin confundir acceso técnico con vigencia jurídica.',decision:'Aclara qué autorización, fecha y autoridad pueden impedir o condicionar la operación.',action:'Comprobar perímetro regulatorio',href:'/regulacion/',linkLabel:'Abrir regulación blockchain',sublayers:[['Marcos vigentes','/regulacion/'],['Fiscalidad','/fiscal/'],['Bancos','/bancos/']]},
     empresas:{index:'03',label:'Empresas',x:54,y:13,side:'top',headline:'Actividad real detrás del anuncio.',description:'Conecta compañías, bancos e iniciativas tokenizadas con la fuente que permite comprobar su estado y alcance.',decision:'Separa una iniciativa operativa de un anuncio y revela qué entidad asume la ejecución.',action:'Verificar entidad y actividad',href:'/empresas/',linkLabel:'Abrir inteligencia empresarial',sublayers:[['Empresas','/empresas/'],['Bancos','/bancos/'],['RWA','/tokenizacion/'],['Proyectos','/proyectos/']]},
-    infraestructura:{index:'04',label:'Infraestructura',x:86,y:35,side:'right',headline:'La capa que sostiene el sistema.',description:'Expone redes L2, proyectos, minería y hardware junto a sus dependencias, costes y señales operativas.',decision:'Hace visibles las dependencias técnicas que afectan continuidad, coste y capacidad de salida.',action:'Evaluar dependencias técnicas',href:'/mercados/',linkLabel:'Abrir inteligencia de infraestructura',sublayers:[['L2','/mercados/'],['Minería','/mineria/'],['Hardware','/hardware/'],['Proyectos','/proyectos/'],['Herramientas','/herramientas/']]},
+    infraestructura:{index:'04',label:'Infraestructura',x:86,y:35,side:'right',headline:'La capa que sostiene el sistema.',description:'Expone redes L2, proyectos, minería y hardware junto a sus dependencias, costes y señales operativas.',decision:'Hace visibles las dependencias técnicas que afectan continuidad, coste y capacidad de salida.',action:'Evaluar dependencias técnicas',href:'/mercados/',linkLabel:'Abrir inteligencia de infraestructura',sublayers:[['L2','/mercados/'],['Minería','/mineria/'],['Hardware','/hardware/'],['Proyectos','/proyectos/']]},
     custodia:{index:'05',label:'Custodia',x:70,y:82,side:'right',headline:'Quién controla, conserva y recupera.',description:'Cruza wallets, exchanges y bancos para separar control de claves, contraparte, autorización y superficie de recuperación.',decision:'Define quién controla las claves, cómo se recupera el acceso y qué contraparte queda expuesta.',action:'Elegir modelo de custodia',href:'/wallets/',linkLabel:'Abrir inteligencia de custodia',sublayers:[['Wallets','/wallets/'],['Exchanges','/exchanges/'],['Bancos','/bancos/']]}
   };
 
@@ -230,7 +228,6 @@
     ['La infraestructura financiera que ya se está moviendo onchain: deuda pública, fondos, crédito, materias primas, acciones y redes de liquidación. El precio cripto es contexto, no el producto.','Datos de deuda pública, fondos, crédito, materias primas, acciones y redes de liquidación onchain. Los precios cripto se muestran como contexto.'],
     ['Inteligencia de activos tokenizados','Datos de activos tokenizados'],
     ['Inteligencia fiscal comparada','Datos fiscales comparados'],
-    ['Laboratorio Kaufman','Herramientas de cálculo'],
     ['Selecciona un territorio para cambiar la ruta de comprobación.','Selecciona un área para consultar sus datos y fuentes.']
   ];
   function plainLanguage(html){return PLAIN_LANGUAGE_REPLACEMENTS.reduce((output,[before,after])=>output.replaceAll(before,after),html)}
@@ -267,7 +264,7 @@
   function findRoute(key){return ROUTES.find((route)=>route.key===key)}
 
   function headerMarkup(page){
-    const mainNav=[findRoute('mercados'),findRoute('regulacion'),findRoute('tokenizacion'),findRoute('herramientas'),findRoute('fiscal')];
+    const mainNav=[findRoute('mercados'),findRoute('regulacion'),findRoute('tokenizacion'),findRoute('mineria'),findRoute('fiscal')];
     return `
       <a class="kf-skip" href="#main-content">Saltar al contenido</a>
       <header class="kf-header">
@@ -309,7 +306,6 @@
       market:{question:'¿Qué señal cambia la lectura del capital hoy?',label:'Interrogar señales de mercado',href:'/mercados/#senales-de-mercado'},
       regulation:{question:'¿Qué norma, fecha o autoridad condiciona la operación?',label:'Abrir radar regulatorio',href:'/regulacion/'},
       tokenization:{question:'¿Qué producto, red y concentración sostienen el activo?',label:'Explorar capital tokenizado',href:'/tokenizacion/'},
-      tools:{question:'¿Qué resultado cambia al introducir tus costes reales?',label:'Abrir herramientas operativas',href:'/herramientas/#rentabilidad-minera'},
       fiscal:{question:'¿Cuándo nace el hecho imponible y qué dato falta?',label:'Calcular un escenario',href:'/fiscal/'},
       directory:{question:'¿Qué entidad o infraestructura necesitas comprobar?',label:'Consultar datos y fuentes',href:'#directorio'}
     };
@@ -426,12 +422,12 @@
   }
 
   function decisionCloseMarkup(page){
+    if(page==='mineria')return '<section class="kf-decision-close kf-mining-decision-close" aria-labelledby="decision-close-title"><div class="kf-container"><div><p class="kf-kicker">Análisis de instalación minera</p><h2 id="decision-close-title">Lleva el escenario a una decisión de inversión.</h2><p>Kaufman contrasta flota, contrato eléctrico, emplazamiento, pool, CAPEX y sensibilidad antes de aceptar una cifra como viable.</p></div><ol><li><span>01</span>ASIC, unidades y potencia</li><li><span>02</span>PPA, PUE y costes completos</li><li><span>03</span>Escenario base y estrés</li></ol><div class="kf-decision-close-action"><strong>Entrega minera definida</strong><span>Modelo económico, fuentes, supuestos, umbrales y datos que todavía debe confirmar el operador.</span><a class="kf-button primary" href="/contacto/?asunto=analisis-mineria&origen=mineria">Solicitar análisis de instalación →</a></div></div></section>';
     const context={
       home:['De la evidencia a una decisión concreta.','Describe la operación. Kaufman devuelve alcance, controles prioritarios, fuentes y preguntas que aún necesitan confirmación.'],
       mercados:['Antes de mover capital, delimita la operación.','Conecta estructura de mercado, vehículo tokenizado, liquidez, costes y jurisdicción en una sola lectura.'],
       regulacion:['La norma importa cuando se aplica a una operación.','Sitúa actividad, territorio, proveedor y fecha para construir el perímetro que debe comprobarse.'],
       tokenizacion:['Una emisión necesita más que una red.','Ordena activo, vehículo, jurisdicción, infraestructura, custodia y riesgos antes de elegir arquitectura.'],
-      herramientas:['Convierte el cálculo en una condición de decisión.','Kaufman documenta entradas, fuentes, sensibilidad del resultado y datos que siguen pendientes.'],
       fiscal:['Lleva el escenario al siguiente nivel de comprobación.','Transforma el cálculo en una lista de hechos, fuentes, supuestos y puntos para revisión profesional.']
     }[page]||['Convierte esta ficha en una decisión comprobable.','Incluye la entidad, el territorio y el objetivo; Kaufman conecta las evidencias relevantes y señala los huecos.'];
     return `<section class="kf-decision-close" aria-labelledby="decision-close-title"><div class="kf-container"><div><p class="kf-kicker">Kaufman Decision Brief</p><h2 id="decision-close-title">${context[0]}</h2><p>${context[1]}</p></div><ol><li><span>01</span>Operación y jurisdicción</li><li><span>02</span>Mercado, coste e infraestructura</li><li><span>03</span>Regulación, custodia y riesgo</li></ol><div class="kf-decision-close-action"><strong>Entrega definida antes de empezar</strong><span>Alcance, formato, plazo y presupuesto se confirman por escrito.</span><a class="kf-button primary" href="/contacto/?asunto=decision-brief&origen=${encodeURIComponent(page)}">Solicitar Decision Brief →</a></div></div></section>`;
@@ -674,6 +670,83 @@
     return `<div class="kf-mining-calculator-grid"><form class="kf-calculator-controls kf-mining-controls" data-mining-calculator><div class="kf-field"><label for="mining-hardware">Equipo</label><select class="kf-select" id="mining-hardware" data-calc-hardware><option value="s21-xp">Antminer S21 XP · aire</option><option value="s21-xp-hyd">Antminer S21 XP Hyd · hidráulica</option><option value="s21">Antminer S21 · aire</option></select></div><input type="hidden" value="manual" data-calc-country><div class="kf-field"><label for="mining-electricity">Electricidad · USD/kWh</label><input id="mining-electricity" data-calc-electricity inputmode="decimal" type="number" min="0" step="0.001" value="0.08"><small>Introduce la tarifa total de tu contrato.</small></div><div class="kf-field"><label for="mining-uptime">Disponibilidad · %</label><input id="mining-uptime" data-calc-uptime inputmode="decimal" type="number" min="0" max="100" step="0.1" value="97"></div><div class="kf-field"><label for="mining-pool">Comisión de pool · %</label><input id="mining-pool" data-calc-pool inputmode="decimal" type="number" min="0" max="100" step="0.1" value="2"></div><div class="kf-field"><label for="mining-cooling">Refrigeración adicional · %</label><input id="mining-cooling" data-calc-cooling inputmode="decimal" type="number" min="0" step="0.1" value="8"></div><div class="kf-field"><label for="mining-hardware-cost">Coste del equipo · USD</label><input id="mining-hardware-cost" data-calc-hardware-cost inputmode="decimal" type="number" min="0" step="1" placeholder="Opcional"></div><div class="kf-calc-source" data-calc-status>Cargando red, precio y recompensa…</div></form><section class="kf-calculator-output"><div class="kf-calc-kpi"><span>Ingreso bruto / día</span><strong data-calc-gross>—</strong></div><div class="kf-calc-kpi"><span>Consumo / día</span><strong data-calc-energy>—</strong></div><div class="kf-calc-kpi"><span>Electricidad / día</span><strong data-calc-power-cost>—</strong></div><div class="kf-calc-kpi primary"><span>Resultado / día</span><strong data-calc-profit>—</strong></div><div class="kf-calc-kpi"><span>Resultado / 30 días</span><strong data-calc-profit-month>—</strong></div><div class="kf-calc-kpi"><span>Recuperación del equipo</span><strong data-calc-payback>Introduce coste</strong></div><p>Antes de impuestos, financiación, averías, reparaciones, aranceles y cambios futuros de precio, dificultad o comisiones.</p></section></div><div class="kf-mining-sensitivity"><header><div><span>Sensibilidad al precio eléctrico</span><strong data-mining-sensitivity-title>Resultado diario</strong></div><small>USD/día · resto de variables sin cambios</small></header><div data-mining-sensitivity-chart><div class="kf-live-empty">Esperando cálculo…</div></div></div>`;
   }
 
+  function miningWorkbenchMarkup(){
+    return '<div class="kf-mining-workbench">'
+      +'<form class="kf-mining-allin-controls" data-mining-calculator>'
+        +'<div class="kf-mining-control-group"><header><span>01</span><strong>Flota</strong></header>'
+          +'<div class="kf-field wide"><label for="mining-hardware-v2">Equipo</label><select class="kf-select" id="mining-hardware-v2" data-calc-hardware><option value="">Cargando catálogo…</option></select></div>'
+          +'<div class="kf-field"><label for="mining-units">Unidades</label><input id="mining-units" data-calc-units inputmode="numeric" type="number" min="1" step="1" value="100"></div>'
+          +'<div class="kf-field"><label for="mining-hardware-cost-v2">ASIC / unidad · US$</label><input id="mining-hardware-cost-v2" data-calc-hardware-cost inputmode="decimal" type="number" min="0" step="1" value="3500"></div>'
+          +'<div class="kf-field"><label for="mining-logistics">Logística / unidad · US$</label><input id="mining-logistics" data-calc-logistics inputmode="decimal" type="number" min="0" step="1" value="200"></div>'
+        +'</div>'
+        +'<div class="kf-mining-control-group"><header><span>02</span><strong>Energía y operación</strong></header>'
+          +'<div class="kf-field"><label for="mining-electricity-v2">Energía directa · US$/kWh</label><input id="mining-electricity-v2" data-calc-electricity inputmode="decimal" type="number" min="0" step="0.001" value="0.055"></div>'
+          +'<div class="kf-field"><label for="mining-demand">Hosting y demanda · US$/kWh</label><input id="mining-demand" data-calc-demand inputmode="decimal" type="number" min="0" step="0.001" value="0.008"></div>'
+          +'<div class="kf-field"><label for="mining-pue">PUE de instalación</label><input id="mining-pue" data-calc-pue inputmode="decimal" type="number" min="1" step="0.01" value="1.08"><small>Potencia total ÷ potencia de los ASIC.</small></div>'
+          +'<div class="kf-field"><label for="mining-uptime-v2">Disponibilidad · %</label><input id="mining-uptime-v2" data-calc-uptime inputmode="decimal" type="number" min="0" max="100" step="0.1" value="97"></div>'
+          +'<div class="kf-field"><label for="mining-curtailment">Curtailment · h/mes</label><input id="mining-curtailment" data-calc-curtailment inputmode="decimal" type="number" min="0" max="720" step="1" value="0"></div>'
+          +'<div class="kf-field"><label for="mining-pool-v2">Comisión de pool · %</label><input id="mining-pool-v2" data-calc-pool inputmode="decimal" type="number" min="0" max="100" step="0.1" value="2.5"></div>'
+        +'</div>'
+        +'<div class="kf-mining-control-group"><header><span>03</span><strong>Costes no eléctricos</strong></header>'
+          +'<div class="kf-field"><label for="mining-maintenance">Mantenimiento · US$/ASIC/mes</label><input id="mining-maintenance" data-calc-maintenance inputmode="decimal" type="number" min="0" step="1" value="5"></div>'
+          +'<div class="kf-field"><label for="mining-finance">Financiación · US$/mes</label><input id="mining-finance" data-calc-finance inputmode="decimal" type="number" min="0" step="1" value="0"></div>'
+          +'<div class="kf-field"><label for="mining-other">Otros costes · US$/mes</label><input id="mining-other" data-calc-other inputmode="decimal" type="number" min="0" step="1" value="0"></div>'
+          +'<div class="kf-calc-source wide" data-calc-status>Cargando red, precio y especificaciones…</div>'
+        +'</div>'
+      +'</form>'
+      +'<section class="kf-mining-allin-output" aria-live="polite">'
+        +'<header><span>Resultado modelado</span><strong data-calc-model-name>—</strong></header>'
+        +'<div class="kf-mining-output-grid">'
+          +'<div><span>Hashrate de flota</span><strong data-calc-fleet-hashrate>—</strong></div>'
+          +'<div><span>Carga total</span><strong data-calc-fleet-load>—</strong></div>'
+          +'<div><span>Producción / mes</span><strong data-calc-btc-month>—</strong></div>'
+          +'<div><span>Ingreso bruto / día</span><strong data-calc-gross>—</strong></div>'
+          +'<div><span>Coste total / día</span><strong data-calc-allin-cost>—</strong></div>'
+          +'<div class="primary"><span>Resultado / día</span><strong data-calc-profit>—</strong></div>'
+          +'<div><span>Resultado / 30 días</span><strong data-calc-profit-month>—</strong></div>'
+          +'<div><span>Coste operativo / BTC</span><strong data-calc-cost-btc>—</strong></div>'
+          +'<div><span>Energía directa de equilibrio</span><strong data-calc-btc-breakeven>—</strong></div>'
+          +'<div><span>Dificultad tolerable</span><strong data-calc-difficulty-headroom>—</strong></div>'
+          +'<div><span>CAPEX declarado</span><strong data-calc-capex>—</strong></div>'
+          +'<div><span>Recuperación de CAPEX</span><strong data-calc-payback>—</strong></div>'
+        +'</div>'
+        +'<p>Modelo antes de impuestos sobre beneficios y sin atribuir valor residual. Todos los costes introducidos permanecen en este navegador.</p>'
+      +'</section>'
+    +'</div>'
+    +'<section class="kf-mining-scenario-panel">'
+      +'<header><div><span>Matriz de estrés</span><strong>Precio BTC × dificultad de red</strong></div><small>Resultado mensual de la flota · resto de entradas constante</small></header>'
+      +'<div class="kf-mining-scenario-matrix" data-mining-scenario-matrix><div class="kf-live-empty">Esperando cálculo…</div></div>'
+    +'</section>'
+    +'<section class="kf-mining-sensitivity"><header><div><span>Sensibilidad eléctrica all-in</span><strong data-mining-sensitivity-title>Resultado diario</strong></div><small>Incluye PUE, hosting, mantenimiento y costes mensuales declarados</small></header><div data-mining-sensitivity-chart><div class="kf-live-empty">Esperando cálculo…</div></div></section>'
+    +'<section class="kf-mining-actions">'
+      +'<div><span>Escenario</span><strong>Guarda, comparte o exporta estas entradas.</strong></div>'
+      +'<nav><button type="button" data-mining-save>Guardar en este navegador</button><button type="button" data-mining-share>Copiar enlace</button><button type="button" data-mining-export>Exportar CSV</button></nav>'
+      +'<small data-mining-action-status aria-live="polite">No se envían datos a Kaufman.</small>'
+    +'</section>'
+    +'<section class="kf-mining-alerts">'
+      +'<header><div><span>Umbrales locales</span><strong>Controla cuándo cambia la decisión.</strong></div><small>Se evalúan al abrir la página; no envían correo ni funcionan con el navegador cerrado.</small></header>'
+      +'<div class="kf-mining-alert-controls"><label>Hashprice mínimo · US$/PH/día<input data-alert-hashprice-min type="number" min="0" step="1" value="35"></label><label>Coste eléctrico máximo · US$/kWh<input data-alert-electricity-max type="number" min="0" step="0.001" value="0.08"></label><label>Margen mensual mínimo · US$<input data-alert-margin-min type="number" step="100" value="0"></label><button type="button" data-mining-alert-save>Guardar umbrales</button></div>'
+      +'<div class="kf-mining-alert-results" data-mining-alert-results><span>Esperando cálculo…</span></div>'
+    +'</section>';
+  }
+
+  function renderMiningV2(){
+    const heroImage=assetUrl('/assets/images/mining-operations-hero-v1.jpg');
+    return '<main class="kf-main kf-mining-page" id="main-content">'
+      +'<header class="kf-mining-hero"><div class="kf-container"><div class="kf-breadcrumbs"><a href="/">Inicio</a><span>/</span><span>Minería de Bitcoin</span></div><div class="kf-mining-hero-frame"><div class="kf-mining-hero-copy"><div class="kf-mining-hero-topline"><p class="kf-kicker">Bitcoin · SHA-256</p><span class="kf-mining-live"><i aria-hidden="true"></i><span data-mining-hero-cadence>Precio 5 min · red 30 min</span></span></div><h1>Minería de Bitcoin</h1><p class="kf-mining-hero-deck">Red, flota y coste total para saber qué variable convierte una instalación en margen o pérdida.</p><dl class="kf-mining-hero-scope"><div><dt>Red</dt><dd data-mining-hero-observed>Sincronizando snapshot…</dd></div><div><dt>Electricidad</dt><dd data-mining-hero-electricity>Esperando último periodo oficial…</dd></div></dl><nav aria-label="Contenido de minería"><a href="#red-minera">Red</a><a href="#economia-minera">Modelo económico</a><a href="#equipos-mineros">ASIC</a><a href="#pools-mineros">Pools</a><a href="#paises-mineros">Electricidad</a></nav></div><figure><div class="kf-mining-hero-media"><img src="'+heroImage+'" width="1672" height="941" alt="Instalación profesional con filas de equipos ASIC para minería de Bitcoin" fetchpriority="high"><span>ASIC · SHA-256</span></div><figcaption><strong>Infraestructura de cómputo</strong><span>Imagen ilustrativa · potencia, refrigeración y disponibilidad</span></figcaption></figure></div></div></header>'
+      +'<section class="kf-section kf-mining-network" id="red-minera" data-mining-dashboard><div class="kf-container"><div class="kf-mining-section-head"><div><p class="kf-kicker">Bitcoin · economía de red</p><h2>Ingreso por hash y presión competitiva.</h2></div><p data-mining-observed>Conectando snapshot minero…</p></div>'
+        +'<div class="kf-mining-freshness" aria-label="Frescura de las fuentes"><div><span>Precio BTC</span><strong data-mining-freshness="price">Conectando…</strong></div><div><span>Red y dificultad</span><strong data-mining-freshness="network">Conectando…</strong></div><div><span>Pools</span><strong data-mining-freshness="pools">Conectando…</strong></div><div><span>Electricidad</span><strong data-mining-freshness="countries">Conectando…</strong></div></div>'
+        +'<div class="kf-mining-kpis-main"><article><span>Hashprice</span><strong data-mining-kpi="hashprice">—</strong><small>US$ por PH/s y día</small></article><article><span>Hashrate de red</span><strong data-mining-kpi="hashrate">—</strong><small data-mining-kpi-note="hashrate">Promedio observado</small></article><article><span>Próximo ajuste</span><strong data-mining-kpi="difficulty">—</strong><small data-mining-kpi-note="difficulty">Estimación de dificultad</small></article><article><span>Comisiones / recompensa</span><strong data-mining-kpi="fee-share">—</strong><small>Últimos 144 bloques</small></article><article><span>Intervalo de bloque</span><strong data-mining-kpi="block-time">—</strong><small>Promedio observado</small></article><article><span>Techo eléctrico teórico</span><strong data-mining-kpi="break-even">—</strong><small>S21 XP · sin otros costes</small></article></div>'
+        +'<div class="kf-mining-network-grid"><section class="kf-mining-chart-panel"><header><div><span>Hashrate medio diario</span><strong data-mining-chart-summary>—</strong></div><div class="kf-range-switch" role="group" aria-label="Periodo del gráfico de hashrate"><button type="button" data-mining-range="7" aria-pressed="false">7 días</button><button type="button" data-mining-range="30" aria-pressed="true">30 días</button><button type="button" data-mining-range="90" aria-pressed="false">90 días</button></div></header><div class="kf-mining-chart" data-mining-hashrate-chart><div class="kf-live-empty">Esperando serie de red…</div></div><footer><span>EH/s · media diaria</span><a href="https://mempool.space/docs/api/rest" target="_blank" rel="noopener noreferrer">Fuente: mempool.space ↗</a></footer></section><aside class="kf-mining-decisions" data-mining-decisions><div class="kf-live-empty">Calculando señales…</div></aside></div>'
+      +'</div></section>'
+      +'<section class="kf-section kf-mining-economics" id="economia-minera"><div class="kf-container"><div class="kf-mining-section-head"><div><p class="kf-kicker">Flota y coste total</p><h2>Modela la operación completa.</h2></div><p>Separa energía directa, hosting, PUE, disponibilidad, curtailment, pool, mantenimiento, financiación y CAPEX. El resultado es un escenario, no una promesa.</p></div>'+miningWorkbenchMarkup()+'</div></section>'
+      +'<section class="kf-section kf-mining-equipment" id="equipos-mineros"><div class="kf-container"><div class="kf-mining-section-head"><div><p class="kf-kicker">Hardware SHA-256 · tres fabricantes</p><h2>Compara la frontera técnica.</h2></div><p>Valores nominales de fabricante y economía recalculada con el mismo snapshot. Tolerancias, temperatura, tensión y lote pueden cambiar el resultado real.</p></div><div class="kf-table-scroll"><table class="kf-mining-table kf-mining-hardware-table"><thead><tr><th>Fabricante / equipo</th><th>Refrigeración</th><th class="number">Hashrate</th><th class="number">Potencia</th><th class="number">Eficiencia</th><th>Condiciones</th><th class="number">Ingreso / día</th><th class="number">Equilibrio</th><th>Fuente</th></tr></thead><tbody data-mining-hardware-table><tr><td colspan="9">Cargando equipos y economía…</td></tr></tbody></table></div><p class="kf-mining-table-note">La comparación utiliza exclusivamente la economía de Bitcoin. No mezcla BCH, BSV ni rentabilidades de otros algoritmos.</p></div></section>'
+      +'<section class="kf-section kf-mining-pools-section" id="pools-mineros"><div class="kf-container"><div class="kf-mining-section-head"><div><p class="kf-kicker">Bloques observados y condiciones de pago</p><h2>Cuota no equivale a rendimiento neto.</h2></div><p>La distribución muestra bloques atribuidos durante siete días. La tabla económica separa método de recompensa, comisión, mínimo y frecuencia cuando existe una fuente pública.</p></div><div class="kf-mining-pool-layout"><section data-mining-pool-chart><div class="kf-live-empty">Cargando distribución…</div></section><section class="kf-mining-pool-table" data-mining-pool-table><div class="kf-live-empty">Cargando condiciones…</div></section></div></div></section>'
+      +'<section class="kf-section kf-mining-countries" id="paises-mineros"><div class="kf-container"><div class="kf-mining-section-head"><div><p class="kf-kicker">Pantalla de coste eléctrico oficial</p><h2>Compara la tarifa; después valida el emplazamiento.</h2></div><p>Es un benchmark semestral no doméstico de Eurostat, no un ranking mundial de países mineros ni una oferta de hosting o PPA.</p></div><div class="kf-mining-country-context" data-mining-country-context><span>Conectando Eurostat y BCE…</span></div><div class="kf-mining-country-tools"><label>Buscar país<input type="search" data-mining-country-search placeholder="Ej. Finlandia"></label><label>Resultado del S21 XP<select data-mining-country-profit><option value="all">Todos</option><option value="positive">Solo margen positivo</option><option value="negative">Solo margen negativo</option></select></label><span data-mining-country-count>—</span></div><div class="kf-table-scroll"><table class="kf-mining-country-table"><thead><tr><th>País</th><th>Periodo</th><th class="number">EUR/kWh</th><th class="number">US$/kWh</th><th class="number">S21 XP / día</th><th>Comprobación pendiente</th></tr></thead><tbody data-mining-countries><tr><td colspan="6">Esperando comparación internacional…</td></tr></tbody></table></div><div class="kf-mining-country-caveat"><strong>No decide una localización</strong><span>Antes de contratar deben comprobarse PPA o tarifa de hosting, MW disponibles, firmeza y curtailment, conexión, permisos, fiscalidad, importación, clima, telecomunicaciones y contraparte.</span></div></div></section>'
+      +'<section class="kf-section kf-mining-method-section"><div class="kf-container"><details class="kf-mining-method-full"><summary>Metodología, frecuencia y límites</summary><div><p><strong>Precio:</strong> Kaufman Reference Price, objetivo 5 minutos. Recalcula ingresos cuando recibe una referencia BTC/USD más reciente.</p><p><strong>Red y pools:</strong> mempool.space, objetivo 30 minutos mediante una automatización independiente. Recompensa media de 144 bloques y pools de 7 días.</p><p><strong>Hardware:</strong> especificaciones primarias de BITMAIN, MicroBT y Canaan. Los valores son nominales; prevalece la ficha del lote comprado.</p><p><strong>Electricidad:</strong> Eurostat nrg_pc_205, banda no doméstica de 500–1.999 MWh/año con impuestos y gravámenes; conversión BCE. La fuente es semestral aunque se compruebe automáticamente.</p></div></details></div></section>'
+    +'</main>';
+  }
+
   function renderMining(){
     const heroImage=assetUrl('/assets/images/mining-operations-hero-v1.jpg');
     return `<main class="kf-main kf-mining-page" id="main-content"><header class="kf-mining-hero"><div class="kf-container"><div class="kf-breadcrumbs"><a href="/">Inicio</a><span>/</span><span>Minería</span></div><div class="kf-mining-hero-frame"><div class="kf-mining-hero-copy"><div class="kf-mining-hero-topline"><p class="kf-kicker">Bitcoin · operación minera</p><span class="kf-mining-live"><i aria-hidden="true"></i>Datos conectados</span></div><h1>Minería</h1><p class="kf-mining-hero-deck">Lo que la red paga, lo que el equipo consume y el coste eléctrico que separa margen de pérdida.</p><dl class="kf-mining-hero-scope"><div><dt>Estado de red</dt><dd data-mining-hero-observed>Sincronizando snapshot…</dd></div><div><dt>Cobertura</dt><dd>Red · rentabilidad · ASIC · pools · países</dd></div></dl><nav aria-label="Contenido de minería"><a href="#red-minera">Red</a><a href="#economia-minera">Rentabilidad</a><a href="#equipos-mineros">Equipos</a><a href="#pools-mineros">Pools</a><a href="#paises-mineros">Países</a></nav></div><figure><div class="kf-mining-hero-media"><img src="${heroImage}" width="1672" height="941" alt="Técnico inspeccionando filas de equipos ASIC en una instalación profesional de minería de criptoactivos" fetchpriority="high"><span>ASIC · SHA-256</span></div><figcaption><strong>Infraestructura de cómputo</strong><span>Potencia · refrigeración · disponibilidad</span></figcaption></figure></div></div></header>
@@ -688,7 +761,7 @@
   function renderDirectory(type){
     const catalog=CATALOGS[type];
     if(!catalog)return renderNotFound();
-    if(type==='mineria')return renderMining();
+    if(type==='mineria')return renderMiningV2();
     const hasVerified=catalog.items.some((item)=>item.status==='verified');
     if(type==='bancos')return `<main class="kf-main" id="main-content"><header class="kf-bank-page-head"><div class="kf-container"><div><p class="kf-kicker">Banca global · tokenización</p><h1>Bancos</h1></div><p>Top 25 mundial por activos y productos blockchain contrastados: dinero programable, valores tokenizados, custodia e infraestructura de liquidación.</p></div></header><section class="kf-section kf-bank-data-section"><div class="kf-container">${bankRegistryMarkup()}</div></section></main>`;
     const connected=type==='exchanges'?exchangeFeesMarkup():type==='regulacion'?regulationRadarMarkup():'';
@@ -766,17 +839,6 @@
 
         <div class="kf-rwa-method kf-fiscal-method"><div><span>GRANO</span><strong>Jurisdicción × evento fiscal × perfil</strong></div><div><span>CADENCIA</span><strong>Fuentes comprobadas cada 24 h · revisión jurídica al cambio</strong></div><div><span>SALIDA PROHIBIDA</span><strong>Cuota final, residencia recomendada o exención garantizada</strong></div><p data-fiscal-methodology>Fiscalidad informativa. Si faltan residencia, actividad o calificación del activo, Kaufman bloquea la conclusión.</p></div>
       </div></section></main>`;
-  }
-
-  function renderTools(){
-    return `<main class="kf-main" id="main-content">${pageHero('Herramientas','Cálculo y cruce de datos para entender minería y fiscalidad sin completar huecos con supuestos ocultos.','Laboratorio Kaufman','auto')}<section class="kf-section"><div class="kf-container"><div class="kf-tool-index"><a href="#rentabilidad-minera"><span>01</span><strong>Rentabilidad minera</strong><small>Precio, red, energía y hardware</small></a><a href="#cruce-fiscal"><span>02</span><strong>Cruce fiscal</strong><small>Hechos entre jurisdicciones</small></a></div>
-      <article class="kf-tool-workbench" id="rentabilidad-minera"><div class="kf-tool-heading"><div><p class="kf-kicker">Herramienta conectada</p><h2>Rentabilidad minera de hoy</h2><p>El motor usa la referencia diaria de red Bitcoin, precio BTC y especificación oficial del equipo. Introduce tus costes para obtener un resultado propio.</p></div>${statusBadge('auto')}</div><div class="kf-tool-grid"><form class="kf-calculator-controls" data-mining-calculator><div class="kf-field"><label for="tool-hardware">Hardware</label><select class="kf-select" id="tool-hardware" data-calc-hardware><option value="s21-xp">Antminer S21 XP · BITMAIN</option></select></div><input type="hidden" value="manual" data-calc-country><div class="kf-field"><label for="tool-electricity">Electricidad · USD/kWh</label><input id="tool-electricity" data-calc-electricity inputmode="decimal" type="number" min="0" step="0.001" placeholder="Ej. 0,08"><small>Tu contrato local; Kaufman no inventa una tarifa nacional.</small></div><div class="kf-field"><label for="tool-uptime">Uptime · %</label><input id="tool-uptime" data-calc-uptime inputmode="decimal" type="number" min="0" max="100" step="0.1" value="100"></div><div class="kf-field"><label for="tool-pool">Comisión de pool · %</label><input id="tool-pool" data-calc-pool inputmode="decimal" type="number" min="0" max="100" step="0.1" value="0"></div><div class="kf-field"><label for="tool-cooling">Refrigeración extra · %</label><input id="tool-cooling" data-calc-cooling inputmode="decimal" type="number" min="0" step="0.1" value="0"></div><div class="kf-field"><label for="tool-hardware-cost">Coste de hardware · USD</label><input id="tool-hardware-cost" data-calc-hardware-cost inputmode="decimal" type="number" min="0" step="1" placeholder="Opcional"></div><div class="kf-calc-source" data-calc-status>Cargando datos de red…</div></form><div class="kf-calculator-output"><div class="kf-calc-kpi"><span>Ingreso bruto / día</span><strong data-calc-gross>—</strong></div><div class="kf-calc-kpi"><span>Consumo / día</span><strong data-calc-energy>—</strong></div><div class="kf-calc-kpi"><span>Electricidad / día</span><strong data-calc-power-cost>Introduce tu tarifa</strong></div><div class="kf-calc-kpi primary"><span>Resultado / día</span><strong data-calc-profit>—</strong></div><div class="kf-calc-kpi"><span>Recuperación del hardware</span><strong data-calc-payback>Introduce coste</strong></div><p>Resultado antes de impuestos, averías, reparaciones, financiación, aranceles y variaciones de dificultad. No es una promesa de rentabilidad.</p></div></div></article>
-      <article class="kf-tool-workbench" id="cruce-fiscal" data-fiscal-dashboard><div class="kf-tool-heading"><div><p class="kf-kicker">Herramienta conectada</p><h2>Cruce fiscal por hecho económico</h2><p>La matriz pública compara venta, permuta, staking, minería y tenencia con fuente, nivel de certeza y límites por jurisdicción.</p></div>${statusBadge('auto')}</div><div class="kf-fiscal-kpis"><article><span>Jurisdicciones</span><strong data-fiscal-kpi="jurisdiction_count">—</strong><small>Mismo contrato comparativo</small></article><article><span>Hechos fiscales</span><strong data-fiscal-kpi="fact_count">—</strong><small>Cinco eventos por jurisdicción</small></article><article><span>Hechos resueltos</span><strong data-fiscal-kpi="resolved_fact_pct">—</strong><small>El resto se bloquea</small></article><article><span>Última revisión</span><strong data-fiscal-reviewed>—</strong><small>Fuentes primarias</small></article></div><div class="kf-section-action"><span data-fiscal-status>Cargando registro fiscal…</span><a class="kf-button primary" href="/fiscal/">Abrir comparador fiscal →</a></div></article>
-    </div></section></main>`;
-  }
-
-  function renderReturns(){
-    return `<main class="kf-main" id="main-content">${pageHero('Rentabilidades','Rendimientos observados en mercados públicos para 7, 30 y 365 días. Son contexto histórico, no predicciones.','Datos históricos','auto')}${marketBandMarkup()}<section class="kf-section"><div class="kf-container"><div class="kf-section-head"><div><p class="kf-kicker">Horizontes conectados</p><h2 class="kf-title small">El periodo cambia la lectura.</h2></div><p class="kf-intro">Los cierres diarios proceden de Kraken OHLC. La referencia actual conserva la mediana de mercados elegibles y se identifica por separado.</p></div><div class="kf-data-table-wrap"><table class="kf-data-table"><thead><tr><th>Activo</th><th class="number">7 días</th><th class="number">30 días</th><th class="number">1 año</th><th>Observación</th></tr></thead><tbody>${[['bitcoin','BTC'],['ethereum','ETH']].map(([id,symbol])=>`<tr data-return-asset="${id}"><td><strong>${symbol}</strong></td><td class="number" data-return-period="7d">—</td><td class="number" data-return-period="30d">—</td><td class="number" data-return-period="365d">—</td><td data-return-status>Cargando histórico…</td></tr>`).join('')}</tbody></table></div><div class="kf-data-note"><span>${statusBadge('auto')}</span><div><strong>Serie diaria auditable</strong><p>Cambio porcentual entre cierres diarios. No incluye comisiones, impuestos, slippage ni rendimiento de staking.</p></div><a href="https://docs.kraken.com/api/docs/rest-api/get-ohlc-data" target="_blank" rel="noopener noreferrer">Kraken OHLC ↗</a></div></div></section></main>`;
   }
 
   function compareFields(type){
@@ -936,8 +998,6 @@
     if(page==='mercados')return renderMarkets();
     if(page==='tokenizacion')return renderTokenization();
     if(page==='fiscal')return renderFiscal();
-    if(page==='herramientas')return renderTools();
-    if(page==='rentabilidades')return renderReturns();
     if(page==='ficha')return renderProfile();
     if(page==='fuentes')return renderSources();
     if(page==='contacto')return renderContact();
@@ -1121,7 +1181,7 @@
     if(title)title.textContent=`${equipment?.model||'Equipo'} · resultado diario`;
   }
 
-  function drawMiningCalculator(){
+  function drawMiningCalculatorLegacy(){
     const root=document.querySelector('[data-mining-calculator]');
     if(!root)return;
     const status=root.querySelector('[data-calc-status]'),grossNode=document.querySelector('[data-calc-gross]'),energyNode=document.querySelector('[data-calc-energy]'),powerNode=document.querySelector('[data-calc-power-cost]'),profitNode=document.querySelector('[data-calc-profit]'),monthNode=document.querySelector('[data-calc-profit-month]'),paybackNode=document.querySelector('[data-calc-payback]');
@@ -1176,7 +1236,7 @@
     return `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Hashrate medio diario de Bitcoin durante los últimos ${days} días"><g class="grid">${guides}</g><polyline class="line" points="${points}"/><circle class="latest" cx="${x(rows.length-1)}" cy="${y(values.at(-1))}" r="5"/><g class="ticks">${ticks}</g></svg>`;
   }
 
-  function renderMiningDashboard(metrics){
+  function renderMiningDashboardLegacy(metrics){
     const dashboard=document.querySelector('[data-mining-dashboard]');
     if(!dashboard)return;
     const valid=metrics?.status==='auto';
@@ -1225,6 +1285,228 @@
     drawMiningCalculator();
   }
 
+  let latestMiningCalculation=null;
+
+  function miningInputNumber(root,selector,fallback=0){
+    const value=Number(root.querySelector(selector)?.value);
+    return Number.isFinite(value)?value:fallback;
+  }
+
+  function miningScenarioInputs(root){
+    return {
+      hardware:root.querySelector('[data-calc-hardware]')?.value||'',
+      units:Math.max(1,Math.round(miningInputNumber(root,'[data-calc-units]',1))),
+      electricity:Math.max(0,miningInputNumber(root,'[data-calc-electricity]',0)),
+      demand:Math.max(0,miningInputNumber(root,'[data-calc-demand]',0)),
+      pue:Math.max(1,miningInputNumber(root,'[data-calc-pue]',1)),
+      uptime:Math.min(100,Math.max(0,miningInputNumber(root,'[data-calc-uptime]',0))),
+      curtailment:Math.min(720,Math.max(0,miningInputNumber(root,'[data-calc-curtailment]',0))),
+      pool:Math.min(100,Math.max(0,miningInputNumber(root,'[data-calc-pool]',0))),
+      maintenance:Math.max(0,miningInputNumber(root,'[data-calc-maintenance]',0)),
+      finance:Math.max(0,miningInputNumber(root,'[data-calc-finance]',0)),
+      other:Math.max(0,miningInputNumber(root,'[data-calc-other]',0)),
+      hardwareCost:Math.max(0,miningInputNumber(root,'[data-calc-hardware-cost]',0)),
+      logistics:Math.max(0,miningInputNumber(root,'[data-calc-logistics]',0))
+    };
+  }
+
+  function setMiningInputs(root,values){
+    const fields={
+      hardware:'[data-calc-hardware]',units:'[data-calc-units]',electricity:'[data-calc-electricity]',
+      demand:'[data-calc-demand]',pue:'[data-calc-pue]',uptime:'[data-calc-uptime]',
+      curtailment:'[data-calc-curtailment]',pool:'[data-calc-pool]',maintenance:'[data-calc-maintenance]',
+      finance:'[data-calc-finance]',other:'[data-calc-other]',hardwareCost:'[data-calc-hardware-cost]',
+      logistics:'[data-calc-logistics]'
+    };
+    Object.entries(fields).forEach(([key,selector])=>{const node=root.querySelector(selector);if(node&&values[key]!==undefined&&values[key]!==null)node.value=String(values[key])});
+  }
+
+  function miningAllInSensitivityMarkup(gross,fleetEnergy,fixedDaily,demand,equipment){
+    const root=document.querySelector('[data-mining-sensitivity-chart]');
+    if(!root||![gross,fleetEnergy,fixedDaily,demand].every(Number.isFinite))return;
+    const costs=[.03,.05,.07,.09,.11,.13,.15];
+    const rows=costs.map((cost)=>({cost,profit:gross-fleetEnergy*(cost+demand)-fixedDaily}));
+    const width=900,height=250,left=64,right=22,top=24,bottom=48,values=[0].concat(rows.map((row)=>row.profit)),min=Math.min.apply(null,values),max=Math.max.apply(null,values),span=Math.max(.01,max-min);
+    const x=(index)=>left+index*(width-left-right)/(rows.length-1);
+    const y=(value)=>top+(max-value)*(height-top-bottom)/span;
+    const zero=y(0),points=rows.map((row,index)=>x(index).toFixed(1)+','+y(row.profit).toFixed(1)).join(' ');
+    root.innerHTML='<svg viewBox="0 0 '+width+' '+height+'" role="img" aria-label="Resultado diario all-in de '+escapeHtml(equipment?.model||'la flota')+' para tarifas eléctricas entre 0,03 y 0,15 dólares por kWh"><line class="zero" x1="'+left+'" x2="'+(width-right)+'" y1="'+zero+'" y2="'+zero+'"/><polyline points="'+points+'"/><g>'+rows.map((row,index)=>'<circle cx="'+x(index)+'" cy="'+y(row.profit)+'" r="4"/><text x="'+x(index)+'" y="'+(height-19)+'" text-anchor="middle">'+row.cost.toFixed(2)+'</text><text class="value" x="'+x(index)+'" y="'+Math.max(14,y(row.profit)-11)+'" text-anchor="middle">'+row.profit.toLocaleString('es-ES',{minimumFractionDigits:0,maximumFractionDigits:0})+'</text>').join('')+'</g><text class="axis" x="'+left+'" y="'+(height-3)+'">US$/kWh</text></svg>';
+    const title=document.querySelector('[data-mining-sensitivity-title]');
+    if(title)title.textContent=(equipment?.model||'Flota')+' · resultado diario';
+  }
+
+  function miningScenarioMatrixMarkup(calculation){
+    const root=document.querySelector('[data-mining-scenario-matrix]');
+    if(!root||!calculation)return;
+    const prices=[['−30 %',.7],['Base',1],['+30 %',1.3]];
+    const difficulties=[['−20 %',.8],['Base',1],['+20 %',1.2]];
+    const cells=['<div class="axis corner">Dificultad \\ Precio</div>'].concat(prices.map((item)=>'<div class="axis">'+item[0]+'</div>'));
+    difficulties.forEach((difficulty)=>{
+      cells.push('<div class="axis row">'+difficulty[0]+'</div>');
+      prices.forEach((price)=>{
+        const monthly=(calculation.grossDay*price[1]/difficulty[1]-calculation.operatingCostDay)*30;
+        const tone=monthly>=0?'positive':'negative';
+        cells.push('<div class="'+tone+'"><strong>'+PRICE.format(monthly)+'</strong><span>/ mes</span></div>');
+      });
+    });
+    root.innerHTML=cells.join('');
+  }
+
+  function drawMiningCalculator(){
+    const root=document.querySelector('[data-mining-calculator]');
+    if(!root)return;
+    const metrics=miningCalculatorData,status=root.querySelector('[data-calc-status]');
+    const outputSelectors=['[data-calc-fleet-hashrate]','[data-calc-fleet-load]','[data-calc-btc-month]','[data-calc-gross]','[data-calc-allin-cost]','[data-calc-profit]','[data-calc-profit-month]','[data-calc-cost-btc]','[data-calc-btc-breakeven]','[data-calc-difficulty-headroom]','[data-calc-capex]','[data-calc-payback]'];
+    if(metrics?.status!=='auto'){
+      if(status)status.textContent='Datos de red no disponibles';
+      outputSelectors.forEach((selector)=>{const node=document.querySelector(selector);if(node)node.textContent='No disponible'});
+      return;
+    }
+    const values=miningScenarioInputs(root),equipment=miningEquipment(metrics,values.hardware);
+    if(!equipment)return;
+    const availability=values.uptime/100;
+    const curtailmentFactor=Math.max(0,1-values.curtailment/720);
+    const productionFactor=availability*curtailmentFactor;
+    const grossPerUnit=Number(equipment.gross_usd_day)*productionFactor*(1-values.pool/100);
+    const baseBtcPerUnit=Number(metrics.gross_btc_day)*(Number(equipment.hashrate_th_s)/Number(metrics.hardware.hashrate_th_s))*productionFactor*(1-values.pool/100);
+    const grossDay=grossPerUnit*values.units;
+    const btcDay=baseBtcPerUnit*values.units;
+    const asicEnergyDay=Number(equipment.power_w)/1000*24*productionFactor*values.units;
+    const facilityEnergyDay=asicEnergyDay*values.pue;
+    const energyCostDay=facilityEnergyDay*(values.electricity+values.demand);
+    const fixedDaily=(values.maintenance*values.units+values.finance+values.other)/30;
+    const operatingCostDay=energyCostDay+fixedDaily;
+    const profitDay=grossDay-operatingCostDay;
+    const capex=values.units*(values.hardwareCost+values.logistics);
+    const costBtc=btcDay>0?operatingCostDay/btcDay:null;
+    const electricityBreakeven=facilityEnergyDay>0?(grossDay-facilityEnergyDay*values.demand-fixedDaily)/facilityEnergyDay:null;
+    const difficultyHeadroom=operatingCostDay>0?(grossDay/operatingCostDay-1)*100:null;
+    const payback=profitDay>0&&capex>0?capex/profitDay:null;
+    const nodes={
+      '[data-calc-model-name]':equipment.manufacturer+' · '+equipment.model,
+      '[data-calc-fleet-hashrate]':values.units>=1000?(Number(equipment.hashrate_th_s)*values.units/1e6).toLocaleString('es-ES',{maximumFractionDigits:3})+' EH/s':(Number(equipment.hashrate_th_s)*values.units/1000).toLocaleString('es-ES',{maximumFractionDigits:3})+' PH/s',
+      '[data-calc-fleet-load]':(Number(equipment.power_w)*values.units*values.pue/1e6).toLocaleString('es-ES',{maximumFractionDigits:3})+' MW',
+      '[data-calc-btc-month]':(btcDay*30).toLocaleString('es-ES',{minimumFractionDigits:4,maximumFractionDigits:4})+' BTC',
+      '[data-calc-gross]':PRICE.format(grossDay),
+      '[data-calc-allin-cost]':PRICE.format(operatingCostDay),
+      '[data-calc-profit]':PRICE.format(profitDay),
+      '[data-calc-profit-month]':PRICE.format(profitDay*30),
+      '[data-calc-cost-btc]':Number.isFinite(costBtc)?PRICE.format(costBtc):'No disponible',
+      '[data-calc-btc-breakeven]':Number.isFinite(electricityBreakeven)?electricityBreakeven.toLocaleString('es-ES',{minimumFractionDigits:3,maximumFractionDigits:3})+' US$/kWh':'No disponible',
+      '[data-calc-difficulty-headroom]':Number.isFinite(difficultyHeadroom)?(difficultyHeadroom>=0?'+':'')+difficultyHeadroom.toLocaleString('es-ES',{maximumFractionDigits:1})+' %':'No disponible',
+      '[data-calc-capex]':PRICE.format(capex),
+      '[data-calc-payback]':Number.isFinite(payback)?Math.ceil(payback).toLocaleString('es-ES')+' días':'No recuperable'
+    };
+    Object.entries(nodes).forEach(([selector,value])=>{const node=document.querySelector(selector);if(node)node.textContent=value});
+    ['[data-calc-profit]','[data-calc-profit-month]'].forEach((selector)=>{const node=document.querySelector(selector);if(node){node.classList.toggle('positive',profitDay>=0);node.classList.toggle('negative',profitDay<0)}});
+    if(status)status.textContent='Red: mempool.space · precio: Kaufman · equipo: '+equipment.source;
+    latestMiningCalculation={values,equipment,grossDay,btcDay,facilityEnergyDay,energyCostDay,fixedDaily,operatingCostDay,profitDay,capex,costBtc,electricityBreakeven,difficultyHeadroom,payback};
+    miningScenarioMatrixMarkup(latestMiningCalculation);
+    miningAllInSensitivityMarkup(grossDay,facilityEnergyDay,fixedDaily,values.demand,equipment);
+    renderMiningAlerts();
+  }
+
+  function renderMiningCountries(){
+    const metrics=miningCalculatorData,screen=metrics?.country_screen,body=document.querySelector('[data-mining-countries]');
+    if(!body)return;
+    if(screen?.status!=='auto'||!Array.isArray(screen.all_observations)){
+      body.innerHTML='<tr><td colspan="6">La fuente internacional no está disponible.</td></tr>';
+      return;
+    }
+    const search=(document.querySelector('[data-mining-country-search]')?.value||'').trim().toLocaleLowerCase('es');
+    const profitFilter=document.querySelector('[data-mining-country-profit]')?.value||'all';
+    const reference=(metrics.hardware_comparison||[]).find((row)=>row.id==='s21-xp')||metrics.hardware;
+    const rows=screen.all_observations.map((row)=>{
+      const gross=Number(reference?.gross_usd_day),cost=Number(reference?.energy_kwh_day)*Number(row.electricity_usd_kwh),profit=gross-cost;
+      return {...row,modeledProfit:profit};
+    }).filter((row)=>{
+      const matches=!search||String(row.country).toLocaleLowerCase('es').includes(search);
+      const profitMatches=profitFilter==='all'||(profitFilter==='positive'?row.modeledProfit>=0:row.modeledProfit<0);
+      return matches&&profitMatches;
+    });
+    body.innerHTML=rows.map((row)=>'<tr><td><strong>'+escapeHtml(row.country)+'</strong></td><td>'+escapeHtml(row.period||screen.source_period)+'</td><td class="number">'+Number(row.electricity_eur_kwh).toLocaleString('es-ES',{minimumFractionDigits:4,maximumFractionDigits:4})+'</td><td class="number">'+Number(row.electricity_usd_kwh).toLocaleString('es-ES',{minimumFractionDigits:4,maximumFractionDigits:4})+'</td><td class="number '+(row.modeledProfit>=0?'positive':'negative')+'">'+PRICE.format(row.modeledProfit)+'</td><td>'+escapeHtml(row.check)+'</td></tr>').join('')||'<tr><td colspan="6">No hay países que coincidan con el filtro.</td></tr>';
+    const count=document.querySelector('[data-mining-country-count]');
+    if(count)count.textContent=rows.length.toLocaleString('es-ES')+' de '+screen.all_observations.length.toLocaleString('es-ES')+' países';
+  }
+
+  function renderMiningAlerts(){
+    const root=document.querySelector('[data-mining-alert-results]');
+    if(!root||!latestMiningCalculation||!miningCalculatorData)return;
+    const hashpriceMin=Number(document.querySelector('[data-alert-hashprice-min]')?.value);
+    const electricityMax=Number(document.querySelector('[data-alert-electricity-max]')?.value);
+    const marginMin=Number(document.querySelector('[data-alert-margin-min]')?.value);
+    const actualHashprice=Number(miningCalculatorData.hashprice_usd_ph_day);
+    const actualElectricity=latestMiningCalculation.values.electricity+latestMiningCalculation.values.demand;
+    const actualMargin=latestMiningCalculation.profitDay*30;
+    const rows=[
+      ['Hashprice',actualHashprice>=hashpriceMin,actualHashprice.toLocaleString('es-ES',{maximumFractionDigits:2})+' frente a mínimo '+hashpriceMin.toLocaleString('es-ES')],
+      ['Energía contratada',actualElectricity<=electricityMax,actualElectricity.toLocaleString('es-ES',{minimumFractionDigits:3,maximumFractionDigits:3})+' frente a máximo '+electricityMax.toLocaleString('es-ES')],
+      ['Margen mensual',actualMargin>=marginMin,PRICE.format(actualMargin)+' frente a mínimo '+PRICE.format(marginMin)]
+    ];
+    root.innerHTML=rows.map((row)=>'<span class="'+(row[1]?'ok':'breach')+'"><i></i><strong>'+row[0]+'</strong>'+row[2]+'</span>').join('');
+  }
+
+  function renderMiningDashboard(metrics){
+    const dashboard=document.querySelector('[data-mining-dashboard]');
+    if(!dashboard)return;
+    const valid=metrics?.status==='auto',observed=document.querySelector('[data-mining-observed]'),heroObserved=document.querySelector('[data-mining-hero-observed]');
+    const networkAge=valid&&metrics.observed_at?ageLabel(ageMs(metrics.observed_at)):'No disponible';
+    if(observed)observed.textContent=valid?'Red observada '+networkAge+' · objetivo de actualización 30 minutos':'Snapshot minero no disponible';
+    if(heroObserved)heroObserved.textContent=valid?networkAge+' · objetivo 30 min':'No disponible';
+    const reference=latestMarketSnapshot?.reference_prices?.bitcoin;
+    const priceTimestamp=reference?.provider_timestamp||reference?.received_at;
+    const priceAge=priceTimestamp?ageLabel(ageMs(priceTimestamp)):(valid&&metrics.observed_at?ageLabel(ageMs(metrics.observed_at))+' · snapshot minero':'No disponible');
+    const screen=metrics?.country_screen;
+    const freshValues={price:priceAge,network:networkAge,pools:networkAge,countries:screen?.source_period||'No disponible'};
+    Object.entries(freshValues).forEach(([key,value])=>{const node=document.querySelector('[data-mining-freshness="'+key+'"]');if(node)node.textContent=value});
+    const heroElectricity=document.querySelector('[data-mining-hero-electricity]');
+    if(heroElectricity)heroElectricity.textContent=screen?.source_period?screen.source_period+' · publicación semestral':'No disponible';
+    const set=(key,value)=>{const node=document.querySelector('[data-mining-kpi="'+key+'"]');if(node)node.textContent=value};
+    if(!valid){['hashprice','hashrate','difficulty','fee-share','block-time','break-even'].forEach((key)=>set(key,'No disponible'));return}
+    set('hashprice',Number(metrics.hashprice_usd_ph_day).toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2})+' US$');
+    set('hashrate',Number(metrics.network_hashrate_eh_s).toLocaleString('es-ES',{maximumFractionDigits:1})+' EH/s');
+    set('difficulty',(Number(metrics.next_difficulty_change_pct)>=0?'+':'')+Number(metrics.next_difficulty_change_pct).toLocaleString('es-ES',{maximumFractionDigits:2})+' %');
+    set('fee-share',Number(metrics.fee_share_pct).toLocaleString('es-ES',{maximumFractionDigits:2})+' %');
+    set('block-time',Number(metrics.block_interval_minutes).toLocaleString('es-ES',{maximumFractionDigits:2})+' min');
+    set('break-even',Number(metrics.break_even_usd_kwh).toLocaleString('es-ES',{minimumFractionDigits:3,maximumFractionDigits:3})+' US$/kWh');
+    const hashNote=document.querySelector('[data-mining-kpi-note="hashrate"]');
+    if(hashNote)hashNote.textContent='7 d '+(Number(metrics.hashrate_change_7d_pct)>=0?'+':'')+Number(metrics.hashrate_change_7d_pct).toLocaleString('es-ES',{maximumFractionDigits:1})+' % · 30 d '+(Number(metrics.hashrate_change_30d_pct)>=0?'+':'')+Number(metrics.hashrate_change_30d_pct).toLocaleString('es-ES',{maximumFractionDigits:1})+' %';
+    const difficultyNote=document.querySelector('[data-mining-kpi-note="difficulty"]');
+    if(difficultyNote)difficultyNote.textContent='Bloque '+Number(metrics.next_difficulty_height).toLocaleString('es-ES')+' · '+new Intl.DateTimeFormat('es-ES',{day:'2-digit',month:'short'}).format(new Date(metrics.next_difficulty_at)).replace('.','');
+    const chart=document.querySelector('[data-mining-hashrate-chart]');
+    if(chart)chart.innerHTML=miningHashrateChartMarkup(metrics,miningChartRange);
+    document.querySelectorAll('[data-mining-range]').forEach((button)=>button.setAttribute('aria-pressed',String(Number(button.dataset.miningRange)===miningChartRange)));
+    const summary=document.querySelector('[data-mining-chart-summary]');
+    if(summary)summary.textContent=Number(metrics.network_hashrate_eh_s).toLocaleString('es-ES',{maximumFractionDigits:1})+' EH/s · '+miningChartRange+' días';
+    const decisions=document.querySelector('[data-mining-decisions]');
+    if(decisions){
+      const difficulty=Number(metrics.next_difficulty_change_pct),fees=Number(metrics.fee_share_pct),hashprice=Number(metrics.hashprice_usd_ph_day),blockTime=Number(metrics.block_interval_minutes);
+      decisions.innerHTML='<header><span>Lectura operativa</span><strong>Qué cambia la cuenta</strong></header><ol><li><b>'+hashprice.toLocaleString('es-ES',{maximumFractionDigits:2})+' US$/PH/día de ingreso bruto</b><span>Es la referencia comparable antes de energía, pool, PUE y costes de instalación.</span></li><li><b>'+(difficulty>=0?'Subida':'Bajada')+' estimada de dificultad</b><span>'+(difficulty>=0?'Reduce':'Aumenta')+' el ingreso por TH/s si precio y comisiones permanecen iguales.</span></li><li><b>'+fees.toLocaleString('es-ES',{maximumFractionDigits:2})+' % de la recompensa son fees</b><span>Mide cuánto ingreso depende del mercado de espacio de bloque frente al subsidio.</span></li><li><b>'+blockTime.toLocaleString('es-ES',{maximumFractionDigits:2})+' minutos por bloque</b><span>Un ritmo distinto de diez minutos altera temporalmente la producción diaria observada.</span></li></ol>';
+    }
+    const hardwareSelect=document.querySelector('[data-calc-hardware]');
+    if(hardwareSelect){
+      const previous=hardwareSelect.value;
+      hardwareSelect.innerHTML=(metrics.hardware_comparison||[]).map((row)=>'<option value="'+escapeHtml(row.id)+'">'+escapeHtml(row.manufacturer+' · '+row.model+' · '+row.cooling)+'</option>').join('');
+      const pending=document.querySelector('[data-mining-calculator]')?.dataset.pendingHardware;
+      const requested=pending||previous;
+      if((metrics.hardware_comparison||[]).some((row)=>row.id===requested))hardwareSelect.value=requested;
+      const calculator=document.querySelector('[data-mining-calculator]');if(calculator)delete calculator.dataset.pendingHardware;
+    }
+    const hardwareTable=document.querySelector('[data-mining-hardware-table]');
+    if(hardwareTable)hardwareTable.innerHTML=(metrics.hardware_comparison||[]).map((row)=>'<tr><td><span>'+escapeHtml(row.manufacturer)+'</span><strong>'+escapeHtml(row.model)+'</strong></td><td>'+escapeHtml(row.cooling)+'</td><td class="number">'+Number(row.hashrate_th_s).toLocaleString('es-ES')+' TH/s</td><td class="number">'+Number(row.power_w).toLocaleString('es-ES')+' W</td><td class="number">'+Number(row.efficiency_j_th).toLocaleString('es-ES',{maximumFractionDigits:1})+' J/TH</td><td><strong>'+escapeHtml(row.operating_temperature||'Consultar ficha')+'</strong><small>'+escapeHtml(row.tolerance||row.spec_basis||'')+'</small></td><td class="number">'+PRICE.format(Number(row.gross_usd_day))+'</td><td class="number">'+Number(row.break_even_usd_kwh).toLocaleString('es-ES',{minimumFractionDigits:3,maximumFractionDigits:3})+' US$/kWh</td><td><a href="'+safeExternalUrl(row.source_url)+'" target="_blank" rel="noopener noreferrer">'+escapeHtml(row.source)+' ↗</a></td></tr>').join('');
+    const poolRows=(metrics.pools||[]).slice(0,6),poolChart=document.querySelector('[data-mining-pool-chart]');
+    if(poolChart)poolChart.innerHTML='<header><span>Cuota de bloques</span><strong>'+Number(metrics.pool_blocks).toLocaleString('es-ES')+' bloques · 7 días</strong></header><div>'+poolRows.map((row)=>'<article><span>'+escapeHtml(row.name)+'</span><i><b style="width:'+Math.min(100,Number(row.share_pct))+'%"></b></i><strong>'+Number(row.share_pct).toLocaleString('es-ES',{maximumFractionDigits:1})+' %</strong></article>').join('')+'</div><small>La cuota observada no incorpora comisión, método de pago, latencia ni varianza del minero.</small>';
+    const poolTable=document.querySelector('[data-mining-pool-table]');
+    if(poolTable)poolTable.innerHTML='<header><span>Condiciones publicadas</span><strong>Verificar antes de conectar</strong></header><div class="kf-pool-terms">'+(metrics.pool_terms||[]).map((row)=>'<article><div><strong>'+escapeHtml(row.name)+'</strong><span>'+escapeHtml(row.payout_scheme)+'</span></div><dl><div><dt>Comisión</dt><dd>'+escapeHtml(row.pool_fee)+'</dd></div><div><dt>Mínimo</dt><dd>'+escapeHtml(row.minimum_payout)+'</dd></div><div><dt>Pago</dt><dd>'+escapeHtml(row.payout_timing)+'</dd></div></dl><a href="'+safeExternalUrl(row.source_url)+'" target="_blank" rel="noopener noreferrer">'+escapeHtml(row.source)+' ↗</a></article>').join('')+'</div><p>Solo se publican términos con una fuente primaria accesible. Los pools sin condiciones comparables permanecen fuera de esta tabla.</p>';
+    if(screen?.status==='auto'){
+      const eurostatSource=screen.sources?.find((source)=>/eurostat/i.test(source.name||'')),ecbSource=screen.sources?.find((source)=>/central|bce|ecb/i.test(source.name||''));
+      const countryContext=document.querySelector('[data-mining-country-context]');
+      if(countryContext)countryContext.innerHTML='<span>'+escapeHtml(screen.benchmark)+'</span><strong>Periodo '+escapeHtml(screen.source_period)+' · '+Number(screen.coverage_count).toLocaleString('es-ES')+' países · fuente semestral</strong><nav>'+(eurostatSource?'<a href="'+safeExternalUrl(eurostatSource.url)+'" target="_blank" rel="noopener noreferrer">Eurostat ↗</a>':'')+(ecbSource?'<a href="'+safeExternalUrl(ecbSource.url)+'" target="_blank" rel="noopener noreferrer">BCE ↗</a>':'')+'</nav>';
+    }
+    renderMiningCountries();
+    drawMiningCalculator();
+  }
+
   function syncMiningReference(){
     const reference=latestMarketSnapshot?.reference_prices?.bitcoin;
     const automated=latestMarketSnapshot?.delivery_mode==='AUTOMATED_5_MINUTE_SNAPSHOT';
@@ -1236,7 +1518,7 @@
       if(Number.isFinite(grossBtc)&&Number.isFinite(energy)&&energy>0&&Number.isFinite(price)&&Number.isFinite(previousPrice)&&previousPrice>0){
         const ratio=price/previousPrice,grossUsd=grossBtc*price,hashprice=Number(miningCalculatorData.hashprice_usd_ph_day)*ratio;
         const hardwareComparison=(miningCalculatorData.hardware_comparison||[]).map((row)=>{const gross=Number(row.gross_usd_day)*ratio,energyDay=Number(row.energy_kwh_day);return {...row,gross_usd_day:gross,break_even_usd_kwh:gross/energyDay}});
-        const countryScreen=miningCalculatorData.country_screen?.status==='auto'?{...miningCalculatorData.country_screen,top_three:miningCalculatorData.country_screen.top_three.map((row)=>{const net=grossUsd-Number(row.electricity_usd_day);return {...row,modeled_net_usd_day:net,modeled_margin_pct:net/grossUsd*100}})}:miningCalculatorData.country_screen;
+        const countryScreen=miningCalculatorData.country_screen?.status==='auto'?{...miningCalculatorData.country_screen,top_three:miningCalculatorData.country_screen.top_three.map((row)=>{const net=grossUsd-Number(row.electricity_usd_day);return {...row,modeled_net_usd_day:net,modeled_margin_pct:net/grossUsd*100}}),all_observations:(miningCalculatorData.country_screen.all_observations||[]).map((row)=>{const net=grossUsd-Number(row.electricity_usd_day);return {...row,modeled_net_usd_day:net,modeled_margin_pct:net/grossUsd*100}})}:miningCalculatorData.country_screen;
         miningCalculatorData={...miningCalculatorData,btc_price_usd:price,gross_usd_day:grossUsd,hashprice_usd_ph_day:hashprice,break_even_usd_kwh:grossUsd/energy,hardware_comparison:hardwareComparison,country_screen:countryScreen,price_source:`Kaufman Reference Price · ${automated?'automático':'tiempo real'}`};
         document.querySelectorAll('[data-mining-gross]').forEach((node)=>node.textContent=PRICE.format(grossUsd));
         document.querySelectorAll('[data-mining-break-even]').forEach((node)=>node.textContent=`${SMALL_USD.format(grossUsd/energy)}/kWh`);
@@ -1252,11 +1534,62 @@
   function initMiningCalculator(){
     const root=document.querySelector('[data-mining-calculator]');
     if(!root)return;
-    root.addEventListener('input',drawMiningCalculator);root.addEventListener('change',drawMiningCalculator);drawMiningCalculator();
+    const query=new URLSearchParams(location.search),shared={};
+    const queryFields={hardware:'m_equipo',units:'m_unidades',electricity:'m_energia',demand:'m_hosting',pue:'m_pue',uptime:'m_uptime',curtailment:'m_curtailment',pool:'m_pool',maintenance:'m_mantenimiento',finance:'m_financiacion',other:'m_otros',hardwareCost:'m_asic',logistics:'m_logistica'};
+    Object.entries(queryFields).forEach(([key,param])=>{if(query.has(param))shared[key]=query.get(param)});
+    let stored=null;
+    try{stored=JSON.parse(window.localStorage.getItem('kaufman_mining_scenario')||'null')}catch(error){}
+    const initial=Object.keys(shared).length?shared:stored;
+    if(initial){
+      setMiningInputs(root,initial);
+      if(initial.hardware)root.dataset.pendingHardware=initial.hardware;
+    }
+    try{
+      const alerts=JSON.parse(window.localStorage.getItem('kaufman_mining_alerts')||'null');
+      if(alerts){
+        const fields={hashprice:'[data-alert-hashprice-min]',electricity:'[data-alert-electricity-max]',margin:'[data-alert-margin-min]'};
+        Object.entries(fields).forEach(([key,selector])=>{const node=document.querySelector(selector);if(node&&alerts[key]!==undefined)node.value=String(alerts[key])});
+      }
+    }catch(error){}
+    root.addEventListener('input',drawMiningCalculator);
+    root.addEventListener('change',drawMiningCalculator);
+    document.querySelector('[data-mining-save]')?.addEventListener('click',()=>{
+      try{window.localStorage.setItem('kaufman_mining_scenario',JSON.stringify(miningScenarioInputs(root)));const status=document.querySelector('[data-mining-action-status]');if(status)status.textContent='Escenario guardado en este navegador.'}catch(error){}
+    });
+    document.querySelector('[data-mining-share]')?.addEventListener('click',async()=>{
+      const url=new URL(location.href),values=miningScenarioInputs(root);
+      Object.entries(queryFields).forEach(([key,param])=>url.searchParams.set(param,String(values[key])));
+      history.replaceState(null,'',url);
+      const status=document.querySelector('[data-mining-action-status]');
+      try{await navigator.clipboard.writeText(url.href);if(status)status.textContent='Enlace copiado con todas las entradas.'}catch(error){if(status)status.textContent='El enlace ya contiene todas las entradas; cópialo desde la barra del navegador.'}
+    });
+    document.querySelector('[data-mining-export]')?.addEventListener('click',()=>{
+      if(!latestMiningCalculation)return;
+      const c=latestMiningCalculation,rows=[
+        ['campo','valor'],['equipo',c.equipment.manufacturer+' '+c.equipment.model],['unidades',c.values.units],
+        ['electricidad_usd_kwh',c.values.electricity],['hosting_demanda_usd_kwh',c.values.demand],['pue',c.values.pue],
+        ['uptime_pct',c.values.uptime],['curtailment_h_mes',c.values.curtailment],['pool_fee_pct',c.values.pool],
+        ['hashrate_th_s_flota',Number(c.equipment.hashrate_th_s)*c.values.units],['energia_kwh_dia',c.facilityEnergyDay],
+        ['ingreso_bruto_usd_dia',c.grossDay],['coste_operativo_usd_dia',c.operatingCostDay],['resultado_usd_dia',c.profitDay],
+        ['resultado_usd_mes',c.profitDay*30],['coste_operativo_usd_btc',c.costBtc],['electricidad_directa_equilibrio_usd_kwh',c.electricityBreakeven],['capex_usd',c.capex],['payback_dias',c.payback]
+      ];
+      const csv=rows.map((row)=>row.map((value)=>'"'+String(value??'').replaceAll('"','""')+'"').join(',')).join('\n');
+      const link=document.createElement('a');link.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));link.download='kaufman-mineria-escenario.csv';link.click();URL.revokeObjectURL(link.href);
+      const status=document.querySelector('[data-mining-action-status]');if(status)status.textContent='CSV exportado con entradas y resultados.';
+    });
+    document.querySelector('[data-mining-alert-save]')?.addEventListener('click',()=>{
+      const alerts={hashprice:miningInputNumber(document,'[data-alert-hashprice-min]',0),electricity:miningInputNumber(document,'[data-alert-electricity-max]',0),margin:miningInputNumber(document,'[data-alert-margin-min]',0)};
+      try{window.localStorage.setItem('kaufman_mining_alerts',JSON.stringify(alerts))}catch(error){}
+      renderMiningAlerts();
+    });
+    document.querySelectorAll('[data-alert-hashprice-min],[data-alert-electricity-max],[data-alert-margin-min]').forEach((node)=>node.addEventListener('input',renderMiningAlerts));
+    drawMiningCalculator();
   }
 
   function initMiningDashboard(){
     document.querySelectorAll('[data-mining-range]').forEach((button)=>button.addEventListener('click',()=>{miningChartRange=Number(button.dataset.miningRange)||30;renderMiningDashboard(miningCalculatorData)}));
+    document.querySelector('[data-mining-country-search]')?.addEventListener('input',renderMiningCountries);
+    document.querySelector('[data-mining-country-profit]')?.addEventListener('change',renderMiningCountries);
   }
 
   function initJurisdictionTool(){
@@ -2493,7 +2826,7 @@
   app.innerHTML=`<div class="kf-shell">${headerMarkup(page)}${pageWithClose}${footerMarkup()}</div>${searchOverlayMarkup()}`;
   arrangeMarketsTop();
   localizeRenderedLinks(app);
-  const pageTitle=page==='home'?'Kaufman | Inteligencia blockchain':`${CATALOGS[page]?.label||({mercados:'Mercados',tokenizacion:'Tokenización',herramientas:'Herramientas',rentabilidades:'Rentabilidades',ficha:'Ficha',fuentes:'Fuentes',contacto:'Contacto',aviso:'Aviso legal',privacidad:'Política de privacidad',cookies:'Política de cookies',terminos:'Términos de uso'}[page]||'Kaufman')} | Kaufman`;
+  const pageTitle=page==='home'?'Kaufman | Inteligencia blockchain':`${CATALOGS[page]?.label||({mercados:'Mercados',tokenizacion:'Tokenización',ficha:'Ficha',fuentes:'Fuentes',contacto:'Contacto',aviso:'Aviso legal',privacidad:'Política de privacidad',cookies:'Política de cookies',terminos:'Términos de uso'}[page]||'Kaufman')} | Kaufman`;
   document.title=pageTitle;
   initMenu();initSearch();initDirectoryFilters();initBankRegistry();initTokenizationFilters();initFiscalDashboard();initComparator();initFeedStars();initMiningCalculator();initMiningDashboard();initJurisdictionTool();initCountryCostStack();initEcosystemMap();initDecisionBrief();initContact();initReveal();
   Promise.resolve(connectMarketAntenna()).finally(()=>{startMarketContextPolling();startGasEdgePolling()});

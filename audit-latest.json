@@ -1,7 +1,7 @@
 {
   "status": "AUDITED_WITH_CONTROLS",
-  "generated_at": "2026-09-01T15:09:52.843Z",
-  "evidence_snapshot_at": "2026-09-01T15:03:00.091Z",
+  "generated_at": "2026-09-02T09:24:25.510Z",
+  "evidence_snapshot_at": "2026-09-02T08:49:35.299Z",
   "findings": [
     {
       "id": "A01",
