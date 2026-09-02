@@ -422,7 +422,7 @@
   }
 
   function decisionCloseMarkup(page){
-    if(page==='mineria')return '<section class="kf-decision-close kf-mining-decision-close" aria-labelledby="decision-close-title"><div class="kf-container"><div><p class="kf-kicker">Análisis de instalación minera</p><h2 id="decision-close-title">Lleva el escenario a una decisión de inversión.</h2><p>Kaufman contrasta flota, contrato eléctrico, emplazamiento, pool, CAPEX y sensibilidad antes de aceptar una cifra como viable.</p></div><ol><li><span>01</span>ASIC, unidades y potencia</li><li><span>02</span>PPA, PUE y costes completos</li><li><span>03</span>Escenario base y estrés</li></ol><div class="kf-decision-close-action"><strong>Entrega minera definida</strong><span>Modelo económico, fuentes, supuestos, umbrales y datos que todavía debe confirmar el operador.</span><a class="kf-button primary" href="/contacto/?asunto=analisis-mineria&origen=mineria">Solicitar análisis de instalación →</a></div></div></section>';
+    if(page==='mineria')return '';
     const context={
       home:['De la evidencia a una decisión concreta.','Describe la operación. Kaufman devuelve alcance, controles prioritarios, fuentes y preguntas que aún necesitan confirmación.'],
       mercados:['Antes de mover capital, delimita la operación.','Conecta estructura de mercado, vehículo tokenizado, liquidez, costes y jurisdicción en una sola lectura.'],
