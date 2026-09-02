@@ -995,7 +995,7 @@ body{font-size:16px;line-height:1.6}
 .kf-mining-country-table td{padding:15px 12px;border-bottom:1px solid #c9c7bf;color:#13292c;font-size:12px;font-weight:550;line-height:1.45}.kf-mining-country-table tr:last-child td{border-bottom:0}
 .kf-mining-country-table td:first-child{font-weight:750}.kf-mining-country-table td:last-child{color:#405457}
 .kf-mining-country-table .number{text-align:right;font-variant-numeric:tabular-nums}.kf-mining-country-table .positive{color:#006b4f;font-weight:750}.kf-mining-country-table .negative{color:#b53622;font-weight:750}
-.kf-mining-country-table th:first-child,.kf-mining-country-table td:first-child{padding-left:0}.kf-mining-country-table th:last-child,.kf-mining-country-table td:last-child{padding-right:0}
+.kf-mining-country-table th:first-child,.kf-mining-country-table td:first-child{padding-left:20px;text-align:left}.kf-mining-country-table th:last-child,.kf-mining-country-table td:last-child{padding-right:20px}
 .kf-mining-country-table td:last-child{max-width:430px}
 
 @media(max-width:1180px){
