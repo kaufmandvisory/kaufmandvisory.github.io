@@ -1623,3 +1623,7 @@ button,input,select,textarea{font-family:var(--kf-sans)}
     --kf-type-section-deck:14px;
   }
 }
+
+/* La home conserva la frescura internamente sin mostrar edades ni horas. */
+.kf-feed-item.no-time,.kf-feed-list.compact .kf-feed-item.no-time{grid-template-columns:minmax(0,1fr) auto}
+.kf-editorial-feed .kf-feed-item.no-time.secondary{display:block}

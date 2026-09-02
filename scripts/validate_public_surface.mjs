@@ -2,7 +2,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const VERSION = 'kaufman-v66';
+const VERSION = 'kaufman-v69';
 const shells = [
   'index.html', 'mercados/index.html', 'regulacion/index.html', 'tokenizacion/index.html',
   'fiscal/index.html', 'empresas/index.html', 'bancos/index.html',
@@ -39,6 +39,23 @@ for (const rule of ['/blog/', '/files/']) if (!robots.includes(`Disallow: ${rule
 
 const appScript = await fs.readFile(path.join(ROOT, 'assets/kaufman-app.js'), 'utf8');
 const appStyles = await fs.readFile(path.join(ROOT, 'assets/kaufman.css'), 'utf8');
+const sliceFunction = (name, nextName) => appScript.slice(appScript.indexOf(`function ${name}`), appScript.indexOf(`function ${nextName}`));
+const publicHomeCopy = [
+  sliceFunction('homeHeroMarkup', 'marketBandMarkup'),
+  sliceFunction('directoryHubMarkup', 'ecosystemMetrics'),
+  sliceFunction('ecosystemPanelMarkup', 'ecosystemMapMarkup'),
+  sliceFunction('ecosystemMapMarkup', 'renderHome'),
+  sliceFunction('renderHome', 'decisionCloseMarkup'),
+  sliceFunction('feedItemMarkup', 'renderHomeCurrentAffairs')
+].join('\n');
+for (const marker of ['Datos y consultas', 'COMPROBACIONES', 'DATOS APLICABLES', 'Datos verificados', 'Directorios de datos']) {
+  if (!publicHomeCopy.includes(marker)) failures.push(`home: falta texto directo ${marker}`);
+}
+for (const rejectedHomeCopy of ['Decision Brief', 'RUTA PROPUESTA', 'Explorar territorio', 'Empieza por la decisión', 'Qué puede cambiar una decisión', 'HOY', 'dateVerb', 'feedDateParts']) {
+  if (publicHomeCopy.includes(rejectedHomeCopy)) failures.push(`home: reaparece texto retirado ${rejectedHomeCopy}`);
+}
+if (!appScript.includes("page==='home'?'Kaufman Reference Price'")) failures.push('home: la fuente minera vuelve a mostrar la edad del precio');
+if (!appStyles.includes('.kf-feed-item.no-time')) failures.push('home: las referencias sin fecha pierden su composición');
 for (const marker of ['kf-mining-hero-frame', 'data-mining-hero-observed', 'ASIC · SHA-256', 'data-mining-country-expand']) {
   if (!appScript.includes(marker)) failures.push(`mineria: falta ${marker}`);
 }
