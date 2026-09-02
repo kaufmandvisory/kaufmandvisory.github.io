@@ -2,6 +2,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
+const VERSION = 'kaufman-v52';
 const shells = [
   'index.html', 'mercados/index.html', 'regulacion/index.html', 'tokenizacion/index.html',
   'herramientas/index.html', 'fiscal/index.html', 'empresas/index.html', 'bancos/index.html',
@@ -20,9 +21,9 @@ for (const relative of shells) {
     referrer: /name="referrer" content="strict-origin-when-cross-origin"/.test(html),
     robots: /name="robots"/.test(html),
     title: /<h1>[^<]{3,}<\/h1>/.test(html),
-    current_assets: /kaufman-v51/.test(html),
-    favicon: /<link rel="icon" href="\/favicon\.svg\?v=kaufman-v51" type="image\/svg\+xml">/.test(html),
-    bank_intelligence: /<script src="\/assets\/bank-intelligence\.js\?v=kaufman-v51" defer><\/script>/.test(html),
+    current_assets: html.includes(VERSION),
+    favicon: new RegExp(`<link rel="icon" href="\\/favicon\\.svg\\?v=${VERSION}" type="image\\/svg\\+xml">`).test(html),
+    bank_intelligence: new RegExp(`<script src="\\/assets\\/bank-intelligence\\.js\\?v=${VERSION}" defer><\\/script>`).test(html),
     valid_meta_markup: !/<meta\s+<meta/i.test(html),
     no_leaked_meta_attributes: !/<\/head>\s*<body[^>]*>\s*content="/i.test(html)
   };

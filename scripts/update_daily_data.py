@@ -444,16 +444,225 @@ def complete_mining_briefing(news: list[dict], metrics: dict) -> list[dict]:
     return [row for row in (mining_data_update(metrics), mining_network_update(metrics)) if row][:2]
 
 
-def mining_profitability():
-    hardware = {
+MINING_HARDWARE = [
+    {
+        "id": "s21-xp",
         "model": "Antminer S21 XP",
+        "cooling": "Aire",
         "hashrate_th_s": 270.0,
         "power_w": 3645.0,
         "source": "BITMAIN Support",
         "source_url": "https://support.bitmain.com/hc/en-us/articles/35383015643673-S21-XP-Specifications",
-    }
+    },
+    {
+        "id": "s21-xp-hyd",
+        "model": "Antminer S21 XP Hyd",
+        "cooling": "Hidráulica",
+        "hashrate_th_s": 473.0,
+        "power_w": 5676.0,
+        "source": "BITMAIN Support",
+        "source_url": "https://support.bitmain.com/hc/en-us/articles/34523540504857-S21-XP-Hyd-Specification",
+    },
+    {
+        "id": "s21",
+        "model": "Antminer S21",
+        "cooling": "Aire",
+        "hashrate_th_s": 200.0,
+        "power_w": 3500.0,
+        "source": "BITMAIN Support",
+        "source_url": "https://support.bitmain.com/hc/en-us/articles/23794895251609-S21-Specification",
+    },
+]
+
+
+COUNTRY_NAMES_ES = {
+    "AL": "Albania",
+    "AT": "Austria",
+    "BA": "Bosnia y Herzegovina",
+    "BE": "Bélgica",
+    "BG": "Bulgaria",
+    "CY": "Chipre",
+    "CZ": "Chequia",
+    "DE": "Alemania",
+    "DK": "Dinamarca",
+    "EE": "Estonia",
+    "EL": "Grecia",
+    "ES": "España",
+    "FI": "Finlandia",
+    "FR": "Francia",
+    "GE": "Georgia",
+    "HR": "Croacia",
+    "HU": "Hungría",
+    "IE": "Irlanda",
+    "IS": "Islandia",
+    "IT": "Italia",
+    "LI": "Liechtenstein",
+    "LT": "Lituania",
+    "LU": "Luxemburgo",
+    "LV": "Letonia",
+    "MD": "Moldavia",
+    "ME": "Montenegro",
+    "MK": "Macedonia del Norte",
+    "MT": "Malta",
+    "NL": "Países Bajos",
+    "NO": "Noruega",
+    "PL": "Polonia",
+    "PT": "Portugal",
+    "RO": "Rumanía",
+    "RS": "Serbia",
+    "SE": "Suecia",
+    "SI": "Eslovenia",
+    "SK": "Eslovaquia",
+    "TR": "Turquía",
+    "UA": "Ucrania",
+    "UK": "Reino Unido",
+    "XK": "Kosovo",
+}
+
+
+COUNTRY_DUE_DILIGENCE = {
+    "FI": "Capacidad de conexión, PPA, fiscalidad y plan de reutilización del calor.",
+    "GE": "Contrato industrial, continuidad de red, permisos e importación de equipos.",
+    "NO": "Registro del centro de datos, capacidad local, municipio y fiscalidad.",
+    "ME": "Capacidad de conexión, licencia operativa, aranceles y contraparte eléctrica.",
+    "TR": "Volatilidad contractual, importación de ASIC, conexión y marco tributario.",
+    "SE": "Impuesto eléctrico aplicable, capacidad de red y contrato de largo plazo.",
+}
+
+
+def percentage_change(current: float, previous: float) -> float | None:
+    if not previous:
+        return None
+    return (current / previous - 1) * 100
+
+
+def trailing_average_change(values: list[float], days: int) -> float | None:
+    """Compare the latest trailing window with the immediately preceding window."""
+    if len(values) < days * 2:
+        return None
+    current = statistics.mean(values[-days:])
+    previous = statistics.mean(values[-days * 2 : -days])
+    return percentage_change(current, previous)
+
+
+def jsonstat_coordinates(payload: dict, flat_index: int) -> dict[str, int]:
+    coordinates = {}
+    remainder = int(flat_index)
+    for dimension, size in reversed(list(zip(payload["id"], payload["size"]))):
+        coordinates[dimension] = remainder % int(size)
+        remainder //= int(size)
+    return coordinates
+
+
+def indexed_codes(dimension: dict) -> dict[int, str]:
+    raw = dimension.get("category", {}).get("index", {})
+    if isinstance(raw, list):
+        return {index: code for index, code in enumerate(raw)}
+    return {int(position): code for code, position in raw.items()}
+
+
+def mining_country_screen(gross_usd_day: float, energy_kwh_day: float) -> dict:
+    """Build an automatic, price-only location screen from official public data."""
+    eurostat_url = (
+        "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_pc_205"
+        "?lang=en&freq=S&siec=E7000&nrg_cons=MWH500-1999&unit=KWH"
+        "&tax=I_TAX&currency=EUR&lastTimePeriod=1"
+    )
+    ecb_url = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
+    checked_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
     try:
-        network = fetch_json("https://mempool.space/api/v1/mining/hashrate/3d")
+        payload = fetch_json(eurostat_url)
+        exchange_xml = fetch_text(ecb_url)
+        match = re.search(r"currency=['\"]USD['\"]\s+rate=['\"]([0-9.]+)", exchange_xml)
+        if not match:
+            raise ValueError("ECB USD reference rate missing")
+        usd_per_eur = float(match.group(1))
+        geo_codes = indexed_codes(payload["dimension"]["geo"])
+        time_codes = indexed_codes(payload["dimension"]["time"])
+        rows = []
+        for flat_index, raw_value in payload.get("value", {}).items():
+            coordinates = jsonstat_coordinates(payload, int(flat_index))
+            geo = geo_codes.get(coordinates["geo"])
+            period = time_codes.get(coordinates["time"])
+            if geo not in COUNTRY_NAMES_ES:
+                continue
+            eur_kwh = float(raw_value)
+            usd_kwh = eur_kwh * usd_per_eur
+            electricity_usd_day = energy_kwh_day * usd_kwh
+            net_usd_day = gross_usd_day - electricity_usd_day
+            margin_pct = net_usd_day / gross_usd_day * 100 if gross_usd_day else None
+            rows.append(
+                {
+                    "code": geo,
+                    "country": COUNTRY_NAMES_ES[geo],
+                    "period": period,
+                    "electricity_eur_kwh": eur_kwh,
+                    "electricity_usd_kwh": usd_kwh,
+                    "electricity_usd_day": electricity_usd_day,
+                    "modeled_net_usd_day": net_usd_day,
+                    "modeled_margin_pct": margin_pct,
+                    "check": COUNTRY_DUE_DILIGENCE.get(
+                        geo,
+                        "Tarifa contractual, capacidad de conexión, permisos, impuestos y continuidad.",
+                    ),
+                }
+            )
+        rows.sort(key=lambda row: (row["electricity_eur_kwh"], row["country"]))
+        if len(rows) < 3:
+            raise ValueError("Insufficient comparable Eurostat observations")
+        for rank, row in enumerate(rows, start=1):
+            row["cost_rank"] = rank
+        period = rows[0]["period"]
+        return {
+            "status": "auto",
+            "checked_at": checked_at,
+            "source_period": period,
+            "coverage_count": len(rows),
+            "benchmark": "Electricidad no doméstica · 500–1.999 MWh/año · impuestos y gravámenes incluidos",
+            "ranking_rule": "Menor precio EUR/kWh publicado; sin puntuaciones cualitativas ocultas",
+            "top_three": rows[:3],
+            "all_observations": rows,
+            "usd_per_eur": usd_per_eur,
+            "sources": [
+                {
+                    "name": "Eurostat · nrg_pc_205",
+                    "url": eurostat_url,
+                    "role": "Precio eléctrico no doméstico comparable",
+                },
+                {
+                    "name": "Banco Central Europeo",
+                    "url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
+                    "role": "Conversión EUR/USD de referencia",
+                },
+            ],
+            "limitations": [
+                "No es una tarifa de hosting ni un PPA para minería; el contrato real puede ser muy distinto.",
+                "No puntúa permisos, impuestos, importación, disponibilidad de potencia, clima ni riesgo político.",
+                "La clasificación cubre únicamente jurisdicciones informantes con observación válida en Eurostat.",
+            ],
+        }
+    except (HTTPError, URLError, TimeoutError, ValueError, KeyError, TypeError, ZeroDivisionError) as error:
+        return {
+            "status": "offline",
+            "checked_at": checked_at,
+            "last_error": f"{type(error).__name__}: {error}",
+            "top_three": [],
+            "all_observations": [],
+            "sources": [
+                {"name": "Eurostat · nrg_pc_205", "url": eurostat_url},
+                {"name": "Banco Central Europeo", "url": ecb_url},
+            ],
+        }
+
+
+def mining_profitability():
+    hardware = dict(MINING_HARDWARE[0])
+    try:
+        observed_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
+        network = fetch_json("https://mempool.space/api/v1/mining/hashrate/3m")
+        difficulty = fetch_json("https://mempool.space/api/v1/difficulty-adjustment")
+        pools = fetch_json("https://mempool.space/api/v1/mining/pools/1w")
+        rewards = fetch_json("https://mempool.space/api/v1/mining/reward-stats/144")
         height = int(fetch_text("https://mempool.space/api/blocks/tip/height").strip())
         observations = []
         coinbase = fetch_json("https://api.exchange.coinbase.com/products/BTC-USD/ticker")
@@ -472,27 +681,99 @@ def mining_profitability():
         network_hashrate = float(network["currentHashrate"])
         btc_usd = float(statistics.median(value for _, value in observations))
         subsidy = 50.0 / (2 ** (height // 210000))
-        btc_day = hardware["hashrate_th_s"] * 1e12 / network_hashrate * 144 * subsidy
+        reward_block_count = int(rewards["endBlock"]) - int(rewards["startBlock"]) + 1
+        total_reward_btc = float(rewards["totalReward"]) / 1e8
+        total_fees_btc = float(rewards["totalFee"]) / 1e8
+        average_reward_btc = total_reward_btc / reward_block_count
+        block_interval_minutes = float(difficulty["timeAvg"]) / 60000
+        blocks_day = 1440 / block_interval_minutes
+        network_revenue_btc_day = average_reward_btc * blocks_day
+        network_revenue_usd_day = network_revenue_btc_day * btc_usd
+        hashprice_usd_ph_day = network_revenue_usd_day / (network_hashrate / 1e15)
+        btc_day = hardware["hashrate_th_s"] / 1000 * hashprice_usd_ph_day / btc_usd
         gross_usd_day = btc_day * btc_usd
         energy_kwh_day = hardware["power_w"] / 1000 * 24
         break_even = gross_usd_day / energy_kwh_day
+        history = sorted(
+            [
+                {
+                    "timestamp": int(row["timestamp"]),
+                    "hashrate_eh_s": float(row["avgHashrate"]) / 1e18,
+                }
+                for row in network.get("hashrates", [])
+                if row.get("timestamp") and row.get("avgHashrate")
+            ],
+            key=lambda row: row["timestamp"],
+        )
+        history_values = [row["hashrate_eh_s"] for row in history]
+        pool_block_count = int(pools["blockCount"])
+        pool_rows = []
+        for row in pools.get("pools", []):
+            share_pct = float(row["blockCount"]) / pool_block_count * 100 if pool_block_count else 0
+            pool_rows.append(
+                {
+                    "name": row["name"],
+                    "slug": row.get("slug", ""),
+                    "blocks": int(row["blockCount"]),
+                    "share_pct": share_pct,
+                    "empty_blocks": int(row.get("emptyBlocks", 0)),
+                }
+            )
+        hhi = sum(row["share_pct"] ** 2 for row in pool_rows)
+        hardware_comparison = []
+        for equipment in MINING_HARDWARE:
+            gross = hashprice_usd_ph_day * equipment["hashrate_th_s"] / 1000
+            energy = equipment["power_w"] / 1000 * 24
+            hardware_comparison.append(
+                {
+                    **equipment,
+                    "efficiency_j_th": equipment["power_w"] / equipment["hashrate_th_s"],
+                    "gross_usd_day": gross,
+                    "energy_kwh_day": energy,
+                    "break_even_usd_kwh": gross / energy,
+                }
+            )
+        country_screen = mining_country_screen(gross_usd_day, energy_kwh_day)
         return {
             "status": "auto",
+            "observed_at": observed_at,
             "hardware": hardware,
+            "hardware_comparison": hardware_comparison,
             "network_hashrate_eh_s": network_hashrate / 1e18,
+            "hashrate_change_7d_pct": trailing_average_change(history_values, 7),
+            "hashrate_change_30d_pct": trailing_average_change(history_values, 30),
+            "hashrate_history": history,
             "block_height": height,
             "block_subsidy_btc": subsidy,
+            "block_interval_minutes": block_interval_minutes,
+            "blocks_per_day_estimate": blocks_day,
+            "next_difficulty_change_pct": float(difficulty["difficultyChange"]),
+            "next_difficulty_height": int(difficulty["nextRetargetHeight"]),
+            "next_difficulty_at": datetime.fromtimestamp(
+                float(difficulty["estimatedRetargetDate"]) / 1000, timezone.utc
+            ).isoformat(timespec="seconds"),
+            "fee_share_pct": total_fees_btc / total_reward_btc * 100,
+            "average_fee_btc_block": total_fees_btc / reward_block_count,
+            "hashprice_usd_ph_day": hashprice_usd_ph_day,
             "btc_price_usd": btc_usd,
             "gross_btc_day": btc_day,
             "gross_usd_day": gross_usd_day,
             "energy_kwh_day": energy_kwh_day,
             "break_even_usd_kwh": break_even,
+            "pools": pool_rows[:10],
+            "pool_window": "7d",
+            "pool_blocks": pool_block_count,
+            "pool_top_2_share_pct": sum(row["share_pct"] for row in pool_rows[:2]),
+            "pool_top_5_share_pct": sum(row["share_pct"] for row in pool_rows[:5]),
+            "pool_hhi": hhi,
+            "country_screen": country_screen,
             "network_source": "mempool.space",
             "network_source_url": "https://mempool.space/docs/api/rest",
             "price_source": "Kaufman Reference Price diario",
             "price_source_url": "/mercados/",
             "price_venues": [name for name, _ in observations],
             "price_methodology": "Mediana de observaciones públicas BTC/USD; CoinGecko excluido",
+            "revenue_methodology": "Recompensa media de los últimos 144 bloques y ritmo de bloque observado; incluye subsidio y comisiones de transacción.",
         }
     except (HTTPError, URLError, TimeoutError, ValueError, KeyError, ZeroDivisionError):
         return {"status": "offline", "hardware": hardware}

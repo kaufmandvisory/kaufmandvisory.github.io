@@ -2,7 +2,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const VERSION = 'kaufman-v51';
+const VERSION = 'kaufman-v52';
 const ROUTES = {
   home: ['Kaufman · Inteligencia blockchain', 'Mercado, regulación, tokenización, infraestructura y riesgo bajo una misma capa de evidencia pública.'],
   mercados: ['Mercados y capital tokenizado', 'RWA, redes, stablecoins, flujos institucionales, gas y precios de referencia calculados desde mercados públicos.'],
@@ -15,7 +15,7 @@ const ROUTES = {
   exchanges: ['Exchanges', 'Mercados, comisiones, custodia, contraparte y disponibilidad por proveedor.'],
   wallets: ['Wallets', 'Custodia fría y caliente, firmware, compatibilidad, recuperación y avisos públicos.'],
   proyectos: ['Proyectos e infraestructura Web3', 'Dependencias de cadena, contratos, oráculos, almacenamiento, indexación y gobierno.'],
-  mineria: ['Minería', 'Red Bitcoin, producción, rentabilidad y hardware con cálculos reproducibles.'],
+  mineria: ['Minería de Bitcoin', 'Hashprice, hashrate, dificultad, comisiones, pools, ASIC, rentabilidad y coste eléctrico internacional con cálculos reproducibles.'],
   hardware: ['Hardware', 'Equipos de minería, potencia, eficiencia y requisitos operativos desde especificaciones oficiales.'],
   rentabilidades: ['Rentabilidades', 'Retornos históricos observados y costes, sin convertirlos en predicciones.'],
   fuentes: ['Fuentes', 'Registro público de conectores, documentación, periodicidad y alcance de cada observación.'],
@@ -112,7 +112,7 @@ for (const file of files) {
 }
 
 const sitemapPath = path.join(ROOT, 'sitemap.xml');
-const sitemap = (await fs.readFile(sitemapPath, 'utf8')).replaceAll(/<lastmod>[^<]+<\/lastmod>/g, '<lastmod>2026-08-24</lastmod>');
+const sitemap = (await fs.readFile(sitemapPath, 'utf8')).replaceAll(/<lastmod>[^<]+<\/lastmod>/g, '<lastmod>2026-09-02</lastmod>');
 await fs.writeFile(sitemapPath, sitemap, 'utf8');
 
 console.log(JSON.stringify({ status: 'OK', app_shells: shells, legacy_noindex: legacy, version: VERSION }, null, 2));

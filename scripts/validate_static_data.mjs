@@ -95,6 +95,22 @@ assert.ok(platform.auxiliary.exchange_fees.entries.filter((row) => row.availabil
 
 assert.equal(daily.home_regulation?.length, 3, 'la portada necesita tres noticias regulatorias');
 assert.equal(daily.mining_news?.length, 2, 'la portada necesita dos noticias mineras');
+const mining = daily.mining_profitability;
+assert.equal(mining?.status, 'auto', 'snapshot operativo de minería no disponible');
+assert.ok(Number.isFinite(Date.parse(mining.observed_at)), 'minería sin hora de observación');
+assert.ok(Date.now() - Date.parse(mining.observed_at) <= 26 * 60 * 60_000, 'snapshot minero superior a 24 horas');
+assert.ok(Number.isFinite(mining.hashprice_usd_ph_day) && mining.hashprice_usd_ph_day > 0, 'hashprice minero inválido');
+assert.ok(Number.isFinite(mining.next_difficulty_change_pct), 'estimación de dificultad ausente');
+assert.ok(Number.isFinite(mining.fee_share_pct) && mining.fee_share_pct >= 0, 'cuota de comisiones ausente');
+assert.ok(Array.isArray(mining.hashrate_history) && mining.hashrate_history.length >= 60, 'serie minera inferior a 60 observaciones');
+assert.equal(mining.hardware_comparison?.length, 3, 'comparativa ASIC incompleta');
+assert.ok(mining.hardware_comparison.every((row) => row.source_url?.startsWith('https://support.bitmain.com/')), 'hardware sin fuente oficial');
+assert.ok(mining.pools?.length >= 5 && mining.pool_blocks > 0, 'distribución de pools incompleta');
+assert.ok(Number.isFinite(mining.pool_top_2_share_pct) && Number.isFinite(mining.pool_hhi), 'concentración de pools ausente');
+assert.equal(mining.country_screen?.status, 'auto', 'comparación eléctrica internacional no disponible');
+assert.equal(mining.country_screen?.top_three?.length, 3, 'top 3 de coste eléctrico incompleto');
+assert.ok(mining.country_screen.top_three.every((row) => Number.isFinite(row.electricity_eur_kwh) && Number.isFinite(row.modeled_net_usd_day)), 'escenario internacional incompleto');
+assert.match(mining.country_screen?.source_period || '', /^\d{4}-S[12]$/, 'periodo Eurostat inválido');
 for (const item of [...daily.home_regulation, ...daily.mining_news]) {
   assert.equal(item.language, 'es-ES', `titular no publicado en castellano: ${item.title}`);
   assert.ok(item.title && item.original_title && item.url && item.publisher, 'noticia incompleta');
