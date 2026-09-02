@@ -2792,6 +2792,8 @@
   function arrangeMarketsTop(){
     if(page!=='mercados')return;
     const main=document.querySelector('#main-content');
+    main?.querySelector('.kf-rwa-market .kf-rwa-kpis')?.remove();
+    main?.querySelector('.kf-rwa-market .kf-rwa-ratios')?.remove();
     const hero=main?.querySelector('.kf-page-hero');
     const priceBand=main?.querySelector('.kf-market-band');
     const metadataGrid=main?.querySelector('[data-market-metadata]');
