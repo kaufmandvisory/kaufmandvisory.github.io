@@ -643,7 +643,7 @@
   }
 
   function walletHeroMarkup(){
-    return `<header class="kf-wallet-hero"><div class="kf-container kf-wallet-hero-grid"><div class="kf-wallet-hero-copy"><p class="kf-kicker">Autocustodia y firma</p><h1>Wallets</h1><p>Compara dónde se guarda la clave, cómo se confirma una transacción y cómo se recupera el acceso.</p><dl><div><dt>Clave</dt><dd>quién la controla</dd></div><div><dt>Firma</dt><dd>qué muestra el dispositivo</dd></div><div><dt>Copia</dt><dd>cómo se recupera</dd></div></dl></div><figure><img src="${assetUrl('/assets/images/wallet-security-v1.jpg')}" alt="Dispositivo de firma hardware junto a una copia física de recuperación" width="1599" height="900"><figcaption>Dispositivo de firma y copia física: deben custodiarse por separado.</figcaption></figure></div></header>`;
+    return `<header class="kf-wallet-hero"><div class="kf-container kf-wallet-hero-grid"><div class="kf-wallet-hero-copy"><p class="kf-kicker">Autocustodia y firma</p><h1>Wallets</h1><p>Compara dónde se guarda la clave, cómo se confirma una transacción y cómo se recupera el acceso.</p><dl><div><dt>Clave</dt><dd>quién la controla</dd></div><div><dt>Firma</dt><dd>qué muestra el dispositivo</dd></div><div><dt>Copia</dt><dd>cómo se recupera</dd></div></dl></div><figure><img src="${assetUrl('/assets/images/wallet-security-v2.jpg')}" alt="Hardware wallet mostrando la revisión de una transacción de Bitcoin" width="1672" height="941"><figcaption>La dirección y el importe deben verificarse en la pantalla del dispositivo.</figcaption></figure></div></header>`;
   }
 
   function walletIntelligenceMarkup(){

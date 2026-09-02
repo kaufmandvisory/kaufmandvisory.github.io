@@ -2,7 +2,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const VERSION = 'kaufman-v72';
+const VERSION = 'kaufman-v73';
 const shells = [
   'index.html', 'mercados/index.html', 'regulacion/index.html', 'tokenizacion/index.html',
   'fiscal/index.html', 'empresas/index.html', 'bancos/index.html',
@@ -81,7 +81,7 @@ if (!appScript.includes("['home','regulacion','wallets','contacto','aviso','priv
 }
 
 for (const marker of [
-  'walletHeroMarkup', '/assets/images/wallet-security-v1.jpg', 'NGRAVE ZERO',
+  'walletHeroMarkup', '/assets/images/wallet-security-v2.jpg', 'NGRAVE ZERO',
   'SO con CC EAL7, según NGRAVE', 'Tres opciones, cinco diferencias.',
   'kf-wallet-matrix', 'https://ngrave.io/en/page/backup/zero/'
 ]) {
@@ -96,7 +96,7 @@ for (const marker of ['.kf-wallet-hero', '.kf-wallet-matrix', '.kf-token-product
 for (const rejectedWalletCopy of ['Fría y caliente no bastan para decidir.', 'Modelos de custodia y control de claves.']) {
   if (appScript.includes(rejectedWalletCopy)) failures.push(`wallets: reaparece texto retirado: ${rejectedWalletCopy}`);
 }
-const walletPhoto = await fs.stat(path.join(ROOT, 'assets/images/wallet-security-v1.jpg')).catch(() => null);
+const walletPhoto = await fs.stat(path.join(ROOT, 'assets/images/wallet-security-v2.jpg')).catch(() => null);
 if (!walletPhoto || walletPhoto.size < 100_000) failures.push('wallets: fotografía editorial ausente o incompleta');
 for (const token of [
   '--kf-type-display:', '--kf-type-page-title:', '--kf-type-section-title:',
