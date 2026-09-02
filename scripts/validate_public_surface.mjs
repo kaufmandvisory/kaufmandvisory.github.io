@@ -2,7 +2,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const VERSION = 'kaufman-v80';
+const VERSION = 'kaufman-v81';
 const shells = [
   'index.html', 'mercados/index.html', 'regulacion/index.html', 'tokenizacion/index.html',
   'fiscal/index.html', 'empresas/index.html', 'bancos/index.html',
@@ -54,8 +54,8 @@ for (const marker of ['Datos y consultas', 'COMPROBACIONES', 'DATOS QUE RESUELVE
 for (const rejectedHomeCopy of ['Decision Brief', 'RUTA PROPUESTA', 'Explorar territorio', 'Empieza por la decisión', 'Qué puede cambiar una decisión', 'HOY', 'dateVerb', 'feedDateParts']) {
   if (publicHomeCopy.includes(rejectedHomeCopy)) failures.push(`home: reaparece texto retirado ${rejectedHomeCopy}`);
 }
-if (!appScript.includes("if(page==='mineria'||page==='home')return '';")) failures.push('home: reaparece el cierre comercial');
-if (!appScript.includes("const commercialPages=!['home','regulacion','wallets'")) failures.push('home o wallets: vuelve a admitir el cierre comercial');
+if (!appScript.includes("if(page==='mineria'||page==='home'||page==='fiscal')return '';")) failures.push('home, minería o fiscal: reaparece el cierre comercial');
+if (!appScript.includes("const commercialPages=!['home','regulacion','wallets','fiscal'")) failures.push('home, regulación, wallets o fiscal: vuelve a admitir el cierre comercial');
 if (!appScript.includes("page==='home'?'Kaufman Reference Price'")) failures.push('home: la fuente minera vuelve a mostrar la edad del precio');
 if (!appScript.includes("main?.querySelector('.kf-rwa-market .kf-rwa-kpis')?.remove();") || !appScript.includes("main?.querySelector('.kf-rwa-market .kf-rwa-ratios')?.remove();")) failures.push('mercados: reaparece el resumen RWA duplicado');
 if (!appStyles.includes('.kf-feed-item.no-time')) failures.push('home: las referencias sin fecha pierden su composición');
@@ -85,7 +85,7 @@ for (const marker of ['fiscalHeroMarkup', 'kf-fiscal-hero-frame', '/assets/image
   if (!appScript.includes(marker)) failures.push(`fiscal: falta ${marker}`);
 }
 const fiscalSurface = sliceFunction('fiscalHeroMarkup', 'compareFields');
-for (const rejectedFiscalCopy of ['Caso A', 'Contraste', 'Caso B', 'kf-fiscal-editorial', 'Compara el tratamiento de una operación blockchain según jurisdicción, residencia y perfil fiscal.', 'Jurisdicción × operación × perfil', 'Documentación fiscal', 'Operación · fecha · coste · residencia', 'Antes de calcular.', 'Qué datos determinan el tratamiento fiscal.', 'Vender, permutar, recibir recompensas']) {
+for (const rejectedFiscalCopy of ['Caso A', 'Contraste', 'Caso B', 'kf-fiscal-editorial', 'kf-fiscal-kpis', 'Compara el tratamiento de una operación blockchain según jurisdicción, residencia y perfil fiscal.', 'Jurisdicción × operación × perfil', 'Documentación fiscal', 'Operación · fecha · coste · residencia', 'Antes de calcular.', 'Qué datos determinan el tratamiento fiscal.', 'Vender, permutar, recibir recompensas']) {
   if (fiscalSurface.includes(rejectedFiscalCopy)) failures.push(`fiscal: reaparece contenido retirado: ${rejectedFiscalCopy}`);
 }
 for (const marker of ['data-regulation-table', 'data-regulation-detail', 'data-regulation-comparison', 'data-regulation-expand', 'REGULATION_REFERENCE_IDS', 'Actividades cubiertas', 'A quién afecta', 'Qué no cubre']) {
@@ -94,7 +94,7 @@ for (const marker of ['data-regulation-table', 'data-regulation-detail', 'data-r
 for (const rejectedRegulationPattern of ['Construyendo fichas regulatorias', 'Mapa de regímenes']) {
   if (appScript.includes(rejectedRegulationPattern)) failures.push(`regulacion: reaparece interfaz retirada: ${rejectedRegulationPattern}`);
 }
-if (!appScript.includes("['home','regulacion','wallets','contacto','aviso','privacidad','cookies','terminos','retirado']")) {
+if (!appScript.includes("['home','regulacion','wallets','fiscal','contacto','aviso','privacidad','cookies','terminos','retirado']")) {
   failures.push('regulacion: el cierre comercial vuelve a estar habilitado');
 }
 

@@ -1314,15 +1314,7 @@ button,input,select,textarea{font-family:var(--kf-sans)}
 .kf-fiscal-hero figure img{width:100%;height:100%;object-fit:cover;object-position:center;filter:saturate(.72) contrast(1.04)}
 .kf-fiscal-live{padding-top:36px}
 
-.kf-fiscal-kpis{grid-template-columns:repeat(5,1fr);margin-top:28px;border:0;border-block:1px solid var(--kf-ink);border-radius:0;background:transparent;color:var(--kf-ink);overflow:visible}
-.kf-fiscal-kpis article{min-height:116px;padding:18px 20px;border-right:1px solid var(--kf-line-dark)}
-.kf-fiscal-kpis article:first-child{padding-left:0}
-.kf-fiscal-kpis article:last-child{padding-right:0;border-right:0}
-.kf-fiscal-kpis span{color:var(--kf-muted);font-family:var(--kf-mono);font-size:10px;letter-spacing:.09em}
-.kf-fiscal-kpis strong{font-family:var(--kf-serif);font-size:31px;font-weight:600;letter-spacing:-.025em}
-.kf-fiscal-kpis small{color:var(--kf-muted);font-size:11px}
-
-.kf-fiscal-engine{grid-template-columns:1fr;margin-top:66px;border-color:var(--kf-ink);border-radius:3px;background:var(--kf-paper-raised);color:var(--kf-ink)}
+.kf-fiscal-engine{grid-template-columns:1fr;margin-top:0;border-color:var(--kf-ink);border-radius:3px;background:var(--kf-paper-raised);color:var(--kf-ink)}
 .kf-fiscal-engine-copy{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(300px,.7fr);gap:58px;align-items:end;padding:34px 38px;border:0;background:var(--kf-ink);color:var(--kf-white)}
 .kf-fiscal-engine-copy h2{max-width:780px;margin:8px 0 14px;font-family:var(--kf-serif);font-size:clamp(40px,4.2vw,58px);font-weight:500;line-height:1;letter-spacing:-.03em}
 .kf-fiscal-engine-copy>div>p:not(.kf-kicker){max-width:720px;margin:0;color:#c5cbc9;font-size:14px;line-height:1.65}
@@ -1344,11 +1336,6 @@ button,input,select,textarea{font-family:var(--kf-sans)}
 
 @media(max-width:1040px){
   .kf-fiscal-hero-frame{grid-template-columns:minmax(320px,.85fr) minmax(0,1.15fr);min-height:450px}.kf-fiscal-hero-copy{padding-right:34px}
-  .kf-fiscal-kpis{grid-template-columns:repeat(2,1fr)}
-  .kf-fiscal-kpis article{border-color:var(--kf-line-dark)}
-  .kf-fiscal-kpis article:nth-child(odd){padding-left:0}
-  .kf-fiscal-kpis article:nth-child(even){padding-right:0}
-  .kf-fiscal-kpis article:last-child{grid-column:1/-1;padding-left:0;border-bottom:0}
   .kf-fiscal-engine-copy{grid-template-columns:1fr;gap:25px}
   .kf-fiscal-controls{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
@@ -1356,11 +1343,7 @@ button,input,select,textarea{font-family:var(--kf-sans)}
 @media(max-width:680px){
   .kf-fiscal-hero>.kf-container{padding-top:24px;padding-bottom:30px}.kf-fiscal-hero .kf-breadcrumbs{margin-bottom:18px}.kf-fiscal-hero-frame{grid-template-columns:1fr;min-height:0}.kf-fiscal-hero-copy{min-height:340px;padding:28px 0 25px;border-right:0;border-bottom:1px solid var(--kf-ink)}.kf-fiscal-hero h1{font-size:55px}.kf-fiscal-hero figure{aspect-ratio:4/3}
   .kf-fiscal-live{padding-top:34px}
-  .kf-fiscal-kpis{grid-template-columns:1fr 1fr}
-  .kf-fiscal-kpis article{min-height:108px;padding:15px 12px;border-bottom:1px solid var(--kf-line-dark)}
-  .kf-fiscal-kpis article:nth-child(odd){padding-left:0}
-  .kf-fiscal-kpis article:last-child{grid-column:1/-1;min-height:96px}
-  .kf-fiscal-engine{margin-top:48px}
+  .kf-fiscal-engine{margin-top:0}
   .kf-fiscal-engine-copy{padding:25px 22px}
   .kf-fiscal-engine-copy h2{font-size:37px}
   .kf-fiscal-safety{padding-left:16px}
