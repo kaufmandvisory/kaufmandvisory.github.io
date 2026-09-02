@@ -14,7 +14,6 @@
     {key:'mineria',label:'Minería',path:'/mineria/',code:'POW',description:'Red, dificultad, energía y economía minera.',tone:'auto'},
     {key:'hardware',label:'Hardware',path:'/hardware/',code:'ASIC',description:'Equipos, eficiencia, algoritmos y disponibilidad.',tone:'verified'},
     {key:'rentabilidades',label:'Rentabilidades',path:'/rentabilidades/',code:'RETURN',description:'Rendimiento observado por periodo, sin predicciones.',tone:'auto'},
-    {key:'riesgos',label:'Riesgos',path:'/riesgos/',code:'RISK',description:'Custodia, mercado, tecnología y regulación.',tone:'verified'},
     {key:'fiscal',label:'Fiscal',path:'/fiscal/',code:'TAX',description:'Hechos fiscales blockchain comparados por jurisdicción, evento y nivel de certeza.',tone:'auto'}
   ];
 
@@ -101,14 +100,6 @@
       {id:'s21-xp',name:'Antminer S21 XP',subtitle:'SHA-256 · refrigeración por aire',status:'verified',source:{name:'BITMAIN Support',url:'https://support.bitmain.com/hc/en-us/articles/35383015643673-S21-XP-Specifications',type:'Especificación oficial'},fields:{'Hashrate típico':'270 TH/s','Potencia típica':'3.645 W','Eficiencia típica':'13,5 J/TH','Entorno':'−20 a 45 °C · 220–277 V'}},
       {id:'s21-xp-hyd',name:'Antminer S21 XP Hyd',subtitle:'SHA-256 · refrigeración hidráulica',status:'verified',source:{name:'BITMAIN Support',url:'https://support.bitmain.com/hc/en-us/articles/34523540504857-S21-XP-Hyd-Specification',type:'Especificación oficial'},fields:{'Hashrate típico':'473 TH/s','Potencia típica':'5.676 W','Eficiencia típica':'12,0 J/TH','Requisito':'380–415 V · circuito hidráulico'}},
       {id:'s21',name:'Antminer S21',subtitle:'SHA-256 · refrigeración por aire',status:'verified',source:{name:'BITMAIN Support',url:'https://support.bitmain.com/hc/en-us/articles/23794895251609-S21-Specification',type:'Especificación oficial'},fields:{'Hashrate típico':'200 TH/s','Potencia típica':'3.500 W','Eficiencia típica':'17,5 J/TH','Entorno':'0 a 45 °C · 220–277 V'}}
-    ]},
-    riesgos:{label:'Riesgos',description:'Dependencias técnicas, operativas y jurídicas visibles; descentralización tratada como un conjunto de controles comprobables.',items:[
-      {id:'contrato-inteligente',name:'Contrato inteligente',subtitle:'Vulnerabilidades y controles',status:'verified',source:{name:'OWASP Smart Contract Top 10',url:'https://scs.owasp.org/sctop10/',type:'Estándar de seguridad 2026'},fields:{'Indicadores':'Control de acceso, lógica, oráculos, reentrancia y dependencias','Uso':'Checklist de revisión, no auditoría','Evidencia':'Categorías OWASP 2026','Mitigación':'Diseño seguro, pruebas y auditoría independiente'}},
-      {id:'infraestructura-l2',name:'Infraestructura L2',subtitle:'Upgrades, DA, secuenciador y salida',status:'auto',source:{name:'L2BEAT',url:'https://l2beat.com/scaling/summary',type:'Datos y matriz de riesgos'},fields:{'Indicadores':'Madurez, ventana de salida, validación y disponibilidad de datos','Uso':'Comparar dependencia adicional','Evidencia':'Campo original L2BEAT conservado','Límite':'El nivel de madurez no equivale a seguridad total'}},
-      {id:'regulatorio',name:'Autorización y perímetro',subtitle:'Proveedor, servicio y jurisdicción',status:'verified',source:{name:'ESMA MiCA Register',url:'https://www.esma.europa.eu/publications-and-data/interactive-single-rulebook/mica',type:'Registro regulatorio europeo'},fields:{'Indicadores':'Entidad, autorización, servicio y pasaporte','Uso':'Comprobar proveedor concreto','Evidencia':'Registro ESMA y autoridad nacional','Límite':'Una marca puede operar mediante distintas entidades'}},
-      {id:'custodia',name:'Custodia y recuperación',subtitle:'Claves, contraparte y dispositivo',status:'verified',source:{name:'ESMA · advertencia cripto',url:'https://www.esma.europa.eu/investor-corner/is-the-firm-regulated',type:'Orientación oficial'},fields:{'Indicadores':'Control de claves, autorización, recuperación y actualización','Uso':'Checklist previa a depositar activos','Evidencia':'Registro y documentación del proveedor','Mitigación':'Verificación de entidad, copias y seguridad del dispositivo'}},
-      {id:'datos-web3',name:'Disponibilidad y procedencia de datos',subtitle:'RPC, indexación, oráculos y almacenamiento',status:'verified',source:{name:'IPFS Docs',url:'https://docs.ipfs.tech/concepts/what-is-ipfs/',type:'Documentación de protocolo'},fields:{'Indicadores':'Proveedor RPC, bloque, indexador, oráculo, CID y persistencia','Uso':'Detectar puntos únicos de fallo fuera de la cadena','Evidencia':'Configuración y contratos concretos','Mitigación':'Redundancia, verificación independiente y fallback probado'}},
-      {id:'gobernanza-web3',name:'Gobernanza y llaves administrativas',subtitle:'Upgrades, pausas, módulos y umbrales',status:'verified',source:{name:'Safe Docs',url:'https://docs.safe.global/advanced/smart-account-concepts',type:'Documentación técnica primaria'},fields:{'Indicadores':'Propietarios, umbral, timelock, módulos, guards y poder de upgrade','Uso':'Separar marca descentralizada de control operativo real','Evidencia':'Contratos, configuración y procesos publicados','Mitigación':'Umbrales, demoras, límites y monitorización onchain'}}
     ]}
   };
   const BANK_INTELLIGENCE=window.KAUFMAN_BANK_INTELLIGENCE||null;
@@ -131,15 +122,14 @@
       };
     });
   }
-  const HOME_DIRECTORY_KEYS = ['empresas','bancos','exchanges','wallets','proyectos','mineria','hardware','riesgos'];
-  const ECOSYSTEM_ORDER = ['mercado','regulacion','empresas','infraestructura','custodia','riesgo'];
+  const HOME_DIRECTORY_KEYS = ['empresas','bancos','exchanges','wallets','proyectos','mineria','hardware'];
+  const ECOSYSTEM_ORDER = ['mercado','regulacion','empresas','infraestructura','custodia'];
   const ECOSYSTEM_TERRITORIES = {
     mercado:{index:'01',label:'Mercado',x:21,y:22,side:'left',headline:'Capital, precio y liquidez en contexto.',description:'Une el precio de referencia, la tokenización, los mercados centralizados y el efecto fiscal de cada operación.',decision:'Determina si el tamaño, la liquidez y el coste hacen viable la operación ahora.',action:'Cuantificar mercado y coste',href:'/mercados/',linkLabel:'Abrir inteligencia de mercado',sublayers:[['Precios','/mercados/'],['RWA','/tokenizacion/'],['Exchanges','/exchanges/'],['Rentabilidad','/rentabilidades/'],['Fiscalidad','/fiscal/']]},
     regulacion:{index:'02',label:'Regulación',x:10,y:63,side:'left',headline:'La norma situada en su territorio.',description:'Relaciona fuentes primarias, fechas efectivas, autoridades y efectos prácticos sin confundir acceso técnico con vigencia jurídica.',decision:'Aclara qué autorización, fecha y autoridad pueden impedir o condicionar la operación.',action:'Comprobar perímetro regulatorio',href:'/regulacion/',linkLabel:'Abrir regulación blockchain',sublayers:[['Marcos vigentes','/regulacion/'],['Fiscalidad','/fiscal/'],['Bancos','/bancos/']]},
     empresas:{index:'03',label:'Empresas',x:54,y:13,side:'top',headline:'Actividad real detrás del anuncio.',description:'Conecta compañías, bancos e iniciativas tokenizadas con la fuente que permite comprobar su estado y alcance.',decision:'Separa una iniciativa operativa de un anuncio y revela qué entidad asume la ejecución.',action:'Verificar entidad y actividad',href:'/empresas/',linkLabel:'Abrir inteligencia empresarial',sublayers:[['Empresas','/empresas/'],['Bancos','/bancos/'],['RWA','/tokenizacion/'],['Proyectos','/proyectos/']]},
     infraestructura:{index:'04',label:'Infraestructura',x:86,y:35,side:'right',headline:'La capa que sostiene el sistema.',description:'Expone redes L2, proyectos, minería y hardware junto a sus dependencias, costes y señales operativas.',decision:'Hace visibles las dependencias técnicas que afectan continuidad, coste y capacidad de salida.',action:'Evaluar dependencias técnicas',href:'/mercados/',linkLabel:'Abrir inteligencia de infraestructura',sublayers:[['L2','/mercados/'],['Minería','/mineria/'],['Hardware','/hardware/'],['Proyectos','/proyectos/'],['Herramientas','/herramientas/']]},
-    custodia:{index:'05',label:'Custodia',x:70,y:82,side:'right',headline:'Quién controla, conserva y recupera.',description:'Cruza wallets, exchanges y bancos para separar control de claves, contraparte, autorización y superficie de recuperación.',decision:'Define quién controla las claves, cómo se recupera el acceso y qué contraparte queda expuesta.',action:'Elegir modelo de custodia',href:'/wallets/',linkLabel:'Abrir inteligencia de custodia',sublayers:[['Wallets','/wallets/'],['Exchanges','/exchanges/'],['Bancos','/bancos/']]},
-    riesgo:{index:'06',label:'Riesgo',x:30,y:89,side:'bottom',headline:'Dependencias visibles antes de decidir.',description:'Reúne riesgo tecnológico, regulatorio, de custodia y de infraestructura sin convertir señales parciales en una puntuación opaca.',decision:'Convierte dependencias dispersas en una lista de comprobaciones y condiciones de no ejecución.',action:'Construir condiciones de control',href:'/riesgos/',linkLabel:'Abrir mapa de riesgos',sublayers:[['Riesgos','/riesgos/'],['Regulación','/regulacion/'],['Custodia','/wallets/'],['Proyectos','/proyectos/']]}
+    custodia:{index:'05',label:'Custodia',x:70,y:82,side:'right',headline:'Quién controla, conserva y recupera.',description:'Cruza wallets, exchanges y bancos para separar control de claves, contraparte, autorización y superficie de recuperación.',decision:'Define quién controla las claves, cómo se recupera el acceso y qué contraparte queda expuesta.',action:'Elegir modelo de custodia',href:'/wallets/',linkLabel:'Abrir inteligencia de custodia',sublayers:[['Wallets','/wallets/'],['Exchanges','/exchanges/'],['Bancos','/bancos/']]}
   };
 
   const STATUS_LABELS = {verified:'VERIFICADO',sourcechecked:'FUENTE CONTRASTADA',unverified:'REVISIÓN NECESARIA',auto:'AUTOMÁTICO',offline:'NO DISPONIBLE'};
@@ -361,7 +351,7 @@
 
   function directoryHubMarkup(){
     const totalProfiles=HOME_DIRECTORY_KEYS.reduce((total,key)=>total+(CATALOGS[key]?.items.length||0),0);
-    const priorityKeys=['proyectos','wallets','riesgos'];
+    const priorityKeys=['proyectos','wallets','bancos'];
     const priority=priorityKeys.map((key,index)=>{
       const catalog=CATALOGS[key],route=findRoute(key);
       const profiles=catalog.items.slice(0,3).map((item)=>`<a href="${profileUrl(key,item.id)}">${escapeHtml(item.name)} <span>↗</span></a>`).join('');
@@ -408,11 +398,7 @@
       metric(connectedProviders||'—','fuentes de datos activas','Observación server-side'),
       metric(new Set(referencePrices.flatMap((item)=>item?.venues||[])).size||'—','mercados usados en referencias','Venues elegibles')
     ];
-    return [
-      metric(l2?.kpis?.projects_without_emergency_exit_window??'—','proyectos sin ventana de salida urgente','L2BEAT · universo completo'),
-      metric(l2?.coverage?.under_review??'—','proyectos L2 en revisión','Estado de la fuente'),
-      metric(CATALOGS.riesgos?.items.length||'—','marcos de riesgo accionables','OWASP · L2BEAT · ESMA')
-    ];
+    return [];
   }
 
   function ecosystemPanelMarkup(territoryId,snapshot=latestMarketSnapshot){
@@ -524,6 +510,19 @@
     }
   };
 
+  const BANK_SELECTION_FACTS={
+    'jpmorgan-chase':{serviceState:'EN PRODUCCIÓN',settlement:'Depósitos blockchain y pagos 24/7/365',network:'Kinexys · red institucional',risk:'Costes, mínimos y SLA no publicados'},
+    'hsbc':{serviceState:'EN PRODUCCIÓN',settlement:'Valores y depósitos tokenizados',network:'HSBC Orion · integración Swift publicada',risk:'Disponibilidad sujeta a país y cliente'},
+    'credit-agricole':{legal:'CACEIS Bank · autorización MiCA',legalNote:'Custodia, administración, transferencia y órdenes',serviceState:'AUTORIZADO',settlement:'Custodia y transferencia institucional',network:'Red según activo y operación',risk:'Tarifas y subcustodios según contrato'},
+    'mufg':{serviceState:'INFRAESTRUCTURA PUBLICADA',settlement:'Emisión y gestión de activos tokenizados',network:'Progmat · red según emisión',risk:'Disponibilidad por producto y jurisdicción'},
+    'citigroup':{serviceState:'EN PRODUCCIÓN / PILOTO',settlement:'Depósitos tokenizados y trade finance',network:'CIDAP · redes públicas y privadas',risk:'Entidad, precio y SLA según contrato'},
+    'banco-santander':{serviceState:'OPERACIÓN PUBLICADA',settlement:'Bono, efectivo y cupones tokenizados',network:'Ethereum público · operación de 2019',risk:'No prueba oferta contratable actual'},
+    'societe-generale':{serviceState:'EN PRODUCCIÓN',settlement:'Stablecoins, bonos y productos estructurados',network:'Ethereum · Tezos · Canton',risk:'Acceso, liquidez y tarifas institucionales'},
+    'goldman-sachs':{serviceState:'INFRAESTRUCTURA PUBLICADA',settlement:'Mercados de capitales digitales',network:'GS DAP · DLT institucional',risk:'Estructura corporativa y costes por confirmar'},
+    'deutsche-bank':{serviceState:'MVP / BLUEPRINT',settlement:'Custodia y distribución multichain',network:'Ethereum · L2 institucional · Axelar',risk:'No presentado como servicio comercial'},
+    'ubs':{serviceState:'PRODUCCIÓN OBSERVADA',settlement:'Fondos, bonos, notas y repos tokenizados',network:'UBS Tokenize · Ethereum y rails institucionales',risk:'Elegibilidad, custodio y precio según operación'}
+  };
+
   function itemSources(item){
     const redirects={
       'https://www.hsbc.com/who-we-are/our-businesses-and-customers/hsbc-orion':'https://www.hsbc.com/who-we-are/hsbc-and-digital/hsbc-and-digital-assets-and-currencies',
@@ -557,8 +556,29 @@
     return bank;
   }
 
+  function bankComparison(item){
+    const bank=bankDisplay(item);
+    const specific=(item.sources||[]).length>1;
+    const fact=BANK_SELECTION_FACTS[item.id]||{};
+    const defaultState=bank.activityLevel==='Sin atribución individual'?'CONTEXTO SECTORIAL':specific?'INICIATIVA PUBLICADA':'NO VERIFICADO';
+    const custodyKnown=!/^(No verificada|No publicada)/i.test(bank.custody||'');
+    return {
+      legal:fact.legal||'Entidad prestadora no identificada',
+      legalNote:fact.legalNote||`${bank.country} · verificar entidad y autorización del servicio`,
+      service:bank.activity,
+      serviceState:fact.serviceState||defaultState,
+      custody:custodyKnown?bank.custody:'No verificada',
+      custodyNote:custodyKnown?'Segregación y subcustodios según contrato':'Sin evidencia suficiente en la fuente vinculada',
+      settlement:fact.settlement||'No publicado',
+      network:fact.network||'Red y firmeza de liquidación no publicadas',
+      risk:fact.risk||'No evaluable con la evidencia actual',
+      cost:'Coste total no publicado'
+    };
+  }
+
   function bankFields(item){
     const bank=bankDisplay(item);
+    const comparison=bankComparison(item);
     const fields={...(item.fields||{})};
     if(bank.activityLevel==='Sin atribución individual')fields['Actividad blockchain pública']='El PBOC documenta un sistema de operadores bancarios e-CNY; esta ficha no atribuye una función concreta al banco.';
     if(bank.activityLevel==='Cobertura pendiente'){
@@ -571,6 +591,11 @@
       fields['Última comprobación automática']=new Intl.DateTimeFormat('es-ES',{dateStyle:'medium',timeZone:'Europe/Madrid'}).format(new Date(source.checked_at));
       fields['Estado técnico de la fuente']=source.connection_status==='CONNECTED'?'Fuente corporativa accesible':'Fuente temporalmente no accesible; se conserva el último hecho validado';
     }
+    fields['Entidad y autorización']=`${comparison.legal} · ${comparison.legalNote}`;
+    fields['Servicio y estado']=`${comparison.serviceState} · ${comparison.service}`;
+    fields['Custodia y protección']=`${comparison.custody} · ${comparison.custodyNote}`;
+    fields['Liquidación y redes']=`${comparison.settlement} · ${comparison.network}`;
+    fields['Riesgo y coste']=`${comparison.risk} · ${comparison.cost}`;
     return {...fields,...(BANK_DIGITAL_FACTS[item.id]||{})};
   }
 
@@ -611,14 +636,15 @@
     const regions=[...new Set(banks.map((item)=>item.bank.region))];
     const rows=banks.map((item)=>{
       const bank=bankDisplay(item);
+      const comparison=bankComparison(item);
       const sources=itemSources(item);
       const facts=Object.entries(bankFields(item)).map(([key,value])=>`<div><dt>${escapeHtml(key)}</dt><dd>${escapeHtml(value)}</dd></div>`).join('');
       const sourceLinks=sources.map((source)=>`<a href="${source.url}" target="_blank" rel="noopener noreferrer"><strong>${escapeHtml(source.name)}</strong><span>${escapeHtml(source.type)} ↗</span></a>`).join('');
-      const search=[item.name,item.subtitle,bank.country,bank.region,bank.activity,bank.activityLevel,bank.custody,bank.access].join(' ').toLowerCase();
-      const activityClass=['Cobertura pendiente','Sin atribución individual'].includes(bank.activityLevel)?' pending':'';
-      return `<details class="kf-bank-row" data-bank-record data-bank-region="${escapeHtml(bank.region)}" data-bank-search="${escapeHtml(search)}"><summary><span class="kf-bank-rank">${String(bank.rank).padStart(2,'0')}</span><span class="kf-bank-name"><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(bank.country)} · ${escapeHtml(item.subtitle.split('·').slice(1).join('·').trim()||'grupo bancario')}</small></span><span class="kf-bank-assets"><strong>${bankAssetsCompact(bank.assets)}</strong><small>activos totales</small></span><span class="kf-bank-activity${activityClass}"><strong>${escapeHtml(bank.activity)}</strong><small>${escapeHtml(bank.activityLevel)}</small></span><span class="kf-bank-access"><strong>${escapeHtml(bank.access)}</strong><small>${escapeHtml(bank.custody)}</small></span><span class="kf-bank-open"><b>Abrir</b><i aria-hidden="true"></i></span></summary><div class="kf-bank-detail"><dl>${facts}</dl><aside><span>Fuentes de la ficha</span>${sourceLinks}<a class="kf-bank-profile-link" href="${profileUrl('bancos',item.id)}">Abrir ficha completa →</a></aside></div></details>`;
+      const search=[item.name,item.subtitle,bank.country,bank.region,...Object.values(comparison)].join(' ').toLowerCase();
+      const serviceClass=['NO VERIFICADO','CONTEXTO SECTORIAL','MVP / BLUEPRINT','OPERACIÓN PUBLICADA'].includes(comparison.serviceState)?' pending':'';
+      return `<details class="kf-bank-row" data-bank-record data-bank-region="${escapeHtml(bank.region)}" data-bank-search="${escapeHtml(search)}"><summary><span class="kf-bank-identity"><b>${String(bank.rank).padStart(2,'0')}</b><span><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(bank.country)} · ${bankAssetsCompact(bank.assets)}</small></span></span><span class="kf-bank-legal"><strong>${escapeHtml(comparison.legal)}</strong><small>${escapeHtml(comparison.legalNote)}</small></span><span class="kf-bank-service${serviceClass}"><strong>${escapeHtml(comparison.serviceState)}</strong><small>${escapeHtml(comparison.service)}</small></span><span class="kf-bank-custody"><strong>${escapeHtml(comparison.custody)}</strong><small>${escapeHtml(comparison.custodyNote)}</small></span><span class="kf-bank-settlement"><strong>${escapeHtml(comparison.settlement)}</strong><small>${escapeHtml(comparison.network)}</small></span><span class="kf-bank-risk"><strong>${escapeHtml(comparison.risk)}</strong><small>${escapeHtml(comparison.cost)}</small></span><span class="kf-bank-open"><i aria-hidden="true"></i></span></summary><div class="kf-bank-detail"><dl>${facts}</dl><aside><span>Fuentes de la ficha</span>${sourceLinks}<a class="kf-bank-profile-link" href="${profileUrl('bancos',item.id)}">Abrir ficha completa →</a></aside></div></details>`;
     }).join('');
-    return `${bankIntelligenceMarkup(banks)}<section class="kf-bank-registry" aria-label="Comparador de los 25 mayores bancos"><div class="kf-bank-tools"><label><span>Buscar banco, país o iniciativa</span><input type="search" data-bank-search placeholder="Ej. Santander, Japón, tokenización…"></label><label><span>Región</span><select data-bank-region><option value="all">Todas</option>${regions.map((region)=>`<option value="${escapeHtml(region)}">${escapeHtml(region)}</option>`).join('')}</select></label><span class="kf-bank-count" data-bank-count>${banks.length} bancos</span></div><div class="kf-bank-columns" aria-hidden="true"><span>Puesto</span><span>Banco y sede</span><span>Activos</span><span>Actividad blockchain</span><span>Acceso y custodia</span><span>Ficha</span></div><div class="kf-bank-list">${rows}<p class="kf-bank-empty" data-bank-empty hidden>No hay bancos que coincidan con el filtro.</p></div><p class="kf-bank-caveat"><strong>Lectura correcta:</strong> el tamaño no mide solvencia, rentabilidad ni calidad. «Sin producto vinculado» significa que Kaufman no adjunta una fuente primaria específica en este corte; no demuestra que el banco carezca de actividad interna.</p></section>`;
+    return `${bankIntelligenceMarkup(banks)}<section class="kf-bank-registry" aria-label="Comparador de los 25 mayores bancos"><div class="kf-bank-tools"><label><span>Buscar banco, país o iniciativa</span><input type="search" data-bank-search placeholder="Ej. Santander, Japón, tokenización…"></label><label><span>Región</span><select data-bank-region><option value="all">Todas</option>${regions.map((region)=>`<option value="${escapeHtml(region)}">${escapeHtml(region)}</option>`).join('')}</select></label><span class="kf-bank-count" data-bank-count>${banks.length} bancos</span></div><div class="kf-bank-columns" aria-hidden="true"><span>Banco y escala</span><span>Entidad y autorización</span><span>Servicio real</span><span>Custodia</span><span>Liquidación y redes</span><span>Riesgo y coste</span><span></span></div><div class="kf-bank-list">${rows}<p class="kf-bank-empty" data-bank-empty hidden>No hay bancos que coincidan con el filtro.</p></div><p class="kf-bank-caveat"><strong>Cómo elegir:</strong> el puesto y los activos solo describen escala. La decisión exige confirmar la entidad contractual, autorización exacta, disponibilidad real, segregación y devolución de activos, firmeza de liquidación, dependencias, precio y SLA. «No publicado» nunca se interpreta como cumplido.</p></section>`;
   }
 
   function walletIntelligenceMarkup(){
@@ -641,19 +667,7 @@
       {code:'05',name:'Indexación',copy:'Quién transforma la cadena en consultas útiles.',items:['The Graph']},
       {code:'06',name:'Identidad',copy:'Cómo se resuelve una identidad a una dirección.',items:['ENS']}
     ];
-    return `<section class="kf-web3-map"><div class="kf-intel-lead"><div><p class="kf-kicker">Infraestructura Web3</p><h2>Una aplicación descentralizada sigue teniendo dependencias.</h2></div><p>Kaufman no clasifica un proyecto por su token. Lo sitúa en la función que resuelve y muestra qué debe verificarse: contratos, operadores, proveedores de datos, almacenamiento, governance y ruta de salida.</p></div><div class="kf-web3-flow">${layers.map((layer,index)=>`<article><span>${layer.code}</span><div><small>${index===0?'ORIGEN':index===layers.length-1?'INTERFAZ':'CAPA'}</small><h3>${layer.name}</h3><p>${layer.copy}</p><strong>${layer.items.join(' · ')}</strong></div></article>`).join('')}</div><div class="kf-subsection-label">Telemetría de dependencias</div><div class="kf-web3-telemetry" data-web3-telemetry><div class="kf-live-empty">Observando cadena, contratos, gateways y releases…</div></div><div class="kf-decentralization-rule"><div><span>DESCENTRALIZACIÓN</span><strong>No es una etiqueta binaria.</strong></div><ol><li><b>Control</b><span>Quién puede actualizar, pausar o censurar.</span></li><li><b>Verificación</b><span>Qué puede comprobar el usuario sin confiar en la interfaz.</span></li><li><b>Disponibilidad</b><span>Qué ocurre si falla un operador, RPC, indexador o proveedor.</span></li><li><b>Salida</b><span>Si existe una ruta para recuperar control o fondos.</span></li></ol><a href="/riesgos/">Abrir controles de descentralización →</a></div><div class="kf-intel-evidence"><p><strong>Criterio de inclusión:</strong> una pieza ocupa una función diferenciada del stack y dispone de documentación técnica primaria o de una matriz pública conectada. No es un ranking ni una recomendación.</p><nav><a href="https://ethereum.org/developers/docs/" target="_blank" rel="noopener noreferrer">Stack Ethereum ↗</a><a href="https://docs.ipfs.tech/concepts/what-is-ipfs/" target="_blank" rel="noopener noreferrer">Qué es —y qué no es— IPFS ↗</a><a href="https://thegraph.com/docs/en/about/" target="_blank" rel="noopener noreferrer">Indexación onchain ↗</a></nav></div></section>`;
-  }
-
-  function decentralizationRiskMarkup(){
-    const dimensions=[
-      ['Upgrade y pausa','Direcciones con poder, umbral, timelock y alcance','Contratos desplegados · gobernanza'],
-      ['Producción de bloques','Secuenciador, proponente o validador; alternativa ante caída','L2BEAT · cliente o red'],
-      ['Disponibilidad de datos','Dónde se publican datos y si pueden reconstruirse','L2BEAT · protocolo DA'],
-      ['Oráculos y bridges','Fuente, agregación, actualización, límites y permisos','Contratos y documentación'],
-      ['Interfaz y lectura','RPC, indexador, gateway, bloque y posibilidad de verificación','The Graph · IPFS · nodo'],
-      ['Custodia y salida','Quién firma, cómo se recupera y si existe retirada independiente','Wallet · contrato · entidad']
-    ];
-    return `<section class="kf-risk-intel"><div class="kf-intel-lead"><div><p class="kf-kicker">Riesgo de descentralización</p><h2>Medir el control real, no el relato.</h2></div><p>Un sistema puede estar descentralizado en consenso y centralizado en upgrades, datos, secuenciación o interfaz. La revisión se hace por dimensión y siempre sobre el despliegue concreto.</p></div><div class="kf-risk-dimensions"><header><span>Dimensión</span><span>Pregunta comprobable</span><span>Evidencia mínima</span></header>${dimensions.map(([name,question,evidence],index)=>`<article><span>0${index+1}</span><h3>${name}</h3><p>${question}</p><strong>${evidence}</strong></article>`).join('')}</div><div class="kf-risk-route"><div><span>PROTOCOLO</span><strong>Contrato y governance</strong></div><i></i><div><span>OPERACIÓN</span><strong>Nodos, datos y interfaces</strong></div><i></i><div><span>USUARIO</span><strong>Firma, recuperación y salida</strong></div></div><p class="kf-risk-note">La ausencia de una prueba no demuestra centralización; demuestra que esa afirmación todavía no está sustentada. Kaufman no rellena ese vacío con una puntuación inventada.</p></section>`;
+    return `<section class="kf-web3-map"><div class="kf-intel-lead"><div><p class="kf-kicker">Infraestructura Web3</p><h2>Una aplicación descentralizada sigue teniendo dependencias.</h2></div><p>Kaufman no clasifica un proyecto por su token. Lo sitúa en la función que resuelve y muestra qué debe verificarse: contratos, operadores, proveedores de datos, almacenamiento, governance y ruta de salida.</p></div><div class="kf-web3-flow">${layers.map((layer,index)=>`<article><span>${layer.code}</span><div><small>${index===0?'ORIGEN':index===layers.length-1?'INTERFAZ':'CAPA'}</small><h3>${layer.name}</h3><p>${layer.copy}</p><strong>${layer.items.join(' · ')}</strong></div></article>`).join('')}</div><div class="kf-subsection-label">Telemetría de dependencias</div><div class="kf-web3-telemetry" data-web3-telemetry><div class="kf-live-empty">Observando cadena, contratos, gateways y releases…</div></div><div class="kf-decentralization-rule"><div><span>DESCENTRALIZACIÓN</span><strong>No es una etiqueta binaria.</strong></div><ol><li><b>Control</b><span>Quién puede actualizar, pausar o censurar.</span></li><li><b>Verificación</b><span>Qué puede comprobar el usuario sin confiar en la interfaz.</span></li><li><b>Disponibilidad</b><span>Qué ocurre si falla un operador, RPC, indexador o proveedor.</span></li><li><b>Salida</b><span>Si existe una ruta para recuperar control o fondos.</span></li></ol></div><div class="kf-intel-evidence"><p><strong>Criterio de inclusión:</strong> una pieza ocupa una función diferenciada del stack y dispone de documentación técnica primaria o de una matriz pública conectada. No es un ranking ni una recomendación.</p><nav><a href="https://ethereum.org/developers/docs/" target="_blank" rel="noopener noreferrer">Stack Ethereum ↗</a><a href="https://docs.ipfs.tech/concepts/what-is-ipfs/" target="_blank" rel="noopener noreferrer">Qué es —y qué no es— IPFS ↗</a><a href="https://thegraph.com/docs/en/about/" target="_blank" rel="noopener noreferrer">Indexación onchain ↗</a></nav></div></section>`;
   }
 
   function renderDirectory(type){
@@ -662,7 +676,7 @@
     const hasVerified=catalog.items.some((item)=>item.status==='verified');
     if(type==='bancos')return `<main class="kf-main" id="main-content"><header class="kf-bank-page-head"><div class="kf-container"><div><p class="kf-kicker">Banca global · tokenización</p><h1>Bancos</h1></div><p>Top 25 mundial por activos y productos blockchain contrastados: dinero programable, valores tokenizados, custodia e infraestructura de liquidación.</p></div></header><section class="kf-section kf-bank-data-section"><div class="kf-container">${bankRegistryMarkup()}</div></section></main>`;
     const connected=type==='exchanges'?exchangeFeesMarkup():type==='regulacion'?regulationRadarMarkup():'';
-    const special=type==='wallets'?walletIntelligenceMarkup():type==='proyectos'?web3ArchitectureMarkup():type==='riesgos'?decentralizationRiskMarkup():'';
+    const special=type==='wallets'?walletIntelligenceMarkup():type==='proyectos'?web3ArchitectureMarkup():'';
     const availableStates=[...new Set(catalog.items.map((item)=>item.status))];
     const statusOptions=`<option value="all">Todos los estados</option>${availableStates.map((state)=>`<option value="${state}">${STATUS_LABELS[state]||state}</option>`).join('')}`;
     const heroTone=hasVerified?'verified':'auto';
@@ -671,7 +685,7 @@
 
   function l2IntelligenceMarkup(){
     const kpis=[['total_l2_tvs_usd','Valor asegurado en L2'],['stage_1_or_2_projects','Proyectos con madurez 1 o 2'],['projects_without_emergency_exit_window','Sin salida ante upgrade urgente'],['curated_public_rwa_usd','RWA público en el radar']];
-    return `<section class="kf-l2-intelligence"><div class="kf-l2-lead"><div><p class="kf-kicker">Infraestructura L2 · explicada en español</p><h2 class="kf-title small">Lo importante está debajo del ticker.</h2></div><div><p>Madurez, stack, disponibilidad de datos, ventana de salida y quién puede mantener el sistema vivo si falla un operador. Kaufman conserva el dato original de L2BEAT y traduce su significado.</p><span data-l2-status>Conectando L2BEAT…</span><nav class="kf-l2-context-nav"><a href="/proyectos/">Ver el stack Web3 →</a><a href="/riesgos/">Abrir controles de descentralización →</a></nav></div></div><div class="kf-l2-kpis">${kpis.map(([key,label])=>`<article><span>${label}</span><strong data-l2-kpi="${key}">—</strong></article>`).join('')}</div><div class="kf-l2-glossary"><div><strong>Madurez ≠ seguridad</strong><span>El nivel mide madurez y descentralización según el marco L2BEAT.</span></div><div><strong>TVS ≠ volumen</strong><span>Total Value Secured es valor asegurado por el sistema.</span></div><div><strong>DA</strong><span>Dónde se publican los datos necesarios para reconstruir y verificar el estado.</span></div></div><div class="kf-l2-projects" data-l2-projects><div class="kf-live-empty">Esperando proyectos y riesgos…</div></div><div class="kf-rwa-method kf-l2-method"><div><span>COBERTURA</span><strong data-l2-coverage>—</strong></div><div><span>SELECCIÓN</span><strong>Muestra editorial declarada · no es un ranking</strong></div><div><span>FUENTE</span><a href="https://l2beat.com/scaling/summary" target="_blank" rel="noopener noreferrer">L2BEAT ↗</a></div><p data-l2-methodology>El nivel de madurez no sustituye una auditoría de seguridad. Ante discrepancia prevalece la ficha original.</p></div></section>`;
+    return `<section class="kf-l2-intelligence"><div class="kf-l2-lead"><div><p class="kf-kicker">Infraestructura L2 · explicada en español</p><h2 class="kf-title small">Lo importante está debajo del ticker.</h2></div><div><p>Madurez, stack, disponibilidad de datos, ventana de salida y quién puede mantener el sistema vivo si falla un operador. Kaufman conserva el dato original de L2BEAT y traduce su significado.</p><span data-l2-status>Conectando L2BEAT…</span><nav class="kf-l2-context-nav"><a href="/proyectos/">Ver el stack Web3 →</a></nav></div></div><div class="kf-l2-kpis">${kpis.map(([key,label])=>`<article><span>${label}</span><strong data-l2-kpi="${key}">—</strong></article>`).join('')}</div><div class="kf-l2-glossary"><div><strong>Madurez ≠ seguridad</strong><span>El nivel mide madurez y descentralización según el marco L2BEAT.</span></div><div><strong>TVS ≠ volumen</strong><span>Total Value Secured es valor asegurado por el sistema.</span></div><div><strong>DA</strong><span>Dónde se publican los datos necesarios para reconstruir y verificar el estado.</span></div></div><div class="kf-l2-projects" data-l2-projects><div class="kf-live-empty">Esperando proyectos L2…</div></div><div class="kf-rwa-method kf-l2-method"><div><span>COBERTURA</span><strong data-l2-coverage>—</strong></div><div><span>SELECCIÓN</span><strong>Muestra editorial declarada · no es un ranking</strong></div><div><span>FUENTE</span><a href="https://l2beat.com/scaling/summary" target="_blank" rel="noopener noreferrer">L2BEAT ↗</a></div><p data-l2-methodology>El nivel de madurez no sustituye una auditoría de seguridad. Ante discrepancia prevalece la ficha original.</p></div></section>`;
   }
 
   function renderMarkets(){
