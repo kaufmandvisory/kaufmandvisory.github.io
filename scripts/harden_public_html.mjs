@@ -2,7 +2,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const VERSION = 'kaufman-v50';
+const VERSION = 'kaufman-v51';
 const ROUTES = {
   home: ['Kaufman · Inteligencia blockchain', 'Mercado, regulación, tokenización, infraestructura y riesgo bajo una misma capa de evidencia pública.'],
   mercados: ['Mercados y capital tokenizado', 'RWA, redes, stablecoins, flujos institucionales, gas y precios de referencia calculados desde mercados públicos.'],
@@ -18,7 +18,6 @@ const ROUTES = {
   mineria: ['Minería', 'Red Bitcoin, producción, rentabilidad y hardware con cálculos reproducibles.'],
   hardware: ['Hardware', 'Equipos de minería, potencia, eficiencia y requisitos operativos desde especificaciones oficiales.'],
   rentabilidades: ['Rentabilidades', 'Retornos históricos observados y costes, sin convertirlos en predicciones.'],
-  fichas: ['Directorio Kaufman', 'Fichas de empresas, bancos, exchanges, wallets, proyectos, minería y hardware.'],
   fuentes: ['Fuentes', 'Registro público de conectores, documentación, periodicidad y alcance de cada observación.'],
   contacto: ['Contacto', 'Consultas, correcciones de datos y solicitudes sobre privacidad: contact@kaufmanadvisory.io.'],
   aviso: ['Aviso legal', 'Kaufman Advisory Group LLC publica información general sobre blockchain. No ejecuta operaciones ni presta asesoramiento personalizado.'],

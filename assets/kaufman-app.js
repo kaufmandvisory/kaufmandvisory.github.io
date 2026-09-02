@@ -263,7 +263,7 @@
     if(!FILE_ROOT)return;
     root.querySelectorAll('a[href^="/"]').forEach((link)=>link.setAttribute('href',internalUrl(link.getAttribute('href'))));
   }
-  function profileUrl(type,id){return internalUrl(`/fichas/?tipo=${encodeURIComponent(type)}&id=${encodeURIComponent(id)}`)}
+  function profileUrl(type,id){return internalUrl(`/${encodeURIComponent(type)}/?id=${encodeURIComponent(id)}`)}
   function findRoute(key){return ROUTES.find((route)=>route.key===key)}
 
   function headerMarkup(page){
@@ -291,7 +291,7 @@
     return `<footer class="kf-footer"><div class="kf-container">
       <div class="kf-footer-grid">
         <div class="kf-footer-brand"><div class="kf-brand-name">Kaufman</div><p>Información sobre mercados, regulación y ecosistema blockchain conectada a fuentes públicas. Los campos sin integración se identifican de forma explícita.</p></div>
-        <nav class="kf-footer-nav" aria-label="Mapa del sitio">${ROUTES.map((route)=>`<a href="${route.path}">${route.label}</a>`).join('')}<a href="/fuentes/">Fuentes</a><a href="/fichas/">Fichas</a></nav>
+        <nav class="kf-footer-nav" aria-label="Mapa del sitio">${ROUTES.map((route)=>`<a href="${route.path}">${route.label}</a>`).join('')}<a href="/fuentes/">Fuentes</a></nav>
       <div class="kf-footer-meta"><span class="kf-footer-meta-title">Legal y contacto</span><a href="/aviso-legal.html">Aviso legal</a><a href="/privacidad.html">Política de privacidad</a><a href="/politica-cookies.html">Política de cookies</a><a href="/terminos.html">Términos de uso</a><button type="button" data-consent-manage>Gestionar analítica</button><a href="/contacto/">Contacto</a></div>
       </div>
       <div class="kf-footer-bottom"><span>© 2026 Kaufman Advisory Group LLC</span><span>Los datos pueden contener latencia. Verifica la fuente antes de decidir.</span></div>
@@ -311,7 +311,7 @@
       tokenization:{question:'¿Qué producto, red y concentración sostienen el activo?',label:'Explorar capital tokenizado',href:'/tokenizacion/'},
       tools:{question:'¿Qué resultado cambia al introducir tus costes reales?',label:'Abrir herramientas operativas',href:'/herramientas/#rentabilidad-minera'},
       fiscal:{question:'¿Cuándo nace el hecho imponible y qué dato falta?',label:'Calcular un escenario',href:'/fiscal/'},
-      directory:{question:'¿Qué entidad, infraestructura o riesgo necesitas comprobar?',label:'Buscar una ficha',href:'/fichas/'}
+      directory:{question:'¿Qué entidad o infraestructura necesitas comprobar?',label:'Consultar datos y fuentes',href:'#directorio'}
     };
     const noAction=['Aviso legal','Política de privacidad','Política de cookies','Términos de uso','Contacto','Ruta retirada'].includes(title)||kicker==='Error 404';
     const action=actions[signature];
@@ -355,13 +355,13 @@
     const priority=priorityKeys.map((key,index)=>{
       const catalog=CATALOGS[key],route=findRoute(key);
       const profiles=catalog.items.slice(0,3).map((item)=>`<a href="${profileUrl(key,item.id)}">${escapeHtml(item.name)} <span>↗</span></a>`).join('');
-      return `<article class="kf-directory-territory kf-directory-territory-${index+1}" data-directory-card="${escapeHtml(key)}"><div class="kf-directory-coordinate"><span>0${index+1}</span><i></i><small>${escapeHtml(route.code)}</small></div><div><p>${catalog.items.length} fichas conectadas</p><h3><a href="${route.path}">${escapeHtml(catalog.label)}</a></h3><p class="kf-directory-summary">${escapeHtml(catalog.description)}</p><nav aria-label="Accesos rápidos de ${escapeHtml(catalog.label)}">${profiles}</nav><a class="kf-directory-route" href="${route.path}">Explorar territorio <span>→</span></a></div></article>`;
+      return `<article class="kf-directory-territory kf-directory-territory-${index+1}" data-directory-card="${escapeHtml(key)}"><div class="kf-directory-coordinate"><span>0${index+1}</span><i></i><small>${escapeHtml(route.code)}</small></div><div><p>${catalog.items.length} registros conectados</p><h3><a href="${route.path}">${escapeHtml(catalog.label)}</a></h3><p class="kf-directory-summary">${escapeHtml(catalog.description)}</p><nav aria-label="Accesos rápidos de ${escapeHtml(catalog.label)}">${profiles}</nav><a class="kf-directory-route" href="${route.path}">Explorar territorio <span>→</span></a></div></article>`;
     }).join('');
     const indexRows=HOME_DIRECTORY_KEYS.filter((key)=>!priorityKeys.includes(key)).map((key,index)=>{
       const catalog=CATALOGS[key],route=findRoute(key);
-      return `<a class="kf-directory-index-row" href="${route.path}"><span>${String(index+4).padStart(2,'0')}</span><strong>${escapeHtml(catalog.label)}</strong><small>${escapeHtml(catalog.description)}</small><b>${catalog.items.length} fichas</b><i>→</i></a>`;
+      return `<a class="kf-directory-index-row" href="${route.path}"><span>${String(index+4).padStart(2,'0')}</span><strong>${escapeHtml(catalog.label)}</strong><small>${escapeHtml(catalog.description)}</small><b>${catalog.items.length} registros</b><i>→</i></a>`;
     }).join('');
-    return `<section class="kf-section kf-home-directories" id="directorios" data-home-directories><div class="kf-container"><header class="kf-directory-head"><div><p class="kf-kicker">Territorios de inteligencia</p><h2>Empieza por la decisión, no por el catálogo.</h2></div><div><strong>${HOME_DIRECTORY_KEYS.length}</strong><span>directorios · ${totalProfiles} fichas · una búsqueda común</span><p>Las rutas prioritarias se abren en profundidad. El resto permanece en un índice compacto y directo.</p></div></header><div class="kf-directory-priority">${priority}</div><div class="kf-directory-index"><div class="kf-directory-index-head"><span>Índice completo</span><a href="/fichas/">Ver todas las fichas →</a></div>${indexRows}</div></div></section>`;
+    return `<section class="kf-section kf-home-directories" id="directorios" data-home-directories><div class="kf-container"><header class="kf-directory-head"><div><p class="kf-kicker">Territorios de inteligencia</p><h2>Empieza por la decisión, no por el catálogo.</h2></div><div><strong>${HOME_DIRECTORY_KEYS.length}</strong><span>directorios · ${totalProfiles} registros conectados</span><p>Las rutas prioritarias se abren en profundidad. El resto permanece en un índice compacto y directo.</p></div></header><div class="kf-directory-priority">${priority}</div><div class="kf-directory-index"><div class="kf-directory-index-head"><span>Índice de secciones</span></div>${indexRows}</div></div></section>`;
   }
 
   function ecosystemMetrics(territoryId,snapshot){
@@ -680,7 +680,7 @@
     const availableStates=[...new Set(catalog.items.map((item)=>item.status))];
     const statusOptions=`<option value="all">Todos los estados</option>${availableStates.map((state)=>`<option value="${state}">${STATUS_LABELS[state]||state}</option>`).join('')}`;
     const heroTone=hasVerified?'verified':'auto';
-    return `<main class="kf-main" id="main-content">${pageHero(catalog.label,catalog.description,'Directorio con fuentes',heroTone)}<section class="kf-section"><div class="kf-container">${special}${connected}${dataNoteMarkup(hasVerified)}<div class="kf-toolbar"><div class="kf-search-field"><input type="search" data-directory-search placeholder="Buscar en ${catalog.label.toLowerCase()}…" aria-label="Buscar en ${catalog.label}"></div><select class="kf-select" data-status-filter aria-label="Filtrar por estado">${statusOptions}</select><span class="kf-result-count" data-result-count>${catalog.items.length} fichas</span></div><div class="kf-record-grid" data-record-grid>${catalog.items.map((item,index)=>recordCard(type,item,index)).join('')}<div class="kf-empty" data-empty hidden>No hay fichas que coincidan con el filtro.</div></div></div></section></main>`;
+    return `<main class="kf-main" id="main-content">${pageHero(catalog.label,catalog.description,'Directorio con fuentes',heroTone)}<section class="kf-section" id="directorio"><div class="kf-container">${special}${connected}${dataNoteMarkup(hasVerified)}<div class="kf-toolbar"><div class="kf-search-field"><input type="search" data-directory-search placeholder="Buscar en ${catalog.label.toLowerCase()}…" aria-label="Buscar en ${catalog.label}"></div><select class="kf-select" data-status-filter aria-label="Filtrar por estado">${statusOptions}</select><span class="kf-result-count" data-result-count>${catalog.items.length} fichas</span></div><div class="kf-record-grid" data-record-grid>${catalog.items.map((item,index)=>recordCard(type,item,index)).join('')}<div class="kf-empty" data-empty hidden>No hay fichas que coincidan con el filtro.</div></div></div></section></main>`;
   }
 
   function l2IntelligenceMarkup(){
@@ -784,9 +784,9 @@
     return `<section class="kf-fiscal-compare"><div class="kf-cost-heading"><p class="kf-kicker">Comparación fiscal y operativa</p><h2>Dos fichas, los mismos campos.</h2><p>Compara jurisdicciones, exchanges, wallets, bancos, hardware o proyectos con un contrato común. Cuando una fuente no cubre un campo, la celda lo declara sin completarlo por inferencia.</p></div><div class="kf-compare-controls"><div class="kf-field"><label for="compare-type">Categoría</label><select class="kf-select" id="compare-type" data-compare-type>${categories.map((key)=>`<option value="${key}">${CATALOGS[key].label}</option>`).join('')}</select></div><div class="kf-field"><label for="compare-left">Ficha A</label><select class="kf-select" id="compare-left" data-compare-left>${options(items)}</select></div><div class="kf-field"><label for="compare-right">Ficha B</label><select class="kf-select" id="compare-right" data-compare-right>${options(items).replace(`value="${items[1].id}"`,`value="${items[1].id}" selected`)}</select></div><a class="kf-button small secondary" href="/fuentes/">Criterios</a></div><div data-compare-table>${compareTableMarkup(type,items[0].id,items[1].id)}</div><div class="kf-data-note"><span>${statusBadge('verified')}</span><div><strong>Comparador basado en fichas con fuente</strong><p>Las diferencias de cobertura se muestran como tales; no se sustituyen por valores estimados.</p></div><a href="/fuentes/">Registro de fuentes →</a></div></section>`;
   }
 
-  function renderProfile(){
+  function renderProfile(typeOverride){
     const params=new URLSearchParams(location.search);
-    const type=params.get('tipo')||'fiscal';
+    const type=typeOverride||params.get('tipo')||'fiscal';
     const id=params.get('id')||CATALOGS[type]?.items?.[0]?.id;
     const catalog=CATALOGS[type];
     const item=catalog?.items.find((entry)=>entry.id===id);
@@ -886,12 +886,6 @@
     return `<main class="kf-main" id="main-content">${pageHero(legal.title,legal.description,'Legal / actualizado 24 agosto 2026','verified')}<section class="kf-section"><div class="kf-container"><article class="kf-legal"><header class="kf-legal-header"><span>Versión 1.1 · 24 agosto 2026</span><p>${legal.summary||legal.description}</p></header>${legal.sections.map(([title,copy])=>`<section><h2>${title}</h2><div class="kf-legal-copy">${copy}</div></section>`).join('')}<p class="kf-legal-note">Documento operativo basado en el tratamiento actual. La incorporación de cuentas, pagos, perfilado, publicidad comportamental o nuevos proveedores exige una revisión previa de este texto y de la configuración técnica.</p></article></div></section></main>`;
   }
 
-  function renderAllProfiles(){
-    const entries=Object.entries(CATALOGS).flatMap(([type,catalog])=>catalog.items.map((item)=>({type,...item})));
-    const states=[...new Set(entries.map((item)=>item.status))];
-    return `<main class="kf-main" id="main-content">${pageHero('Fichas','Índice transversal de entidades, jurisdicciones, herramientas y conceptos de Kaufman.','Directorio global')}<section class="kf-section"><div class="kf-container"><div class="kf-toolbar"><div class="kf-search-field"><input type="search" data-directory-search placeholder="Buscar en todas las fichas…" aria-label="Buscar fichas"></div><select class="kf-select" data-status-filter><option value="all">Todos los estados</option>${states.map((state)=>`<option value="${state}">${STATUS_LABELS[state]}</option>`).join('')}</select><span class="kf-result-count" data-result-count>${entries.length} fichas</span></div><div class="kf-record-grid" data-record-grid>${entries.map((item,index)=>recordCard(item.type,item,index)).join('')}<div class="kf-empty" data-empty hidden>No hay fichas que coincidan con el filtro.</div></div></div></section></main>`;
-  }
-
   function renderContact(){
     const email='contact@kaufmanadvisory.io';
     const params=new URLSearchParams(location.search);
@@ -929,15 +923,11 @@
     if(page==='herramientas')return renderTools();
     if(page==='rentabilidades')return renderReturns();
     if(page==='ficha')return renderProfile();
-    if(page==='fichas'){
-      const params=new URLSearchParams(location.search);
-      return params.has('tipo')||params.has('id')?renderProfile():renderAllProfiles();
-    }
     if(page==='fuentes')return renderSources();
     if(page==='contacto')return renderContact();
     if(page==='aviso'||page==='privacidad'||page==='cookies'||page==='terminos')return renderLegal(page);
     if(page==='retirado')return renderRetired();
-    if(CATALOGS[page])return renderDirectory(page);
+    if(CATALOGS[page])return new URLSearchParams(location.search).has('id')?renderProfile(page):renderDirectory(page);
     return renderNotFound();
   }
 
@@ -2394,7 +2384,7 @@
   app.innerHTML=`<div class="kf-shell">${headerMarkup(page)}${pageWithClose}${footerMarkup()}</div>${searchOverlayMarkup()}`;
   arrangeMarketsTop();
   localizeRenderedLinks(app);
-  const pageTitle=page==='home'?'Kaufman | Inteligencia blockchain':`${CATALOGS[page]?.label||({mercados:'Mercados',tokenizacion:'Tokenización',herramientas:'Herramientas',rentabilidades:'Rentabilidades',ficha:'Ficha',fichas:'Fichas',fuentes:'Fuentes',contacto:'Contacto',aviso:'Aviso legal',privacidad:'Política de privacidad',cookies:'Política de cookies',terminos:'Términos de uso'}[page]||'Kaufman')} | Kaufman`;
+  const pageTitle=page==='home'?'Kaufman | Inteligencia blockchain':`${CATALOGS[page]?.label||({mercados:'Mercados',tokenizacion:'Tokenización',herramientas:'Herramientas',rentabilidades:'Rentabilidades',ficha:'Ficha',fuentes:'Fuentes',contacto:'Contacto',aviso:'Aviso legal',privacidad:'Política de privacidad',cookies:'Política de cookies',terminos:'Términos de uso'}[page]||'Kaufman')} | Kaufman`;
   document.title=pageTitle;
   initMenu();initSearch();initDirectoryFilters();initBankRegistry();initTokenizationFilters();initFiscalDashboard();initComparator();initFeedStars();initMiningCalculator();initJurisdictionTool();initCountryCostStack();initEcosystemMap();initDecisionBrief();initContact();initReveal();
   Promise.resolve(connectMarketAntenna()).finally(()=>{startMarketContextPolling();startGasEdgePolling()});

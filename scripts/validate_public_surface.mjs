@@ -6,7 +6,7 @@ const shells = [
   'index.html', 'mercados/index.html', 'regulacion/index.html', 'tokenizacion/index.html',
   'herramientas/index.html', 'fiscal/index.html', 'empresas/index.html', 'bancos/index.html',
   'exchanges/index.html', 'wallets/index.html', 'proyectos/index.html', 'mineria/index.html',
-  'hardware/index.html', 'rentabilidades/index.html', 'fichas/index.html',
+  'hardware/index.html', 'rentabilidades/index.html',
   'fuentes/index.html', 'contacto/index.html', 'aviso-legal.html', 'privacidad.html',
   'politica-cookies.html', 'terminos.html', '404.html', 'checkout.html', 'intake.html'
 ];
@@ -20,9 +20,9 @@ for (const relative of shells) {
     referrer: /name="referrer" content="strict-origin-when-cross-origin"/.test(html),
     robots: /name="robots"/.test(html),
     title: /<h1>[^<]{3,}<\/h1>/.test(html),
-    current_assets: /kaufman-v50/.test(html),
-    favicon: /<link rel="icon" href="\/favicon\.svg\?v=kaufman-v50" type="image\/svg\+xml">/.test(html),
-    bank_intelligence: /<script src="\/assets\/bank-intelligence\.js\?v=kaufman-v50" defer><\/script>/.test(html),
+    current_assets: /kaufman-v51/.test(html),
+    favicon: /<link rel="icon" href="\/favicon\.svg\?v=kaufman-v51" type="image\/svg\+xml">/.test(html),
+    bank_intelligence: /<script src="\/assets\/bank-intelligence\.js\?v=kaufman-v51" defer><\/script>/.test(html),
     valid_meta_markup: !/<meta\s+<meta/i.test(html),
     no_leaked_meta_attributes: !/<\/head>\s*<body[^>]*>\s*content="/i.test(html)
   };
