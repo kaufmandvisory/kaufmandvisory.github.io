@@ -2,7 +2,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const VERSION = 'kaufman-v77';
+const VERSION = 'kaufman-v78';
 const shells = [
   'index.html', 'mercados/index.html', 'regulacion/index.html', 'tokenizacion/index.html',
   'fiscal/index.html', 'empresas/index.html', 'bancos/index.html',
@@ -81,11 +81,11 @@ for (const rejectedCopy of ['Modela la operación', 'Resultado modelado', 'no un
 }
 const miningHero = await fs.stat(path.join(ROOT, 'assets/images/mining-operations-hero-v1.jpg')).catch(() => null);
 if (!miningHero || miningHero.size < 100_000) failures.push('mineria: imagen hero ausente o incompleta');
-for (const marker of ['fiscalHeroMarkup', 'kf-fiscal-hero', 'Jurisdicción × operación × perfil', 'kf-fiscal-editorial', '/assets/images/fiscal-review-v1.jpg', 'Introduce los datos de tu operación.']) {
+for (const marker of ['fiscalHeroMarkup', 'kf-fiscal-hero-frame', 'Jurisdicción × operación × perfil', '/assets/images/fiscal-review-v1.jpg', 'Introduce los datos de tu operación.']) {
   if (!appScript.includes(marker)) failures.push(`fiscal: falta ${marker}`);
 }
 const fiscalSurface = sliceFunction('fiscalHeroMarkup', 'compareFields');
-for (const rejectedFiscalCopy of ['Caso A', 'Contraste', 'Caso B', 'Qué datos determinan el tratamiento fiscal.', 'Vender, permutar, recibir recompensas']) {
+for (const rejectedFiscalCopy of ['Caso A', 'Contraste', 'Caso B', 'kf-fiscal-editorial', 'Antes de calcular.', 'Qué datos determinan el tratamiento fiscal.', 'Vender, permutar, recibir recompensas']) {
   if (fiscalSurface.includes(rejectedFiscalCopy)) failures.push(`fiscal: reaparece contenido retirado: ${rejectedFiscalCopy}`);
 }
 for (const marker of ['data-regulation-table', 'data-regulation-detail', 'data-regulation-comparison', 'data-regulation-expand', 'REGULATION_REFERENCE_IDS', 'Actividades cubiertas', 'A quién afecta', 'Qué no cubre']) {
