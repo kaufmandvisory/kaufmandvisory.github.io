@@ -416,15 +416,13 @@
   }
 
   function decisionCloseMarkup(page){
-    if(page==='mineria')return '';
+    if(page==='mineria'||page==='home')return '';
     const context={
-      home:['Análisis por operación y jurisdicción.','Alcance, controles, fuentes y puntos pendientes definidos para la operación seleccionada.'],
       mercados:['Antes de mover capital, delimita la operación.','Conecta estructura de mercado, vehículo tokenizado, liquidez, costes y jurisdicción en una sola lectura.'],
       tokenizacion:['Una emisión necesita más que una red.','Ordena activo, vehículo, jurisdicción, infraestructura, custodia y riesgos antes de elegir arquitectura.'],
       fiscal:['Comprobación fiscal de los datos introducidos.','Lista de hechos, fuentes, supuestos y puntos para revisión profesional.']
     }[page]||['Convierte esta ficha en una decisión comprobable.','Incluye la entidad, el territorio y el objetivo; Kaufman conecta las evidencias relevantes y señala los huecos.'];
-    const homePage=page==='home';
-    return `<section class="kf-decision-close" aria-labelledby="decision-close-title"><div class="kf-container"><div><p class="kf-kicker">${homePage?'Análisis por encargo':'Kaufman Decision Brief'}</p><h2 id="decision-close-title">${context[0]}</h2><p>${context[1]}</p></div><ol><li><span>01</span>Operación y jurisdicción</li><li><span>02</span>Mercado, coste e infraestructura</li><li><span>03</span>Regulación, custodia y riesgo</li></ol><div class="kf-decision-close-action"><strong>Contenido definido antes de empezar</strong><span>Alcance, formato, plazo y presupuesto se confirman por escrito.</span><a class="kf-button primary" href="/contacto/?asunto=decision-brief&origen=${encodeURIComponent(page)}">${homePage?'Solicitar análisis':'Solicitar Decision Brief'} →</a></div></div></section>`;
+    return `<section class="kf-decision-close" aria-labelledby="decision-close-title"><div class="kf-container"><div><p class="kf-kicker">Kaufman Decision Brief</p><h2 id="decision-close-title">${context[0]}</h2><p>${context[1]}</p></div><ol><li><span>01</span>Operación y jurisdicción</li><li><span>02</span>Mercado, coste e infraestructura</li><li><span>03</span>Regulación, custodia y riesgo</li></ol><div class="kf-decision-close-action"><strong>Contenido definido antes de empezar</strong><span>Alcance, formato, plazo y presupuesto se confirman por escrito.</span><a class="kf-button primary" href="/contacto/?asunto=decision-brief&origen=${encodeURIComponent(page)}">Solicitar Decision Brief →</a></div></div></section>`;
   }
 
   function dataNoteMarkup(hasVerified=false){
@@ -2825,7 +2823,7 @@
 
   const page=new URLSearchParams(location.search).get('pagina')||document.body.dataset.page||'home';
   const app=document.getElementById('kaufman-app');
-  const commercialPages=!['regulacion','contacto','aviso','privacidad','cookies','terminos','retirado'].includes(page);
+  const commercialPages=!['home','regulacion','contacto','aviso','privacidad','cookies','terminos','retirado'].includes(page);
   const renderedPage=plainLanguage(renderPage(page));
   const pageWithClose=plainLanguage(commercialPages?renderedPage.replace('</main>',`${decisionCloseMarkup(page)}</main>`):renderedPage);
   app.innerHTML=`<div class="kf-shell">${headerMarkup(page)}${pageWithClose}${footerMarkup()}</div>${searchOverlayMarkup()}`;
