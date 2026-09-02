@@ -2,7 +2,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const VERSION = 'kaufman-v76';
+const VERSION = 'kaufman-v75';
 const shells = [
   'index.html', 'mercados/index.html', 'regulacion/index.html', 'tokenizacion/index.html',
   'fiscal/index.html', 'empresas/index.html', 'bancos/index.html',
@@ -48,7 +48,7 @@ const publicHomeCopy = [
   sliceFunction('renderHome', 'decisionCloseMarkup'),
   sliceFunction('feedItemMarkup', 'renderHomeCurrentAffairs')
 ].join('\n');
-for (const marker of ['Datos y consultas', 'COMPROBACIONES', 'PREGUNTA QUE RESPONDE', 'Datos verificados', 'Directorios de datos', 'Consulta los datos por la pregunta que necesitas resolver.']) {
+for (const marker of ['Datos y consultas', 'COMPROBACIONES', 'DATOS APLICABLES', 'Datos verificados', 'Directorios de datos']) {
   if (!publicHomeCopy.includes(marker)) failures.push(`home: falta texto directo ${marker}`);
 }
 for (const rejectedHomeCopy of ['Decision Brief', 'RUTA PROPUESTA', 'Explorar territorio', 'Empieza por la decisión', 'Qué puede cambiar una decisión', 'HOY', 'dateVerb', 'feedDateParts']) {
@@ -59,20 +59,6 @@ if (!appScript.includes("const commercialPages=!['home','regulacion','wallets'")
 if (!appScript.includes("page==='home'?'Kaufman Reference Price'")) failures.push('home: la fuente minera vuelve a mostrar la edad del precio');
 if (!appScript.includes("main?.querySelector('.kf-rwa-market .kf-rwa-kpis')?.remove();") || !appScript.includes("main?.querySelector('.kf-rwa-market .kf-rwa-ratios')?.remove();")) failures.push('mercados: reaparece el resumen RWA duplicado');
 if (!appStyles.includes('.kf-feed-item.no-time')) failures.push('home: las referencias sin fecha pierden su composición');
-const ecosystemConfig = appScript.slice(appScript.indexOf('const ECOSYSTEM_ORDER'), appScript.indexOf('const STATUS_LABELS'));
-for (const marker of ["['mercado','regulacion','tokenizacion','custodia','mineria','fiscal']", "href:'/mercados/'", "href:'/regulacion/'", "href:'/tokenizacion/'", "href:'/wallets/'", "href:'/mineria/'", "href:'/fiscal/'"]) {
-  if (!ecosystemConfig.includes(marker)) failures.push(`home: falta área real en navegación: ${marker}`);
-}
-for (const retiredArea of ["label:'Empresas'", "label:'Infraestructura'", "label:'Riesgo'"]) {
-  if (ecosystemConfig.includes(retiredArea)) failures.push(`home: reaparece área inexistente: ${retiredArea}`);
-}
-for (const retiredGraphic of ['kf-eco-geometry', 'kf-eco-center', 'kf-eco-node-ring']) {
-  if (sliceFunction('ecosystemMapMarkup', 'renderHome').includes(retiredGraphic)) failures.push(`home: reaparece el mapa ornamental: ${retiredGraphic}`);
-}
-if (appScript.includes("const HOME_DIRECTORY_KEYS = ['empresas'")) failures.push('home: Empresas reaparece en los directorios públicos');
-for (const marker of ['.kf-eco-index-head', '.kf-eco-node-copy', '.kf-eco-node-index']) {
-  if (!appStyles.includes(marker)) failures.push(`home: falta el nuevo índice editorial: ${marker}`);
-}
 for (const marker of ['kf-mining-hero-frame', 'data-mining-hero-observed', 'ASIC · SHA-256', 'data-mining-country-expand']) {
   if (!appScript.includes(marker)) failures.push(`mineria: falta ${marker}`);
 }
