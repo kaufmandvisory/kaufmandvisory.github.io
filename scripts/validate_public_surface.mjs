@@ -2,7 +2,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const VERSION = 'kaufman-v60';
+const VERSION = 'kaufman-v61';
 const shells = [
   'index.html', 'mercados/index.html', 'regulacion/index.html', 'tokenizacion/index.html',
   'fiscal/index.html', 'empresas/index.html', 'bancos/index.html',
@@ -38,6 +38,7 @@ const robots = await fs.readFile(path.join(ROOT, 'robots.txt'), 'utf8');
 for (const rule of ['/blog/', '/files/']) if (!robots.includes(`Disallow: ${rule}`)) failures.push(`robots.txt: ${rule}`);
 
 const appScript = await fs.readFile(path.join(ROOT, 'assets/kaufman-app.js'), 'utf8');
+const appStyles = await fs.readFile(path.join(ROOT, 'assets/kaufman.css'), 'utf8');
 for (const marker of ['kf-mining-hero-frame', 'data-mining-hero-observed', 'ASIC · SHA-256']) {
   if (!appScript.includes(marker)) failures.push(`mineria: falta ${marker}`);
 }
@@ -46,6 +47,14 @@ for (const rejectedCopy of ['Modela la operación', 'Resultado modelado', 'no un
 }
 const miningHero = await fs.stat(path.join(ROOT, 'assets/images/mining-operations-hero-v1.jpg')).catch(() => null);
 if (!miningHero || miningHero.size < 100_000) failures.push('mineria: imagen hero ausente o incompleta');
+for (const marker of ['kf-fiscal-editorial', '/assets/images/fiscal-review-v1.jpg', 'Introduce los datos de tu operación.']) {
+  if (!appScript.includes(marker)) failures.push(`fiscal: falta ${marker}`);
+}
+for (const retiredFiscalFeature of ['kf-fiscal-globe-section', 'data-fiscal-earth', 'Pausar rotación', 'NASA/GSFC']) {
+  if (appScript.includes(retiredFiscalFeature) || appStyles.includes(retiredFiscalFeature)) failures.push(`fiscal: permanece el globo retirado: ${retiredFiscalFeature}`);
+}
+const fiscalPhoto = await fs.stat(path.join(ROOT, 'assets/images/fiscal-review-v1.jpg')).catch(() => null);
+if (!fiscalPhoto || fiscalPhoto.size < 100_000) failures.push('fiscal: fotografía editorial ausente o incompleta');
 for (const retiredPath of ['herramientas/index.html', 'rentabilidades/index.html']) {
   const present = await fs.stat(path.join(ROOT, retiredPath)).then(() => true).catch(() => false);
   if (present) failures.push(`${retiredPath}: la página retirada todavía existe`);
