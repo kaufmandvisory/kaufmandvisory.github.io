@@ -2,7 +2,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const VERSION = 'kaufman-v79';
+const VERSION = 'kaufman-v80';
 const shells = [
   'index.html', 'mercados/index.html', 'regulacion/index.html', 'tokenizacion/index.html',
   'fiscal/index.html', 'empresas/index.html', 'bancos/index.html',
@@ -85,7 +85,7 @@ for (const marker of ['fiscalHeroMarkup', 'kf-fiscal-hero-frame', '/assets/image
   if (!appScript.includes(marker)) failures.push(`fiscal: falta ${marker}`);
 }
 const fiscalSurface = sliceFunction('fiscalHeroMarkup', 'compareFields');
-for (const rejectedFiscalCopy of ['Caso A', 'Contraste', 'Caso B', 'kf-fiscal-editorial', 'Jurisdicción × operación × perfil', 'Documentación fiscal', 'Operación · fecha · coste · residencia', 'Antes de calcular.', 'Qué datos determinan el tratamiento fiscal.', 'Vender, permutar, recibir recompensas']) {
+for (const rejectedFiscalCopy of ['Caso A', 'Contraste', 'Caso B', 'kf-fiscal-editorial', 'Compara el tratamiento de una operación blockchain según jurisdicción, residencia y perfil fiscal.', 'Jurisdicción × operación × perfil', 'Documentación fiscal', 'Operación · fecha · coste · residencia', 'Antes de calcular.', 'Qué datos determinan el tratamiento fiscal.', 'Vender, permutar, recibir recompensas']) {
   if (fiscalSurface.includes(rejectedFiscalCopy)) failures.push(`fiscal: reaparece contenido retirado: ${rejectedFiscalCopy}`);
 }
 for (const marker of ['data-regulation-table', 'data-regulation-detail', 'data-regulation-comparison', 'data-regulation-expand', 'REGULATION_REFERENCE_IDS', 'Actividades cubiertas', 'A quién afecta', 'Qué no cubre']) {

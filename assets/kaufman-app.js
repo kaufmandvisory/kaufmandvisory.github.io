@@ -862,7 +862,7 @@
   }
 
   function fiscalHeroMarkup(){
-    return `<header class="kf-fiscal-hero"><div class="kf-container"><div class="kf-breadcrumbs"><a href="/">Inicio</a><span>/</span><span>Fiscal</span></div><div class="kf-fiscal-hero-frame"><div class="kf-fiscal-hero-copy"><p class="kf-kicker">Datos fiscales comparados</p><h1>Fiscal</h1><p>Compara el tratamiento de una operación blockchain según jurisdicción, residencia y perfil fiscal.</p></div><figure><img src="/assets/images/fiscal-review-v1.jpg" width="1536" height="1024" alt="Profesional revisando documentación fiscal y registros de operaciones digitales" fetchpriority="high"></figure></div></div></header>`;
+    return `<header class="kf-fiscal-hero"><div class="kf-container"><div class="kf-breadcrumbs"><a href="/">Inicio</a><span>/</span><span>Fiscal</span></div><div class="kf-fiscal-hero-frame"><div class="kf-fiscal-hero-copy"><p class="kf-kicker">Datos fiscales comparados</p><h1>Fiscal</h1></div><figure><img src="/assets/images/fiscal-review-v1.jpg" width="1536" height="1024" alt="Profesional revisando documentación fiscal y registros de operaciones digitales" fetchpriority="high"></figure></div></div></header>`;
   }
 
   function renderFiscal(){
