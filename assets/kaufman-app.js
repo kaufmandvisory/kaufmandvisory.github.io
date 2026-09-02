@@ -153,6 +153,7 @@
   let gasEdgeRequest = null;
   let regulationFallbackPromise = null;
   let platformFallbackPromise = null;
+  let regulationDataset = null;
   let ecosystemPinned = 'infraestructura';
 
   function statusBadge(status){return `<span class="kf-status ${status}">${STATUS_LABELS[status]||status}</span>`}
@@ -444,8 +445,15 @@
     return `<section class="kf-live-panel"><div class="kf-live-panel-head"><div><p class="kf-kicker">Comisiones conectadas</p><h2>Qué tarifa puede calcularse y cuál exige cuenta.</h2></div><div class="kf-live-actions"><span data-exchange-fee-status aria-live="polite">Cargando fuentes oficiales…</span></div></div><div class="kf-data-table-wrap"><table class="kf-data-table"><thead><tr><th>Exchange</th><th>Mercado y condición</th><th class="number">Maker</th><th class="number">Taker</th><th>Fuente</th></tr></thead><tbody data-exchange-fee-rows><tr><td colspan="5">Conectando tarifas oficiales…</td></tr></tbody></table></div><p class="kf-live-footnote">Actualización diaria. La tabla separa tarifa exacta pública de tarifa condicionada a cuenta, volumen, región o programa. No incluye spread, conversión, retirada ni deslizamiento.</p></section>`;
   }
 
-  function regulationRadarMarkup(){
-    return `<section class="kf-reg-dashboard" data-regulation-dashboard><div class="kf-reg-head"><div><h2>Regulación Blockchain</h2></div><span data-regulation-status>Conectando registro regulatorio…</span></div><div class="kf-reg-kpis"><article><span>Regímenes conectados</span><strong data-reg-kpi="regime_count">—</strong><small>Sin fichas de demostración</small></article><article><span>Jurisdicciones</span><strong data-reg-kpi="jurisdiction_count">—</strong><small>Perímetros separados</small></article><article><span>Fuentes accesibles</span><strong data-reg-reachable>—</strong><small>Comprobación server-side</small></article><article><span>Firma jurídica válida</span><strong data-reg-signed>—</strong><small>Ed25519 · huellas y cadena de revisión</small></article></div><div class="kf-reg-layout"><section><div class="kf-subsection-label">Cambios y fechas operativas</div><div class="kf-reg-events" data-regulation-events><div class="kf-live-empty">Cargando fechas verificadas…</div></div></section><aside><div class="kf-subsection-label">Monitor de fuentes primarias</div><div class="kf-reg-source-list" data-regulation-sources><div class="kf-live-empty">Comprobando fuentes…</div></div></aside></div><div class="kf-subsection-label kf-reg-regimes-label">Mapa de regímenes</div><div class="kf-reg-regimes" data-regulation-regimes><div class="kf-live-empty">Construyendo fichas regulatorias…</div></div><p class="kf-reg-method" data-regulation-methodology>La conexión técnica no sustituye la revisión jurídica.</p></section>`;
+  function renderRegulationV2(){
+    const activities=[['all','Todas las actividades'],['issuer','Emisión'],['stablecoin','Stablecoins'],['custody','Custodia'],['exchange','Exchange'],['brokerage','Órdenes e intermediación'],['transfer','Transferencias'],['marketing','Promoción'],['payments','Pagos']];
+    return `<main class="kf-main kf-regulation-page" id="main-content" data-regulation-dashboard>
+      <header class="kf-reg-hero"><div class="kf-container"><div class="kf-breadcrumbs"><a href="/">Inicio</a><span>/</span><span>Regulación</span></div><div class="kf-reg-hero-grid"><div><p class="kf-kicker">10 marcos · fuentes oficiales</p><h1>Regulación</h1><p class="kf-reg-hero-deck">Compara qué actividad necesita autorización, a quién afecta y qué queda fuera en cada país o territorio.</p><span class="kf-reg-live" data-regulation-status aria-live="polite">Conectando fuentes oficiales…</span></div><div class="kf-reg-flow" aria-label="Actividades que pueden activar obligaciones regulatorias"><p>La actividad determina el perímetro</p><div><span><i>01</i><strong>Emitir</strong></span><span><i>02</i><strong>Custodiar</strong></span><span><i>03</i><strong>Intercambiar</strong></span><span><i>04</i><strong>Promocionar</strong></span></div><small>Una misma operación puede activar más de una licencia.</small></div></div><div class="kf-reg-facts"><div><span>Marcos comparados</span><strong data-reg-kpi="regime_count">—</strong></div><div><span>Países y territorios</span><strong data-reg-kpi="jurisdiction_count">—</strong></div><div><span>Fuentes oficiales accesibles</span><strong data-reg-reachable>—</strong></div><div><span>Revisión jurídica firmada</span><strong data-reg-signed>—</strong></div></div></div></header>
+      <section class="kf-section kf-reg-registry" id="comparar-regulacion"><div class="kf-container"><div class="kf-reg-section-head"><div><p class="kf-kicker">Matriz regulatoria</p><h2>Qué exige cada marco y a quién.</h2></div><p>Lee primero el acceso al mercado. Abre una fila para revisar obligaciones, exclusiones y controles concretos del proveedor.</p></div><div class="kf-reg-tools"><label><span>Buscar país, marco o autoridad</span><input type="search" data-regulation-search placeholder="Ej. España, custodia, FCA"></label><label><span>Actividad</span><select data-regulation-activity>${activities.map(([value,label])=>`<option value="${value}">${label}</option>`).join('')}</select></label><strong data-regulation-count>—</strong></div><div class="kf-reg-table" data-regulation-table><div class="kf-reg-table-head"><span>País / marco</span><span>A quién afecta</span><span>Acceso al mercado</span><span>Actividad</span><span>Detalle</span></div><div data-regulation-regimes><div class="kf-live-empty">Cargando marcos regulatorios…</div></div></div></div></section>
+      <section class="kf-section kf-reg-compare" id="comparador-regulatorio"><div class="kf-container"><div class="kf-reg-section-head"><div><p class="kf-kicker">Comparación directa</p><h2>Dos marcos, la misma operación.</h2></div><p>No asigna una puntuación ni declara un país “mejor”. Expone diferencias de autorización, alcance, obligaciones y exclusiones.</p></div><div class="kf-reg-compare-controls"><label>Primer marco<select data-regulation-compare="left"></select></label><label>Segundo marco<select data-regulation-compare="right"></select></label></div><div class="kf-reg-compare-grid" data-regulation-comparison><div class="kf-live-empty">Cargando comparación…</div></div></div></section>
+      <section class="kf-section kf-reg-calendar" id="fechas-regulatorias"><div class="kf-container"><div class="kf-reg-section-head"><div><p class="kf-kicker">Fechas operativas</p><h2>Qué cambió y desde cuándo.</h2></div><p>Solo se muestran fechas que modifican una autorización, transición o texto aplicable.</p></div><div class="kf-reg-events" data-regulation-events><div class="kf-live-empty">Cargando fechas verificadas…</div></div></div></section>
+      <section class="kf-section kf-reg-evidence" id="fuentes-regulatorias"><div class="kf-container"><details><summary><span>Fuentes y estado de revisión</span><strong data-reg-source-summary>Comprobando…</strong></summary><div class="kf-reg-source-list" data-regulation-sources><div class="kf-live-empty">Comprobando fuentes oficiales…</div></div></details><p class="kf-reg-method" data-regulation-methodology>La accesibilidad de una fuente no equivale a revisión jurídica.</p></div></section>
+    </main>`;
   }
 
   function recordCard(type,item,index){
@@ -756,9 +764,10 @@
     const catalog=CATALOGS[type];
     if(!catalog)return renderNotFound();
     if(type==='mineria')return renderMiningV2();
+    if(type==='regulacion')return renderRegulationV2();
     const hasVerified=catalog.items.some((item)=>item.status==='verified');
     if(type==='bancos')return `<main class="kf-main" id="main-content"><header class="kf-bank-page-head"><div class="kf-container"><div><p class="kf-kicker">Banca global · tokenización</p><h1>Bancos</h1></div><p>Top 25 mundial por activos y productos blockchain contrastados: dinero programable, valores tokenizados, custodia e infraestructura de liquidación.</p></div></header><section class="kf-section kf-bank-data-section"><div class="kf-container">${bankRegistryMarkup()}</div></section></main>`;
-    const connected=type==='exchanges'?exchangeFeesMarkup():type==='regulacion'?regulationRadarMarkup():'';
+    const connected=type==='exchanges'?exchangeFeesMarkup():'';
     const special=type==='wallets'?walletIntelligenceMarkup():type==='proyectos'?web3ArchitectureMarkup():'';
     const availableStates=[...new Set(catalog.items.map((item)=>item.status))];
     const statusOptions=`<option value="all">Todos los estados</option>${availableStates.map((state)=>`<option value="${state}">${STATUS_LABELS[state]||state}</option>`).join('')}`;
@@ -995,6 +1004,7 @@
     if(page==='contacto')return renderContact();
     if(page==='aviso'||page==='privacidad'||page==='cookies'||page==='terminos')return renderLegal(page);
     if(page==='retirado')return renderRetired();
+    if(page==='regulacion')return renderDirectory(page);
     if(CATALOGS[page])return new URLSearchParams(location.search).has('id')?renderProfile(page):renderDirectory(page);
     return renderNotFound();
   }
@@ -2209,43 +2219,118 @@
     const methodology=document.querySelector('[data-fiscal-methodology]');if(methodology)methodology.textContent=`${data.methodology} ${data.review_policy}`;
   }
 
+  const REGULATION_ACTIVITY_LABELS={issuer:'Emisión',stablecoin:'Stablecoins',custody:'Custodia',exchange:'Exchange',brokerage:'Órdenes',transfer:'Transferencias',marketing:'Promoción',payments:'Pagos',advice:'Asesoramiento',banking:'Banca',lending:'Préstamo'};
+  const REGULATION_SEARCH_ALIASES={'mica-union-europea':'MiCA ESMA EBA CASP','mica-espana-2026':'MiCA CNMV Banco de España CASP','mexico-activos-virtuales':'CNBV Banxico LRITF ITF','emiratos-payment-tokens':'CBUAE payment token','dubai-vara':'VARA VASP','uk-cryptoassets':'FCA MLR FSMA','hong-kong-vatp':'SFC AMLO VATP','japan-crypto-exchange':'FSA PSA','australia-vasp':'AUSTRAC AML CTF VASP','us-payment-stablecoins':'GENIUS Act payment stablecoin'};
+
+  function regulationStateLabel(state){
+    return {TRANSITION_ENDED:'TRANSICIÓN FINALIZADA',ENACTED:'PROMULGADA',IN_FORCE_AND_TRANSITION:'EN VIGOR · CAMBIO PROGRAMADO',IN_FORCE:'EN VIGOR'}[state]||String(state||'ESTADO NO PUBLICADO').replaceAll('_',' ');
+  }
+
+  function regulationList(items){
+    return `<ul>${(items||[]).map((item)=>`<li>${escapeHtml(item)}</li>`).join('')}</ul>`;
+  }
+
+  function regulationSourceLinks(regime,sourcesById){
+    return (regime.source_ids||[]).map((id)=>sourcesById.get(id)).filter(Boolean).map((source)=>`<a href="${safeExternalUrl(source.url)}" target="_blank" rel="noopener noreferrer"><span>${escapeHtml(source.authority)}</span>${escapeHtml(source.title)} ↗</a>`).join('');
+  }
+
+  function regulationRowMarkup(regime,sourcesById){
+    const activityText=(regime.regulated_activities||[]).slice(0,3).join(' · ');
+    const searchText=[regime.name,regime.jurisdiction,regime.authority,regime.framework_type,regime.market_access,REGULATION_SEARCH_ALIASES[regime.id],...(regime.applies_to||[]),...(regime.regulated_activities||[])].join(' ').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+    const signedReview=regime.review_status==='SIGNED';
+    const reviewLabel=signedReview?'Revisión jurídica firmada':regime.legal_reviewed_at?`Revisión editorial ${regime.legal_reviewed_at} · firma jurídica pendiente`:`Fuentes contrastadas ${regime.source_verified_at||'sin fecha'} · firma jurídica pendiente`;
+    return `<article class="kf-reg-row" data-regulation-row data-id="${escapeHtml(regime.id)}" data-tags="${escapeHtml((regime.activity_tags||[]).join(' '))}" data-search="${escapeHtml(searchText)}"><button class="kf-reg-row-summary" type="button" aria-expanded="false" aria-controls="reg-detail-${escapeHtml(regime.id)}" data-regulation-toggle><span class="kf-reg-place"><b>${escapeHtml(regime.code)}</b><span><strong>${escapeHtml(regime.jurisdiction)}</strong><small>${escapeHtml(regime.framework_type)}</small></span></span><span class="kf-reg-who">${escapeHtml((regime.applies_to||[])[0]||regime.scope)}</span><span class="kf-reg-access"><i>${escapeHtml(regulationStateLabel(regime.state))}</i>${escapeHtml(regime.market_access)}</span><span class="kf-reg-activities"><span class="kf-reg-activity-track" aria-hidden="true">${Object.keys(REGULATION_ACTIVITY_LABELS).slice(0,8).map((key)=>`<i class="${(regime.activity_tags||[]).includes(key)?'active':''}"></i>`).join('')}</span><small>${escapeHtml(activityText)}</small></span><span class="kf-reg-open"><b>+</b><small>Abrir</small></span></button><div class="kf-reg-detail" id="reg-detail-${escapeHtml(regime.id)}" data-regulation-detail hidden><div class="kf-reg-detail-intro"><div><span>Autoridad</span><strong>${escapeHtml(regime.authority)}</strong></div><div><span>Fecha y estado</span><strong>${escapeHtml(regime.effective)}</strong></div><div><span>Perímetro</span><strong>${escapeHtml(regime.scope)}</strong></div></div><div class="kf-reg-detail-columns"><section><h3>A quién afecta</h3>${regulationList(regime.applies_to)}</section><section><h3>Qué no cubre</h3>${regulationList(regime.does_not_apply_to)}</section><section><h3>Obligaciones materiales</h3>${regulationList(regime.core_obligations)}</section><section><h3>Qué comprobar antes de operar</h3>${regulationList(regime.verification_steps)}</section></div><div class="kf-reg-detail-foot"><div><span>Efecto práctico</span><p>${escapeHtml(regime.practical_effect)}</p><span>Límite del dato</span><p>${escapeHtml(regime.limitation)}</p></div><div class="kf-reg-official-links"><span>Fuentes oficiales</span>${regulationSourceLinks(regime,sourcesById)}</div><small>${escapeHtml(reviewLabel)}</small></div></div></article>`;
+  }
+
+  function drawRegulationRows(){
+    if(!regulationDataset)return;
+    const root=document.querySelector('[data-regulation-regimes]');if(!root)return;
+    const search=document.querySelector('[data-regulation-search]')?.value.normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLowerCase()||'';
+    const activity=document.querySelector('[data-regulation-activity]')?.value||'all';
+    const sourcesById=new Map(regulationDataset.sources.map((source)=>[source.id,source]));
+    const rows=regulationDataset.regimes.filter((regime)=>{
+      const haystack=[regime.name,regime.jurisdiction,regime.authority,regime.framework_type,regime.market_access,REGULATION_SEARCH_ALIASES[regime.id],...(regime.applies_to||[]),...(regime.regulated_activities||[])].join(' ').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+      return (!search||haystack.includes(search))&&(activity==='all'||(regime.activity_tags||[]).includes(activity));
+    });
+    root.innerHTML=rows.length?rows.map((regime)=>regulationRowMarkup(regime,sourcesById)).join(''):'<div class="kf-reg-no-results">No hay un marco que coincida con esos filtros.</div>';
+    const count=document.querySelector('[data-regulation-count]');if(count)count.textContent=`${rows.length} de ${regulationDataset.regimes.length} marcos`;
+  }
+
+  function drawRegulationComparison(){
+    if(!regulationDataset)return;
+    const root=document.querySelector('[data-regulation-comparison]');if(!root)return;
+    const leftId=document.querySelector('[data-regulation-compare="left"]')?.value;
+    const rightId=document.querySelector('[data-regulation-compare="right"]')?.value;
+    const left=regulationDataset.regimes.find((row)=>row.id===leftId)||regulationDataset.regimes[0];
+    const right=regulationDataset.regimes.find((row)=>row.id===rightId)||regulationDataset.regimes[1]||left;
+    const cell=(items)=>regulationList(items);
+    const lines=[
+      ['Marco',left.framework_type,right.framework_type],
+      ['Acceso al mercado',left.market_access,right.market_access],
+      ['A quién afecta',cell(left.applies_to),cell(right.applies_to)],
+      ['Qué no cubre',cell(left.does_not_apply_to),cell(right.does_not_apply_to)],
+      ['Actividades',cell(left.regulated_activities),cell(right.regulated_activities)],
+      ['Obligaciones',cell(left.core_obligations),cell(right.core_obligations)],
+      ['Comprobación',cell(left.verification_steps),cell(right.verification_steps)]
+    ];
+    root.innerHTML=`<div class="kf-reg-compare-head"><span>Variable</span><strong>${escapeHtml(left.jurisdiction)}</strong><strong>${escapeHtml(right.jurisdiction)}</strong></div>${lines.map(([label,a,b])=>`<div class="kf-reg-compare-line"><span>${escapeHtml(label)}</span><div>${typeof a==='string'&&a.startsWith('<ul>')?a:escapeHtml(a)}</div><div>${typeof b==='string'&&b.startsWith('<ul>')?b:escapeHtml(b)}</div></div>`).join('')}`;
+  }
+
+  function initRegulationExplorer(){
+    const dashboard=document.querySelector('[data-regulation-dashboard]');if(!dashboard||dashboard.dataset.explorerReady)return;
+    dashboard.dataset.explorerReady='true';
+    dashboard.addEventListener('click',(event)=>{
+      const toggle=event.target.closest('[data-regulation-toggle]');if(!toggle)return;
+      const row=toggle.closest('[data-regulation-row]'),detail=row?.querySelector('[data-regulation-detail]');if(!detail)return;
+      const willOpen=toggle.getAttribute('aria-expanded')!=='true';
+      dashboard.querySelectorAll('[data-regulation-toggle][aria-expanded="true"]').forEach((button)=>{button.setAttribute('aria-expanded','false');const current=button.closest('[data-regulation-row]')?.querySelector('[data-regulation-detail]');if(current)current.hidden=true});
+      toggle.setAttribute('aria-expanded',String(willOpen));detail.hidden=!willOpen;
+      if(willOpen&&window.matchMedia('(max-width: 760px)').matches)row.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+    dashboard.querySelector('[data-regulation-search]')?.addEventListener('input',drawRegulationRows);
+    dashboard.querySelector('[data-regulation-activity]')?.addEventListener('change',drawRegulationRows);
+    dashboard.querySelectorAll('[data-regulation-compare]').forEach((select)=>select.addEventListener('change',drawRegulationComparison));
+  }
+
   function renderRegulationIntelligence(snapshot){
     const dashboard=document.querySelector('[data-regulation-dashboard]');if(!dashboard)return;
     const data=snapshot?.regulation_intelligence;
-    const valid=data?.schema_version==='kaufman-regulation-intelligence-v1'&&data?.source_contract_version===REGULATION_SOURCE_CONTRACT&&Array.isArray(data.regimes)&&Array.isArray(data.sources)&&data.regimes.length>0;
+    const valid=data?.schema_version==='kaufman-regulation-intelligence-v1'&&data?.source_contract_version===REGULATION_SOURCE_CONTRACT&&Array.isArray(data.regimes)&&Array.isArray(data.sources)&&data.regimes.length>0&&data.regimes.every((regime)=>Array.isArray(regime.applies_to)&&Array.isArray(regime.does_not_apply_to)&&Array.isArray(regime.core_obligations));
     const status=document.querySelector('[data-regulation-status]');
-    if(!valid){if(status)status.textContent='Actualizando registro regulatorio…';return}
+    if(!valid){if(status)status.textContent='Actualizando matriz regulatoria…';return}
     const currentSnapshot=Date.parse(dashboard.dataset.snapshot||''),incomingSnapshot=Date.parse(data.generated_at||'');
     if(Number.isFinite(currentSnapshot)&&Number.isFinite(incomingSnapshot)&&incomingSnapshot<currentSnapshot)return;
     const quality=data.data_quality||{},sourcesById=new Map(data.sources.map((source)=>[source.id,source]));
     const checked=Number(quality.checked_source_count)||0,sourceCount=Number(quality.source_count)||data.sources.length,reachable=Number(quality.reachable_source_count)||0;
-    if(status)status.textContent=checked?`Registro conectado · ${reachable}/${sourceCount} fuentes accesibles`:'Registro cargado · comprobando fuentes oficiales';
+    if(status)status.textContent=checked?`${reachable}/${sourceCount} fuentes oficiales accesibles · comprobación automática cada 24 h`:'Datos cargados · comprobando acceso a las fuentes';
     document.querySelectorAll('[data-reg-kpi]').forEach((node)=>{const value=quality[node.dataset.regKpi];node.textContent=Number.isFinite(Number(value))?Number(value).toLocaleString('es-ES'):'—'});
-    const reachableNode=document.querySelector('[data-reg-reachable]');if(reachableNode)reachableNode.textContent=checked?`${reachable}/${sourceCount}`:'Comprobando';
+    const reachableNode=document.querySelector('[data-reg-reachable]');if(reachableNode)reachableNode.textContent=checked?`${reachable} / ${sourceCount}`:'Comprobando';
     const signed=document.querySelector('[data-reg-signed]');if(signed)signed.textContent=`${Number(quality.signed_regime_count||0).toLocaleString('es-ES')} / ${Number(quality.regime_count||data.regimes.length).toLocaleString('es-ES')}`;
+    regulationDataset=data;
+    initRegulationExplorer();
+    drawRegulationRows();
+    const options=data.regimes.map((regime)=>`<option value="${escapeHtml(regime.id)}">${escapeHtml(regime.jurisdiction)} · ${escapeHtml(regime.framework_type)}</option>`).join('');
+    const left=document.querySelector('[data-regulation-compare="left"]'),right=document.querySelector('[data-regulation-compare="right"]');
+    if(left&&left.dataset.snapshot!==data.generated_at){left.innerHTML=options;left.value=data.regimes.find((row)=>row.id==='mica-espana-2026')?.id||data.regimes[0].id;left.dataset.snapshot=data.generated_at}
+    if(right&&right.dataset.snapshot!==data.generated_at){right.innerHTML=options;right.value=data.regimes.find((row)=>row.id==='uk-cryptoassets')?.id||data.regimes[1]?.id||data.regimes[0].id;right.dataset.snapshot=data.generated_at}
+    drawRegulationComparison();
     if(dashboard.dataset.snapshot===data.generated_at)return;
     dashboard.dataset.snapshot=data.generated_at;
     const events=document.querySelector('[data-regulation-events]');
-    if(events)events.innerHTML=data.events.map((event)=>{
+    if(events)events.innerHTML=data.events.map((event,index)=>{
       const source=sourcesById.get(event.source_ids?.[0]);
       const date=new Intl.DateTimeFormat('es-ES',{day:'2-digit',month:'short',year:'numeric'}).format(new Date(`${event.effective_date}T12:00:00Z`));
-      return `<article class="kf-reg-event"><div><time datetime="${escapeHtml(event.effective_date)}">${date}</time>${statusBadge('verified')}</div><h3>${escapeHtml(event.title)}</h3><p>${escapeHtml(event.impact)}</p><footer><span>${escapeHtml(event.jurisdiction)} · ${escapeHtml(event.category)} · impacto ${escapeHtml(event.importance)}</span>${source?`<a href="${safeExternalUrl(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.authority)} ↗</a>`:''}</footer></article>`;
+      return `<article class="kf-reg-event"><span>${String(index+1).padStart(2,'0')}</span><time datetime="${escapeHtml(event.effective_date)}">${date}</time><div><strong>${escapeHtml(event.jurisdiction)} · ${escapeHtml(event.category)}</strong><h3>${escapeHtml(event.title)}</h3><p>${escapeHtml(event.impact)}</p></div>${source?`<a href="${safeExternalUrl(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.authority)} ↗</a>`:''}</article>`;
     }).join('');
     const sourceRoot=document.querySelector('[data-regulation-sources]');
     if(sourceRoot)sourceRoot.innerHTML=data.sources.map((source)=>{
       const connected=source.connection_status==='CONNECTED',pending=source.connection_status==='NOT_CHECKED';
-      const badge=pending?'<span class="kf-status unverified">COMPROBANDO</span>':connected?'<span class="kf-status auto">FUENTE PÚBLICA CONECTADA</span>':'<span class="kf-status offline">FUENTE TEMPORALMENTE INACCESIBLE</span>';
-      const observed=source.checked_at?`Observada ${ageLabel(ageMs(source.checked_at))}`:'Comprobación en curso';
+      const state=pending?'Comprobación pendiente':connected?'Accesible':'Acceso fallido';
+      const observed=source.checked_at?`Observada ${ageLabel(ageMs(source.checked_at))}`:'Sin comprobación técnica';
       const bindingLabel=REGULATION_LEVEL_LABELS[source.binding_level]||source.binding_level;
-      return `<article class="kf-reg-source"><div><strong>${escapeHtml(source.authority)}</strong>${badge}</div><span>${escapeHtml(source.title)}</span><small>${escapeHtml(bindingLabel)} · ${escapeHtml(observed)}</small><a href="${safeExternalUrl(source.url)}" target="_blank" rel="noopener noreferrer">Fuente oficial ↗</a></article>`;
+      return `<div class="kf-reg-source"><i class="${connected?'connected':pending?'pending':'offline'}"></i><strong>${escapeHtml(source.authority)}</strong><span>${escapeHtml(source.title)}</span><small>${escapeHtml(bindingLabel)} · ${escapeHtml(state)} · ${escapeHtml(observed)}</small><a href="${safeExternalUrl(source.url)}" target="_blank" rel="noopener noreferrer">Abrir ↗</a></div>`;
     }).join('');
-    const regimeRoot=document.querySelector('[data-regulation-regimes]');
-    if(regimeRoot)regimeRoot.innerHTML=data.regimes.map((regime)=>{
-      const state=regime.state==='TRANSITION_ENDED'?'TRANSICIÓN FINALIZADA':regime.state==='ENACTED'?'PROMULGADA':regime.state==='IN_FORCE_AND_TRANSITION'?'EN VIGOR · CAMBIO PROGRAMADO':'EN VIGOR';
-      const links=regime.source_ids.map((id)=>sourcesById.get(id)).filter(Boolean).map((source)=>`<a href="${safeExternalUrl(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.authority)} ↗</a>`).join('');
-      const signedReview=regime.review_status==='SIGNED',reviewLabel=signedReview?'REVISIÓN JURÍDICA FIRMADA':regime.legal_reviewed_at?`REVISIÓN ${regime.legal_reviewed_at} · FIRMA PENDIENTE`:`FUENTE VERIFICADA ${regime.source_verified_at} · FIRMA PENDIENTE`;
-      return `<article class="kf-reg-regime"><header><span>${escapeHtml(regime.code)} · ${escapeHtml(regime.jurisdiction)}</span>${statusBadge(signedReview?'verified':'sourcechecked')}</header><h3>${escapeHtml(regime.name)}</h3><div class="kf-reg-state">${escapeHtml(state)} · ${escapeHtml(regime.effective)}</div><dl><div><dt>Autoridad</dt><dd>${escapeHtml(regime.authority)}</dd></div><div><dt>Perímetro</dt><dd>${escapeHtml(regime.scope)}</dd></div><div><dt>Efecto operativo</dt><dd>${escapeHtml(regime.practical_effect)}</dd></div><div><dt>Límite</dt><dd>${escapeHtml(regime.limitation)}</dd></div></dl><footer>${links}<small>${escapeHtml(reviewLabel)}</small></footer></article>`;
-    }).join('');
+    const sourceSummary=document.querySelector('[data-reg-source-summary]');if(sourceSummary)sourceSummary.textContent=`${reachable}/${sourceCount} accesibles · ${Number(quality.signed_regime_count||0)}/${Number(quality.regime_count||data.regimes.length)} con firma jurídica`;
     const methodology=document.querySelector('[data-regulation-methodology]');if(methodology)methodology.textContent=`${data.methodology} ${data.review_policy}`;
   }
 

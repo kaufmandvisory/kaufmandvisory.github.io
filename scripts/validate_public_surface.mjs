@@ -2,7 +2,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const VERSION = 'kaufman-v61';
+const VERSION = 'kaufman-v62';
 const shells = [
   'index.html', 'mercados/index.html', 'regulacion/index.html', 'tokenizacion/index.html',
   'fiscal/index.html', 'empresas/index.html', 'bancos/index.html',
@@ -49,6 +49,12 @@ const miningHero = await fs.stat(path.join(ROOT, 'assets/images/mining-operation
 if (!miningHero || miningHero.size < 100_000) failures.push('mineria: imagen hero ausente o incompleta');
 for (const marker of ['kf-fiscal-editorial', '/assets/images/fiscal-review-v1.jpg', 'Introduce los datos de tu operación.']) {
   if (!appScript.includes(marker)) failures.push(`fiscal: falta ${marker}`);
+}
+for (const marker of ['data-regulation-table', 'data-regulation-detail', 'data-regulation-comparison', 'A quién afecta', 'Qué no cubre']) {
+  if (!appScript.includes(marker)) failures.push(`regulacion: falta ${marker}`);
+}
+for (const rejectedRegulationPattern of ['Construyendo fichas regulatorias', 'Mapa de regímenes']) {
+  if (appScript.includes(rejectedRegulationPattern)) failures.push(`regulacion: reaparece interfaz retirada: ${rejectedRegulationPattern}`);
 }
 for (const retiredFiscalFeature of ['kf-fiscal-globe-section', 'data-fiscal-earth', 'Pausar rotación', 'NASA/GSFC']) {
   if (appScript.includes(retiredFiscalFeature) || appStyles.includes(retiredFiscalFeature)) failures.push(`fiscal: permanece el globo retirado: ${retiredFiscalFeature}`);

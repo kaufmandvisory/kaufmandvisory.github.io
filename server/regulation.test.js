@@ -17,8 +17,23 @@ test('publishes complete regulation regimes without demo placeholders', () => {
   for (const regime of snapshot.regimes) {
     assert.ok(regime.source_ids.length > 0);
     assert.ok(['VERIFIED', 'SOURCE_GROUNDED'].includes(regime.legal_status));
+    assert.ok(regime.framework_type && regime.market_access);
+    for (const key of ['applies_to', 'does_not_apply_to', 'regulated_activities', 'core_obligations', 'verification_steps', 'activity_tags']) {
+      assert.ok(Array.isArray(regime[key]) && regime[key].length > 0, `${regime.id}: missing ${key}`);
+    }
     assert.doesNotMatch(JSON.stringify(regime), /DEMO/i);
   }
+});
+
+test('keeps material differences between comparable jurisdictions', () => {
+  const snapshot = buildRegulationSnapshot({}, '2026-09-02T12:00:00.000Z');
+  const spain = snapshot.regimes.find((row) => row.id === 'mica-espana-2026');
+  const uk = snapshot.regimes.find((row) => row.id === 'uk-cryptoassets');
+  assert.match(spain.market_access, /autorización MiCA/i);
+  assert.match(uk.market_access, /registro MLR/i);
+  assert.notDeepEqual(spain.does_not_apply_to, uk.does_not_apply_to);
+  assert.ok(uk.activity_tags.includes('marketing'));
+  assert.ok(spain.activity_tags.includes('issuer'));
 });
 
 test('keeps source accessibility separate from legal review', () => {

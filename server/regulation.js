@@ -91,6 +91,11 @@ export const REGULATORY_SOURCES = Object.freeze([
     source_type: 'OFFICIAL_REGISTER', binding_level: 'OFFICIAL_REGISTER'
   },
   {
+    id: 'jp_fsa_intermediary', jurisdiction: 'japon', authority: 'Financial Services Agency',
+    title: 'Registro de intermediarios de servicios de criptoactivos y medios de pago electrónicos', url: 'https://www.fsa.go.jp/common/shinsei/denanchuukai/index.html',
+    source_type: 'OFFICIAL_REGISTRATION_GUIDANCE', binding_level: 'OFFICIAL_GUIDANCE'
+  },
+  {
     id: 'au_austrac_vasp', jurisdiction: 'australia', authority: 'Federal Register of Legislation',
     title: 'AML/CTF Act 2006 · texto vigente y registro VASP', url: 'https://www.legislation.gov.au/C2006A00169/latest/text',
     source_type: 'PRIMARY_LAW', binding_level: 'PRIMARY_LAW'
@@ -203,7 +208,7 @@ export const REGULATORY_REGIMES = Object.freeze([
     scope: 'Compra, venta, intercambio, intermediación y determinadas formas de custodia o gestión de criptoactivos.',
     practical_effect: 'Debe comprobarse el proveedor en el registro FSA y el conjunto de activos que figura en su ficha.',
     limitation: 'La inclusión de un activo en la lista no garantiza ni respalda su valor; otros productos tokenizados pueden quedar bajo Financial Instruments and Exchange Act.',
-    source_ids: ['jp_fsa_crypto_register'], source_verified_at: '2026-08-22', legal_reviewed_at: null
+    source_ids: ['jp_fsa_crypto_register', 'jp_fsa_intermediary'], source_verified_at: '2026-09-02', legal_reviewed_at: null
   },
   {
     id: 'australia-vasp', code: 'AU', name: 'VASP · Australia', jurisdiction: 'Australia',
@@ -224,6 +229,279 @@ export const REGULATORY_REGIMES = Object.freeze([
     source_ids: ['us_genius_act'], source_verified_at: '2026-08-22', legal_reviewed_at: null
   }
 ]);
+
+const REGULATORY_DETAILS = Object.freeze({
+  'mica-union-europea': {
+    framework_type: 'Marco integral de criptoactivos',
+    market_access: 'Autorización CASP o habilitación del artículo 60, con alcance de servicios verificable.',
+    applies_to: [
+      'Emisores y oferentes de criptoactivos cubiertos por MiCA',
+      'CASP que presten custodia, negociación, intercambio, ejecución, colocación, transferencia o asesoramiento en la UE',
+      'Emisores de tokens referenciados a activos (ART) y tokens de dinero electrónico (EMT)'
+    ],
+    does_not_apply_to: [
+      'Criptoactivos que sean instrumentos financieros u otros productos ya regulados por normativa sectorial',
+      'NFT realmente únicos; una serie o colección puede volver a entrar en el perímetro',
+      'Una autorización CASP no aprueba ni garantiza los criptoactivos ofrecidos'
+    ],
+    regulated_activities: ['Emisión y oferta', 'Custodia', 'Exchange', 'Ejecución y órdenes', 'Transferencias', 'Asesoramiento'],
+    core_obligations: [
+      'Gobierno, capital y salvaguarda según el servicio autorizado',
+      'Información al cliente, gestión de conflictos y reclamaciones',
+      'White paper y reglas específicas cuando corresponda a emisión',
+      'Controles de abuso de mercado para criptoactivos admitidos a negociación'
+    ],
+    verification_steps: [
+      'Comprobar entidad jurídica y autoridad nacional de origen',
+      'Leer en el registro los servicios exactos autorizados y el pasaporte',
+      'Clasificar el activo antes de asumir que MiCA es la norma aplicable'
+    ],
+    activity_tags: ['issuer', 'stablecoin', 'custody', 'exchange', 'brokerage', 'transfer', 'advice']
+  },
+  'mica-espana-2026': {
+    framework_type: 'Aplicación nacional de MiCA',
+    market_access: 'Desde el 1 de julio de 2026, autorización MiCA válida; el antiguo registro AML no basta.',
+    applies_to: [
+      'CASP establecidos en España',
+      'CASP de otro Estado miembro que hayan notificado el pasaporte para España',
+      'Antiguos proveedores españoles que operaban durante la transición'
+    ],
+    does_not_apply_to: [
+      'El registro previo del Banco de España no equivale a autorización MiCA',
+      'La ficha española no sustituye la clasificación del producto ni las reglas de valores',
+      'Un proveedor autorizado para un servicio no queda habilitado para todos los demás'
+    ],
+    regulated_activities: ['Custodia', 'Exchange', 'Órdenes', 'Transferencias', 'Asesoramiento', 'Emisión ART/EMT'],
+    core_obligations: [
+      'Autorización y alcance publicados en registro oficial',
+      'Segregación y salvaguarda de activos y fondos cuando proceda',
+      'Procedimientos de reclamación, conflictos y continuidad',
+      'Supervisión CNMV; competencias específicas del Banco de España para ART y EMT'
+    ],
+    verification_steps: [
+      'Buscar la razón social, no solo la marca comercial',
+      'Confirmar servicios autorizados y país de origen en el registro MiCA',
+      'Verificar que el dominio y la entidad del contrato coinciden con el registro'
+    ],
+    activity_tags: ['issuer', 'stablecoin', 'custody', 'exchange', 'brokerage', 'transfer', 'advice']
+  },
+  'mexico-activos-virtuales': {
+    framework_type: 'Ley Fintech y circular bancaria',
+    market_access: 'El perímetro depende de la entidad y la operación; no existe una licencia cripto general equivalente a MiCA.',
+    applies_to: [
+      'Instituciones de tecnología financiera sujetas a la LRITF',
+      'Instituciones de crédito que realicen operaciones internas con activos virtuales',
+      'Operaciones expresamente comprendidas por la autorización y reglas de Banco de México'
+    ],
+    does_not_apply_to: [
+      'La Circular 4/2019 no autoriza por sí sola una oferta general de criptoactivos al público',
+      'Una empresa tecnológica no se convierte en institución regulada solo por usar blockchain',
+      'No crea un pasaporte internacional ni una equivalencia con una licencia de exchange extranjera'
+    ],
+    regulated_activities: ['Operaciones de ITF', 'Operaciones internas bancarias', 'Transmisión de fondos', 'Uso de activos autorizados'],
+    core_obligations: [
+      'Autorización institucional y cumplimiento del perímetro asignado',
+      'Separación de riesgos de las operaciones con activos virtuales',
+      'Controles AML y de identificación aplicables a la entidad',
+      'Información de riesgos y prohibiciones de representación engañosa'
+    ],
+    verification_steps: [
+      'Identificar si la contraparte es ITF, banco u otra entidad',
+      'Comprobar la autorización concreta en CNBV y las reglas de Banco de México',
+      'Separar servicio de pago, custodia, intercambio y oferta al público'
+    ],
+    activity_tags: ['exchange', 'transfer', 'payments', 'banking']
+  },
+  'emiratos-payment-tokens': {
+    framework_type: 'Reglamento federal de payment tokens',
+    market_access: 'Licencia o registro CBUAE según emisión, custodia, transferencia o conversión.',
+    applies_to: [
+      'Emisores de payment tokens denominados en dírhams',
+      'Custodios y transferidores de payment tokens',
+      'Proveedores de conversión y emisores extranjeros dirigidos al mercado de EAU'
+    ],
+    does_not_apply_to: [
+      'Financial Free Zones, sujetas a sus propios reguladores',
+      'Tokens que no cumplen la definición de payment token',
+      'Programas de recompensa limitados y otros supuestos expresamente exentos'
+    ],
+    regulated_activities: ['Emisión', 'Custodia', 'Transferencia', 'Conversión', 'Payment tokens'],
+    core_obligations: [
+      'Licencia o registro por categoría de servicio',
+      'Reservas, redención y salvaguarda cuando corresponda al emisor',
+      'Gobierno, gestión de riesgos y controles tecnológicos',
+      'AML, protección del cliente e información sobre condiciones del token'
+    ],
+    verification_steps: [
+      'Confirmar si el token es un payment token y en qué moneda está denominado',
+      'Determinar si el servicio se presta en EAU o se dirige a personas de EAU',
+      'Separar CBUAE de VARA, ADGM y DIFC antes de buscar la licencia'
+    ],
+    activity_tags: ['issuer', 'stablecoin', 'custody', 'exchange', 'transfer', 'payments']
+  },
+  'dubai-vara': {
+    framework_type: 'Licencia por actividad de activos virtuales',
+    market_access: 'Licencia VARA para cada actividad regulada en Dubái, excepto DIFC.',
+    applies_to: [
+      'VASP en mainland Dubái y sus free zones, salvo DIFC',
+      'Emisores de activos virtuales dentro del perímetro VARA',
+      'Servicios de asesoramiento, broker-dealer, custodia, exchange, lending, gestión y transferencia'
+    ],
+    does_not_apply_to: [
+      'DIFC, que mantiene un marco separado bajo DFSA',
+      'El marco no debe extrapolarse automáticamente a Abu Dabi u otros emiratos',
+      'Payment tokens que entren en la competencia federal del CBUAE requieren análisis separado'
+    ],
+    regulated_activities: ['Advisory', 'Broker-dealer', 'Custodia', 'Exchange', 'Lending', 'Gestión', 'Transferencia', 'Emisión'],
+    core_obligations: [
+      'Licencia de la actividad y rulebook específico del servicio',
+      'Gobierno, capital, tecnología y gestión de riesgos',
+      'Segregación, custodia y reglas de mercado según actividad',
+      'Aprobación y condiciones particulares para emisión'
+    ],
+    verification_steps: [
+      'Confirmar que la ubicación contractual no es DIFC',
+      'Comprobar la actividad exacta en el registro público VARA',
+      'Revisar el rulebook de actividad además del reglamento general'
+    ],
+    activity_tags: ['issuer', 'custody', 'exchange', 'brokerage', 'transfer', 'advice', 'lending']
+  },
+  'uk-cryptoassets': {
+    framework_type: 'Registro AML actual y autorización FSMA futura',
+    market_access: 'Registro MLR para actividad en Reino Unido; régimen FSMA previsto desde el 25 de octubre de 2027.',
+    applies_to: [
+      'Cryptoasset exchange providers que desarrollen negocio en Reino Unido',
+      'Custodian wallet providers dentro del perímetro MLR',
+      'Cualquier firma, también extranjera, que comunique promociones a consumidores británicos'
+    ],
+    does_not_apply_to: [
+      'El registro MLR no es una autorización general de servicios financieros',
+      'El registro no aprueba los tokens ofrecidos ni elimina el riesgo de inversión',
+      'El futuro régimen FSMA no debe mostrarse como vigente antes de su fecha operativa'
+    ],
+    regulated_activities: ['Exchange', 'Custodia', 'Promoción financiera', 'Transferencias', 'Stablecoins desde 2027'],
+    core_obligations: [
+      'Registro MLR antes de iniciar la actividad comprendida',
+      'Controles AML, titularidad efectiva y evaluación de responsables',
+      'Promociones claras, equilibradas y comunicadas o aprobadas por vía válida',
+      'Preparación de autorización FSMA sin confundirla con el registro actual'
+    ],
+    verification_steps: [
+      'Buscar la entidad en el registro FCA y leer su estatus',
+      'Comprobar la vía legal usada para promociones dirigidas a Reino Unido',
+      'Distinguir permiso financiero, registro MLR y futura autorización cripto'
+    ],
+    activity_tags: ['custody', 'exchange', 'transfer', 'marketing', 'stablecoin']
+  },
+  'hong-kong-vatp': {
+    framework_type: 'Licencia dual de plataforma',
+    market_access: 'Licencia SFC para VATP centralizada que opere en Hong Kong o comercialice activamente allí.',
+    applies_to: [
+      'Plataformas centralizadas de negociación de activos virtuales en Hong Kong',
+      'Plataformas extranjeras que comercialicen activamente servicios a inversores de Hong Kong',
+      'Operadores con security tokens, non-security tokens o ambos'
+    ],
+    does_not_apply_to: [
+      'La inclusión de un token en una plataforma no supone aprobación de la SFC',
+      'Un emisor o proveedor de software no es VATP solo por publicar un token o una wallet',
+      'La licencia de plataforma no sustituye permisos para otras actividades financieras'
+    ],
+    regulated_activities: ['Plataforma de negociación', 'Custodia de plataforma', 'Security tokens', 'Non-security tokens', 'Marketing activo'],
+    core_obligations: [
+      'Licencia AMLO y, cuando corresponda, licencias SFO tipos 1 y 7',
+      'Custodia, segregación, admisión de tokens y controles de mercado',
+      'Protección del cliente y evaluación de idoneidad según el servicio',
+      'Controles tecnológicos, continuidad y prevención de abuso'
+    ],
+    verification_steps: [
+      'Comprobar el nombre legal en la lista pública de VATP',
+      'Determinar si la plataforma negocia security tokens, non-security tokens o ambos',
+      'Verificar dominios, condiciones territoriales y restricciones del servicio'
+    ],
+    activity_tags: ['custody', 'exchange', 'brokerage', 'marketing']
+  },
+  'japan-crypto-exchange': {
+    framework_type: 'Registro de exchange e intermediación',
+    market_access: 'Registro FSA o Local Finance Bureau; intermediarios sujetos a un régimen específico desde junio de 2026.',
+    applies_to: [
+      'Proveedores de compra, venta e intercambio de criptoactivos',
+      'Intermediarios que conectan usuarios con proveedores registrados',
+      'Custodia o gestión de criptoactivos cuando forma parte del servicio regulado'
+    ],
+    does_not_apply_to: [
+      'La lista FSA no respalda el valor ni la seguridad de un criptoactivo',
+      'Un activo listado por un proveedor no queda aprobado como inversión',
+      'Security tokens y otros productos pueden quedar bajo Financial Instruments and Exchange Act'
+    ],
+    regulated_activities: ['Compra y venta', 'Intercambio', 'Intermediación', 'Custodia', 'Transferencia'],
+    core_obligations: [
+      'Registro y publicación de la entidad y los activos gestionados',
+      'Segregación de activos de clientes y controles de custodia',
+      'Información de riesgos, publicidad y protección del usuario',
+      'Controles AML, ciberseguridad y continuidad'
+    ],
+    verification_steps: [
+      'Buscar la entidad en la lista FSA y confirmar su Local Finance Bureau',
+      'Comprobar que el activo figura en la ficha del proveedor',
+      'Distinguir proveedor de exchange, intermediario y producto financiero tokenizado'
+    ],
+    activity_tags: ['custody', 'exchange', 'brokerage', 'transfer']
+  },
+  'australia-vasp': {
+    framework_type: 'Registro AML/CTF de VASP',
+    market_access: 'Registro AUSTRAC antes de prestar servicios VASP designados; renovación cada tres años.',
+    applies_to: [
+      'Intercambio entre moneda fiat y activos virtuales',
+      'Intercambio cripto a cripto y determinadas transferencias',
+      'Custodia y otros servicios VASP designados prestados en Australia'
+    ],
+    does_not_apply_to: [
+      'El registro AUSTRAC no equivale a licencia de servicios financieros',
+      'No resuelve clasificación como valor, fiscalidad ni protección del consumidor',
+      'Servicios técnicos fuera de las actividades designadas requieren análisis propio'
+    ],
+    regulated_activities: ['Fiat-cripto', 'Cripto-cripto', 'Custodia', 'Transferencias', 'Oferta de determinados servicios'],
+    core_obligations: [
+      'Registro AUSTRAC y renovación trienal',
+      'Programa AML/CTF basado en riesgo',
+      'KYC, monitorización y reportes de operaciones',
+      'Conservación de registros y evaluación de riesgos del servicio'
+    ],
+    verification_steps: [
+      'Comprobar la entidad en el registro público VASP',
+      'Separar registro AUSTRAC de una eventual licencia ASIC',
+      'Confirmar qué servicio designado presta y desde qué entidad'
+    ],
+    activity_tags: ['custody', 'exchange', 'transfer']
+  },
+  'us-payment-stablecoins': {
+    framework_type: 'Ley federal de payment stablecoins',
+    market_access: 'La emisión para personas de EE. UU. queda reservada a permitted payment stablecoin issuers.',
+    applies_to: [
+      'Emisores federales o estatales permitidos de payment stablecoins',
+      'Emisores extranjeros que ofrezcan payment stablecoins a personas de Estados Unidos bajo el régimen aplicable',
+      'Reservas, redención y divulgación del payment stablecoin'
+    ],
+    does_not_apply_to: [
+      'No es una licencia general para exchanges, brokers, DeFi o custodia',
+      'No cubre automáticamente tokens de inversión ni otros criptoactivos',
+      'Un payment stablecoin cubierto no se convierte por ello en depósito bancario asegurado'
+    ],
+    regulated_activities: ['Emisión de stablecoin', 'Reservas', 'Redención', 'Divulgación', 'Supervisión de emisor'],
+    core_obligations: [
+      'Reservas permitidas y respaldo conforme al texto legal',
+      'Redención y divulgación periódica de composición de reservas',
+      'Supervisión federal o estatal según categoría de emisor',
+      'Restricciones de emisión, representación y reutilización de reservas'
+    ],
+    verification_steps: [
+      'Confirmar que el activo cumple la definición de payment stablecoin',
+      'Identificar al emisor y su supervisor federal o estatal',
+      'Revisar reservas, derecho de redención y fecha real de aplicación de cada obligación'
+    ],
+    activity_tags: ['issuer', 'stablecoin', 'payments']
+  }
+});
 
 export const REGULATORY_EVENTS = Object.freeze([
   {
@@ -273,7 +551,10 @@ export function buildRegulationSnapshot(sourceHealth = {}, receivedAt = new Date
     access_method: 'PUBLIC_OFFICIAL_SOURCE',
     changed_in_session: detectedChanges.includes(source.id)
   }));
-  const regimes = clone(REGULATORY_REGIMES);
+  const regimes = clone(REGULATORY_REGIMES).map((regime) => ({
+    ...regime,
+    ...clone(REGULATORY_DETAILS[regime.id] || {})
+  }));
   const checked = sources.filter((source) => source.connection_status !== 'NOT_CHECKED');
   const reachable = sources.filter((source) => source.connection_status === 'CONNECTED');
   const jurisdictionCount = new Set(regimes.map((regime) => regime.jurisdiction)).size;
@@ -292,7 +573,7 @@ export function buildRegulationSnapshot(sourceHealth = {}, receivedAt = new Date
     legal_reviewed_at: '2026-07-13',
     legal_review_ledger: reviewLedger,
     review_policy: 'La fuente se monitoriza automáticamente cada 24 horas. Un HTTP correcto prueba accesibilidad, no vigencia jurídica; los cambios de contenido activan revisión editorial.',
-    scope: 'Mapa informativo de perímetros regulatorios. No determina si una actividad o entidad concreta necesita licencia.',
+    scope: 'Matriz informativa de perímetros regulatorios. No determina si una actividad o entidad concreta necesita licencia.',
     regimes,
     events: clone(REGULATORY_EVENTS),
     sources,
@@ -309,7 +590,7 @@ export function buildRegulationSnapshot(sourceHealth = {}, receivedAt = new Date
       ,signed_regime_count: reviewLedger.signed_regime_ids.length
       ,pending_signoff_count: reviewLedger.pending_regime_ids.length
     },
-    methodology: 'Cada ficha conserva jurisdicción, autoridad, fecha efectiva, perímetro, efecto práctico, límite y enlaces primarios. Kaufman no infiere equivalencia entre registros, licencias o territorios.'
+    methodology: 'Cada marco conserva jurisdicción, autoridad, fecha efectiva, perímetro, efecto práctico, límite y enlaces primarios. Kaufman no infiere equivalencia entre registros, licencias o territorios.'
   };
 }
 
@@ -321,8 +602,11 @@ export function validateRegulationSnapshot(snapshot) {
   const regimeIds = new Set(snapshot.regimes.map((regime) => regime.id));
   if (regimeIds.size !== snapshot.regimes.length) throw new Error('Duplicate regulation regime IDs');
   for (const regime of snapshot.regimes) {
-    const required = ['name', 'jurisdiction', 'legal_status', 'state', 'authority', 'effective', 'scope', 'practical_effect', 'limitation'];
+    const required = ['name', 'jurisdiction', 'legal_status', 'state', 'authority', 'effective', 'scope', 'practical_effect', 'limitation', 'framework_type', 'market_access'];
     if (required.some((key) => !regime[key])) throw new Error(`Incomplete regulation regime: ${regime.id}`);
+    for (const key of ['applies_to', 'does_not_apply_to', 'regulated_activities', 'core_obligations', 'verification_steps', 'activity_tags']) {
+      if (!Array.isArray(regime[key]) || !regime[key].length) throw new Error(`Incomplete regulation comparison field ${key}: ${regime.id}`);
+    }
     if (!regime.legal_reviewed_at && !regime.source_verified_at) throw new Error(`Missing review provenance: ${regime.id}`);
     if (!regime.source_ids?.length || regime.source_ids.some((id) => !sourceIds.has(id))) throw new Error(`Invalid regulation sources: ${regime.id}`);
     if (JSON.stringify(regime).toUpperCase().includes('DEMO')) throw new Error(`Demo value in regulation regime: ${regime.id}`);

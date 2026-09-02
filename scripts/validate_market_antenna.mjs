@@ -172,10 +172,18 @@ for (const source of regulation.sources) {
 }
 for (const regime of regulation.regimes) {
   assert.ok(['VERIFIED', 'SOURCE_GROUNDED', 'SIGNED_LEGAL_REVIEW'].includes(regime.legal_status), `${regime.id}: legal review status`);
-  assert.ok(regime.authority && regime.effective && regime.scope && regime.practical_effect && regime.limitation, `${regime.id}: incomplete regulation regime`);
+  assert.ok(regime.authority && regime.effective && regime.scope && regime.practical_effect && regime.limitation && regime.framework_type && regime.market_access, `${regime.id}: incomplete regulation regime`);
+  for (const key of ['applies_to', 'does_not_apply_to', 'regulated_activities', 'core_obligations', 'verification_steps', 'activity_tags']) {
+    assert.ok(Array.isArray(regime[key]) && regime[key].length > 0, `${regime.id}: missing comparison field ${key}`);
+  }
   assert.ok(regime.source_ids.length > 0 && regime.source_ids.every((id) => regulationSourceIds.has(id)), `${regime.id}: broken source reference`);
   assert.doesNotMatch(JSON.stringify(regime), /DEMO/i, `${regime.id}: demo value leaked into regulation`);
 }
+assert.notEqual(
+  regulation.regimes.find((row) => row.id === 'mica-espana-2026').market_access,
+  regulation.regimes.find((row) => row.id === 'uk-cryptoassets').market_access,
+  'Spain and UK market access were flattened into generic copy'
+);
 assert.equal(regulation.legal_review_ledger?.schema_version, 'kaufman-legal-review-ledger-v1', 'legal review ledger missing');
 assert.equal(regulation.data_quality.signed_regime_count, regulation.legal_review_ledger.signed_regime_ids.length, 'signed legal review count mismatch');
 
