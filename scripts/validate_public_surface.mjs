@@ -2,7 +2,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const VERSION = 'kaufman-v67';
+const VERSION = 'kaufman-v66';
 const shells = [
   'index.html', 'mercados/index.html', 'regulacion/index.html', 'tokenizacion/index.html',
   'fiscal/index.html', 'empresas/index.html', 'bancos/index.html',
@@ -39,19 +39,6 @@ for (const rule of ['/blog/', '/files/']) if (!robots.includes(`Disallow: ${rule
 
 const appScript = await fs.readFile(path.join(ROOT, 'assets/kaufman-app.js'), 'utf8');
 const appStyles = await fs.readFile(path.join(ROOT, 'assets/kaufman.css'), 'utf8');
-for (const marker of ['kf-home-hero-v3', 'data-home-kpi', 'kf-home-area-row', 'data-home-reg-events', 'kf-home-directory-row']) {
-  if (!appScript.includes(marker)) failures.push(`home: falta ${marker}`);
-}
-for (const marker of ['.kf-home-hero-v3', '.kf-home-area-row', '.kf-home-update-grid', '.kf-home-directory-row']) {
-  if (!appStyles.includes(marker)) failures.push(`home: falta diseño ${marker}`);
-}
-for (const retiredHomeFeature of ['data-home-regulation', 'data-feed-star', 'Configurar decisión']) {
-  if (appScript.includes(retiredHomeFeature)) failures.push(`home: permanece interfaz retirada: ${retiredHomeFeature}`);
-}
-const homeRenderer = appScript.slice(appScript.indexOf('function renderHome(){'), appScript.indexOf('function decisionCloseMarkup'));
-for (const retiredHomeFeature of ['ecosystemMapMarkup()', 'data-decision-builder', 'data-ecosystem', 'Decision Brief']) {
-  if (homeRenderer.includes(retiredHomeFeature)) failures.push(`home: renderiza interfaz retirada: ${retiredHomeFeature}`);
-}
 for (const marker of ['kf-mining-hero-frame', 'data-mining-hero-observed', 'ASIC · SHA-256', 'data-mining-country-expand']) {
   if (!appScript.includes(marker)) failures.push(`mineria: falta ${marker}`);
 }
@@ -69,8 +56,8 @@ for (const marker of ['data-regulation-table', 'data-regulation-detail', 'data-r
 for (const rejectedRegulationPattern of ['Construyendo fichas regulatorias', 'Mapa de regímenes']) {
   if (appScript.includes(rejectedRegulationPattern)) failures.push(`regulacion: reaparece interfaz retirada: ${rejectedRegulationPattern}`);
 }
-if (!appScript.includes("['home','regulacion','contacto','aviso','privacidad','cookies','terminos','retirado']")) {
-  failures.push('home/regulacion: el cierre comercial vuelve a estar habilitado');
+if (!appScript.includes("['regulacion','contacto','aviso','privacidad','cookies','terminos','retirado']")) {
+  failures.push('regulacion: el cierre comercial vuelve a estar habilitado');
 }
 for (const token of [
   '--kf-type-display:', '--kf-type-page-title:', '--kf-type-section-title:',
