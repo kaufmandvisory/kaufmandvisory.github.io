@@ -122,13 +122,14 @@
     });
   }
   const HOME_DIRECTORY_KEYS = ['empresas','bancos','exchanges','wallets','proyectos','mineria','hardware'];
-  const ECOSYSTEM_ORDER = ['mercado','regulacion','empresas','infraestructura','custodia'];
+  const ECOSYSTEM_ORDER = ['mercado','regulacion','tokenizacion','mineria','custodia','fiscal'];
   const ECOSYSTEM_TERRITORIES = {
-    mercado:{index:'01',label:'Mercado',x:21,y:22,side:'left',headline:'Precio, liquidez y capital tokenizado.',description:'Precios de referencia, productos tokenizados, exchanges y efectos fiscales de la operación seleccionada.',decision:'Tamaño de mercado, liquidez disponible y coste estimado de la operación.',action:'Consultar mercado y costes',href:'/mercados/',linkLabel:'Abrir datos de mercado',sublayers:[['Precios','/mercados/'],['RWA','/tokenizacion/'],['Exchanges','/exchanges/'],['Minería','/mineria/#economia-minera'],['Fiscalidad','/fiscal/']]},
-    regulacion:{index:'02',label:'Regulación',x:10,y:63,side:'left',headline:'Normativa por jurisdicción y autoridad.',description:'Fuentes oficiales, autoridades competentes, actividades reguladas y fechas efectivas.',decision:'Autorizaciones y obligaciones aplicables a la operación seleccionada.',action:'Consultar regulación',href:'/regulacion/',linkLabel:'Abrir regulación',sublayers:[['Marcos vigentes','/regulacion/'],['Fiscalidad','/fiscal/'],['Bancos','/bancos/']]},
-    empresas:{index:'03',label:'Empresas',x:54,y:13,side:'top',headline:'Empresas e iniciativas verificables.',description:'Compañías, bancos y productos tokenizados vinculados a fuentes corporativas o registros públicos.',decision:'Entidad responsable, actividad declarada y alcance documentado de cada iniciativa.',action:'Consultar entidades',href:'/empresas/',linkLabel:'Abrir empresas',sublayers:[['Empresas','/empresas/'],['Bancos','/bancos/'],['RWA','/tokenizacion/'],['Proyectos','/proyectos/']]},
-    infraestructura:{index:'04',label:'Infraestructura',x:86,y:35,side:'right',headline:'Redes, minería, hardware y dependencias.',description:'Redes L2, proyectos, equipos mineros, costes técnicos y dependencias operativas.',decision:'Dependencias técnicas que afectan disponibilidad, coste y capacidad de retirada.',action:'Consultar infraestructura',href:'/mercados/',linkLabel:'Abrir infraestructura',sublayers:[['L2','/mercados/'],['Minería','/mineria/'],['Hardware','/hardware/'],['Proyectos','/proyectos/']]},
-    custodia:{index:'05',label:'Custodia',x:70,y:82,side:'right',headline:'Control de claves, contraparte y recuperación.',description:'Wallets, exchanges y bancos comparados por control de claves, entidad responsable y recuperación.',decision:'Control de claves, procedimiento de recuperación y exposición a contraparte.',action:'Consultar custodia',href:'/wallets/',linkLabel:'Abrir custodia',sublayers:[['Wallets','/wallets/'],['Exchanges','/exchanges/'],['Bancos','/bancos/']]}
+    mercado:{index:'01',label:'Mercado',x:21,y:22,side:'left',headline:'Precios, flujos y costes de mercado.',description:'Referencias de BTC y ETH, flujos ETF, derivados, gas y liquidez con fuente y método identificados.',decision:'Precio de referencia, dirección del capital institucional, coste de ejecución y liquidez disponible.',href:'/mercados/',linkLabel:'Abrir mercados',sublayers:[['Precios','/mercados/'],['Flujos y derivados','/mercados/#senales-de-mercado'],['Exchanges','/exchanges/']]},
+    regulacion:{index:'02',label:'Regulación',x:10,y:63,side:'left',headline:'Obligaciones por actividad y jurisdicción.',description:'Marcos comparados por país, actividad cubierta, autoridad competente, vigencia y fuente oficial.',decision:'Autorización exigida, sujetos afectados, obligaciones materiales y exclusiones del marco.',href:'/regulacion/',linkLabel:'Abrir regulación',sublayers:[['Matriz regulatoria','/regulacion/#comparar-regulacion'],['Comparador','/regulacion/#comparador-regulatorio'],['Fuentes','/regulacion/#fuentes-regulatorias']]},
+    tokenizacion:{index:'03',label:'Tokenización',x:54,y:13,side:'top',headline:'Capital tokenizado, producto, red y emisor.',description:'Productos RWA, deuda tokenizada, stablecoins, redes y concentración del capital onchain.',decision:'Activo representado, entidad emisora, red utilizada, capital rastreado y concentración.',href:'/tokenizacion/',linkLabel:'Abrir tokenización',sublayers:[['Productos RWA','/tokenizacion/'],['Proyectos','/proyectos/'],['Bancos','/bancos/']]},
+    mineria:{index:'04',label:'Minería',x:86,y:35,side:'right',headline:'Red, energía, ASIC y margen operativo.',description:'Hashprice, hashrate, dificultad, comisiones, equipos ASIC y tarifas eléctricas comparables.',decision:'Ingreso por potencia, coste eléctrico de equilibrio, eficiencia del equipo y concentración de pools.',href:'/mineria/',linkLabel:'Abrir minería',sublayers:[['Estado de red','/mineria/#red-minera'],['Países','/mineria/#paises-mineros'],['Hardware','/hardware/']]},
+    custodia:{index:'05',label:'Custodia',x:70,y:82,side:'right',headline:'Control de claves, recuperación y contraparte.',description:'Wallets, exchanges y bancos comparados por control, aislamiento, recuperación y dependencia de terceros.',decision:'Quién controla la clave, cómo se recupera el acceso y qué entidad interviene en la custodia.',href:'/wallets/',linkLabel:'Abrir wallets',sublayers:[['Wallets','/wallets/'],['Exchanges','/exchanges/'],['Bancos','/bancos/']]},
+    fiscal:{index:'06',label:'Fiscal',x:31,y:86,side:'left',headline:'Tratamiento fiscal por operación y residencia.',description:'Hechos fiscales blockchain comparados por jurisdicción, tipo de operación, base y nivel de certeza.',decision:'Hecho que activa tributación, momento, base fiscal, información exigida y límite del cálculo.',href:'/fiscal/',linkLabel:'Abrir fiscal',sublayers:[['Cálculo','/fiscal/'],['Comparación','/fiscal/'],['Regulación','/regulacion/']]}
   };
 
   const STATUS_LABELS = {verified:'VERIFICADO',sourcechecked:'FUENTE CONTRASTADA',unverified:'REVISIÓN NECESARIA',auto:'AUTOMÁTICO',offline:'NO DISPONIBLE'};
@@ -146,6 +147,7 @@
   const STATIC_HOST = /(^|\.)kaufmanadvisory\.io$|(^|\.)kaufmandvisory\.github\.io$/.test(location.hostname);
   let latestEthUsd = null;
   let latestMarketSnapshot = null;
+  let latestDailySnapshot = null;
   let marketEdgeTimer = null;
   let marketEdgeRequest = null;
   let marketContextTimer = null;
@@ -156,7 +158,7 @@
   let platformFallbackPromise = null;
   let regulationDataset = null;
   let regulationRowsExpanded = false;
-  let ecosystemPinned = 'infraestructura';
+  let ecosystemPinned = 'mercado';
 
   function statusBadge(status){return `<span class="kf-status ${status}">${STATUS_LABELS[status]||status}</span>`}
   function brandMarkMarkup(){return `<svg class="kf-brand-mark" viewBox="0 0 64 44" aria-hidden="true" focusable="false"><path d="M13 7v30M13 22h17M30 22 50 7M30 22l20 15"/><path class="kf-brand-mark-route" d="M13 7 30 22 50 37"/><rect x="25" y="17" width="10" height="10" rx="2" transform="rotate(45 30 22)"/><circle cx="13" cy="7" r="2.5"/><circle cx="13" cy="37" r="2.5"/><circle cx="50" cy="7" r="2.5"/><circle cx="50" cy="37" r="2.5"/></svg>`}
@@ -359,51 +361,58 @@
   function ecosystemMetrics(territoryId,snapshot){
     const referencePrices=Object.values(snapshot?.reference_prices||{});
     const tokenization=snapshot?.tokenization_markets||{};
-    const l2=snapshot?.l2_intelligence||{};
+    const wallets=snapshot?.wallet_intelligence||{};
     const fiscal=snapshot?.fiscal_intelligence||{};
     const regulation=snapshot?.regulation_intelligence||{};
-    const connectedProviders=Object.values(snapshot?.providers||{}).filter((provider)=>['LIVE','CONNECTED','SNAPSHOT'].includes(provider?.connection_status)).length;
+    const marketContext=snapshot?.market_context||{};
+    const mining=latestDailySnapshot?.mining_profitability||{};
     const metric=(value,label,source)=>({value:value??'—',label,source});
     const countItems=(keys)=>keys.reduce((total,key)=>total+(CATALOGS[key]?.items.length||0),0);
+    const price=(id)=>referencePrices.find((item)=>item?.asset_id===id);
+    const compactSignedUsd=(value)=>Number.isFinite(Number(value))?`${Number(value)>0?'+':''}${new Intl.NumberFormat('es-ES',{notation:'compact',maximumFractionDigits:1}).format(Number(value))} USD`:'—';
     if(territoryId==='mercado')return [
-      metric(referencePrices.filter((item)=>item?.verification_status==='VERIFIED').length||'—','precios de referencia publicados','Coinbase · Kraken · Binance'),
-      metric(tokenization?.coverage?.rwa_protocols??'—','protocolos RWA rastreados','DefiLlama Open API'),
-      metric(tokenizedUsd(tokenization?.kpis?.tracked_rwa_tvl_usd),'capital RWA onchain','Snapshot público conectado')
+      metric(Number.isFinite(Number(price('bitcoin')?.price))?PRICE.format(price('bitcoin').price):'—','BTC / USD','Kaufman Reference Price'),
+      metric(Number.isFinite(Number(price('ethereum')?.price))?PRICE.format(price('ethereum').price):'—','ETH / USD','Kaufman Reference Price'),
+      metric(compactSignedUsd(marketContext?.etf_flows?.assets?.bitcoin?.period_net_flow_usd?.['7d']),'flujo ETF Bitcoin · 7 días','Serie pública contrastada')
     ];
     if(territoryId==='regulacion')return [
-      metric(regulation?.data_quality?.regime_count??'—','regímenes documentados','Fuentes públicas oficiales'),
-      metric(regulation?.data_quality?.source_count??'—','fuentes regulatorias','Comprobación server-side'),
-      metric(regulation?.events?.length??'—','cambios y fechas operativas','Registro jurídico Kaufman')
+      metric(regulation?.data_quality?.regime_count??'—','marcos comparados','Registro regulatorio Kaufman'),
+      metric(regulation?.data_quality?.jurisdiction_count??'—','países y territorios','Fuentes públicas oficiales'),
+      metric(regulation?.data_quality?.source_count??'—','fuentes regulatorias','Comprobación server-side')
     ];
-    if(territoryId==='empresas')return [
-      metric(countItems(['empresas','bancos']),'entidades con ficha navegable','Fuentes corporativas y registros'),
-      metric(tokenization?.leaders?.length??'—','productos RWA líderes observados','DefiLlama Open API'),
+    if(territoryId==='tokenizacion')return [
+      metric(tokenization?.coverage?.rwa_protocols??'—','productos y protocolos RWA','DefiLlama Open API'),
+      metric(tokenizedUsd(tokenization?.kpis?.tracked_rwa_tvl_usd),'capital RWA onchain','TVL elegible rastreado'),
       metric(tokenization?.coverage?.networks??'—','redes con capital tokenizado','Distribución chainTvls')
     ];
-    if(territoryId==='infraestructura')return [
-      metric(l2?.coverage?.curated_projects??'—','proyectos L2 explicados','L2BEAT · muestra editorial'),
-      metric(l2?.coverage?.projects??'—','proyectos L2 observados','L2BEAT API pública'),
-      metric(Number.isFinite(Number(snapshot?.auxiliary?.ethereum_gas?.gas_gwei))?`${Number(snapshot.auxiliary.ethereum_gas.gas_gwei).toLocaleString('es-ES',{maximumFractionDigits:3})} Gwei`:'—','gas Ethereum observado','eth_feeHistory')
+    if(territoryId==='mineria')return [
+      metric(Number.isFinite(Number(mining.hashprice_usd_ph_day))?`${Number(mining.hashprice_usd_ph_day).toLocaleString('es-ES',{maximumFractionDigits:2})} US$`:'—','hashprice · PH/s y día','mempool.space + precio Kaufman'),
+      metric(Number.isFinite(Number(mining.network_hashrate_eh_s))?`${Number(mining.network_hashrate_eh_s).toLocaleString('es-ES',{maximumFractionDigits:1})} EH/s`:'—','hashrate de red','mempool.space'),
+      metric(mining?.country_screen?.all_observations?.length||'—','países con tarifa comparable','Eurostat + BCE')
     ];
     if(territoryId==='custodia')return [
-      metric(countItems(['wallets','exchanges','bancos']),'proveedores y herramientas comparables','Fichas Kaufman con fuente'),
-      metric(connectedProviders||'—','fuentes de datos activas','Observación server-side'),
-      metric(new Set(referencePrices.flatMap((item)=>item?.venues||[])).size||'—','mercados usados en referencias','Venues elegibles')
+      metric(wallets?.coverage?.products??'—','productos monitorizados','Releases oficiales'),
+      metric(`${wallets?.coverage?.observed_controls??'—'} / ${wallets?.coverage?.expected_controls??'—'}`,'controles técnicos observados','Firmware, aplicación y servicio'),
+      metric(countItems(['wallets','exchanges','bancos']),'fichas de custodia y contraparte','Fuentes de producto y registros')
+    ];
+    if(territoryId==='fiscal')return [
+      metric(fiscal?.data_quality?.jurisdiction_count??'—','jurisdicciones fiscales','Matriz fiscal Kaufman'),
+      metric(fiscal?.data_quality?.fact_count??'—','hechos fiscales comparables','Cinco eventos por jurisdicción'),
+      metric(fiscal?.data_quality?.source_count??'—','fuentes fiscales','Administraciones y textos oficiales')
     ];
     return [];
   }
 
   function ecosystemPanelMarkup(territoryId,snapshot=latestMarketSnapshot){
-    const territory=ECOSYSTEM_TERRITORIES[territoryId]||ECOSYSTEM_TERRITORIES.infraestructura;
+    const territory=ECOSYSTEM_TERRITORIES[territoryId]||ECOSYSTEM_TERRITORIES.mercado;
     const metrics=ecosystemMetrics(territoryId,snapshot).map((item)=>`<div class="kf-eco-metric"><strong>${escapeHtml(item.value)}</strong><span>${escapeHtml(item.label)}</span><small>${escapeHtml(item.source)}</small></div>`).join('');
     const sublayers=territory.sublayers.map(([label,href],index)=>`<a href="${href}"><span>${String(index+1).padStart(2,'0')}</span><strong>${escapeHtml(label)}</strong><i aria-hidden="true">→</i></a>`).join('');
-    const briefHref=`/contacto/?asunto=decision-brief&territorio=${encodeURIComponent(territoryId)}`;
-    return `<div class="kf-eco-panel-head"><p>${escapeHtml(territory.index)} / ${escapeHtml(territory.label)}</p></div><h3>${escapeHtml(territory.headline)}</h3><p class="kf-eco-panel-copy">${escapeHtml(territory.description)}</p><div class="kf-eco-decision"><span>DATOS APLICABLES</span><strong>${escapeHtml(territory.decision)}</strong></div><div class="kf-eco-metrics">${metrics}</div><div class="kf-eco-layers"><span>Áreas relacionadas</span><nav aria-label="Áreas de ${escapeHtml(territory.label)}">${sublayers}</nav></div><div class="kf-eco-panel-actions"><a class="kf-eco-open" href="${territory.href}">${escapeHtml(territory.linkLabel)} <span>→</span></a><a class="kf-eco-brief" href="${briefHref}">${escapeHtml(territory.action)}</a></div>`;
+    return `<div class="kf-eco-panel-head"><p>${escapeHtml(territory.index)} / ${escapeHtml(territory.label)}</p></div><h3>${escapeHtml(territory.headline)}</h3><p class="kf-eco-panel-copy">${escapeHtml(territory.description)}</p><div class="kf-eco-decision"><span>DATOS QUE RESUELVE</span><strong>${escapeHtml(territory.decision)}</strong></div><div class="kf-eco-metrics">${metrics}</div><div class="kf-eco-layers"><span>Accesos relacionados</span><nav aria-label="Áreas de ${escapeHtml(territory.label)}">${sublayers}</nav></div><div class="kf-eco-panel-actions"><a class="kf-eco-open" href="${territory.href}">${escapeHtml(territory.linkLabel)} <span>→</span></a></div>`;
   }
 
   function ecosystemMapMarkup(){
-    const nodes=ECOSYSTEM_ORDER.map((id)=>{const territory=ECOSYSTEM_TERRITORIES[id];const active=id==='infraestructura';return `<button class="kf-eco-node${active?' active':''}" id="ecosystem-tab-${id}" type="button" role="tab" aria-selected="${active}" aria-controls="kaufman-ecosystem-panel" data-eco-territory="${id}" data-side="${territory.side}" style="--eco-x:${territory.x}%;--eco-y:${territory.y}%"><span class="kf-eco-node-ring"><i></i></span><strong>${escapeHtml(territory.label)}</strong><small>${territory.index}</small></button>`}).join('');
-    return `<section class="kf-section kf-ecosystem" id="explorar" data-ecosystem><div class="kf-container"><header class="kf-ecosystem-head"><div><p class="kf-kicker">Datos conectados</p><h2>Mercado, regulación, empresas, infraestructura y custodia.</h2></div><p>Selecciona un área para consultar métricas, fuentes y datos relacionados.</p></header><div class="kf-eco-shell"><div class="kf-eco-canvas" data-eco-current="infraestructura"><svg class="kf-eco-geometry" viewBox="0 0 960 600" aria-hidden="true"><path class="kf-eco-scaffold" d="M49 484 C77 211 272 44 548 62 C769 76 892 231 870 408 C850 541 711 581 576 520 C435 457 415 300 514 210 C592 139 713 167 747 253"/><path class="kf-eco-scaffold secondary" d="M94 518 C235 573 350 536 405 430 C457 331 425 208 335 150"/><path class="kf-eco-core-orbit" d="M331 318 C331 252 385 199 451 199 C517 199 570 252 570 318 C570 384 517 437 451 437 C385 437 331 384 331 318Z"/><path class="kf-eco-link" data-eco-link="mercado" d="M451 318 C369 273 285 197 197 131"/><path class="kf-eco-link" data-eco-link="regulacion" d="M451 318 C324 329 213 357 89 385"/><path class="kf-eco-link" data-eco-link="empresas" d="M451 318 C448 226 478 132 528 75"/><path class="kf-eco-link" data-eco-link="infraestructura" d="M451 318 C579 264 699 223 827 207"/><path class="kf-eco-link" data-eco-link="custodia" d="M451 318 C553 379 623 451 682 503"/><path class="kf-eco-link" data-eco-link="riesgo" d="M451 318 C397 416 342 485 283 539"/><path class="kf-eco-cross" d="M197 131 C334 88 456 84 528 75"/><path class="kf-eco-cross" d="M89 385 C243 393 338 421 283 539"/><path class="kf-eco-cross" d="M827 207 C776 332 745 425 682 503"/></svg><div class="kf-eco-center"><span>Datos</span><strong>K</strong><i></i></div><div class="kf-eco-node-list" role="tablist" aria-label="Áreas de datos Kaufman">${nodes}</div><div class="kf-eco-signals" aria-live="polite"><span data-eco-signal="market">Precios · comprobando</span><span data-eco-signal="regulation">Regulación · comprobando</span><span data-eco-signal="fiscal">Fiscal · comprobando</span></div></div><aside class="kf-eco-panel" id="kaufman-ecosystem-panel" role="tabpanel" aria-labelledby="ecosystem-tab-infraestructura" aria-live="polite" data-eco-panel>${ecosystemPanelMarkup('infraestructura',null)}</aside></div><p class="kf-eco-instruction"><span aria-hidden="true">↳</span> Selecciona un área para consultar sus datos y fuentes.</p></div></section>`;
+    const nodes=ECOSYSTEM_ORDER.map((id)=>{const territory=ECOSYSTEM_TERRITORIES[id];const active=id==='mercado';return `<button class="kf-eco-node${active?' active':''}" id="ecosystem-tab-${id}" type="button" role="tab" aria-selected="${active}" aria-controls="kaufman-ecosystem-panel" data-eco-territory="${id}" data-side="${territory.side}" style="--eco-x:${territory.x}%;--eco-y:${territory.y}%"><span class="kf-eco-node-ring"><i></i></span><strong>${escapeHtml(territory.label)}</strong><small>${territory.index}</small></button>`}).join('');
+    return `<section class="kf-section kf-ecosystem" id="explorar" data-ecosystem><div class="kf-container"><header class="kf-ecosystem-head"><div><p class="kf-kicker">Datos conectados</p><h2>Mercado, regulación, tokenización, minería, custodia y fiscalidad.</h2></div><p>Selecciona un área para consultar sus métricas, fuentes y páginas relacionadas.</p></header><div class="kf-eco-shell"><div class="kf-eco-canvas" data-eco-current="mercado"><svg class="kf-eco-geometry" viewBox="0 0 960 600" aria-hidden="true"><path class="kf-eco-scaffold" d="M49 484 C77 211 272 44 548 62 C769 76 892 231 870 408 C850 541 711 581 576 520 C435 457 415 300 514 210 C592 139 713 167 747 253"/><path class="kf-eco-scaffold secondary" d="M94 518 C235 573 350 536 405 430 C457 331 425 208 335 150"/><path class="kf-eco-core-orbit" d="M331 318 C331 252 385 199 451 199 C517 199 570 252 570 318 C570 384 517 437 451 437 C385 437 331 384 331 318Z"/><path class="kf-eco-link" data-eco-link="mercado" d="M451 318 C369 273 285 197 197 131"/><path class="kf-eco-link" data-eco-link="regulacion" d="M451 318 C324 329 213 357 89 385"/><path class="kf-eco-link" data-eco-link="tokenizacion" d="M451 318 C448 226 478 132 528 75"/><path class="kf-eco-link" data-eco-link="mineria" d="M451 318 C579 264 699 223 827 207"/><path class="kf-eco-link" data-eco-link="custodia" d="M451 318 C553 379 623 451 682 503"/><path class="kf-eco-link" data-eco-link="fiscal" d="M451 318 C397 416 342 485 283 539"/><path class="kf-eco-cross" d="M197 131 C334 88 456 84 528 75"/><path class="kf-eco-cross" d="M89 385 C243 393 338 421 283 539"/><path class="kf-eco-cross" d="M827 207 C776 332 745 425 682 503"/></svg><div class="kf-eco-center"><span>Datos</span><strong>K</strong><i></i></div><div class="kf-eco-node-list" role="tablist" aria-label="Áreas de datos Kaufman">${nodes}</div><div class="kf-eco-signals" aria-live="polite"><span data-eco-signal="market">BTC y ETH · comprobando</span><span data-eco-signal="regulation">Marcos · comprobando</span><span data-eco-signal="fiscal">Fiscal · comprobando</span></div></div><aside class="kf-eco-panel" id="kaufman-ecosystem-panel" role="tabpanel" aria-labelledby="ecosystem-tab-mercado" aria-live="polite" data-eco-panel>${ecosystemPanelMarkup('mercado',null)}</aside></div><p class="kf-eco-instruction"><span aria-hidden="true">↳</span> Selecciona un área para consultar sus datos y fuentes.</p></div></section>`;
   }
 
   function renderHome(){
@@ -852,10 +861,14 @@
       </div></section></main>`;
   }
 
+  function fiscalHeroMarkup(){
+    return `<header class="kf-fiscal-hero"><div class="kf-container"><div class="kf-breadcrumbs"><a href="/">Inicio</a><span>/</span><span>Fiscal</span></div><div class="kf-fiscal-hero-grid"><div><p class="kf-kicker">Datos fiscales comparados</p><h1>Fiscal</h1></div><div class="kf-fiscal-hero-scope"><p>Compara el tratamiento de una operación blockchain según jurisdicción, residencia y perfil fiscal.</p><span>Jurisdicción × operación × perfil</span></div></div></div></header>`;
+  }
+
   function renderFiscal(){
-    return `<main class="kf-main" id="main-content">${pageHero('Fiscal','Fiscalidad blockchain comparada por hecho económico, residencia y tipo de actividad. Kaufman muestra la regla, la fuente y el punto exacto donde deja de poder concluir.','Inteligencia fiscal comparada','auto')}
+    return `<main class="kf-main" id="main-content">${fiscalHeroMarkup()}
       <section class="kf-section kf-fiscal-live" data-fiscal-dashboard><div class="kf-container">
-        <section class="kf-fiscal-editorial"><figure><img src="/assets/images/fiscal-review-v1.jpg" width="1536" height="1024" alt="Profesional revisando documentación fiscal y registros de operaciones digitales" loading="eager"><figcaption><span>Revisión documental</span><strong>Operación, fecha, coste y residencia</strong></figcaption></figure><div class="kf-fiscal-editorial-copy"><p class="kf-kicker">Fiscalidad blockchain · jurisdicción × evento</p><h2>Qué datos determinan el tratamiento fiscal.</h2><p>Vender, permutar, recibir recompensas, minar o mantener activos puede producir obligaciones distintas. El cálculo separa el hecho, la categoría, el momento, el reporte y el límite de cada fuente.</p><ol><li><span>01</span><div><strong>Residencia fiscal efectiva</strong><small>País aplicable y situación personal o empresarial.</small></div></li><li><span>02</span><div><strong>Operación y fecha</strong><small>Venta, permuta, staking, minería o tenencia.</small></div></li><li><span>03</span><div><strong>Valor de salida y coste</strong><small>Importes en la moneda exigida por la jurisdicción.</small></div></li><li><span>04</span><div><strong>Perfil y custodia</strong><small>Inversión personal, actividad, sociedad y proveedor.</small></div></li></ol><span data-fiscal-status>Conectando registro fiscal server-side…</span></div></section>
+        <section class="kf-fiscal-editorial"><figure><img src="/assets/images/fiscal-review-v1.jpg" width="1536" height="1024" alt="Profesional revisando documentación fiscal y registros de operaciones digitales" loading="eager"><figcaption><span>Documentación fiscal</span><strong>Operaciones con activos digitales</strong></figcaption></figure><div class="kf-fiscal-editorial-copy"><p class="kf-kicker">Datos necesarios</p><h2>Antes de calcular.</h2><ol><li><span>01</span><strong>Jurisdicción y perfil fiscal</strong></li><li><span>02</span><strong>Operación y fecha</strong></li><li><span>03</span><strong>Valor de salida y coste fiscal</strong></li></ol></div></section>
         <div class="kf-fiscal-kpis"><article><span>Jurisdicciones</span><strong data-fiscal-kpi="jurisdiction_count">—</strong><small>Mismo contrato comparativo</small></article><article><span>Hechos fiscales</span><strong data-fiscal-kpi="fact_count">—</strong><small>Cinco eventos por jurisdicción</small></article><article><span>Hechos resueltos</span><strong data-fiscal-kpi="resolved_fact_pct">—</strong><small>El resto se bloquea, no se rellena</small></article><article><span>Fuentes oficiales</span><strong data-fiscal-kpi="source_count">—</strong><small>Leyes, doctrina, guías y formularios</small></article><article><span>Última revisión jurídica</span><strong data-fiscal-reviewed>—</strong><small>Accesibilidad ≠ vigencia material</small></article></div>
 
         <section class="kf-fiscal-engine"><div class="kf-fiscal-engine-copy"><div><p class="kf-kicker">Cálculo por operación</p><h2>Introduce los datos de tu operación.</h2><p>Los tramos y umbrales se aplican a los importes declarados. El resultado muestra cálculo, método, fuentes, supuestos y límites.</p></div><div class="kf-fiscal-safety"><span>NO CALCULA</span><strong>Residencia efectiva · cuota tributaria final · convenios · impuestos regionales · estructura societaria</strong></div></div><form class="kf-fiscal-controls" data-fiscal-scenario-form><div class="kf-field"><label for="fiscal-jurisdiction">Jurisdicción fiscal</label><select class="kf-select" id="fiscal-jurisdiction" data-fiscal-jurisdiction><option value="">Esperando datos…</option></select></div><div class="kf-field"><label for="fiscal-event">Evento</label><select class="kf-select" id="fiscal-event" data-fiscal-event><option value="sell_fiat">Venta a moneda fiat</option><option value="crypto_swap" selected>Permuta cripto a cripto</option><option value="staking">Staking y recompensas</option><option value="mining">Minería y validación</option><option value="holding">Tenencia y declaración</option></select></div><div class="kf-field"><label for="fiscal-profile">Perfil</label><select class="kf-select" id="fiscal-profile" data-fiscal-profile><option value="individual-investor">Persona física · inversión</option><option value="individual-business">Persona física · actividad</option><option value="company">Sociedad</option></select></div><div class="kf-field"><label for="fiscal-holding">Días de tenencia</label><input id="fiscal-holding" type="number" min="0" step="1" value="400" data-fiscal-holding></div><div class="kf-field"><label for="fiscal-proceeds">Valor de salida</label><input id="fiscal-proceeds" type="number" min="0" step="0.01" placeholder="Necesario para calcular" data-fiscal-proceeds></div><div class="kf-field"><label for="fiscal-cost">Coste fiscal ajustado</label><input id="fiscal-cost" type="number" min="0" step="0.01" placeholder="Necesario para calcular" data-fiscal-cost></div><div class="kf-field"><label for="fiscal-prior-base">Base fiscal previa del año</label><input id="fiscal-prior-base" type="number" min="0" step="0.01" value="0" data-fiscal-prior-base></div><div class="kf-field"><label for="fiscal-filing">Estado de declaración</label><select class="kf-select" id="fiscal-filing" data-fiscal-filing-status><option value="single">Individual</option><option value="joint">Conjunta / matrimonio</option><option value="head">Cabeza de familia</option><option value="separate">Matrimonio separado</option></select></div><div class="kf-field"><label for="fiscal-context">Tratamiento del activo</label><select class="kf-select" id="fiscal-context" data-fiscal-tax-context><option value="standard">Regla general</option></select></div><div class="kf-field"><label for="fiscal-turnover">Volumen anual de actividad</label><input id="fiscal-turnover" type="number" min="0" step="0.01" value="0" data-fiscal-turnover></div><div class="kf-field"><label for="fiscal-custody">Custodia</label><select class="kf-select" id="fiscal-custody" data-fiscal-custody><option value="self">Self-custody</option><option value="domestic">Proveedor nacional</option><option value="foreign">Proveedor extranjero</option></select></div><button class="kf-button primary" type="submit">Calcular impacto fiscal →</button></form><div class="kf-fiscal-result" data-fiscal-scenario-result><div class="kf-live-empty">Esperando el registro fiscal conectado…</div></div></section>
@@ -2630,13 +2643,13 @@
     if(!root)return;
     const connectedProviders=Object.values(snapshot?.providers||{}).filter((provider)=>['LIVE','CONNECTED','SNAPSHOT'].includes(provider?.connection_status)).length;
     document.querySelectorAll('[data-engine-state]').forEach((node)=>node.innerHTML=`<i></i> ${connectedProviders||'—'} fuentes activas`);
-    const references=Object.values(snapshot?.reference_prices||{});
+    const references=Object.values(snapshot?.reference_prices||{}).filter((item)=>['bitcoin','ethereum'].includes(item?.asset_id));
     const regulation=snapshot?.regulation_intelligence||{};
     const fiscal=snapshot?.fiscal_intelligence||{};
     const signals={
-      market:`${references.filter((item)=>item?.verification_status==='VERIFIED').length} PRECIOS DE REFERENCIA`,
-      regulation:`${regulation?.events?.length??0} CAMBIOS REGULATORIOS`,
-      fiscal:`${fiscal?.data_quality?.source_count??0} FUENTES FISCALES`
+      market:`${references.filter((item)=>item?.verification_status==='VERIFIED').length} PRECIOS BTC / ETH`,
+      regulation:`${regulation?.data_quality?.regime_count??0} MARCOS REGULATORIOS`,
+      fiscal:`${fiscal?.data_quality?.jurisdiction_count??0} JURISDICCIONES FISCALES`
     };
     for(const [key,value] of Object.entries(signals)){const node=root.querySelector(`[data-eco-signal="${key}"]`);if(node)node.textContent=value}
     activateEcosystemTerritory(ecosystemPinned);
@@ -2721,8 +2734,10 @@
   }
 
   function applyDailySnapshot(data){
+    latestDailySnapshot=data||null;
     renderHomeCurrentAffairs(data);
     updateMiningCalculator(data?.mining_profitability);
+    if(document.querySelector('[data-ecosystem]'))activateEcosystemTerritory(ecosystemPinned);
     const radar=document.querySelector('[data-regulation-radar]');
     if(!radar)return;
     const sources=(data?.regulation?.sources||[]).map((source)=>`<div class="kf-source-row"><strong>${escapeHtml(source.name)}</strong><span>${escapeHtml(source.scope)}</span><span>${source.status==='auto'?'Fuente conectada':'Fuente no disponible'}</span><div>${statusBadge(source.status==='auto'?'auto':'offline')} <a href="${safeExternalUrl(source.url)}" target="_blank" rel="noopener noreferrer">Abrir ↗</a></div></div>`).join('');

@@ -2,7 +2,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const VERSION = 'kaufman-v75';
+const VERSION = 'kaufman-v77';
 const shells = [
   'index.html', 'mercados/index.html', 'regulacion/index.html', 'tokenizacion/index.html',
   'fiscal/index.html', 'empresas/index.html', 'bancos/index.html',
@@ -48,7 +48,7 @@ const publicHomeCopy = [
   sliceFunction('renderHome', 'decisionCloseMarkup'),
   sliceFunction('feedItemMarkup', 'renderHomeCurrentAffairs')
 ].join('\n');
-for (const marker of ['Datos y consultas', 'COMPROBACIONES', 'DATOS APLICABLES', 'Datos verificados', 'Directorios de datos']) {
+for (const marker of ['Datos y consultas', 'COMPROBACIONES', 'DATOS QUE RESUELVE', 'Datos verificados', 'Directorios de datos']) {
   if (!publicHomeCopy.includes(marker)) failures.push(`home: falta texto directo ${marker}`);
 }
 for (const rejectedHomeCopy of ['Decision Brief', 'RUTA PROPUESTA', 'Explorar territorio', 'Empieza por la decisión', 'Qué puede cambiar una decisión', 'HOY', 'dateVerb', 'feedDateParts']) {
@@ -59,6 +59,20 @@ if (!appScript.includes("const commercialPages=!['home','regulacion','wallets'")
 if (!appScript.includes("page==='home'?'Kaufman Reference Price'")) failures.push('home: la fuente minera vuelve a mostrar la edad del precio');
 if (!appScript.includes("main?.querySelector('.kf-rwa-market .kf-rwa-kpis')?.remove();") || !appScript.includes("main?.querySelector('.kf-rwa-market .kf-rwa-ratios')?.remove();")) failures.push('mercados: reaparece el resumen RWA duplicado');
 if (!appStyles.includes('.kf-feed-item.no-time')) failures.push('home: las referencias sin fecha pierden su composición');
+const ecosystemConfig = appScript.slice(appScript.indexOf('const ECOSYSTEM_ORDER'), appScript.indexOf('const STATUS_LABELS'));
+const ecosystemMarkup = sliceFunction('ecosystemMapMarkup', 'renderHome');
+for (const marker of ["['mercado','regulacion','tokenizacion','mineria','custodia','fiscal']", "href:'/mercados/'", "href:'/regulacion/'", "href:'/tokenizacion/'", "href:'/mineria/'", "href:'/wallets/'", "href:'/fiscal/'"]) {
+  if (!ecosystemConfig.includes(marker)) failures.push(`home: falta área vigente en el diagrama: ${marker}`);
+}
+for (const retiredArea of ["label:'Empresas'", "label:'Infraestructura'", "label:'Riesgo'"]) {
+  if (ecosystemConfig.includes(retiredArea)) failures.push(`home: reaparece área retirada del diagrama: ${retiredArea}`);
+}
+for (const goldenMarker of ['kf-eco-geometry', 'kf-eco-scaffold', 'kf-eco-core-orbit', 'kf-eco-center']) {
+  if (!ecosystemMarkup.includes(goldenMarker)) failures.push(`home: se pierde el diagrama áureo: ${goldenMarker}`);
+}
+for (const dataMarker of ['PRECIOS BTC / ETH', 'MARCOS REGULATORIOS', 'JURISDICCIONES FISCALES', 'latestDailySnapshot', 'hashprice_usd_ph_day']) {
+  if (!appScript.includes(dataMarker)) failures.push(`home: falta actualización de datos del diagrama: ${dataMarker}`);
+}
 for (const marker of ['kf-mining-hero-frame', 'data-mining-hero-observed', 'ASIC · SHA-256', 'data-mining-country-expand']) {
   if (!appScript.includes(marker)) failures.push(`mineria: falta ${marker}`);
 }
@@ -67,8 +81,12 @@ for (const rejectedCopy of ['Modela la operación', 'Resultado modelado', 'no un
 }
 const miningHero = await fs.stat(path.join(ROOT, 'assets/images/mining-operations-hero-v1.jpg')).catch(() => null);
 if (!miningHero || miningHero.size < 100_000) failures.push('mineria: imagen hero ausente o incompleta');
-for (const marker of ['kf-fiscal-editorial', '/assets/images/fiscal-review-v1.jpg', 'Introduce los datos de tu operación.']) {
+for (const marker of ['fiscalHeroMarkup', 'kf-fiscal-hero', 'Jurisdicción × operación × perfil', 'kf-fiscal-editorial', '/assets/images/fiscal-review-v1.jpg', 'Introduce los datos de tu operación.']) {
   if (!appScript.includes(marker)) failures.push(`fiscal: falta ${marker}`);
+}
+const fiscalSurface = sliceFunction('fiscalHeroMarkup', 'compareFields');
+for (const rejectedFiscalCopy of ['Caso A', 'Contraste', 'Caso B', 'Qué datos determinan el tratamiento fiscal.', 'Vender, permutar, recibir recompensas']) {
+  if (fiscalSurface.includes(rejectedFiscalCopy)) failures.push(`fiscal: reaparece contenido retirado: ${rejectedFiscalCopy}`);
 }
 for (const marker of ['data-regulation-table', 'data-regulation-detail', 'data-regulation-comparison', 'data-regulation-expand', 'REGULATION_REFERENCE_IDS', 'Actividades cubiertas', 'A quién afecta', 'Qué no cubre']) {
   if (!appScript.includes(marker)) failures.push(`regulacion: falta ${marker}`);
