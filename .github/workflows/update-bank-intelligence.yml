@@ -24,6 +24,8 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: main
       - uses: actions/setup-node@v6
         with:
           node-version: "22"
@@ -35,12 +37,23 @@ jobs:
       - name: Publish changed snapshot
         shell: bash
         run: |
-          if git diff --quiet -- assets/bank-intelligence.js; then
-            exit 0
-          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add assets/bank-intelligence.js
-          git commit -m "data: update weekly bank intelligence"
-          git pull --rebase origin main
-          git push
+          for attempt in 1 2 3; do
+            if [ "$attempt" -gt 1 ]; then
+              git fetch origin main
+              git switch --force-create "bank-publish-${GITHUB_RUN_ID}-${attempt}" origin/main
+              node scripts/update_bank_intelligence.mjs
+              node scripts/validate_bank_intelligence.mjs
+            fi
+            if git diff --quiet -- assets/bank-intelligence.js; then
+              exit 0
+            fi
+            git add assets/bank-intelligence.js
+            git commit -m "data: update weekly bank intelligence"
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            sleep 5
+          done
+          exit 1

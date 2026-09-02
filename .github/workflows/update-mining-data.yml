@@ -25,6 +25,8 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: main
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
@@ -39,11 +41,23 @@ jobs:
       - name: Commit changed mining snapshot
         shell: bash
         run: |
-          if git diff --quiet -- assets/daily-data.js; then
-            exit 0
-          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add assets/daily-data.js
-          git commit -m "data: update automatic mining snapshot"
-          git push
+          for attempt in 1 2 3; do
+            if [ "$attempt" -gt 1 ]; then
+              git fetch origin main
+              git switch --force-create "mining-publish-${GITHUB_RUN_ID}-${attempt}" origin/main
+              python scripts/update_mining_data.py
+              node scripts/validate_static_data.mjs
+            fi
+            if git diff --quiet -- assets/daily-data.js; then
+              exit 0
+            fi
+            git add assets/daily-data.js
+            git commit -m "data: update automatic mining snapshot"
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            sleep 5
+          done
+          exit 1

@@ -25,6 +25,8 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: main
       - uses: actions/setup-node@v6
         with:
           node-version: "22"
@@ -46,12 +48,23 @@ jobs:
       - name: Publish changed snapshot
         shell: bash
         run: |
-          if git diff --quiet -- api/market/snapshot api/market/gas; then
-            exit 0
-          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add api/market/snapshot api/market/gas
-          git commit -m "data: update automatic reference prices"
-          git pull --rebase origin main
-          git push
+          for attempt in 1 2 3; do
+            if [ "$attempt" -gt 1 ]; then
+              git fetch origin main
+              git switch --force-create "price-publish-${GITHUB_RUN_ID}-${attempt}" origin/main
+              node scripts/update_market_price_snapshot.mjs
+              node scripts/validate_automated_market_snapshot.mjs
+            fi
+            if git diff --quiet -- api/market/snapshot api/market/gas; then
+              exit 0
+            fi
+            git add api/market/snapshot api/market/gas
+            git commit -m "data: update automatic reference prices"
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            sleep 5
+          done
+          exit 1
