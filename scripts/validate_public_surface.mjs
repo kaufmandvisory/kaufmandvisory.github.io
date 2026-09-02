@@ -2,7 +2,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const VERSION = 'kaufman-v59';
+const VERSION = 'kaufman-v60';
 const shells = [
   'index.html', 'mercados/index.html', 'regulacion/index.html', 'tokenizacion/index.html',
   'fiscal/index.html', 'empresas/index.html', 'bancos/index.html',
@@ -40,6 +40,9 @@ for (const rule of ['/blog/', '/files/']) if (!robots.includes(`Disallow: ${rule
 const appScript = await fs.readFile(path.join(ROOT, 'assets/kaufman-app.js'), 'utf8');
 for (const marker of ['kf-mining-hero-frame', 'data-mining-hero-observed', 'ASIC · SHA-256']) {
   if (!appScript.includes(marker)) failures.push(`mineria: falta ${marker}`);
+}
+for (const rejectedCopy of ['Modela la operación', 'Resultado modelado', 'no una promesa', 'Escenario guardado']) {
+  if (appScript.includes(rejectedCopy)) failures.push(`mineria: reaparece texto rechazado: ${rejectedCopy}`);
 }
 const miningHero = await fs.stat(path.join(ROOT, 'assets/images/mining-operations-hero-v1.jpg')).catch(() => null);
 if (!miningHero || miningHero.size < 100_000) failures.push('mineria: imagen hero ausente o incompleta');
