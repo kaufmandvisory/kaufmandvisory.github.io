@@ -2,7 +2,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const VERSION = 'kaufman-v82';
+const VERSION = 'kaufman-v83';
 const shells = [
   'index.html', 'mercados/index.html', 'regulacion/index.html', 'tokenizacion/index.html',
   'fiscal/index.html', 'empresas/index.html', 'bancos/index.html',
@@ -81,10 +81,12 @@ for (const rejectedCopy of ['Modela la operación', 'Resultado modelado', 'no un
 }
 const miningHero = await fs.stat(path.join(ROOT, 'assets/images/mining-operations-hero-v1.jpg')).catch(() => null);
 if (!miningHero || miningHero.size < 100_000) failures.push('mineria: imagen hero ausente o incompleta');
-for (const marker of ['fiscalHeroMarkup', 'kf-fiscal-hero-frame', '/assets/images/fiscal-review-v1.jpg', 'Introduce los datos de tu operación.']) {
+for (const marker of ['fiscalHeroMarkup', 'kf-fiscal-hero-frame', '/assets/images/fiscal-review-v1.jpg', 'Cambios con efecto fiscal.', 'official_date_kind', '¿Qué necesitas resolver?', '¿Qué vas a pagar exactamente', 'fiscal-blockchain', 'Calcula una operación.']) {
   if (!appScript.includes(marker)) failures.push(`fiscal: falta ${marker}`);
 }
 const fiscalSurface = sliceFunction('fiscalHeroMarkup', 'compareFields');
+if (fiscalSurface.indexOf('data-fiscal-changes') > fiscalSurface.indexOf('id="fiscal-calculator"')) failures.push('fiscal: los cambios oficiales deben preceder al cálculo');
+if (appScript.includes("new Date(signal.date+")) failures.push('fiscal: el render vuelve a usar una fecha fiscal sin semántica oficial');
 for (const rejectedFiscalCopy of ['Caso A', 'Contraste', 'Caso B', 'kf-fiscal-editorial', 'kf-fiscal-kpis', 'kf-fiscal-quality', 'kf-fiscal-source-register', 'kf-fiscal-method', 'data-fiscal-methodology', 'Cobertura y fuentes', 'Qué está verificado y qué no.', 'Compara el tratamiento de una operación blockchain según jurisdicción, residencia y perfil fiscal.', 'Jurisdicción × operación × perfil', 'Documentación fiscal', 'Operación · fecha · coste · residencia', 'Antes de calcular.', 'Qué datos determinan el tratamiento fiscal.', 'Vender, permutar, recibir recompensas']) {
   if (fiscalSurface.includes(rejectedFiscalCopy)) failures.push(`fiscal: reaparece contenido retirado: ${rejectedFiscalCopy}`);
 }

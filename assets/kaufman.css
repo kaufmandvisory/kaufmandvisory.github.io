@@ -1314,6 +1314,27 @@ button,input,select,textarea{font-family:var(--kf-sans)}
 .kf-fiscal-hero figure img{width:100%;height:100%;object-fit:cover;object-position:center;filter:saturate(.72) contrast(1.04)}
 .kf-fiscal-live{padding-top:36px}
 
+.kf-fiscal-changes-primary{margin-bottom:88px}
+.kf-fiscal-changes-primary .kf-fiscal-section-head{margin-top:0}
+.kf-fiscal-change-list time{display:flex;flex-direction:column;gap:5px;line-height:1.2}
+.kf-fiscal-change-list time small{color:var(--kf-violet);font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.kf-fiscal-change-list time strong{font-size:13px;white-space:nowrap}
+
+.kf-fiscal-service{margin-bottom:88px;border-block:1px solid var(--kf-ink)}
+.kf-fiscal-service>header{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr);gap:72px;align-items:end;padding:34px 0}
+.kf-fiscal-service>header h2{max-width:820px;margin:8px 0 0;font-family:var(--kf-serif);font-size:clamp(42px,4.4vw,62px);font-weight:500;line-height:.98;letter-spacing:-.035em}
+.kf-fiscal-service>header>p{max-width:580px;margin:0;color:var(--kf-muted);font-size:14px;line-height:1.65}
+.kf-fiscal-service-questions{margin:0;padding:0;border-top:1px solid var(--kf-line);list-style:none}
+.kf-fiscal-service-questions li{border-bottom:1px solid var(--kf-line)}
+.kf-fiscal-service-questions a{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:22px;align-items:center;min-height:92px;padding:18px 0;color:var(--kf-ink)}
+.kf-fiscal-service-questions a:hover strong,.kf-fiscal-service-questions a:focus-visible strong{color:var(--kf-violet)}
+.kf-fiscal-service-questions span{color:var(--kf-violet);font:800 11px/1 var(--kf-mono);letter-spacing:.08em}
+.kf-fiscal-service-questions strong{max-width:920px;font-size:18px;line-height:1.35;letter-spacing:-.015em;transition:color .18s ease}
+.kf-fiscal-service-questions em{color:var(--kf-violet);font-size:12px;font-style:normal;font-weight:900;white-space:nowrap}
+.kf-fiscal-service>footer{display:flex;align-items:center;gap:24px;padding:24px 0}
+.kf-fiscal-service>footer small{max-width:640px;color:var(--kf-muted);font-size:11px;line-height:1.5}
+#fiscal-calculator,#fiscal-comparison{scroll-margin-top:92px}
+
 .kf-fiscal-engine{grid-template-columns:1fr;margin-top:0;border-color:var(--kf-ink);border-radius:3px;background:var(--kf-paper-raised);color:var(--kf-ink)}
 .kf-fiscal-engine-copy{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(300px,.7fr);gap:58px;align-items:end;padding:34px 38px;border:0;background:var(--kf-ink);color:var(--kf-white)}
 .kf-fiscal-engine-copy h2{max-width:780px;margin:8px 0 14px;font-family:var(--kf-serif);font-size:clamp(40px,4.2vw,58px);font-weight:500;line-height:1;letter-spacing:-.03em}
@@ -1336,6 +1357,7 @@ button,input,select,textarea{font-family:var(--kf-sans)}
 
 @media(max-width:1040px){
   .kf-fiscal-hero-frame{grid-template-columns:minmax(320px,.85fr) minmax(0,1.15fr);min-height:450px}.kf-fiscal-hero-copy{padding-right:34px}
+  .kf-fiscal-service>header{grid-template-columns:1fr;gap:20px}
   .kf-fiscal-engine-copy{grid-template-columns:1fr;gap:25px}
   .kf-fiscal-controls{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
@@ -1343,6 +1365,10 @@ button,input,select,textarea{font-family:var(--kf-sans)}
 @media(max-width:680px){
   .kf-fiscal-hero>.kf-container{padding-top:24px;padding-bottom:30px}.kf-fiscal-hero .kf-breadcrumbs{margin-bottom:18px}.kf-fiscal-hero-frame{grid-template-columns:1fr;min-height:0}.kf-fiscal-hero-copy{min-height:340px;padding:28px 0 25px;border-right:0;border-bottom:1px solid var(--kf-ink)}.kf-fiscal-hero h1{font-size:55px}.kf-fiscal-hero figure{aspect-ratio:4/3}
   .kf-fiscal-live{padding-top:34px}
+  .kf-fiscal-changes-primary,.kf-fiscal-service{margin-bottom:65px}
+  .kf-fiscal-service>header{padding:27px 0}.kf-fiscal-service>header h2{font-size:40px}
+  .kf-fiscal-service-questions a{grid-template-columns:32px 1fr;gap:12px;min-height:0;padding:19px 0}.kf-fiscal-service-questions strong{font-size:16px}.kf-fiscal-service-questions em{grid-column:2;white-space:normal}
+  .kf-fiscal-service>footer{align-items:flex-start;flex-direction:column}
   .kf-fiscal-engine{margin-top:0}
   .kf-fiscal-engine-copy{padding:25px 22px}
   .kf-fiscal-engine-copy h2{font-size:37px}

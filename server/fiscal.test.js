@@ -47,3 +47,17 @@ test('source monitoring stays separate from legal review freshness', () => {
   assert.equal(snapshot.legal_reviewed_at, '2026-08-22');
   assert.match(snapshot.review_policy, /accesibilidad no certifica vigencia/i);
 });
+
+test('publishes only typed official dates for fiscal changes', () => {
+  const snapshot = buildFiscalSnapshot();
+  const allowedKinds = new Set(['ENTRY_INTO_FORCE', 'APPLICATION_START', 'SIGNED']);
+  assert.ok(snapshot.change_signals.length > 0);
+  for (const signal of snapshot.change_signals) {
+    assert.match(signal.official_date, /^\d{4}-\d{2}-\d{2}$/);
+    assert.ok(allowedKinds.has(signal.official_date_kind));
+    assert.equal('date' in signal, false);
+    assert.equal('detected_at' in signal, false);
+  }
+  assert.equal(snapshot.change_signals.find((row) => row.id === 'co-carf-2026').official_date, '2026-03-31');
+  assert.equal(snapshot.change_signals.find((row) => row.id === 'pt-crypto-tax-2023').official_date_kind, 'ENTRY_INTO_FORCE');
+});
