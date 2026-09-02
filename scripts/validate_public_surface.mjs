@@ -2,7 +2,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const VERSION = 'kaufman-v64';
+const VERSION = 'kaufman-v65';
 const shells = [
   'index.html', 'mercados/index.html', 'regulacion/index.html', 'tokenizacion/index.html',
   'fiscal/index.html', 'empresas/index.html', 'bancos/index.html',
@@ -50,7 +50,7 @@ if (!miningHero || miningHero.size < 100_000) failures.push('mineria: imagen her
 for (const marker of ['kf-fiscal-editorial', '/assets/images/fiscal-review-v1.jpg', 'Introduce los datos de tu operación.']) {
   if (!appScript.includes(marker)) failures.push(`fiscal: falta ${marker}`);
 }
-for (const marker of ['data-regulation-table', 'data-regulation-detail', 'data-regulation-comparison', 'data-regulation-expand', 'A quién afecta', 'Qué no cubre']) {
+for (const marker of ['data-regulation-table', 'data-regulation-detail', 'data-regulation-comparison', 'data-regulation-expand', 'kf-reg-activity-legend', 'A quién afecta', 'Qué no cubre']) {
   if (!appScript.includes(marker)) failures.push(`regulacion: falta ${marker}`);
 }
 for (const rejectedRegulationPattern of ['Construyendo fichas regulatorias', 'Mapa de regímenes']) {

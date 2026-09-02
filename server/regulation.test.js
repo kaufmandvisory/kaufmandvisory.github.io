@@ -12,7 +12,7 @@ test('publishes complete regulation regimes without demo placeholders', () => {
   assert.equal(validateRegulationSnapshot(snapshot), true);
   assert.equal(snapshot.source_contract_version, 'official-public-v2');
   assert.equal(snapshot.data_quality.demo_record_count, 0);
-  assert.equal(snapshot.regimes.length, 26);
+  assert.equal(snapshot.regimes.length, 29);
   assert.equal(snapshot.data_quality.sourced_regime_pct, 100);
   for (const regime of snapshot.regimes) {
     assert.ok(regime.source_ids.length > 0);
@@ -36,7 +36,7 @@ test('keeps material differences between comparable jurisdictions', () => {
   assert.ok(spain.activity_tags.includes('issuer'));
 });
 
-test('covers material Latin American and Asian crypto jurisdictions', () => {
+test('covers material Latin American, Asian, African, Israeli and Russian crypto jurisdictions', () => {
   const snapshot = buildRegulationSnapshot({}, '2026-09-02T12:00:00.000Z');
   const ids = new Set(snapshot.regimes.map((row) => row.id));
   for (const id of [
@@ -44,8 +44,16 @@ test('covers material Latin American and Asian crypto jurisdictions', () => {
     'colombia-no-general-license', 'uruguay-psav', 'peru-psav-aml', 'singapore-dpt',
     'south-korea-vasp', 'thailand-digital-assets', 'indonesia-ojk-crypto',
     'malaysia-digital-assets', 'philippines-vasp', 'kazakhstan-aifc-datf',
-    'panama-no-general-vasp', 'costa-rica-no-general-vasp'
+    'panama-no-general-vasp', 'costa-rica-no-general-vasp',
+    'israel-financial-asset-services', 'russia-crypto-market-2026', 'nigeria-sec-digital-assets'
   ]) assert.ok(ids.has(id), `missing ${id}`);
+});
+
+test('publishes the regulatory matrix in Spanish alphabetical order', () => {
+  const snapshot = buildRegulationSnapshot({}, '2026-09-02T12:00:00.000Z');
+  const jurisdictions = snapshot.regimes.map((row) => row.jurisdiction);
+  const ordered = [...jurisdictions].sort((left, right) => left.localeCompare(right, 'es', { sensitivity: 'base' }));
+  assert.deepEqual(jurisdictions, ordered);
 });
 
 test('keeps source accessibility separate from legal review', () => {
@@ -58,7 +66,7 @@ test('keeps source accessibility separate from legal review', () => {
   assert.equal(regime.legal_status, 'VERIFIED');
   assert.equal(snapshot.legal_review_ledger.status, 'EMPTY');
   assert.equal(snapshot.data_quality.signed_regime_count, 0);
-  assert.equal(snapshot.data_quality.pending_signoff_count, 26);
+  assert.equal(snapshot.data_quality.pending_signoff_count, 29);
   assert.match(snapshot.review_policy, /accesibilidad, no vigencia jurídica/i);
 });
 

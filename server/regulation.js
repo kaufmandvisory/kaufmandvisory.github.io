@@ -189,6 +189,26 @@ export const REGULATORY_SOURCES = Object.freeze([
     id: 'cr_sugef_risk_2025', jurisdiction: 'costa-rica', authority: 'SUGEF',
     title: 'Evaluación sectorial de riesgos 2025 · ausencia de regulación PSAV', url: 'https://www.sugef.fi.cr/informacion_relevante/presentaciones%20sbr/Informe%20Final%20ESR-SF%20version%20publica-2025.pdf',
     source_type: 'OFFICIAL_RISK_ASSESSMENT', binding_level: 'OFFICIAL_ASSESSMENT'
+  },
+  {
+    id: 'il_isa_annual_report_2023', jurisdiction: 'israel', authority: 'Israel Securities Authority',
+    title: 'Informe anual 2023 · perímetro de activos digitales y servicios financieros', url: 'https://www.new.isa.gov.il/en/images/Fittings/isa-be/asset_library_pic/al_lobby/al_lobby-649135bbde875/ANNUALREPORT2023.pdf',
+    source_type: 'OFFICIAL_REGULATORY_REPORT', binding_level: 'OFFICIAL_GUIDANCE'
+  },
+  {
+    id: 'ru_cbr_crypto_market_2026', jurisdiction: 'rusia', authority: 'Bank of Russia',
+    title: 'Nuevo marco para la circulación de criptomonedas', url: 'https://www.cbr.ru/eng/press/event/?id=32724',
+    source_type: 'OFFICIAL_REGULATION_NOTICE', binding_level: 'OFFICIAL_GUIDANCE'
+  },
+  {
+    id: 'ng_sec_arip_2026', jurisdiction: 'nigeria', authority: 'Securities and Exchange Commission Nigeria',
+    title: 'VASPs admitidos en el Accelerated Regulatory Incubation Programme', url: 'https://sec.gov.ng/for-investors/sec-nigeria-clears-additional-vasps-for-accelerated-regulatory-incubation-programme/',
+    source_type: 'OFFICIAL_REGULATORY_PROGRAMME', binding_level: 'OFFICIAL_GUIDANCE'
+  },
+  {
+    id: 'ng_sec_digital_asset_consultation_2026', jurisdiction: 'nigeria', authority: 'Securities and Exchange Commission Nigeria',
+    title: 'Proyecto de reglas de operaciones, custodia y mercados de activos digitales', url: 'https://sec.gov.ng/for-investors/proposed-rules-digital-and-virtual-assets-operations-custody-and-markets/',
+    source_type: 'OFFICIAL_CONSULTATION', binding_level: 'CONSULTATION'
   }
 ]);
 
@@ -584,6 +604,57 @@ export const REGULATORY_REGIMES = Object.freeze([
     core_obligations: ['No afirmar supervisión inexistente', 'Debida diligencia y origen de fondos según contraparte', 'Cumplir normas sectoriales activadas por la operación'],
     verification_steps: ['Comprobar entidad legal, domicilio y regulador real', 'Separar uso del activo de prestación de un servicio financiero', 'Verificar custodia, contrato y vías de reclamación'],
     activity_tags: ['custody', 'exchange', 'transfer', 'marketing', 'payments', 'banking']
+  },
+  {
+    id: 'israel-financial-asset-services', code: 'IL', name: 'Activos digitales · Israel', jurisdiction: 'Israel',
+    legal_status: 'SOURCE_GROUNDED', review_status: 'PENDING_LEGAL_SIGNOFF', state: 'IN_FORCE_AND_TRANSITION', authority: 'Capital Market Authority · Israel Securities Authority',
+    effective: 'Servicios financieros bajo la Ley de 2016; integración de activos digitales en las leyes de valores en desarrollo según el informe oficial',
+    scope: 'Servicios en activos financieros y actividades de inversión con activos digitales que puedan constituir oferta pública, negociación, intermediación, asesoramiento o gestión.',
+    practical_effect: 'Debe identificarse primero la naturaleza de la actividad y el regulador competente; la autorización de un servicio financiero no resuelve automáticamente la clasificación del activo como valor.',
+    limitation: 'La fuente oficial describe un perímetro repartido y un proceso legislativo. La licencia y el alcance vigentes deben comprobarse entidad por entidad antes de operar.',
+    source_ids: ['il_isa_annual_report_2023'], source_verified_at: '2026-09-02', legal_reviewed_at: null,
+    framework_type: 'Perímetro repartido entre servicios financieros y valores',
+    market_access: 'Licencia aplicable al servicio financiero; autorización adicional cuando la actividad entra en las leyes de valores o de pagos.',
+    applies_to: ['Proveedores de servicios en activos financieros sujetos a la Ley de Supervisión de 2016', 'Emisores e intermediarios cuando el activo digital constituye una inversión o valor', 'Plataformas, asesores y gestores cuando su actividad entra en el perímetro de valores'],
+    does_not_apply_to: ['Aprobación de cada activo digital por el regulador', 'Una licencia única válida para servicios financieros, valores y pagos', 'Exención automática para una plataforma por utilizar blockchain'],
+    regulated_activities: ['Servicios en activos financieros', 'Oferta pública', 'Negociación e intermediación', 'Asesoramiento y gestión'],
+    core_obligations: ['Licencia y supervisor correctos para la actividad', 'Divulgación y protección del inversor cuando aplica la normativa de valores', 'Capital, tecnología, datos y gestión de riesgos según el permiso', 'Salvaguarda de fondos y activos cuando corresponda'],
+    verification_steps: ['Clasificar el activo y el servicio antes de buscar la licencia', 'Comprobar entidad, regulador y alcance exacto del permiso', 'Separar servicios financieros, valores y pagos', 'Confirmar el estado actual de las reformas citadas por el informe'],
+    activity_tags: ['issuer', 'custody', 'exchange', 'brokerage', 'advice']
+  },
+  {
+    id: 'russia-crypto-market-2026', code: 'RU', name: 'Mercado de criptomonedas · Rusia', jurisdiction: 'Rusia',
+    legal_status: 'SOURCE_GROUNDED', review_status: 'PENDING_LEGAL_SIGNOFF', state: 'IN_FORCE_AND_TRANSITION', authority: 'Bank of Russia',
+    effective: 'Nuevo marco efectivo desde 1 sep 2026; transición de licencias hasta 1 jul 2027',
+    scope: 'Compra, venta, intermediación, negociación organizada y registro de derechos sobre criptomonedas y determinados derechos digitales.',
+    practical_effect: 'Los inversores deben operar mediante la infraestructura admitida. Los no cualificados están sujetos a prueba y a un límite anual de 300.000 rublos por intermediario para los activos más líquidos.',
+    limitation: 'Las criptomonedas continúan prohibidas como medio de pago interno; los pagos transfronterizos empresariales, las sanciones y las tenencias en el extranjero requieren análisis separado.',
+    source_ids: ['ru_cbr_crypto_market_2026'], source_verified_at: '2026-09-02', legal_reviewed_at: null,
+    framework_type: 'Mercado regulado con acceso diferenciado por inversor',
+    market_access: 'Intermediarios, exchanges y depositarios digitales regulados; transición para obtener licencia hasta julio de 2027.',
+    applies_to: ['Exchanges, brokers, gestoras y plataformas de negociación que intermedian criptomonedas', 'Depositarios digitales que registran derechos', 'Inversores residentes cualificados y no cualificados'],
+    does_not_apply_to: ['Uso de criptomonedas para pagar bienes o servicios dentro de Rusia', 'Libre acceso sin prueba o límite para inversores no cualificados', 'Exención automática de sanciones o reporte fiscal'],
+    regulated_activities: ['Exchange', 'Brokerage', 'Gestión', 'Registro y custodia', 'Liquidación transfronteriza empresarial'],
+    core_obligations: ['Licencia y registro durante el periodo transitorio', 'Prueba y límites para inversores no cualificados', 'Registro de activos y derechos en depositarios digitales', 'Información y reporte de tenencias extranjeras'],
+    verification_steps: ['Comprobar la licencia y categoría del intermediario', 'Identificar la condición del inversor y el límite aplicable', 'Separar inversión, pago interno y liquidación transfronteriza', 'Revisar sanciones y restricciones de la contraparte'],
+    activity_tags: ['custody', 'exchange', 'brokerage', 'transfer', 'payments']
+  },
+  {
+    id: 'nigeria-sec-digital-assets', code: 'NG', name: 'Activos digitales y VASP · Nigeria', jurisdiction: 'Nigeria',
+    legal_status: 'SOURCE_GROUNDED', review_status: 'PENDING_LEGAL_SIGNOFF', state: 'IN_FORCE_AND_TRANSITION', authority: 'Securities and Exchange Commission Nigeria',
+    effective: 'Reglas SEC y ARIP operativos; proyecto de marco ampliado publicado para consulta el 20 ago 2026',
+    scope: 'VASPs, plataformas de negociación, custodios, ofertas y servicios de inversión con activos digitales dirigidos al mercado nigeriano.',
+    practical_effect: 'Debe verificarse el estado exacto del operador. La admisión en ARIP concede una Approval-in-Principle condicionada y no constituye una licencia final.',
+    limitation: 'El proyecto de agosto de 2026 no debe mostrarse como norma vigente; tampoco una Approval-in-Principle demuestra autorización definitiva o cobertura de todos los servicios.',
+    source_ids: ['ng_sec_arip_2026', 'ng_sec_digital_asset_consultation_2026'], source_verified_at: '2026-09-02', legal_reviewed_at: null,
+    framework_type: 'Registro VASP y acceso mediante programa regulatorio',
+    market_access: 'Registro SEC o admisión condicionada en ARIP según el servicio y la fase; comprobar si existe licencia final.',
+    applies_to: ['VASPs y plataformas que operan en Nigeria', 'Operadores extranjeros que dirigen servicios o promociones al mercado nigeriano', 'Custodios, emisores y plataformas de oferta de activos digitales'],
+    does_not_apply_to: ['Proveedor puramente tecnológico sin actividad financiera regulada', 'Autorización final por el solo hecho de entrar en ARIP', 'Aplicación vinculante del proyecto publicado para consulta'],
+    regulated_activities: ['Emisión y oferta', 'Exchange', 'Brokerage', 'Custodia', 'Transferencias', 'Asesoramiento'],
+    core_obligations: ['Registro y entidad legal identificable', 'Gobierno, capital y controles operativos según categoría', 'Custodia, ciberseguridad y protección del inversor', 'AML/CFT, divulgación y conducta de mercado'],
+    verification_steps: ['Buscar al operador en los canales oficiales de la SEC', 'Distinguir licencia final, Approval-in-Principle y solicitud', 'Comprobar la entidad, el dominio y los servicios admitidos', 'No aplicar el texto en consulta como si ya estuviera vigente'],
+    activity_tags: ['issuer', 'custody', 'exchange', 'brokerage', 'transfer', 'marketing', 'advice']
   }
 ]);
 
@@ -911,7 +982,8 @@ export function buildRegulationSnapshot(sourceHealth = {}, receivedAt = new Date
   const regimes = clone(REGULATORY_REGIMES).map((regime) => ({
     ...regime,
     ...clone(REGULATORY_DETAILS[regime.id] || {})
-  }));
+  })).sort((left, right) => left.jurisdiction.localeCompare(right.jurisdiction, 'es', { sensitivity: 'base' })
+    || left.name.localeCompare(right.name, 'es', { sensitivity: 'base' }));
   const checked = sources.filter((source) => source.connection_status !== 'NOT_CHECKED');
   const reachable = sources.filter((source) => source.connection_status === 'CONNECTED');
   const jurisdictionCount = new Set(regimes.map((regime) => regime.jurisdiction)).size;

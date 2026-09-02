@@ -70,7 +70,7 @@ const findings = [
   },
   {
     id: 'A07', severity: 'IMPROVED', area: 'Regulación',
-    finding: 'Cobertura regulatoria ampliada a hubs globales y jurisdicciones relevantes de Latinoamérica y Asia; no pretende ser exhaustiva.',
+      finding: 'Cobertura regulatoria ampliada a hubs globales y jurisdicciones relevantes de Latinoamérica, Asia, África, Israel y Rusia; no pretende ser exhaustiva.',
     evidence: `${platform.regulation_intelligence.data_quality.regime_count} regímenes y ${platform.regulation_intelligence.data_quality.jurisdiction_count} jurisdicciones.`,
     remediation: 'Mantener texto primario, fecha efectiva, transición y registro de proveedores; ampliar por demanda operativa verificable.'
   },
