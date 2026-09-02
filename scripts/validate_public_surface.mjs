@@ -2,7 +2,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const VERSION = 'kaufman-v73';
+const VERSION = 'kaufman-v74';
 const shells = [
   'index.html', 'mercados/index.html', 'regulacion/index.html', 'tokenizacion/index.html',
   'fiscal/index.html', 'empresas/index.html', 'bancos/index.html',
@@ -83,14 +83,16 @@ if (!appScript.includes("['home','regulacion','wallets','contacto','aviso','priv
 for (const marker of [
   'walletHeroMarkup', '/assets/images/wallet-security-v2.jpg', 'NGRAVE ZERO',
   'SO con CC EAL7, según NGRAVE', 'Tres opciones, cinco diferencias.',
-  'kf-wallet-matrix', 'https://ngrave.io/en/page/backup/zero/'
+  'kf-wallet-matrix', 'https://ngrave.io/en/page/backup/zero/', 'walletLandscapeMarkup',
+  'Wallets calientes', 'Wallets frías', 'Tesorería y custodia', 'Trust Wallet',
+  'COLDCARD Q', 'Coinbase Prime'
 ]) {
   if (!appScript.includes(marker)) failures.push(`wallets: falta ${marker}`);
 }
 for (const marker of ['data-token-product-expand', 'rows.slice(0,5)', 'Mostrar solo 5', 'aria-expanded']) {
   if (!appScript.includes(marker)) failures.push(`tokenizacion: falta ${marker}`);
 }
-for (const marker of ['.kf-wallet-hero', '.kf-wallet-matrix', '.kf-token-product-more']) {
+for (const marker of ['.kf-wallet-hero', '.kf-wallet-landscape', '.kf-wallet-groups', '.kf-wallet-matrix', '.kf-token-product-more']) {
   if (!appStyles.includes(marker)) failures.push(`interfaz: falta ${marker}`);
 }
 for (const rejectedWalletCopy of ['Fría y caliente no bastan para decidir.', 'Modelos de custodia y control de claves.']) {
