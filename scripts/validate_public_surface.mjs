@@ -2,7 +2,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const VERSION = 'kaufman-v74';
+const VERSION = 'kaufman-v75';
 const shells = [
   'index.html', 'mercados/index.html', 'regulacion/index.html', 'tokenizacion/index.html',
   'fiscal/index.html', 'empresas/index.html', 'bancos/index.html',
@@ -98,6 +98,7 @@ for (const marker of ['.kf-wallet-hero', '.kf-wallet-landscape', '.kf-wallet-gro
 for (const rejectedWalletCopy of ['Fría y caliente no bastan para decidir.', 'Modelos de custodia y control de claves.']) {
   if (appScript.includes(rejectedWalletCopy)) failures.push(`wallets: reaparece texto retirado: ${rejectedWalletCopy}`);
 }
+if (appScript.includes('5 calientes, 5 frías y 5 para organizaciones.')) failures.push('wallets: reaparece el título numérico retirado');
 const walletPhoto = await fs.stat(path.join(ROOT, 'assets/images/wallet-security-v2.jpg')).catch(() => null);
 if (!walletPhoto || walletPhoto.size < 100_000) failures.push('wallets: fotografía editorial ausente o incompleta');
 for (const token of [
