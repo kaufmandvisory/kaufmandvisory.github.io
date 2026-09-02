@@ -15,7 +15,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: kaufman-data-writes
+  group: kaufman-bank-writes
   cancel-in-progress: false
 
 jobs:

@@ -19,7 +19,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: kaufman-data-writes
+  group: kaufman-daily-writes
   cancel-in-progress: false
 
 jobs:
